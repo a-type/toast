@@ -1,5 +1,5 @@
 {
-  "name": "toast-backend",
+  "name": "toast-core",
   "version": "0.1.0",
   "description": "Toast API",
   "main": "src/server.js",
