@@ -17,6 +17,7 @@ app.use(
   graphqlExpress(req => ({ schema, context: createContext(req) }))
 );
 app.use('/playground', playground({ endpoint: '/api' }));
+app.use(express.static('client'));
 
 app.listen(config.port, () => {
   info(`Server ready on http://localhost:${config.port}`);

@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "apis\\toast-core"
+		},
+		{
+			"path": "ops"
 		}
 	]
 }

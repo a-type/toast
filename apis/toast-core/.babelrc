@@ -1,8 +1,6 @@
 {
-  "presets": [
-    "env",
-    "stage-0"
-  ],
+  "presets": ["env", "stage-0"],
+  "plugins": ["transform-runtime"],
   "sourceMaps": "both",
   "retainLines": true
 }
