@@ -1,0 +1,32 @@
+// @flow
+import React from 'react';
+import { Icon } from 'components/generic';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 5px;
+  font-family: var(--font-default);
+  cursor: pointer;
+  color: ${props =>
+    props.active ? 'var(--color-brand)' : 'var(--color-black)'};
+
+  &:hover {
+    color: var(--color-brand);
+  }
+`;
+
+export default ({
+  onClick,
+  active,
+}: {
+  onClick(ev: MouseEvent): mixed,
+  active: boolean,
+}) => (
+  <Button onClick={onClick} active={active}>
+    Create new
+    <Icon name="create" />
+  </Button>
+);

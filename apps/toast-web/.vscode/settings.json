@@ -1,0 +1,7 @@
+{
+  "javascript.validate.enable": false,
+  "flow.pathToFlow": ".\\client\\node_modules\\.bin\\flow",
+  "flow.useNPMPackagedFlow": true,
+  "editor.formatOnSave": true,
+  "git.ignoreLimitWarning": true
+}

@@ -1,0 +1,58 @@
+{
+  "name": "toast-backend",
+  "version": "0.1.0",
+  "description": "Toast API",
+  "main": "src/server.js",
+  "scripts": {
+    "start":
+      "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
+    "test": "cross-env NODE_PATH=src jest",
+    "db:index": "babel-node ./db/indexes.js",
+    "db:seed": "babel-node ./db/seeds.js",
+    "db-init": "run-s db:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/a-type/toast-backend.git"
+  },
+  "keywords": ["Toast"],
+  "author": "Grant Forrest <gaforres@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/a-type/toast-backend/issues"
+  },
+  "homepage": "https://gitlab.com/a-type/toast-backend#README",
+  "prettier": {
+    "singleQuote": true,
+    "trailingCommas": "all"
+  },
+  "dependencies": {
+    "apollo-server-express": "^1.3.5",
+    "apollo-upload-server": "^5.0.0",
+    "aws-sdk": "^2.229.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "chalk": "^2.4.1",
+    "config": "^1.30.0",
+    "cross-env": "^5.1.4",
+    "express": "^4.16.3",
+    "graphql": "^0.13.2",
+    "graphql-playground-middleware-express": "^1.6.1",
+    "graphql-tools": "^2.24.0",
+    "jsonwebtoken": "^8.2.1",
+    "mime-types": "^2.1.18",
+    "neo4j-driver": "^1.5.3",
+    "neo4j-graphql-binding": "^1.0.3",
+    "neo4j-graphql-js": "^0.1.14",
+    "ramda": "^0.25.0",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "nodemon": "^1.17.3",
+    "npm-run-all": "^4.1.2"
+  }
+}

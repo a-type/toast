@@ -1,0 +1,10 @@
+{
+  "presets": ["env", "react", "flow"],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-class-properties",
+    "graphql-tag",
+    "styled-components",
+    "react-hot-loader/babel"
+  ]
+}
