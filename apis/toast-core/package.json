@@ -6,7 +6,7 @@
   "scripts": {
     "dev":
       "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
-    "test": "cross-env NODE_PATH=src jest",
+    "test": "cross-env NODE_PATH=src echo No tests!",
     "db:index": "babel-node ./db/indexes.js",
     "db:seed": "babel-node ./db/seeds.js",
     "db-init": "run-s db:*",
@@ -20,7 +20,8 @@
     "build-client": "run-s build-client:*",
 
     "containerize:client": "npm run build-client",
-    "containerize:run": "docker build -t toast-core .",
+    "containerize:run": "docker build -t us.gcr.io/toast-203322/toast-core .",
+    "containerize:publish": "docker push us.gcr.io/toast-203322/toast-core",
     "containerize:clean": "rimraf client",
     "containerize": "run-s containerize:*",
 

@@ -1,0 +1,39 @@
+before_script:
+  - npm i -g lerna
+  - lerna bootstrap --ci
+
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  script:
+    - lerna run test
+
+build:
+  stage: build
+  script:
+    - lerna run --scope=toast-core containerize
+
+deploy_stage:
+  stage: deploy
+  script:
+    - echo "Deploy stage"
+  environment:
+    name: stage
+    url: https://stage.toastcooking.app
+  only:
+  - master
+
+deploy_prod:
+  stage: deploy
+  script:
+    - echo "Deploy prod"
+  environment:
+    name: production
+    url: https://toastcooking.app
+  when: manual
+  only:
+  - master
