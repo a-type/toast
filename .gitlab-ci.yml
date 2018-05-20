@@ -4,6 +4,12 @@ before_script:
   - npm i -g lerna
   - lerna bootstrap --ci
 
+cache:
+  paths:
+  - node_modules/
+  - apps/toast-web/node_modules/
+  - apis/toast-core/node_modules/
+
 stages:
   - test
   - build

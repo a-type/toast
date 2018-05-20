@@ -5,15 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
-
     "build:pack": "webpack --mode production",
     "build": "run-s build:*",
-
     "precommit": "lint-staged",
-
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-
     "test": "echo No tests!"
   },
   "lint-staged": {
@@ -73,7 +69,7 @@
     "prop-types": "^15.6.1",
     "ramda": "^0.25.0",
     "react": "^16.3.0",
-    "react-apollo": "^2.1.0-beta.3",
+    "react-apollo": "^2.1.4",
     "react-collapse": "^4.0.3",
     "react-dom": "^16.3.0",
     "react-motion": "^0.5.2",
