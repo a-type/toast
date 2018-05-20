@@ -1,3 +1,5 @@
+image: node:9
+
 before_script:
   - npm i -g lerna
   - lerna bootstrap --ci
