@@ -1,5 +1,9 @@
 image: node:9
 
+variables:
+  KUBERNETES_VERSION: 1.8.6
+  HELM_VERSION: 2.6.1
+
 before_script:
   - npm i -g lerna
   - lerna bootstrap --ci
@@ -22,6 +26,9 @@ test:
 
 build:
   stage: build
+  image: docker:stable-git
+  services:
+  - docker:stable-dind
   script:
     - lerna run --scope=toast-core containerize
 
@@ -38,6 +45,9 @@ deploy_stage:
 deploy_prod:
   stage: deploy
   script:
+    - echo "deb http://packages.cloud.google.com/apt cloud-sdk-jessie main" | tee /etc/apt/sources.list.d/google-cloud-sdk.list
+    - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    - apt-get update && apt-get install google-cloud-sdk
     - echo "Deploy prod"
   environment:
     name: production
