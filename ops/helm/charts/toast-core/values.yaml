@@ -44,6 +44,10 @@ tolerations: []
 
 affinity: {}
 
+application:
+  track: "stable"
+  neo4j_bolt_host: "bolt://localhost:7687"
+
 neo4j:
   acceptLicenseAgreement: "yes"
   imageTag: "3.4.0-enterprise"
