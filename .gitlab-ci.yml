@@ -13,6 +13,7 @@ test:
   image: registry.gitlab.com/a-type/docker-gitlab-dind-node:latest
   before_script: 
     - npm i -g lerna
+    - lerna bootstrap
   script:
     - lerna run test
   only:
