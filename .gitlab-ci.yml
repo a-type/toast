@@ -10,9 +10,8 @@ stages:
 
 test:
   stage: test
-  image: registry.gitlab.com/a-type/docker-gitlab-dind-node:latest
+  image: us.gcr.io/toast-203322/docker-gitlab-dind-node:latest
   before_script: 
-    - npm i -g lerna
     - lerna bootstrap
   script:
     - lerna run test
@@ -21,7 +20,7 @@ test:
 
 containerize:
   stage: containerize
-  image: registry.gitlab.com/a-type/docker-gitlab-dind-node:latest
+  image: us.gcr.io/toast-203322/docker-gitlab-dind-node:latest
   variables:
     DOCKER_DRIVER: overlay2
   before_script:
@@ -29,7 +28,6 @@ containerize:
     - echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
     - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
     - docker login -u _json_key --password-stdin https://us.gcr.io < ${HOME}/gcloud-service-key.json
-    - npm i -g lerna
   script:
     - lerna run --scope=toast-core containerize
   only:
@@ -37,7 +35,7 @@ containerize:
 
 deploy:
   stage: deploy
-  image: registry.gitlab.com/a-type/docker-gitlab-dind-node:latest
+  image: us.gcr.io/toast-203322/docker-gitlab-dind-node:latest
   variables:
     DOCKER_DRIVER: overlay2
     IMAGE_NAME: toast-core
