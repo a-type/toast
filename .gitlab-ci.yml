@@ -11,7 +11,8 @@ stages:
 test:
   stage: test
   image: registry.gitlab.com/a-type/docker-gitlab-dind-node:latest
-  before_script: npm i -g lerna
+  before_script: 
+    - npm i -g lerna
   script:
     - lerna run test
   only:
