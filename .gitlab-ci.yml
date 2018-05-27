@@ -10,7 +10,7 @@ stages:
 
 test:
   stage: test
-  image: us.gcr.io/toast-203322/docker-gitlab-dind-node:latest
+  image: gforrest/docker-gitlab-dind-node:latest
   before_script:
     - lerna bootstrap
   script:
@@ -20,7 +20,7 @@ test:
 
 containerize:
   stage: containerize
-  image: us.gcr.io/toast-203322/docker-gitlab-dind-node:latest
+  image: gforrest/docker-gitlab-dind-node:latest
   variables:
     DOCKER_DRIVER: overlay2
   before_script:
@@ -35,7 +35,7 @@ containerize:
 
 deploy:
   stage: deploy
-  image: us.gcr.io/toast-203322/docker-gitlab-dind-node:latest
+  image: gforrest/docker-gitlab-dind-node:latest
   variables:
     DOCKER_DRIVER: overlay2
     IMAGE_NAME: toast-core
