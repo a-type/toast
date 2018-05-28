@@ -1,8 +1,7 @@
-image: node:9
+image: gforrest/docker-gitlab-dind-node:latest
 
-before_script:
-  - npm i -g lerna
-  - lerna bootstrap --ci
+variables:
+  KUBERNETES_VERSION: 1.8.6
 
 stages:
   - test
@@ -11,31 +10,42 @@ stages:
 
 test:
   stage: test
+  before_script:
+    - lerna bootstrap
   script:
     - lerna run test
+  only:
+    - branches
 
 build:
   stage: build
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  before_script:
+    # Write our GCP service account private key into a file
+    - echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+    - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - docker login -u _json_key --password-stdin https://us.gcr.io < ${HOME}/gcloud-service-key.json
   script:
     - lerna run --scope=toast-core containerize
-
-deploy_stage:
-  stage: deploy
-  script:
-    - echo "Deploy stage"
-  environment:
-    name: stage
-    url: https://stage.toastcooking.app
   only:
-  - master
+    - master
 
-deploy_prod:
+deploy:
   stage: deploy
+  variables:
+    DOCKER_DRIVER: overlay2
+    IMAGE_NAME: toast-core
+    IMAGE_REPO_SOURCE: us.gcr.io/$GCLOUD_PROJECT_ID/$IMAGE_NAME:latest
+    APP_PORT: 4000
+  before_script:
+    # Write our GCP service account private key into a file
+    - echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+    - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - gcloud config set project $GCLOUD_PROJECT_ID
+    - gcloud config set compute/zone $GCLOUD_COMPUTE_ZONE
+    - source ops/scripts/deploy_functions.sh
   script:
-    - echo "Deploy prod"
-  environment:
-    name: production
-    url: https://toastcooking.app
-  when: manual
-  only:
-  - master
+    - deploy
