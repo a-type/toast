@@ -1,4 +1,4 @@
-image: gforrest/docker-gitlab-dind-node:latest
+image: us.gcr.io/toast-cooking-0/docker-gitlab-dind-node:latest
 
 variables:
   KUBERNETES_VERSION: 1.8.6
