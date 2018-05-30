@@ -22,7 +22,7 @@ build:
   services:
     - docker:dind
   variables:
-    DOCKER_DRIVER: overlay
+    DOCKER_DRIVER: overlay2
   before_script:
     # Write our GCP service account private key into a file
     - echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -36,7 +36,7 @@ build:
 deploy:
   stage: deploy
   variables:
-    DOCKER_DRIVER: overlay
+    DOCKER_DRIVER: overlay2
     IMAGE_NAME: toast-core
     IMAGE_REPO_SOURCE: us.gcr.io/$GCLOUD_PROJECT_ID/$IMAGE_NAME:latest
     APP_PORT: 4000
