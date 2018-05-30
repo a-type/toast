@@ -29,6 +29,7 @@ build:
     # Write our GCP service account private key into a file
     - echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
     - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - lerna bootstrap
   script:
     - docker login -u _json_key -p "$(cat ${HOME}/gcloud-service-key.json)" https://us.gcr.io
     - cd apis/toast-core
