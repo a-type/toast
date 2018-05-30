@@ -20,8 +20,7 @@
     "build-client": "run-s build-client:*",
 
     "containerize:client": "npm run build-client",
-    "containerize:run": "docker build -t us.gcr.io/toast-203322/toast-core .",
-    "containerize:publish": "docker push us.gcr.io/toast-203322/toast-core",
+    "containerize:run": "docker build -t toast-core .",
     "containerize:clean": "rimraf client",
     "containerize": "run-s containerize:*",
 
