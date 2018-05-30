@@ -21,6 +21,8 @@ build:
   stage: build
   services:
     - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
   before_script:
     # Write our GCP service account private key into a file
     - echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
