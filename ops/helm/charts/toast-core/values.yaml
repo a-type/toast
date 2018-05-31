@@ -5,13 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: us.gcr.io/toast-203322/toast-core
+  repository: us.gcr.io/toast-cooking-0/toast-core
   tag: latest
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
-  port: 4000
+  port: 80
 
 ingress:
   enabled: false
@@ -47,6 +47,7 @@ affinity: {}
 application:
   track: "stable"
   neo4j_bolt_host: "bolt://localhost:7687"
+  port: 4000
 
 neo4j:
   acceptLicenseAgreement: "yes"
