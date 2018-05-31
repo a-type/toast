@@ -1,7 +1,6 @@
 image: gforrest/docker-gitlab-dind-node:latest
 
 variables:
-  KUBERNETES_VERSION: 1.8.6
   DOCKER_DRIVER: overlay
   IMAGE_NAME: toast-core
   IMAGE_REPO_SOURCE: us.gcr.io/$GCLOUD_PROJECT_ID/$IMAGE_NAME:latest
@@ -43,6 +42,7 @@ deploy:
   stage: deploy
   variables:
     APP_PORT: 4000
+    NAMESPACE: stage
   before_script:
     - export DOCKER_HOST=tcp://localhost:2375
     # Write our GCP service account private key into a file

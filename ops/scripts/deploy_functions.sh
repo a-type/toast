@@ -1,7 +1,9 @@
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 function deploy() {
-  if kubectl describe deployment $IMAGE_NAME; then
-    kubectl set image deployment/$IMAGE_NAME $IMAGE_NAME=$IMAGE_REPO_SOURCE
+  if helm get $IMAGE_NAME; then
+    helm upgrade $IMAGE_NAME DIR/../helm/charts/toast-core --namespace="$NAMESPACE"
   else
-    kubectl run $IMAGE_NAME --image=$IMAGE_REPO_SOURCE --port $APP_PORT
+    helm install $IMAGE_NAME DIR/../helm/charts/toast-core --namespace="$NAMESPACE"
   fi
 }

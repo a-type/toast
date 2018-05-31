@@ -14,17 +14,15 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
-    - chart-example.local
+    - toastcooking.app
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  - secretName: toastcooking-app-tls
+     hosts:
+       - toastcooking.app
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -48,38 +46,3 @@ application:
   track: "stable"
   neo4j_bolt_host: "bolt://localhost:7687"
   port: 4000
-
-neo4j:
-  acceptLicenseAgreement: "yes"
-  imageTag: "3.4.0-enterprise"
-  core:
-    numberOfServers: 1
-    initContainers:
-    - name: init-plugins
-      image: "appropriate/curl:latest"
-      imagePullPolicy: "IfNotPresent"
-      volumeMounts:
-      - name: plugins
-        mountPath: /plugins
-      command:
-        - "/bin/sh"
-        - "-c"
-        - |
-          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.4.0.1/apoc-3.4.0.1-all.jar -O
-          cp apoc-3.4.0.1-all.jar /plugins/
-            
-  readReplica:
-    numberOfServers: 0
-    initContainers:
-    - name: init-plugins
-      image: "appropriate/curl:latest"
-      imagePullPolicy: "IfNotPresent"
-      volumeMounts:
-      - name: plugins
-        mountPath: /plugins
-      command:
-        - "/bin/sh"
-        - "-c"
-        - |
-          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.4.0.1/apoc-3.4.0.1-all.jar -O
-          cp apoc-3.4.0.1-all.jar /plugins/
