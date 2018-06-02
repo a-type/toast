@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
+import logger from './logger';
 // import { neo4jGraphQLBinding } from 'neo4j-graphql-binding';
 // import { typeDefs } from './schema';
+
+console.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,

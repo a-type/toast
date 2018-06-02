@@ -8,12 +8,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: NodePort
   ports:
-    - port: {{ .Values.service.port }}
+    - port: 443
       targetPort: {{ .Values.application.port }}
       protocol: TCP
-      name: http
+      name: https
   selector:
     app: {{ template "toast-core.name" . }}
     release: {{ .Release.Name }}

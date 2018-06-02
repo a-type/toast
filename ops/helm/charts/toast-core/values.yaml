@@ -2,27 +2,28 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: us.gcr.io/toast-cooking-0/toast-core
   tag: latest
   pullPolicy: IfNotPresent
 
-service:
-  type: NodePort
-  port: 80
-
 ingress:
-  enabled: true
-  annotations: {}
+  staticIp: "toast-primary-ingress"
   path: /
-  hosts:
-    - toastcooking.app
-  tls: []
-  - secretName: toastcooking-app-tls
-     hosts:
-       - toastcooking.app
+  tls:
+    secretName: toastcooking-app-tls-prod
+
+tls:
+  certName: toastcooking-app-prod
+  issuer: letsencrypt-production
+
+db:
+  creds:
+    secretName: neo4j-creds
+  hosts: 
+    bolt: bolt://neo4j-prod-neo4j-core-0.neo4j-prod-neo4j.toast-prod.svc.cluster.local:7687
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -44,5 +45,6 @@ affinity: {}
 
 application:
   track: "stable"
-  neo4j_bolt_host: "bolt://localhost:7687"
   port: 4000
+  jwt:
+    secretName: jwt-token-secret

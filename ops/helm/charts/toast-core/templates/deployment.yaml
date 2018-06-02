@@ -24,6 +24,30 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: https
               containerPort: {{ .Values.application.port }}
               protocol: TCP
+          env:
+          - name: NEO4J_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.db.creds.secretName }}
+                key: user
+          - name: NEO4J_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.db.creds.secretName }}
+                key: password
+          - name: NEO4J_BOLT_HOST
+            value: {{ .Values.db.hosts.bolt }}
+          - name: JWT_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.application.jwt.secretName }}
+                key: tokenSecret
+          - name: PORT
+            value: "{{ .Values.application.port }}"
+      volumes:
+      - name: tls-secret
+        secret:
+          secretName: {{ .Values.ingress.tls.secretName }}

@@ -7,9 +7,6 @@ name: "neo4j"
 
 # Specs for the Neo4j docker image
 image: "neo4j"
-imageTag: "3.4.0-enterprise"
-imagePullPolicy: "IfNotPresent"
-# imagePullSecret: registry-secret
 acceptLicenseAgreement: "yes"
 podDisruptionBudget: {}
   # minAvailable: 2
@@ -22,13 +19,9 @@ authEnabled: true
 ## Defaults to a random 10-character alphanumeric string if not set and authEnabled is true
 # neo4jPassword:
 
-# Specs for the images used for running tests against the Helm package
-testImage: "markhneedham/k8s-kubectl"
-testImageTag: "master"
-
 # Cores
 core:
-  numberOfServers: 1
+  numberOfServers: 3
   persistentVolume:
 
     ## core server data Persistent Volume mount root path
@@ -54,11 +47,13 @@ core:
 
   ## Pass extra environment variables to the Neo4j container.
   ##
-  # extraVars:
-  # - name: EXTRA_VAR_1
-  #   value: extra-var-value-1
-  # - name: EXTRA_VAR_2
-  #   value: extra-var-value-2
+  extraVars:
+  - name: NEO4J_dbms_security_procedures_unrestricted
+    value: apoc.\\\*
+  - name: NEO4J_apoc_autoIndex_enabled
+    value: "true"
+  - name: NEO4J_apoc_autoIndex_async
+    value: "true"
 
   sidecarContainers: []
   ## Additional containers to be added to the Neo4j core pod.
@@ -76,19 +71,21 @@ core:
         - "/bin/sh"
         - "-c"
         - |
-          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.4.0.1/apoc-3.4.0.1-all.jar -O
-          cp apoc-3.4.0.1-all.jar /plugins/
+          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.3.0.3/apoc-3.3.0.3-all.jar -O
+          cp apoc-3.3.0.3-all.jar /plugins/
 
 # Read Replicas
 readReplica:
   numberOfServers: 0
   ## Pass extra environment variables to the Neo4j container.
   ##
-  # extraVars:
-  # - name: EXTRA_VAR_1
-  #   value: extra-var-value-1
-  # - name: EXTRA_VAR_2
-  #   value: extra-var-value-2
+  extraVars:
+  - name: NEO4J_dbms_security_procedures_unrestricted
+    value: apoc.\\\*
+  - name: NEO4J_apoc_autoIndex_enabled
+    value: "true"
+  - name: NEO4J_apoc_autoIndex_async
+    value: "true"
 
   sidecarContainers: []
   ## Additional containers to be added to the Neo4j replica pod.
@@ -106,8 +103,8 @@ readReplica:
         - "/bin/sh"
         - "-c"
         - |
-          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.4.0.1/apoc-3.4.0.1-all.jar -O
-          cp apoc-3.4.0.1-all.jar /plugins/
+          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.3.0.3/apoc-3.3.0.3-all.jar -O
+          cp apoc-3.3.0.3-all.jar /plugins/
 
 resources: {}
 # limits:

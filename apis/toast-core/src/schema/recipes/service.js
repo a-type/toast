@@ -1,6 +1,6 @@
 import { pick } from 'ramda';
 import uuid from 'uuid';
-import s3 from 'services/s3';
+import gcloudStorage from 'services/gcloudStorage';
 
 export const createRecipe = async (user, { title, description }, ctx) => {
   const session = ctx.getSession();
@@ -170,7 +170,7 @@ export const updateRecipe = async (args, ctx) => {
 
     if (args.input.coverImage) {
       const file = await args.input.coverImage.file;
-      const uploaded = await s3.upload(file, 'images');
+      const uploaded = await gcloudStorage.upload(file, 'images');
       await tx.run(
         `
         MATCH (r:Recipe {id: $id})
