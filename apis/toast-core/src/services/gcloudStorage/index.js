@@ -20,7 +20,12 @@ export default {
 
     return new Promise((resolve, reject) => {
       stream
-        .pipe(file.createWriteStream({ public: true }))
+        .pipe(
+          file.createWriteStream({
+            public: true,
+            metadata: { contentType: mimetype }
+          })
+        )
         .on('error', reject)
         .on('finish', () => {
           return {
