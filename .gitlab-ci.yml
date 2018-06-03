@@ -44,7 +44,7 @@ deploy:
   stage: deploy
   variables:
     APP_PORT: 4000
-    NAMESPACE: stage
+    NAMESPACE: toast-prod
   before_script:
     - export DOCKER_HOST=tcp://localhost:2375
     # Write our GCP service account private key into a file
