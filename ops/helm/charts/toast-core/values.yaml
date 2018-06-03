@@ -23,7 +23,7 @@ db:
   creds:
     secretName: neo4j-creds
   hosts: 
-    bolt: bolt://neo4j-prod-neo4j-core-0.neo4j-prod-neo4j.toast-prod.svc.cluster.local:7687
+    bolt: bolt+routing://neo4j-prod-neo4j-core-0.neo4j-prod-neo4j.toast-prod.svc.cluster.local:7687
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

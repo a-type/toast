@@ -16,12 +16,12 @@ export default {
     const directory = config.gcloud.storage.directories[mediaType];
     const fileName = `${directory}/${filename}`;
 
-    const file = storage.bucket(bucket).file(fileName);
+    const gFile = storage.bucket(bucket).file(fileName);
 
     return new Promise((resolve, reject) => {
       stream
         .pipe(
-          file.createWriteStream({
+          gFile.createWriteStream({
             public: true,
             metadata: { contentType: mimetype }
           })

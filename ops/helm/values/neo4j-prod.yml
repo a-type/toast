@@ -21,7 +21,7 @@ authEnabled: true
 
 # Cores
 core:
-  numberOfServers: 3
+  numberOfServers: 2
   persistentVolume:
 
     ## core server data Persistent Volume mount root path
@@ -49,7 +49,7 @@ core:
   ##
   extraVars:
   - name: NEO4J_dbms_security_procedures_unrestricted
-    value: apoc.\\\*
+    value: "apoc.*"
   - name: NEO4J_apoc_autoIndex_enabled
     value: "true"
   - name: NEO4J_apoc_autoIndex_async
@@ -81,7 +81,7 @@ readReplica:
   ##
   extraVars:
   - name: NEO4J_dbms_security_procedures_unrestricted
-    value: apoc.\\\*
+    value: "apoc.*"
   - name: NEO4J_apoc_autoIndex_enabled
     value: "true"
   - name: NEO4J_apoc_autoIndex_async
