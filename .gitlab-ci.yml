@@ -5,6 +5,7 @@ variables:
   IMAGE_NAME: toast-core
   IMAGE_REPO_SOURCE: us.gcr.io/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_REF_SLUG_$CI_COMMIT_SHA
   TILLER_NAMESPACE: "kube-system"
+  CLUSTER_NAME: toast-primary
 
 stages:
   - test
@@ -51,6 +52,8 @@ deploy:
     - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
     - gcloud config set project $GCLOUD_PROJECT_ID
     - gcloud config set compute/zone $GCLOUD_COMPUTE_ZONE
+    - gcloud container clusters get-credentials $CLUSTER_NAME --zone us-east1-b --project $GCLOUD_PROJECT_ID
+    - kubectl config current-context
     - source ops/scripts/deploy_functions.sh
   script:
     - deploy
