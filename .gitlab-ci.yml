@@ -1,4 +1,4 @@
-image: gforrest/docker-gitlab-dind-node:latest
+image: us.gcr.io/toast-cooking-0/docker-gitlab-dind-node:latest
 
 variables:
   DOCKER_DRIVER: overlay
