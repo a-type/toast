@@ -8,12 +8,12 @@ import Empty from './Empty';
 
 export default () => (
   <Consumer>
-    {({ state: { results, loading } }: SearchContext) => {
+    {({ state: { results, loading, term } }: SearchContext) => {
       if (loading) {
         return <Loader size="80px" />;
       }
 
-      if (results && results.length === 0) {
+      if (results && term.length > 2 && results.length === 0) {
         return <Empty />;
       }
 
