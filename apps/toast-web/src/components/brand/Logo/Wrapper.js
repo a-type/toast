@@ -6,4 +6,5 @@ export default styled.div`
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  padding: 10px;
 `;
