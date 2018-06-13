@@ -10,7 +10,7 @@ export default styled.div`
     padding: 20px;
   }
 
-  & > *:first-child {
-    border-right: 1px dashed var(--color-gray);
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
   }
 `;

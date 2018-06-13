@@ -15,7 +15,7 @@ export default ({
       left: 0,
       right: 0,
       backgroundImage: `url(${imageSrc})`,
-      height: '50vh',
+      height: 'calc(var(--rhythm) * 20)',
       backgroundSize: 'cover',
       zIndex: -1000,
     }}

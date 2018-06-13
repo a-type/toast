@@ -8,7 +8,7 @@ export default styled.div`
     'details'
     'ingredients'
     'steps';
-  grid-template-rows: 30vh repeat(3, auto);
+  grid-template-rows: calc(var(--rhythm) * 15) repeat(3, auto);
   padding-left: ${LARGE_PADDING_LEFT}px;
 
   @media (max-width: ${LARGE_BREAKPOINT}px) {

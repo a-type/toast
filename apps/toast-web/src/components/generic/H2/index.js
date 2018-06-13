@@ -5,5 +5,5 @@ export default styled.h2`
   font-family: var(--font-fancy);
   font-weight: var(--normal);
   font-size: var(--font-size-lg);
-  ${getCss('lg', { top: 1, bottom: 1 })};
+  ${props => getCss('lg', props.spacing || { top: 1, bottom: 1 })};
 `;

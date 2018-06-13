@@ -1,3 +1,3 @@
-import styled from 'styled-components';
+import { Span } from 'components/generic';
 
-export default styled.span``;
+export default Span;

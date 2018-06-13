@@ -7,7 +7,8 @@ export default styled.div`
   grid-area: details / details / steps / steps;
   background: var(--color-white);
   width: ${CONTENT_WIDTH}px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px;
+  border: 1px solid var(--color-gray-light);
 
   @media (max-width: ${LARGE_BREAKPOINT}px) {
     width: auto;

@@ -18,10 +18,7 @@ export default ({ steps }: { steps: Array<RecipeStep> }) => (
         config={config.slow}
       >
         {steps.map(({ index, step: { id, text } }) => styles => (
-          <animated.li
-            style={{ ...styles, overflowY: 'hidden', padding: '10px' }}
-            key={id}
-          >
+          <animated.li style={{ ...styles, overflowY: 'hidden' }} key={id}>
             {index ? index + 1 : 1}. {text}
           </animated.li>
         ))}

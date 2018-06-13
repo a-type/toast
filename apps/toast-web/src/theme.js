@@ -18,6 +18,8 @@ export const capHeights = {
 
 injectGlobal`
 :root {
+  --rhythm: ${rhythmHeight}px;
+
   --font-fancy: "Prata", serif;
   --font-default: "Noto Serif", serif;
 
@@ -69,10 +71,6 @@ html, body {
   font-family: var(--font-default);
   font-weight: var(--normal);
   line-height: ${rhythmHeight}px;
-
-  @media screen only and (max-device-width: 600px) {
-    font-size: 24px;
-  }
 }
 
 html, body, #main {

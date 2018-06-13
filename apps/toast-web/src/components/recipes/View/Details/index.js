@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import Layout from './Layout';
-import H1 from 'components/generic/H1';
-import Link from 'components/generic/Link';
+import { P, Link, H1 } from 'components/generic';
 import { type Recipe } from 'types';
 
 export default ({ recipe }: { recipe: Recipe }) => {
@@ -14,12 +13,12 @@ export default ({ recipe }: { recipe: Recipe }) => {
 
   return (
     <Layout>
-      <H1>{title}</H1>
-      <span>
+      <H1 spacing={{ bottom: 0 }}>{title}</H1>
+      <P spacing={{ bottom: 1 }}>
         by{' '}
         <Link to={`/authors/${author.id}`}>{author.name || 'Anonymous'}</Link>
-      </span>
-      <p>{description || 'No description'}</p>
+      </P>
+      <P>{description || 'No description'}</P>
     </Layout>
   );
 };

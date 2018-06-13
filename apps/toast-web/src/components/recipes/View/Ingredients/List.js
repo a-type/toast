@@ -4,7 +4,7 @@ import Units from './Item/Units';
 export default styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-gap: 10px;
+  grid-gap: var(--spacing-sm);
   align-items: baseline;
 
   & > ${Units} {

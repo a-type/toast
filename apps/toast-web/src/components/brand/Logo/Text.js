@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 export default styled.h1`
-  margin-top: calc(-0.21em + 10px);
-  margin-bottom: calc(-0.37em + 10px);
+  margin-top: 1px;
+  margin-bottom: -6px;
   padding: 0;
   font-family: var(--font-fancy);
-  font-size: 2.5vh;
+  font-size: var(--font-size-lg);
   font-weight: var(--normal);
   color: var(--color-white);
   position: relative;

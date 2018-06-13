@@ -11,6 +11,8 @@ export default css`
   }
 
   & > * {
-    padding: 20px;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--rhythm);
   }
 `;
