@@ -1,13 +1,15 @@
 import styled from 'styled-components';
+import { getCss } from 'components/utils/rhythm';
 
-const SIZE = '20px';
+const SIZE = '22px';
 
 export default styled.label`
   cursor: pointer;
   position: relative;
   user-select: none;
   padding: 0 0 0 calc(${SIZE} + 10px);
-  display: inline-block;
+  display: block;
+  font-size: var(--font-size-md);
 
   &::before,
   &::after {
@@ -50,4 +52,6 @@ export default styled.label`
   input:checked + &::after {
     background: var(--color-brand);
   }
+
+  ${getCss('md')};
 `;

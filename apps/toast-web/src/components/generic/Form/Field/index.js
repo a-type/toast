@@ -5,17 +5,22 @@ import Label from './styles/Label';
 
 const getHtmlFor = children => {
   if (children.props && children.props.id) {
-    return ((children.props.id: any): string);
+    return children.props.id;
   }
 };
-const renderLabel = ({ style, fieldProps }) =>
+const renderLabel = ({ gridArea, fieldProps }) =>
   fieldProps.label && (
     <Label
-      style={style}
+      style={{ gridArea }}
       htmlFor={fieldProps.fieldId || getHtmlFor(fieldProps.children)}
     >
       {fieldProps.label}
     </Label>
+  );
+
+const renderContent = ({ gridArea, fieldProps }) =>
+  fieldProps.children && (
+    <div style={{ gridArea, height: '48px' }}>{fieldProps.children}</div>
   );
 
 Field.Group = withProps({
@@ -24,7 +29,10 @@ Field.Group = withProps({
       ...Field.Group.defaultFieldElements[0],
       render: renderLabel,
     },
-    Field.Group.defaultFieldElements[1],
+    {
+      ...Field.Group.defaultFieldElements[1],
+      render: renderContent,
+    },
   ],
 })(Field.Group);
 

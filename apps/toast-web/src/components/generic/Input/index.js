@@ -1,15 +1,17 @@
+import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { loading } from '../common/effects';
+import { getCss } from 'components/utils/rhythm';
 
 const sharedSolidStyles = css`
-  padding: 10px 15px;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
   background: var(--color-gray-lightest);
   border-radius: 6px;
   outline: none;
   border: 1px solid var(--color-gray-lightest);
   font-family: var(--font-default);
-  width: 100%;
+  display: inline-block;
+  vertical-align: top;
 
   &:disabled {
     background: var(--color-disabled-background);
@@ -28,6 +30,10 @@ const sharedSolidStyles = css`
     `
     border-color: var(--color-negative);
   `};
+
+  ${getCss(24)};
+  padding: 5px 11px;
+  margin-bottom: -12px;
 `;
 
 const Input = styled.input`
@@ -39,14 +45,17 @@ Input.defaultProps = {
 };
 
 Input.H1 = styled(Input)`
-  font-size: 1.8rem;
+  font-size: var(--font-size-xl);
   font-family: var(--font-fancy);
-  -webkit-margin-after: 0.67em;
-  -webkit-margin-before: 0.67em;
+  display: inline-block;
+  margin-top: 6px;
+  margin-bottom: -14px;
+  padding-bottom: 0;
 `;
 
 Input.Block = styled('textarea')`
   ${sharedSolidStyles} width: 100%;
+  margin-bottom: auto;
 `;
 
 export default Input;

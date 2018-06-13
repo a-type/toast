@@ -21,7 +21,11 @@ import {
   Divider,
   Checkbox,
   Form,
+  P,
+  H1,
+  H2,
 } from 'components/generic';
+import { Logo } from 'components/brand';
 
 storiesOf('Button', module).add('demo', () => (
   <Grid>
@@ -60,13 +64,6 @@ storiesOf('Link', module).add('demo', () => (
   </BrowserRouter>
 ));
 
-storiesOf('Pill', module).add('demo', () => (
-  <Grid>
-    <Pill onClick={action('clicked')}>Interactive</Pill>
-    <Pill.Border>Non-interactive</Pill.Border>
-  </Grid>
-));
-
 storiesOf('Checkbox', module).add('demo', () => (
   <Grid>
     <Checkbox value="checkbox">Checkbox</Checkbox>
@@ -94,3 +91,78 @@ storiesOf('Form', module).add('demo', () => (
     </Form>
   </div>
 ));
+
+storiesOf('Logo', module).add('demo', () => (
+  <div style={{ padding: '30px', display: 'flex' }}>
+    <Logo />
+  </div>
+));
+
+storiesOf('Vertical rhythm', module)
+  .add('text', () => (
+    <BrowserRouter>
+      <div
+        style={{
+          background:
+            'linear-gradient(#b3075332, #b3075332 1px, transparent 1px)',
+          backgroundSize: '1px 24px',
+          paddingBottom: '24px',
+          overflow: 'hidden',
+        }}
+      >
+        <P>Paragraph, one line</P>
+        <H1>Heading 1</H1>
+        <P>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
+          gravida eget massa a tincidunt. Morbi interdum elit at sapien
+          vestibulum sodales.
+        </P>
+        <H2>Heading 2</H2>
+        <P>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
+          gravida eget massa a tincidunt. Morbi interdum elit at sapien
+          vestibulum sodales. <Link>Link to somewhere</Link> ipsum dolor sit
+          amet, consectetur adipiscing elit. Quisque gravida
+        </P>
+        <P textSize="sm">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
+          gravida eget massa a tincidunt. Morbi interdum elit at sapien
+          vestibulum sodales. <Link>Link to somewhere</Link> ipsum dolor sit
+          amet, consectetur adipiscing elit. Quisque gravida
+        </P>
+        <br />
+        <Button>Test button</Button>
+        <H1>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
+          gravida eget massa a tincidunt. Morbi interdum elit at sapien
+          vestibulum sodales.
+        </H1>
+        <H2>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
+          gravida eget massa a tincidunt. Morbi interdum elit at sapien
+          vestibulum sodales.
+        </H2>
+      </div>
+    </BrowserRouter>
+  ))
+  .add('inputs', () => (
+    <div
+      style={{
+        background:
+          'linear-gradient(#b3075332, #b3075332 1px, transparent 1px)',
+        backgroundSize: '1px 24px',
+        paddingBottom: '24px',
+        overflow: 'hidden',
+        paddingLeft: '8px',
+        paddingRight: '8px',
+      }}
+    >
+      <Input value="Foo Bar Baz" />
+      <div style={{ height: '24px' }} />
+      <Input.H1 value="Header style!" />
+      <div style={{ height: '24px' }} />
+      <Checkbox value="foo">A checkbox!</Checkbox>
+      <div style={{ height: '24px' }} />
+      <Input.Block value="Block style!" />
+    </div>
+  ));

@@ -1,18 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from '../Icon';
+import { getCss } from 'components/utils/rhythm';
 
 const Button = styled.button`
-  padding: 5px 15px;
   border: 1px solid var(--color-gray);
   color: var(--color-gray);
   cursor: pointer;
   background: var(--color-white);
   font-family: var(--font-default);
   font-style: italic;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
   border-radius: 6px;
   transition: 0.25s ease-in-out;
+  display: inline-block;
+  vertical-align: top;
 
   &:hover,
   &:focus {
@@ -28,6 +30,10 @@ const Button = styled.button`
     background: var(--color-brand-light);
     color: var(--color-dark);
   }
+
+  ${getCss(24)};
+  padding: 5px 11px;
+  margin-bottom: -12px;
 `;
 
 Button.Ghost = styled(Button)`

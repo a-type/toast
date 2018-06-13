@@ -1,11 +1,30 @@
 import { injectGlobal } from 'styled-components';
 
+export const rhythmHeight = 24;
+
+export const fontSizes = {
+  sm: 14,
+  md: 18,
+  lg: 24,
+  xl: 36,
+};
+
+export const capHeights = {
+  sm: 0.7142857142857143,
+  md: 0.7777777777777778,
+  lg: 0.6,
+  xl: 0.8666666666666666,
+};
+
 injectGlobal`
 :root {
   --font-fancy: "Prata", serif;
   --font-default: "Noto Serif", serif;
 
-  --font-size-default: 18px;
+  --font-size-md: ${fontSizes.md}px;
+  --font-size-sm: ${fontSizes.sm}px;
+  --font-size-lg: ${fontSizes.lg}px;
+  --font-size-xl: ${fontSizes.xl}px;
 
   --normal: 400;
   --light: 200;
@@ -35,14 +54,21 @@ injectGlobal`
   --color-negative-dark: #6d0043;
 
   --color-dark: #280f34;
+
+  --spacing-md: ${rhythmHeight}px;
+  --spacing-sm: ${Math.round(rhythmHeight / 2)}px;
+  --spacing-lg: ${rhythmHeight * 2}px;
+  --spacing-xs: ${Math.round(rhythmHeight / 4)}px;
+  --spacing-xl: ${rhythmHeight * 4}px;
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  font-size: var(--font-size-default);
+  font-size: var(--font-size-md);
   font-family: var(--font-default);
   font-weight: var(--normal);
+  line-height: ${rhythmHeight}px;
 
   @media screen only and (max-device-width: 600px) {
     font-size: 24px;
@@ -51,6 +77,11 @@ html, body {
 
 html, body, #main {
   height: 100%;
+}
+
+br {
+  height: ${rhythmHeight}px;
+  display: block;
 }
 
 * {

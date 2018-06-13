@@ -25,9 +25,29 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: {
-          loader: 'style-loader',
-        },
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(gif|png|jpe?g|svg|eot|woff2?|ttf)$/i,
+        use: [
+          'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              bypassOnDebug: true,
+            },
+          },
+        ],
       },
     ],
   },

@@ -72,7 +72,7 @@ export default class Checkbox extends React.Component {
     const id = this.props.id || this.naturalId;
 
     return (
-      <div style={{ display: 'block', position: 'relative' }}>
+      <div>
         <Input
           id={id}
           className={className}

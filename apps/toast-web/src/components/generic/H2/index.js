@@ -1,7 +1,9 @@
 import styled from 'styled-components';
+import { getCss } from 'components/utils/rhythm';
 
 export default styled.h2`
   font-family: var(--font-fancy);
   font-weight: var(--normal);
-  font-size: 1.5rem;
+  font-size: var(--font-size-lg);
+  ${getCss('lg', { top: 1, bottom: 1 })};
 `;
