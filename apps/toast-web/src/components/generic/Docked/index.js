@@ -3,6 +3,31 @@ import PropTypes from 'prop-types';
 import Portal from './Portal';
 
 /**
+ * The default calcDockedStyles is configured for use as a search suggestions box
+ * or a Select.
+ */
+const defaultCalcDockedStyles = ({
+  anchorWidth,
+  availableHeight,
+  anchorPoint,
+  attachment,
+  dockedProps,
+}) => ({
+  position: 'absolute',
+  top: anchorPoint.top + (attachment === 'above' ? -6 : 6),
+  left: anchorPoint.left,
+  width: anchorWidth,
+  maxHeight: availableHeight,
+  transform: attachment === 'above' ? 'translateY(-100%)' : 'none',
+  backgroundColor: 'var(--color-gray-lightest)',
+  overflowY: 'auto',
+  overflowX: 'visible',
+  borderRadius: '6px',
+  boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.15)',
+  zIndex: 100000,
+});
+
+/**
  * The Docked component renders an absolutely-positioned 'docked'
  * overlay anchored against a target element. It was designed to
  * render 'dropdown' style lists for search/select inputs. It uses
@@ -66,6 +91,17 @@ class Docked extends React.Component {
      */
     isDockedVisible: PropTypes.bool,
     /**
+     * Computes the style values which will be passed to the root docked
+     * element. The function is called with many provided values for you
+     * to use: ({ anchorWidth, availableHeight, anchorPoint, attachment, dockedProps }).
+     * - anchorWidth: the pixel width of the anchor element
+     * - availableHeight: available screen space which the docked element can consume before reaching the screen border
+     * - anchorPoint: { top, left } of the point on the anchor element which the docked element is attached to
+     * - attachment: the current attachment ('above' / 'below') value
+     * - dockedProps: the props passed to this component to use as you like
+     */
+    calcDockedStyles: PropTypes.func,
+    /**
      * Can be used to override some global environmental variables like
      * the window reference.
      */
@@ -77,12 +113,13 @@ class Docked extends React.Component {
   static defaultProps = {
     attachment: 'below',
     isAttachmentDynamic: true,
-    maxHeight: 300,
+    maxHeight: 800,
     buffer: 20,
     pollForPositionChanges: false,
     pollingInterval: 100,
     isDockedVisible: true,
     scrollContextSelector: 'body',
+    calcDockedStyles: defaultCalcDockedStyles,
     environment: { window },
   };
 
@@ -144,12 +181,12 @@ class Docked extends React.Component {
     const anchorLeft = anchorBounds.left - contextBounds.left;
 
     const topAnchorPoint = {
-      x: anchorLeft,
-      y: anchorTop,
+      left: anchorLeft,
+      top: anchorTop,
     };
     const bottomAnchorPoint = {
-      x: anchorLeft,
-      y: anchorTop + anchorBounds.height,
+      left: anchorLeft,
+      top: anchorTop + anchorBounds.height,
     };
 
     const spaceBelow = contextBounds.height - (anchorTop + anchorBounds.height);
@@ -210,25 +247,13 @@ class Docked extends React.Component {
       return { display: 'none' };
     }
 
-    const transform =
-      currentAttachment === 'above' ? 'translateY(-100%)' : 'none';
-
-    return {
-      position: 'absolute',
-      top: anchorPoint.y + (currentAttachment === 'above' ? 6 : -6),
-      left: anchorPoint.x,
-      width,
-      maxHeight: height,
-      transform,
-      backgroundColor: 'var(--color-gray-lightest)',
-      overflowY: 'auto',
-      border: `1px dashed var(--color-gray-medium)`,
-      padding: '10px 10px',
-      borderRadius: '0 0 6px 6px',
-      [currentAttachment === 'above' ? 'borderBottom' : 'borderTop']: '0',
-      boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.15)',
-      zIndex: 100000,
-    };
+    return this.props.calcDockedStyles({
+      attachment: currentAttachment,
+      anchorPoint,
+      anchorWidth: width,
+      availableHeight: height,
+      dockedProps: this.props,
+    });
   };
 
   renderDocked = children =>

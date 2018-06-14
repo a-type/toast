@@ -12,5 +12,9 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"javascript.format.enable": true,
+		"javascript.validate.enable": false
+	}
 }
