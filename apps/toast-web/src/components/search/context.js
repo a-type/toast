@@ -1,45 +1,92 @@
 // @flow
 import React, { createContext } from 'react';
 import client from 'apolloClient';
-import { Recipes } from 'queries/Search';
 import { type Ingredient, type Recipe } from 'types';
+import { gql } from 'apollo-boost';
+import { withRouter } from 'react-router-dom';
 
+export const Recipes = gql`
+  query SearchRecipes($input: RecipeSearchInput!) {
+    searchRecipes(input: $input) {
+      total
+      items {
+        id
+        title
+        coverImage {
+          id
+          url
+        }
+      }
+    }
+  }
+`;
+
+export const Ingredients = gql`
+  query SearchIngredients($input: IngredientSearchInput!) {
+    searchIngredients(input: $input) {
+      total
+      items {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export type IngredientSuggestion = {
+  ingredient: Ingredient,
+  onInclude(): mixed,
+  onExclude(): mixed,
+};
+export type SearchSuggestions = {
+  ingredients: IngredientSuggestion[],
+};
+export type IngredientFilter = {
+  ingredient: Ingredient,
+  type: 'include' | 'exclude',
+  onRemove(): mixed,
+};
+export type SearchFilters = {
+  ingredients: Array<IngredientFilter>,
+};
 export type SearchContextState = {
-  ingredients: {
-    include: Array<Ingredient>,
-    exclude: Array<Ingredient>,
-  },
+  filters: SearchFilters,
+  inputValue: string,
   term: string,
   loading: boolean,
   error: ?string,
-  results: Array<Recipe>,
+  suggestions: SearchSuggestions,
+  results: Recipe[],
 };
 export type SearchContextActions = {
-  includeIngredient(ingredient: Ingredient): any,
-  excludeIngredient(ingredient: Ingredient): any,
-  removeIncludedIngredient(ingredient: Ingredient): any,
-  removeExcludedIngredient(ingredient: Ingredient): any,
+  onInputChange(value: string): any,
   setTerm(term: string): any,
-  onTermFocus(): any,
-  onTermBlur(): any,
+  onInputFocus(): any,
+  onInputBlur(): any,
+  reset(): any,
 };
 export type SearchContext = {
   state: SearchContextState & { active: boolean },
   actions: SearchContextActions,
 };
 
-type InternalState = SearchContextState & { isTermFocused: boolean };
+type InternalState = SearchContextState & { isInputFocused: boolean };
 
-const initialState = {
-  ingredients: {
-    include: [],
-    exclude: [],
+type Props = { match: mixed, location: mixed, history: mixed };
+
+const initialState: SearchContextState = {
+  filters: {
+    ingredients: [],
   },
   term: '',
+  inputValue: '',
   loading: false,
   results: [],
+  suggestions: {
+    ingredients: [],
+  },
   error: null,
-  isTermFocused: false,
+  isInputFocused: false,
 };
 
 const context = createContext({ state: initialState });
@@ -47,150 +94,177 @@ const InternalProvider = context.Provider;
 
 const SEARCH_TIMER = 1000;
 
-export class Provider extends React.PureComponent<*, InternalState> {
+class SearchProvider extends React.PureComponent<Props, InternalState> {
   state = initialState;
-  searchTimeout: TimeoutID | null = null;
+  suggestionTimeout: TimeoutID | null = null;
 
   componentDidUpdate(_oldProps: {}, oldState: InternalState) {
-    if (this.searchTimeout) {
-      clearTimeout(this.searchTimeout);
+    if (this.suggestionTimeout) {
+      clearTimeout(this.suggestionTimeout);
     }
 
     if (
-      (oldState.term !== this.state.term ||
-        oldState.ingredients.include.length !==
-          this.state.ingredients.include.length ||
-        oldState.ingredients.exclude.length !==
-          this.state.ingredients.exclude.length) &&
-      (this.state.term.length > 0 ||
-        this.state.ingredients.exclude.length > 0 ||
-        this.state.ingredients.include.length > 0)
+      oldState.inputValue !== this.state.inputValue &&
+      this.state.inputValue.length > 2
     ) {
-      this.startSearchTimer();
+      this.startSuggestionsTimer();
     }
   }
 
   componentWillUnmount() {
-    if (this.searchTimeout) {
-      clearTimeout(this.searchTimeout);
+    if (this.suggestionTimeout) {
+      clearTimeout(this.suggestionTimeout);
     }
   }
 
-  startSearchTimer = () => {
-    if (this.searchTimeout) {
-      clearTimeout(this.searchTimeout);
+  startSuggestionsTimer = () => {
+    if (this.suggestionTimeout) {
+      clearTimeout(this.suggestionTimeout);
     }
-    this.searchTimeout = setTimeout(this.search, SEARCH_TIMER);
+    this.suggestionTimeout = setTimeout(this.fetchSuggestions, SEARCH_TIMER);
   };
 
-  search = async () => {
+  fetchSuggestions = async () => {
     try {
       this.setState({ loading: true });
       const { data } = await client.query({
-        query: Recipes,
+        query: Ingredients,
         variables: {
           input: {
-            term: this.state.term,
-            ingredients: {
-              include: this.state.ingredients.include.map(ing => ing.id),
-              exclude: this.state.ingredients.exclude.map(ing => ing.id),
-            },
+            term: this.state.inputValue,
           },
         },
       });
-      this.setState({ results: data.searchRecipes.items, loading: false });
+      const ingredientSuggestions = data.searchIngredients.items.map(
+        ingredient => ({
+          ingredient,
+          onInclude: () => this.addIngredientFilter(ingredient, 'include'),
+          onExclude: () => this.addIngredientFilter(ingredient, 'exclude'),
+        }),
+      );
+      this.setState(({ suggestions }) => ({
+        suggestions: { ...suggestions, ingredients: ingredientSuggestions },
+        loading: false,
+      }));
     } catch (err) {
       this.setState({ loading: false, error: err.message });
     }
   };
 
-  handleIngredientInclude = (ingredient: Ingredient) => {
-    this.setState(({ ingredients }) => ({
-      ingredients: {
-        include: ingredients.include.concat(ingredient),
-        exclude: ingredients.exclude,
-      },
-    }));
-  };
-  handleIncludeRemoved = (ingredient: Ingredient) => {
-    this.setState(({ ingredients }) => {
-      if (
-        ingredients.exclude.length === 0 &&
-        ingredients.include.every(value => value.id === ingredient.id)
-      ) {
-        return {
-          ingredients: {
-            include: [],
-            exclude: [],
-          },
-        };
-      }
-      return {
-        ingredients: {
-          include: ingredients.include.filter(
-            value => value.id !== ingredient.id,
-          ),
-          exclude: ingredients.exclude,
+  withoutIngredient = (
+    ingredientFilters: IngredientFilter[],
+    ingredient: Ingredient,
+  ): IngredientFilter[] =>
+    ingredientFilters.filter(filter => filter.ingredient.id !== ingredient.id);
+
+  addIngredientFilter = (
+    ingredient: Ingredient,
+    type: 'include' | 'exclude',
+  ) => {
+    const ingredientFilter: IngredientFilter = {
+      ingredient,
+      type,
+      onRemove: () => this.removeIngredientFilter(ingredient),
+    };
+    this.setState(
+      ({ filters }) => ({
+        filters: {
+          ...filters,
+          ingredients: this.withoutIngredient(
+            filters.ingredients,
+            ingredient,
+          ).concat(ingredientFilter),
         },
-      };
-    });
+        inputValue: '',
+      }),
+      this.doSearch,
+    );
   };
 
-  handleIngredientExclude = (ingredient: Ingredient) => {
-    this.setState(({ ingredients }) => ({
-      ingredients: {
-        include: ingredients.include,
-        exclude: ingredients.exclude.concat(ingredient),
-      },
-    }));
-  };
-  handleExcludeRemoved = (ingredient: Ingredient) => {
-    this.setState(({ ingredients }) => {
-      if (
-        ingredients.include.length === 0 &&
-        ingredients.exclude.every(value => value.id === ingredient.id)
-      ) {
-        return {
-          ingredients: {
-            include: [],
-            exclude: [],
-          },
-        };
-      }
-      return {
-        ingredients: {
-          exclude: ingredients.exclude.filter(
-            value => value.id !== ingredient.id,
-          ),
-          include: ingredients.include,
+  removeIngredientFilter = (ingredient: Ingredient) =>
+    this.setState(
+      ({ filters }) => ({
+        filters: {
+          ...filters,
+          ingredients: this.withoutIngredient(filters.ingredients, ingredient),
         },
-      };
-    });
-  };
+      }),
+      this.doSearch,
+    );
 
   setTerm = (term: string) => {
-    this.setState({ term });
+    this.setState({ term }, this.doSearch);
   };
-  handleTermFocus = () => this.setState({ isTermFocused: true });
-  handleTermBlur = () => this.setState({ isTermFocused: false });
+
+  handleInputChange = (ev: InputEvent) =>
+    this.setState({ inputValue: ev.target.value });
+  handleInputFocus = () => this.setState({ isInputFocused: true });
+  handleInputBlur = () => this.setState({ isInputFocused: false });
+
+  sortIngredientFilters = (ingredientFilters: IngredientFilter[]) =>
+    ingredientFilters.reduce(
+      (filters, filter) => {
+        filters[filter.type].push(filter.ingredient.id);
+        return filters;
+      },
+      { include: [], exclude: [] },
+    );
+
+  doSearch = async () => {
+    const { term, filters } = this.state;
+
+    if (term.length === 0 && filters.ingredients.length === 0) {
+      this.setState({ results: [] });
+      return;
+    }
+
+    const { location, history } = this.props;
+    const ingredients = this.sortIngredientFilters(filters.ingredients);
+    console.info(ingredients);
+    const input = {
+      term,
+      ingredients,
+    };
+
+    try {
+      const { data } = await client.query({
+        query: Recipes,
+        variables: {
+          input,
+        },
+      });
+      const results = data.searchRecipes.items;
+      this.setState({
+        results,
+      });
+
+      if (location.pathname !== '/search') {
+        history.push('/search');
+      }
+    } catch (err) {
+      this.setState({ loading: false, error: err.message });
+    }
+  };
+
+  reset = () => {
+    this.setState(initialState);
+  };
 
   actions = {
-    includeIngredient: this.handleIngredientInclude,
-    excludeIngredient: this.handleIngredientExclude,
-    removeIncludedIngredient: this.handleIncludeRemoved,
-    removeExcludedIngredient: this.handleExcludeRemoved,
     setTerm: this.setTerm,
-    onTermFocus: this.handleTermFocus,
-    onTermBlur: this.handleTermBlur,
+    onInputChange: this.handleInputChange,
+    onInputFocus: this.handleInputFocus,
+    onInputBlur: this.handleInputBlur,
+    search: this.doSearch,
+    reset: this.reset,
   };
 
   render() {
-    const { isTermFocused, ...internalState } = this.state;
+    const { isInputFocused, ...internalState } = this.state;
     const active =
-      isTermFocused ||
+      isInputFocused ||
       internalState.term.length > 0 ||
-      internalState.ingredients.include.length > 0 ||
-      internalState.ingredients.exclude.length > 0;
+      internalState.filters.ingredients.length > 0;
 
     return (
       <InternalProvider
@@ -204,5 +278,7 @@ export class Provider extends React.PureComponent<*, InternalState> {
     );
   }
 }
+
+export const Provider = withRouter(SearchProvider);
 
 export const Consumer = context.Consumer;
