@@ -6,5 +6,5 @@ export default styled.div`
   position: relative;
   cursor: pointer;
   padding: 10px;
-  bottom: -18px;
+  margin: auto;
 `;

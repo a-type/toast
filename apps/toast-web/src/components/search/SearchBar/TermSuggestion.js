@@ -6,7 +6,11 @@ export default styled.div`
   color: var(--color-white);
   height: calc(var(--rhythm) * 2);
   line-height: calc(var(--rhythm) * 2);
-  outline: 4px solid var(--color-brand);
   list-style-type: none;
   padding: 0 var(--spacing-md);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-brand-dark);
+  }
 `;
