@@ -7,6 +7,7 @@ import config from 'config';
 import schema from './schema';
 import { createContext } from './context';
 import { info } from 'logger';
+import path from 'path';
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.use(
 );
 app.use('/playground', playground({ endpoint: '/api' }));
 app.use(express.static('client'));
+app.use((req, res) =>
+  res.sendFile(path.join(process.cwd(), 'client/index.html'))
+);
 
 app.listen(config.port, () => {
   info(`Server ready on http://localhost:${config.port}`);
