@@ -21,7 +21,6 @@ const sharedSolidStyles = css`
 
   &:active:not(:disabled),
   &:focus:not(:disabled) {
-    border: 1px dashed var(--color-gray);
     outline: none;
   }
 

@@ -10,8 +10,8 @@ export default styled(Input)`
   box-shadow: ${props =>
     props.active
       ? `
-    0 0 10000px 10000px #00000008,
-    0 16px 32px 0 #00000040
+    0 0 10000px 10000px #00002008,
+    0 16px 32px 0 #00002040
   `
       : 'none'};
   transition: 0.2s all ease;

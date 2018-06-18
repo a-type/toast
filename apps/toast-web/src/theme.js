@@ -32,13 +32,13 @@ injectGlobal`
   --light: 200;
   --bold: 600;
 
-  --color-white: #fff;
+  --color-white: #fefeff;
   --color-black: #161616;
 
-  --color-gray-lightest: #eeeefe;
-  --color-gray-light: #d8d8e8;
-  --color-gray: #727282;
-  --color-gray-dark: #323242;
+  --color-gray-lightest: #ededff;
+  --color-gray-light: #d8d8f8;
+  --color-gray: #7272a2;
+  --color-gray-dark: #323262;
 
   --color-disabled-background: #eeeefe80;
   --color-disabled: #727282;

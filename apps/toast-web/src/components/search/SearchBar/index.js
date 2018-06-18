@@ -59,7 +59,7 @@ export default class SearchBar extends React.PureComponent {
                   onChange={actions.onInputChange}
                   onFocus={this.setActive}
                   active={this.state.active}
-                  autocomplete="off"
+                  autoComplete="off"
                   placeholder="Search for recipes or ingredients..."
                 />
                 {this.state.active &&
