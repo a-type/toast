@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import { type RecipeIngredient } from 'types';
-import { Form, Input, Button, Loader } from 'components/generic';
+import { Form, Loader } from 'components/generic';
+import { Input, Button } from 'components/typeset';
 import Layout from './Layout';
 import IngredientPicker from 'components/ingredients/Picker';
 import { Formik } from 'formik';

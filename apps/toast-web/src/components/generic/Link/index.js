@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Link as LibLink } from 'react-router-dom';
 import Clear from './Clear';
-import { getCss } from 'components/utils/rhythm';
 
 const Link = styled(LibLink)`
   color: var(--color-brand);
@@ -13,8 +12,6 @@ const Link = styled(LibLink)`
   &:hover {
     color: var(--color-brand-dark);
   }
-
-  ${props => (!props.inline ? getCss(props.textSize || 'md') : '')};
 `;
 
 Link.Positive = styled(Link)`

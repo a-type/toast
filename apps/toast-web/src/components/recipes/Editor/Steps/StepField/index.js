@@ -2,7 +2,8 @@
 import React from 'react';
 import { type RecipeStep } from 'types';
 import { Formik } from 'formik';
-import { Form, Input, Button, Loader } from 'components/generic';
+import { Form, Loader } from 'components/generic';
+import { Input, Button } from 'components/typeset';
 import Layout from '../common/Layout';
 import Number from '../common/Number';
 

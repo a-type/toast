@@ -193,7 +193,7 @@ class SearchProvider extends React.PureComponent<Props, InternalState> {
     );
 
   setTerm = (term: string) => {
-    this.setState({ term }, this.doSearch);
+    this.setState({ term, inputValue: '' }, this.doSearch);
   };
 
   handleInputChange = (ev: InputEvent) =>

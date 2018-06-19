@@ -12,7 +12,7 @@ export default styled.div`
   padding-left: ${LARGE_PADDING_LEFT}px;
 
   @media (max-width: ${LARGE_BREAKPOINT}px) {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0;
+    padding-right: 0;
   }
 `;

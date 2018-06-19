@@ -3,7 +3,7 @@ import React from 'react';
 import AddStep from './AddStep';
 import StepField from './StepField';
 import { type Step } from 'types';
-import { H2 } from 'components/generic';
+import { H2 } from 'components/typeset';
 import Stack from './Stack';
 
 type Props = {

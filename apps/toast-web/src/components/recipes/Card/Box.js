@@ -9,13 +9,12 @@ export default styled.div`
   height: 100%;
   display: flex;
   align-items: flex-end;
-  filter: grayscale(50%);
   border-radius: 5px;
   box-shadow: inset 0 -36px 24px 0 #00000080;
 
   a:focus > &,
   a:hover > & {
     background-color: var(--color-brand);
-    filter: none;
+    box-shadow: 0 0 0 8px var(--color-brand-light);
   }
 `;

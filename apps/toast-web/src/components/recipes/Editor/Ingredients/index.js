@@ -4,7 +4,7 @@ import React from 'react';
 import { type RecipeIngredient } from 'types';
 import IngredientField from './IngredientField';
 import AddIngredient from './AddIngredient';
-import { H2 } from 'components/generic';
+import { H2 } from 'components/typeset';
 import SideControls from '../common/SideControls';
 
 type Props = {

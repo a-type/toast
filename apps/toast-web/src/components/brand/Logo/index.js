@@ -16,6 +16,8 @@ export default class Logo extends React.PureComponent {
       <Wrapper
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
+        onTouchStart={this.onMouseEnter}
+        onTouchEnd={this.onMouseLeave}
       >
         {new Array(5)
           .fill(null)

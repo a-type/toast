@@ -10,6 +10,7 @@ export default ({ show }) => {
   if (!show) {
     return (
       <div
+        className="bubble"
         style={{
           backgroundColor: colors[colorIdx],
           borderRadius: '100%',
@@ -30,6 +31,7 @@ export default ({ show }) => {
   const y = Math.random() * 100;
   return (
     <div
+      className="bubble"
       style={{
         backgroundColor: colors[colorIdx],
         borderRadius: '100%',

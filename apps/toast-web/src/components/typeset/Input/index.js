@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { loading } from '../common/effects';
+import { loading } from 'components/generic/common/effects';
+import { getCss } from 'components/utils/rhythm';
 
 const sharedSolidStyles = css`
   font-size: var(--font-size-md);
@@ -29,6 +30,7 @@ const sharedSolidStyles = css`
     border-color: var(--color-negative);
   `};
 
+  ${getCss(24)};
   padding: 5px 11px;
   margin-bottom: -12px;
 `;

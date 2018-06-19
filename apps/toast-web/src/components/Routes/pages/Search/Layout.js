@@ -4,15 +4,11 @@ export default styled.div`
   display: grid;
   grid-template-areas: 'filters' 'results';
   grid-template-rows: auto 1fr;
+  grid-template-columns: minmax(auto, 600px);
   grid-gap: calc(var(--rhythm) * 2);
   justify-content: center;
   align-items: start;
   padding: 0 var(--spacing-md);
-
-  & > * {
-    width: 95vw;
-    max-width: 600px;
-  }
 
   & > *:nth-child(1) {
     grid-area: filters;

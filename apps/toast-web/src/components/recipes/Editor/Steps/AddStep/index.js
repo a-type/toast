@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import { Formik } from 'formik';
-import { Form, Input, Button } from 'components/generic';
+import { Form } from 'components/generic';
+import { Input, Button } from 'components/typeset';
 import Layout from '../common/Layout';
 import Number from '../common/Number';
 

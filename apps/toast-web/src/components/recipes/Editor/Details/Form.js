@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Input from 'components/generic/Input';
+import Input from 'components/typeset/Input';
 import { type RecipeEditorFormState } from './types';
 import FieldLayout from './FieldLayout';
 
