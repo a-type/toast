@@ -68,16 +68,6 @@ class Docked extends React.Component {
      */
     children: PropTypes.func.isRequired,
     /**
-     * Whether to poll at an interval to update the position of the docked
-     * element. In most cases this should not be necessary. It may be useful
-     * if the layout of the page is prone to changing in some way.
-     */
-    pollForPositionChanges: PropTypes.bool,
-    /**
-     * If position polling is enabled, this sets the polling interval in ms.
-     */
-    pollingInterval: PropTypes.number,
-    /**
      * A selector which should match an element currently on the page which
      * serves as the closest 'context' parent of the anchor element.
      * This element MUST have a `relative`, `absolute`, or `fixed` CSS position.
@@ -115,8 +105,6 @@ class Docked extends React.Component {
     isAttachmentDynamic: true,
     maxHeight: 800,
     buffer: 20,
-    pollForPositionChanges: false,
-    pollingInterval: 100,
     isDockedVisible: true,
     scrollContextSelector: 'body',
     calcDockedStyles: defaultCalcDockedStyles,
@@ -132,19 +120,28 @@ class Docked extends React.Component {
     height: this.props.maxHeight,
   };
 
+  handleResize = entries => {
+    for (let entry of entries) {
+      this.updatePlacement(this.state.anchorElement, this.state.contextElement);
+    }
+  };
+  resizeObserver = new window.ResizeObserver(this.handleResize);
+
   componentWillReceiveProps(newProps) {
     if (!this.props.isDockedVisible && newProps.isDockedVisible) {
       this.updatePlacement(this.state.anchorElement, this.state.contextElement);
     }
   }
 
-  componentWillUnmount() {
-    if (this.updatePositionInterval) {
-      clearInterval(this.updatePositionInterval);
-    }
+  componentDidMount() {
+    this.resizeObserver.observe(document.body);
   }
 
-  updatePositionInterval = null;
+  componentWillUnmount() {
+    if (this.state.anchorElement) {
+      this.resizeObserver.unobserve(this.state.anchorElement);
+    }
+  }
 
   onAnchorRef = el => {
     const {
@@ -158,14 +155,17 @@ class Docked extends React.Component {
       environment.window.document.querySelector(scrollContextSelector) ||
       environment.window.document.body;
 
+    // unobserve old anchorElement
+    if (this.state.anchorElement) {
+      this.resizeObserver.unobserve(this.state.anchorElement);
+    }
+    if (el) {
+      this.resizeObserver.observe(el);
+    }
+
     this.setState({ anchorElement: el, contextElement });
 
     this.updatePlacement(el, contextElement);
-    this.updatePositionInterval = setInterval(() => {
-      if (pollForPositionChanges) {
-        this.updatePlacement(this.state.anchorElement);
-      }
-    }, pollingInterval);
   };
 
   updatePlacement = (anchorElement, contextElement) => {

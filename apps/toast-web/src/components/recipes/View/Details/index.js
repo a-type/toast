@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Layout from './Layout';
-import { P, Link, H1 } from 'components/generic';
+import { P, Link, H1 } from 'components/typeset';
 import { type Recipe } from 'types';
 
 export default ({ recipe }: { recipe: Recipe }) => {

@@ -4,7 +4,12 @@ const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: ['babel-polyfill', 'react-hot-loader/patch', './src/index.js'],
+  entry: [
+    'babel-polyfill',
+    'resize-observer-polyfill',
+    'react-hot-loader/patch',
+    './src/index.js',
+  ],
   output: {
     publicPath: '/',
     path: path.resolve(process.cwd(), 'dist'),

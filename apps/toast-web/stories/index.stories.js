@@ -21,10 +21,8 @@ import {
   Divider,
   Checkbox,
   Form,
-  P,
-  H1,
-  H2,
 } from 'components/generic';
+import { P, H1, H2 } from 'components/typeset';
 import { Logo } from 'components/brand';
 
 storiesOf('Button', module).add('demo', () => (

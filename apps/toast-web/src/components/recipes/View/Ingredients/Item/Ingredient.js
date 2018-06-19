@@ -1,3 +1,3 @@
-import { Span } from 'components/generic';
+import { Span } from 'components/typeset';
 
 export default Span;

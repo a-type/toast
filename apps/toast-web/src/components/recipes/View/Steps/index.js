@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import List from './List';
-import H2 from 'components/generic/H2';
+import { H2 } from 'components/typeset';
 import { type RecipeStep } from 'types';
 import { Transition, animated, config } from 'react-spring';
 
