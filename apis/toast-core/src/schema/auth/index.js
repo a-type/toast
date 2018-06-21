@@ -1,5 +1,5 @@
 import neo4jgraphql from 'neo4j-graphql-js';
-import { signup, createToken } from './service';
+import { signup, createToken, login } from './service';
 
 export const typeDefs = `
 type AuthResponse {
@@ -31,8 +31,16 @@ export const resolvers = {
       );
       return { token: createToken(user) };
     },
-    login: (_parent, args, ctx, resolution) => {
-      /* TODO */
+    login: async (_parent, args, ctx, resolution) => {
+      const user = await login(
+        args.credential.email.email,
+        args.credential.email.password,
+        ctx
+      );
+      if (!user) {
+        throw new Error('Invalid credentials');
+      }
+      return { token: createToken(user) };
     }
   }
 };
