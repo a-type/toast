@@ -162,6 +162,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                   variables: data,
                 }).then(({ data: { login: { token } } }) => {
                   auth.authToken = token;
+                  this.props.onLogin();
                 }),
               )
             }
@@ -169,13 +170,14 @@ export default class AdaptiveAuthForm extends React.PureComponent {
         );
       case 'SIGN_UP':
         return (
-          <Mutation mutation={Login}>
+          <Mutation mutation={Signup}>
             {runMutation =>
               this.renderForm(data =>
                 runMutation({
                   variables: data,
                 }).then(({ data: { signup: { token } } }) => {
                   auth.authToken = token;
+                  this.props.onLogin();
                 }),
               )
             }

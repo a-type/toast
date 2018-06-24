@@ -32,6 +32,10 @@ export const login = async (email, password, context) => {
     }
   );
 
+  if (!result.records.length) {
+    throw new Error('Incorrect credentials');
+  }
+
   const credential = result.records[0].get('c');
   const user = result.records[0].get('u');
   const matches = await bcrypt.compare(password, credential.password);
