@@ -1,7 +1,7 @@
 import ApolloClient from 'apollo-client';
 import { Operation, ApolloLink, Observable } from 'apollo-link';
 import resolvers, { defaults } from './resolvers';
-import { authTokenHeader } from './auth';
+import auth from './auth';
 import { InMemoryCache, HttpLink } from 'apollo-boost';
 import { withClientState } from 'apollo-link-state';
 import { onError } from 'apollo-link-error';
@@ -27,7 +27,7 @@ const requestHandler = new ApolloLink(
       let handle;
       Promise.resolve(operation)
         .then(operation => {
-          const token = authTokenHeader();
+          const token = auth.httpHeader;
           if (token) {
             operation.setContext({
               headers: {

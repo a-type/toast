@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce';
 import { equals } from 'ramda';
 
 type Props = {
+  timeout: number,
   values: { [string]: mixed },
   render({ isSaving: boolean }): Node,
   onSave({ [string]: mixed }): Promise<mixed>,
@@ -20,6 +21,7 @@ type State = {
 export default class AutoSave extends React.Component<Props, State> {
   static defaultProps = {
     render: () => null,
+    timeout: 300,
   };
 
   state = {
@@ -42,7 +44,7 @@ export default class AutoSave extends React.Component<Props, State> {
     } catch (err) {
       this.setState({ isSaving: false, saveError: err.message });
     }
-  }, 300);
+  }, this.props.timeout);
 
   render() {
     return this.props.render(this.state);

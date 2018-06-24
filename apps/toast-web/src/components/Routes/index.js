@@ -12,7 +12,7 @@ export default () => (
   <Switch>
     <Route path="/" exact component={HomePage} />
     <Route path="/login" component={LoginPage} />
-    <Route path="/recipes/edit/create" component={EditRecipePage} />
+    <Route path="/recipes/create" component={EditRecipePage} />
     <Route path="/recipes/edit/:recipeId" component={EditRecipePage} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
     <Route path="/authors/:authorId" component={AuthorPage} />

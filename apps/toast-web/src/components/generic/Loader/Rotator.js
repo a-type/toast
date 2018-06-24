@@ -19,7 +19,11 @@ const spin = keyframes`
 `;
 
 export default styled.div`
-  animation: ${spin} 1s infinite;
-  animation-delay: 0s;
-  margin: auto;
+  display: flex;
+
+  & > span {
+    animation: ${spin} 1s infinite;
+    animation-delay: 0s;
+    margin: auto;
+  }
 `;

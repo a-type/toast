@@ -37,3 +37,10 @@ export const debug = (...items) =>
   console.debug(
     chalk.black.bgWhiteBright.bold('\n', ...items.map(convert), '\n')
   );
+
+export default {
+  info,
+  warn,
+  fatal,
+  debug
+};

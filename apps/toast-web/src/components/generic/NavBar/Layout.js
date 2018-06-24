@@ -10,6 +10,8 @@ export default styled.div`
   padding: var(--spacing-sm);
   align-content: end;
   height: auto;
+  margin-left: auto;
+  margin-right: auto;
 
   & > *:first-child {
     grid-area: logo;
@@ -19,6 +21,12 @@ export default styled.div`
     grid-area: search;
     margin: auto;
     justify-self: center;
+  }
+  & > *:nth-child(3) {
+    grid-area: user;
+    justify-self: end;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
   @media (min-width: 700px) {
@@ -33,5 +41,6 @@ export default styled.div`
 
   @media (min-width: 800px) {
     grid-template-columns: 1fr 600px 1fr;
+    max-width: 1200px;
   }
 `;

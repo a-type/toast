@@ -1,6 +1,7 @@
 import Storage from '@google-cloud/storage';
 import config from 'config';
 import uuid from 'uuid';
+import logger from 'logger';
 
 const storage = new Storage({
   projectId: config.gcloud.projectId
@@ -26,12 +27,16 @@ export default {
             metadata: { contentType: mimetype }
           })
         )
-        .on('error', reject)
+        .on('error', err => {
+          logger.fatal('GCloud image upload failure');
+          logger.fatal(err);
+          reject(new Error(err.message));
+        })
         .on('finish', () => {
-          return {
+          resolve({
             id,
             url: `https://storage.googleapis.com/${bucket}/${fileName}`
-          };
+          });
         });
     });
   }

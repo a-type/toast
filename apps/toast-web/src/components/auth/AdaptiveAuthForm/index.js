@@ -5,7 +5,7 @@ import { H1, Button, Input } from 'components/typeset';
 import { sentence } from 'change-case';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { storeAuthToken } from 'apolloClient/auth';
+import auth from 'apolloClient/auth';
 
 const Login = gql`
   mutation Login($email: String!, $password: String!) {
@@ -161,7 +161,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 runMutation({
                   variables: data,
                 }).then(({ data: { login: { token } } }) => {
-                  storeAuthToken(token);
+                  auth.authToken = token;
                 }),
               )
             }
@@ -175,7 +175,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 runMutation({
                   variables: data,
                 }).then(({ data: { signup: { token } } }) => {
-                  storeAuthToken(token);
+                  auth.authToken = token;
                 }),
               )
             }

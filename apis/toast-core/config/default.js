@@ -28,5 +28,8 @@ module.exports = {
         images: 'images'
       }
     }
+  },
+  imageup: {
+    host: 'http://localhost:31111'
   }
 };

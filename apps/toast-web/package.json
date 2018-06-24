@@ -70,6 +70,7 @@
     "graphql": "^0.13.2",
     "graphql-tag": "^2.8.0",
     "immutable": "^3.8.2",
+    "jwt-decode": "^2.2.0",
     "lodash.debounce": "^4.0.8",
     "prop-types": "^15.6.1",
     "ramda": "^0.25.0",

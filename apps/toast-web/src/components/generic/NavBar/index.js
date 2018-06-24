@@ -16,5 +16,6 @@ export default withRouter(({ location }) => (
       )}
     </Consumer>
     <SearchBar />
+    <Link to="/login">Log in / Sign up</Link>
   </Layout>
 ));

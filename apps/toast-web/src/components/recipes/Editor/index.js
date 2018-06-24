@@ -50,6 +50,16 @@ const Update = gql`
   ${dataFragment}
 `;
 
+const Create = gql`
+  mutation CreateRecipe($input: RecipeCreateInput!) {
+    createRecipe(input: $input) {
+      ...RecipeData
+    }
+  }
+
+  ${dataFragment}
+`;
+
 const Get = gql`
   query GetFullRecipe($id: ID!) {
     recipe(id: $id) {
@@ -67,18 +77,25 @@ export type QueryResponse = {
   refetch(): any,
 };
 
-type MutationData = {
+type UpdateMutation = {
   updateRecipe: Recipe,
 };
 
-type MutateFunction = (args: mixed) => Promise<MutationData>;
+type UpdateMutateFunction = (args: mixed) => Promise<UpdateMutation>;
+
+type CreateMutation = {
+  createRecipe: Recipe,
+};
+
+type CreateMutateFunction = (args: mixed) => Promise<CreateMutation>;
 
 type Props = {
   recipeId: string,
+  onCreate(recipe: Recipe): mixed,
 };
 
 export default class RecipeEditor extends React.PureComponent<Props> {
-  renderContents = (response: QueryResponse, update: MutateFunction) => {
+  renderEdit = (response: QueryResponse, update: MutateFunction) => {
     if (response.loading) {
       return <Layout loading={response.loading} />;
     }
@@ -172,15 +189,54 @@ export default class RecipeEditor extends React.PureComponent<Props> {
     );
   };
 
+  renderCreate = create => {
+    const updateDetails = ({ title, description }) =>
+      create({
+        variables: {
+          input: {
+            title,
+            description,
+          },
+        },
+      }).then(response => {
+        console.info(response);
+        this.props.onCreate(response.data.createRecipe);
+      });
+
+    return (
+      <Layout>
+        <Layout.Header>
+          <Layout.Header.CoverImage />
+        </Layout.Header>
+        <Layout.Details>
+          <Details
+            recipe={{ title: '', description: '' }}
+            onChange={updateDetails}
+          />
+        </Layout.Details>
+        <Layout.Ingredients />
+        <Layout.Steps />
+      </Layout>
+    );
+  };
+
   render() {
     const { recipeId } = this.props;
+
+    if (!recipeId) {
+      return (
+        <Mutation mutation={Create}>
+          {(createRecipe: MutateFunction) => this.renderCreate(createRecipe)}
+        </Mutation>
+      );
+    }
 
     return (
       <Query query={Get} variables={{ id: recipeId }} skip={!recipeId}>
         {(data: QueryResponse) => (
           <Mutation mutation={Update}>
             {(updateRecipe: MutateFunction) =>
-              this.renderContents(data, updateRecipe)
+              this.renderEdit(data, updateRecipe)
             }
           </Mutation>
         )}

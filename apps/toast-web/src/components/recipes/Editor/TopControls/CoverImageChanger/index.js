@@ -43,7 +43,6 @@ export default class RecipeCoverImageChanger extends React.PureComponent<
           <Chooser
             onImageChange={async image => {
               if (image) {
-                console.log(image);
                 this.setState({ loading: true });
                 await updateImage({
                   variables: { file: image, id: this.props.recipeId },

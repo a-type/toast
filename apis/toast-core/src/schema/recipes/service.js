@@ -6,8 +6,8 @@ export const createRecipe = async (user, { title, description }, ctx) => {
   const session = ctx.getSession();
   const result = await session.run(
     `
-      MERGE (r:Recipe {title: $title, description: $description, id: $id}),
-        (r)<-[:AUTHOR_OF]-(u:User {id: userId})
+      CREATE (r:Recipe {title: $title, description: $description, id: $id}),
+        (r)<-[:AUTHOR_OF]-(u:User {id: $userId})
       RETURN r {.id, .title, .description}, u {.id, .name, .username}
     `,
     {
