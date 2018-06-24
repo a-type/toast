@@ -29,7 +29,7 @@ module.exports = {
       }
     }
   },
-  imageup: {
-    host: 'http://localhost:31111'
+  imageService: {
+    host: 'http://localhost:9000'
   }
 };

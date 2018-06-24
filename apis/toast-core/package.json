@@ -21,7 +21,6 @@
     "containerize:clean": "rimraf client",
     "containerize": "run-s containerize:*",
     "start": "cross-env NODE_PATH=build node build/server.js",
-
     "proxy:prod":
       "kubectl port-forward neo4j-prod-neo4j-core-0 7474:7474 7473:7473 7687:7687 --namespace=toast-prod"
   },
@@ -54,6 +53,7 @@
     "graphql": "^0.13.2",
     "graphql-playground-middleware-express": "^1.6.1",
     "graphql-tools": "^2.24.0",
+    "imaginary": "^0.1.16",
     "jsonwebtoken": "^8.2.1",
     "mime-types": "^2.1.18",
     "neo4j-driver": "^1.5.3",
