@@ -1,83 +1,52 @@
 // @flow
 import React from 'react';
+import Field from './Field';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import { type RecipeIngredient } from 'types';
-import { Form, Loader } from 'components/generic';
-import { Input, Button } from 'components/typeset';
-import Layout from './Layout';
-import IngredientPicker from 'components/ingredients/Picker';
-import { Formik } from 'formik';
-import SideControls from '../../common/SideControls';
 
-type Props = {
-  index: number,
+const UpdateIngredient = gql`
+  mutation UpdateRecipeIngredient(
+    $id: ID!
+    $input: RecipeIngredientUpdateInput!
+  ) {
+    updateRecipeIngredient(id: $id, input: $input) {
+      id
+      unit
+      unitValue
+      note
+      ingredient {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export type Props = {
   ingredient: RecipeIngredient,
-  onChange({ ingredientId: string, unit: string, unitValue: number }): mixed,
 };
 
-export default class IngredientField extends React.PureComponent<Props> {
-  handleSubmit = async values => {
-    await this.props.onChange({
-      id: this.props.ingredient.id,
-      unit: values.unit,
-      unitValue: values.unitValue,
-    });
-  };
-
-  renderForm = ({ values, errors, handleChange, handleBlur, handleSubmit }) => (
-    <React.Fragment>
-      <Form onSubmit={handleSubmit}>
-        <Form.Field.Group columns={7}>
-          <Form.Field columnSpan={1} label="Quantity">
-            <Input
-              name="unitValue"
-              type="number"
-              value={values.unitValue}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              style={{ width: '100%' }}
-            />
-          </Form.Field>
-          <Form.Field columnSpan={3} label="Units">
-            <Input
-              name="unit"
-              value={values.unit}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Form.Field>
-          <Form.Field columnSpan={3} label="Ingredient">
-            <IngredientPicker
-              name="ingredient"
-              disabled
-              value={values.ingredient}
-            />
-          </Form.Field>
-        </Form.Field.Group>
-      </Form>
-      <SideControls>
-        <Form.AutoSave
-          values={values}
-          onSave={this.handleSubmit}
-          render={({ isSaving }) => isSaving && <Loader size="30px" />}
-        />
-      </SideControls>
-    </React.Fragment>
-  );
-
-  render() {
-    const { ingredient } = this.props;
-
-    return (
-      <Formik
-        initialValues={{
-          unit: ingredient.unit,
-          unitValue: ingredient.unitValue,
-          ingredient: ingredient.ingredient,
+export default ({ ingredient }: Props) => (
+  <Mutation mutation={UpdateIngredient}>
+    {updateIngredient => (
+      <Field
+        index={ingredient.index}
+        ingredient={ingredient}
+        onChange={({ ingredientId, unit, unitValue, note }) => {
+          updateIngredient({
+            variables: {
+              id: ingredient.id,
+              input: {
+                ingredientId,
+                unit,
+                unitValue,
+                note,
+              },
+            },
+          });
         }}
-        onSubmit={this.handleSubmit}
-      >
-        {this.renderForm}
-      </Formik>
-    );
-  }
-}
+      />
+    )}
+  </Mutation>
+);

@@ -8,20 +8,15 @@ import Stack from './Stack';
 
 type Props = {
   steps: Array<Step>,
-  onPushStep({ text: string }): mixed,
-  onSetStep({ id: string, text: string }): mixed,
-  onMoveStep({ fromIndex: number, toIndex: number }): mixed,
+  recipeId: string,
 };
 
-export default ({ steps, onPushStep, onSetStep, onMoveStep }: Props) => (
+export default ({ steps, recipeId }: Props) => (
   <div>
     <H2>Steps</H2>
     <Stack>
-      {steps &&
-        steps.map(step => (
-          <StepField key={step.id} step={step} onChange={onSetStep} />
-        ))}
-      <AddStep onCreate={onPushStep} index={steps.length} />
+      {steps && steps.map(step => <StepField key={step.id} step={step} />)}
+      <AddStep index={steps.length} recipeId={recipeId} />
     </Stack>
   </div>
 );
