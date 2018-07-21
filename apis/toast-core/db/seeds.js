@@ -1,6 +1,7 @@
 import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
 import uuid from 'uuid';
+import bcrypt from 'bcryptjs';
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,
@@ -15,6 +16,21 @@ const seed = async () => {
     await tx.run(`
     CREATE (u:User {name: "ToastMaster", username: "toastmaster", id: "${userId}"})
     `);
+    const hashedPassword = await bcrypt.hash(
+      config.security.masterPassword,
+      10
+    );
+    await tx.run(
+      `
+    MATCH (u:User {id: "$userId"})
+    CREATE (u)<-[:AUTHENTICATES]-(c:Credential {email: $email, password: $password})
+    `,
+      {
+        userId,
+        email: config.security.masterEmail,
+        password: hashedPassword
+      }
+    );
     await tx.run(`
     MATCH (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "Toast", description: "Just toast!", id: "${uuid()}"}),

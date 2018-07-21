@@ -1,7 +1,9 @@
 module.exports = {
   port: process.env.PORT || 4000,
   security: {
-    tokenSecret: process.env.JWT_TOKEN_SECRET || 'notsecret'
+    tokenSecret: process.env.JWT_TOKEN_SECRET || 'notsecret',
+    masterEmail: 'toastmaster@toastcooking.app',
+    masterPassword: 'INSECURE CHANGE THIS!'
   },
   database: {
     neo4j: {
