@@ -5,9 +5,30 @@ import { Button, Input } from 'components/typeset';
 import IngredientPicker from 'components/ingredients/Picker';
 import Layout from '../IngredientField/Layout';
 import { Formik } from 'formik';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const CreateIngredient = gql`
+  mutation CreateRecipeIngredient(
+    $recipeId: ID!
+    $input: RecipeIngredientCreateInput!
+  ) {
+    createRecipeIngredient(recipeId: $recipeId, input: $input) {
+      id
+      index
+      unit
+      unitValue
+      note
+      ingredient {
+        id
+        name
+      }
+    }
+  }
+`;
 
 type Props = {
-  onAdd({ ingredientId: string, unit: string, unitValue: number }): mixed,
+  recipeId: string,
 };
 
 type State = {
@@ -19,16 +40,6 @@ export default class AddIngredient extends React.PureComponent<Props, State> {
     active: false,
   };
 
-  handleSubmit = async values => {
-    await this.props.onAdd({
-      ingredientId: values.ingredient.id,
-      unit: values.unit,
-      unitValue: values.unitValue,
-    });
-
-    this.setState({ active: false });
-  };
-
   toggleActive = () => this.setState(({ active }) => ({ active: !active }));
 
   renderForm = ({
@@ -37,7 +48,7 @@ export default class AddIngredient extends React.PureComponent<Props, State> {
     handleBlur,
     setFieldValue,
     handleSubmit,
-  }) => (
+  }: any) => (
     <Form onSubmit={handleSubmit}>
       <Form.Field.Group columns={9}>
         <Form.Field columnSpan={1} label="Quantity">
@@ -79,6 +90,7 @@ export default class AddIngredient extends React.PureComponent<Props, State> {
   );
 
   render() {
+    const { recipeId } = this.props;
     const { active } = this.state;
 
     if (!active) {
@@ -88,16 +100,33 @@ export default class AddIngredient extends React.PureComponent<Props, State> {
     }
 
     return (
-      <Formik
-        initialValues={{
-          unitValue: 0,
-          unit: '',
-          ingredient: null,
-        }}
-        onSubmit={this.handleSubmit}
-      >
-        {this.renderForm}
-      </Formik>
+      <Mutation mutation={CreateIngredient}>
+        {createIngredient => (
+          <Formik
+            initialValues={{
+              unitValue: 0,
+              unit: '',
+              ingredient: null,
+            }}
+            onSubmit={async ({ values }) => {
+              await createIngredient({
+                variables: {
+                  recipeId,
+                  input: {
+                    ingredientId: values.ingredient.id,
+                    unit: values.unit,
+                    unitValue: values.unitValue,
+                    note: values.note,
+                  },
+                },
+              });
+              this.setState({ active: false });
+            }}
+          >
+            {this.renderForm}
+          </Formik>
+        )}
+      </Mutation>
     );
   }
 }

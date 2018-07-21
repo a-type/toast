@@ -4,7 +4,7 @@ import { getRecipeAuthor } from './service';
 export const typeDefs = `
 type User {
   id: ID!
-  name: String!
+  name: String
   username: String!
 }
 

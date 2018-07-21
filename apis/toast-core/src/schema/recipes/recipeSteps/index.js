@@ -1,4 +1,9 @@
-import { getForRecipe } from './service';
+import {
+  getForRecipe,
+  createRecipeStep,
+  updateRecipeStep,
+  moveRecipeStep
+} from './service';
 
 export const typeDefs = `
 type RecipeStep {
@@ -9,16 +14,35 @@ type RecipeStep {
   )
 }
 
+input RecipeStepCreateInput {
+  text: String!
+}
+
+input RecipeStepUpdateInput {
+  text: String
+}
+
 extend type Recipe {
   steps: [RecipeStep!]!
+}
+
+extend type Mutation {
+  updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep @authenticated @relatedToUser
+  createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): RecipeStep @authenticated @relatedToUser(idArg: "recipeId")
+  moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe @authenticated @relatedToUser(idArg: "recipeId")
 }
 `;
 
 export const resolvers = {
   Recipe: {
-    steps: (parent, args, ctx, info) => {
-      const steps = getForRecipe(parent.id, ctx);
-      return steps;
-    }
+    steps: (parent, args, ctx, info) => getForRecipe(parent.id, ctx)
+  },
+  Mutation: {
+    createRecipeStep: (parent, args, ctx, info) =>
+      createRecipeStep(args.recipeId, args.input, ctx),
+    updateRecipeStep: (parent, args, ctx, info) =>
+      updateRecipeStep(args.id, args.input, ctx),
+    moveRecipeStep: (parent, args, ctx, info) =>
+      moveRecipeStep(args.recipeId, args.input, ctx)
   }
 };

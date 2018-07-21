@@ -18,7 +18,7 @@ const seed = async () => {
     await tx.run(`
     MATCH (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "Toast", description: "Just toast!", id: "${uuid()}"}),
-      (r)<-[:INGREDIENT_OF {unit: "slice", unitValue: 1, index: 0, id: "${uuid()}"}]-(i:Ingredient {id: "${uuid()}", name: "Bread", description: "Bread!"}),
+      (r)<-[:INGREDIENT_OF {unit: "slice", unitValue: 1, index: 0, note: "white or wheat", id: "${uuid()}"}]-(i:Ingredient {id: "${uuid()}", name: "Bread", description: "Bread!"}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 0}]-(s:Step {id: "${uuid()}", text: "Toast bread in toaster."}),
       (r)<-[:AUTHOR_OF]-(u)
     RETURN r;
@@ -26,7 +26,7 @@ const seed = async () => {
     await tx.run(`
     MATCH (bread:Ingredient {name: "Bread"}), (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "French Toast", description: "Better toast", id: "${uuid()}"}),
-      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "slice", unitValue: 4, index: 0}]-(bread),
+      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "slice", unitValue: 4, note: "try spongy breads like challah", index: 0}]-(bread),
       (r)<-[:INGREDIENT_OF {id: "${uuid()}", unitValue: 1, index: 1}]-(egg:Ingredient {id: "${uuid()}", name: "Egg"}),
       (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "cup", unitValue: 0.25, index: 2}]-(milk:Ingredient {id: "${uuid()}", name: "Milk"}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 0}]-(:Step {id: "${uuid()}", text: "Mix egg and milk."}),

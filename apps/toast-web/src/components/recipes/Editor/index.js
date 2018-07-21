@@ -40,9 +40,9 @@ const dataFragment = gql`
   }
 `;
 
-const Update = gql`
-  mutation UpdateRecipe($id: ID!, $input: RecipeUpdateInput!) {
-    updateRecipe(id: $id, input: $input) {
+const UpdateDetails = gql`
+  mutation UpdateRecipeDetails($id: ID!, $input: RecipeDetailsUpdateInput!) {
+    updateRecipeDetails(id: $id, input: $input) {
       ...RecipeData
     }
   }
@@ -108,50 +108,6 @@ export default class RecipeEditor extends React.PureComponent<Props> {
           input: { title, description },
         },
       });
-    const setIngredient = ({ id, unit, unitValue }) =>
-      update({
-        variables: {
-          id: recipeId,
-          input: {
-            ingredients: { set: { id, ingredient: { unit, unitValue } } },
-          },
-        },
-      });
-    const pushIngredient = ({ unit, unitValue, ingredientId }) =>
-      update({
-        variables: {
-          id: recipeId,
-          input: {
-            ingredients: { push: { unit, unitValue, ingredientId } },
-          },
-        },
-      });
-    const moveIngredient = ({ fromIndex, toIndex }) =>
-      update({
-        variables: {
-          id: recipeId,
-          input: {
-            ingredients: { move: { fromIndex, toIndex } },
-          },
-        },
-      });
-    const pushStep = ({ text }) =>
-      update({
-        variables: { id: recipeId, input: { steps: { push: { text } } } },
-      });
-    const setStep = ({ id, text }) =>
-      update({
-        variables: {
-          id: recipeId,
-          input: { steps: { set: { id, step: { text } } } },
-        },
-      });
-    const moveStep = ({ fromIndex, toIndex }) => ({
-      variables: {
-        id: recipeId,
-        input: { steps: { move: { fromIndex, toIndex } } },
-      },
-    });
 
     return (
       <Layout loading={response.loading}>
@@ -172,17 +128,13 @@ export default class RecipeEditor extends React.PureComponent<Props> {
         <Layout.Ingredients>
           <Ingredients
             ingredients={path(['data', 'recipe', 'ingredients'], response)}
-            onSetIngredient={setIngredient}
-            onPushIngredient={pushIngredient}
-            onMoveIngredient={moveIngredient}
+            recipeId={recipeId}
           />
         </Layout.Ingredients>
         <Layout.Steps>
           <Steps
             steps={path(['data', 'recipe', 'steps'], response)}
-            onPushStep={pushStep}
-            onSetStep={setStep}
-            onMoveStep={moveStep}
+            recipeId={recipeId}
           />
         </Layout.Steps>
       </Layout>
@@ -234,7 +186,7 @@ export default class RecipeEditor extends React.PureComponent<Props> {
     return (
       <Query query={Get} variables={{ id: recipeId }} skip={!recipeId}>
         {(data: QueryResponse) => (
-          <Mutation mutation={Update}>
+          <Mutation mutation={UpdateDetails}>
             {(updateRecipe: MutateFunction) =>
               this.renderEdit(data, updateRecipe)
             }

@@ -14,6 +14,11 @@ import * as directives from './directives';
 const globalTypeDefs = `
   scalar Upload
 
+  input ListMoveInput {
+    fromIndex: Int!
+    toIndex: Int!
+  }
+
   type Query {
     hello: String!
   }

@@ -1,5 +1,9 @@
-import { neo4jgraphql } from 'neo4j-graphql-js';
-import { createRecipe, updateRecipe, getRecipe, listRecipes } from './service';
+import {
+  createRecipe,
+  updateRecipeDetails,
+  getRecipe,
+  listRecipes
+} from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
 import { mergeDeepRight } from 'ramda';
@@ -17,58 +21,10 @@ input RecipeCreateInput {
   description: String
 }
 
-input RecipeUpdateInput {
+input RecipeDetailsUpdateInput {
   title: String
   description: String
-  ingredients: RecipeIngredientsUpdateInput
-  steps: RecipeStepsUpdateInput
   coverImage: ImageCreateInput
-}
-
-input RecipeIngredientsUpdateInput {
-  set: RecipeIngredientSetInput
-  push: RecipeIngredientCreateInput
-  move: ListMoveInput
-}
-
-input RecipeIngredientSetInput {
-  id: ID!
-  ingredient: RecipeIngredientUpdateInput!
-}
-
-input RecipeIngredientCreateInput {
-  ingredientId: ID!
-  unit: String!
-  unitValue: Float!
-}
-
-input RecipeIngredientUpdateInput {
-  unit: String
-  unitValue: Float
-}
-
-input ListMoveInput {
-  fromIndex: Int!
-  toIndex: Int!
-}
-
-input RecipeStepsUpdateInput {
-  push: RecipeStepCreateInput
-  move: ListMoveInput
-  set: RecipeStepSetInput
-}
-
-input RecipeStepCreateInput {
-  text: String!
-}
-
-input RecipeStepSetInput {
-  id: ID!
-  step: RecipeStepUpdateInput!
-}
-
-input RecipeStepUpdateInput {
-  text: String
 }
 
 input ImageCreateInput {
@@ -87,7 +43,7 @@ extend type Query {
 
 extend type Mutation {
   createRecipe(input: RecipeCreateInput!): Recipe @authenticated
-  updateRecipe(id: ID!, input: RecipeUpdateInput!): Recipe @authenticated @relatedToUser
+  updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe @authenticated @relatedToUser
   deleteRecipe(id: ID!): Recipe @authenticated @relatedToUser
 }
 `,
@@ -98,24 +54,14 @@ extend type Mutation {
 export const resolvers = [
   {
     Query: {
-      recipes: async (_parent, args, ctx, info) => {
-        const recipes = await listRecipes(args.input, ctx);
-        return recipes;
-      },
-      recipe: async (_parent, args, ctx, info) => {
-        const recipe = await getRecipe(args.id, ctx);
-        return recipe;
-      }
+      recipes: (_parent, args, ctx, info) => listRecipes(args.input, ctx),
+      recipe: (_parent, args, ctx, info) => getRecipe(args.id, ctx)
     },
     Mutation: {
-      createRecipe: async (_parent, args, ctx, info) => {
-        const recipe = await createRecipe(ctx.user, args.input, ctx);
-        return recipe;
-      },
-      updateRecipe: async (_parent, args, ctx, info) => {
-        const recipe = await updateRecipe(args, ctx);
-        return recipe;
-      }
+      createRecipe: (_parent, args, ctx, info) =>
+        createRecipe(ctx.user, args.input, ctx),
+      updateRecipeDetails: (_parent, args, ctx, info) =>
+        updateRecipeDetails(args, ctx)
     }
   },
   recipeIngredients.resolvers,

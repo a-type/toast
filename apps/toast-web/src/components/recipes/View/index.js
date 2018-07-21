@@ -23,6 +23,7 @@ const FullRecipeQuery = gql`
         id
         unit
         unitValue
+        note
         index
         ingredient {
           id
