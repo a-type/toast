@@ -1,19 +1,22 @@
 {
-	"folders": [
-		{
-			"path": "apps\\toast-web"
-		},
-		{
-			"path": "apis\\toast-core"
-		},
-		{
-			"path": "ops"
-		},
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"javascript.validate.enable": false
-	}
+  "folders": [
+    {
+      "path": "apps\\toast-web"
+    },
+    {
+      "path": "apis\\toast-core"
+    },
+    {
+      "path": "ops"
+    },
+    {
+      "path": "."
+    },
+    {
+      "path": "C:\\Users\\a-typ\\Documents\\Git\\toast-data"
+    }
+  ],
+  "settings": {
+    "javascript.validate.enable": false
+  }
 }
