@@ -6,16 +6,19 @@ type Ingredient {
   id: ID!
   name: String!
   description: String
+  attribution: String
 }
 
 input IngredientCreateInput {
   name: String!
   description: String
+  attribution: String
 }
 
 input IngredientUpdateInput {
   name: String
   description: String
+  attribution: String
 }
 
 extend type Query {
@@ -35,10 +38,8 @@ export const resolvers = {
     ingredient: neo4jgraphql
   },
   Mutation: {
-    createIngredient: async (_parent, args, ctx, info) => {
-      const ingredient = await createIngredient(args.input, ctx);
-      return ingredient;
-    },
+    createIngredient: (_parent, args, ctx, info) =>
+      createIngredient(args.input, ctx),
     updateIngredient: neo4jgraphql
   }
 };

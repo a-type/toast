@@ -23,7 +23,7 @@ export const signup = async (user, credential, context) => {
   return result.records[0].get('u');
 };
 
-export const login = async (email, password, context) => {
+export const loginByEmail = async (email, password, context) => {
   const session = context.getSession();
   const result = await session.run(
     'MATCH (c:Credential {email: $email})-[:AUTHENTICATES]->(u:User) RETURN c {.password}, u {.id, .name, .username}',
@@ -44,6 +44,18 @@ export const login = async (email, password, context) => {
   }
 
   return null;
+};
+
+export const login = async (credential, context) => {
+  if (credential.email) {
+    return loginByEmail(
+      credential.email.email,
+      credential.email.password,
+      context
+    );
+  }
+
+  throw new Error('Unknown credential type');
 };
 
 export const createToken = async user =>

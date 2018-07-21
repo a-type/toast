@@ -32,11 +32,7 @@ export const resolvers = {
       return { token: createToken(user) };
     },
     login: async (_parent, args, ctx, resolution) => {
-      const user = await login(
-        args.credential.email.email,
-        args.credential.email.password,
-        ctx
-      );
+      const user = await login(args.credential, ctx);
       if (!user) {
         throw new Error('Invalid credentials');
       }
