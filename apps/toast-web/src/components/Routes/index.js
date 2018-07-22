@@ -16,7 +16,7 @@ export default () => (
     <Route path="/recipes/edit/:recipeId" component={EditRecipePage} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
     <Route path="/authors/:authorId" component={AuthorPage} />
-    <Route path="/ingredients/:ingredientName" component={IngredientPage} />
+    <Route path="/ingredients/:ingredientId" component={IngredientPage} />
     <Route path="/search" component={SearchPage} />
   </Switch>
 );

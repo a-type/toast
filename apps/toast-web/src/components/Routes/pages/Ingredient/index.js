@@ -6,6 +6,6 @@ import Summary from 'components/ingredients/Summary';
 
 export default ({ match: { params } }) => (
   <Layout>
-    <Summary ingredientName={params.ingredientName} />
+    <Summary ingredientId={params.ingredientId} />
   </Layout>
 );
