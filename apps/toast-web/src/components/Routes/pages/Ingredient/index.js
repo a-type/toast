@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Layout from 'components/generic/layouts/CenterColumnPage';
-import Summary from 'components/ingredients/Summary';
+import Details from 'components/ingredients/Details';
 
 export default ({ match: { params } }) => (
   <Layout>
-    <Summary ingredientId={params.ingredientId} />
+    <Details ingredientId={params.ingredientId} />
   </Layout>
 );

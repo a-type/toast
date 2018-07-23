@@ -93,3 +93,27 @@ export const listRecipes = async (
     return result.records.map(rec => rec.get('recipe'));
   });
 };
+
+export const listRecipesForIngredient = async (
+  ingredientId,
+  { offset, count },
+  ctx
+) => {
+  const session = ctx.getSession();
+  return session.readTransaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (ingredient:Ingredient { id: $ingredientId })-[:INGREDIENT_OF]->(recipe:Recipe)
+        RETURN recipe { .id, .title, .description }
+        SKIP $offset LIMIT $count
+      `,
+      {
+        ingredientId,
+        offset,
+        count
+      }
+    );
+
+    return result.records.map(rec => rec.get('recipe'));
+  });
+};

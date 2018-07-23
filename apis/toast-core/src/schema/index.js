@@ -19,6 +19,11 @@ const globalTypeDefs = `
     toIndex: Int!
   }
 
+  input ListPaginationInput {
+    offset: Int
+    count: Int
+  }
+
   type Query {
     hello: String!
   }

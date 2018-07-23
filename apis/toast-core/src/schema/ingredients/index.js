@@ -1,5 +1,9 @@
-import { neo4jgraphql } from 'neo4j-graphql-js';
-import { createIngredient } from './service';
+import {
+  listIngredients,
+  getIngredient,
+  createIngredient,
+  updateIngredient
+} from './service';
 
 export const typeDefs = `
 type Ingredient {
@@ -22,7 +26,7 @@ input IngredientUpdateInput {
 }
 
 extend type Query {
-  ingredients: [Ingredient!]!
+  ingredients(pagination: ListPaginationInput): [Ingredient!]!
   ingredient(id: ID!): Ingredient
 }
 
@@ -34,12 +38,14 @@ extend type Mutation {
 
 export const resolvers = {
   Query: {
-    ingredients: neo4jgraphql,
-    ingredient: neo4jgraphql
+    ingredients: (_parent, args, ctx, info) =>
+      listIngredients(args.pagination, ctx),
+    ingredient: (_parent, args, ctx, info) => getIngredient(args.id, ctx)
   },
   Mutation: {
     createIngredient: (_parent, args, ctx, info) =>
       createIngredient(args.input, ctx),
-    updateIngredient: neo4jgraphql
+    updateIngredient: (_parent, args, ctx, info) =>
+      updateIngredient(args.id, args.input, ctx)
   }
 };

@@ -2,7 +2,8 @@ import {
   createRecipe,
   updateRecipeDetails,
   getRecipe,
-  listRecipes
+  listRecipes,
+  listRecipesForIngredient
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -31,13 +32,8 @@ input ImageCreateInput {
   file: Upload!
 }
 
-input RecipeListInput {
-  offset: Int
-  count: Int
-}
-
 extend type Query {
-  recipes(input: RecipeListInput): [Recipe]!
+  recipes(pagination: ListPaginationInput): [Recipe!]!
   recipe(id: ID!): Recipe
 }
 
@@ -45,6 +41,10 @@ extend type Mutation {
   createRecipe(input: RecipeCreateInput!): Recipe @authenticated
   updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe @authenticated @relatedToUser
   deleteRecipe(id: ID!): Recipe @authenticated @relatedToUser
+}
+
+extend type Ingredient {
+  recipes(input: ListPaginationInput): [Recipe!]!
 }
 `,
   recipeIngredients.typeDefs,
@@ -54,7 +54,7 @@ extend type Mutation {
 export const resolvers = [
   {
     Query: {
-      recipes: (_parent, args, ctx, info) => listRecipes(args.input, ctx),
+      recipes: (_parent, args, ctx, info) => listRecipes(args.pagination, ctx),
       recipe: (_parent, args, ctx, info) => getRecipe(args.id, ctx)
     },
     Mutation: {
@@ -62,6 +62,14 @@ export const resolvers = [
         createRecipe(ctx.user, args.input, ctx),
       updateRecipeDetails: (_parent, args, ctx, info) =>
         updateRecipeDetails(args, ctx)
+    },
+    Ingredient: {
+      recipes: (parent, args, ctx, info) =>
+        listRecipesForIngredient(
+          parent.id,
+          args.input || { offset: 0, count: 25 },
+          ctx
+        )
     }
   },
   recipeIngredients.resolvers,
