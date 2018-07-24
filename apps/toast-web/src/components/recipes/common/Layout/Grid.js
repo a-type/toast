@@ -7,8 +7,9 @@ export default styled.div`
     'header'
     'details'
     'ingredients'
-    'steps';
-  grid-template-rows: calc(var(--rhythm) * 15) repeat(3, auto);
+    'steps'
+    'jumpControls';
+  grid-template-rows: calc(var(--rhythm) * 15) repeat(4, auto);
   padding-left: ${LARGE_PADDING_LEFT}px;
 
   @media (max-width: ${LARGE_BREAKPOINT}px) {

@@ -7,6 +7,7 @@ import Steps from './Content/Steps';
 import Grid from './Grid';
 import Skeleton from './Skeleton';
 import Page from './Page';
+import JumpControls from './JumpControls';
 
 export type Props = {
   loading: boolean,
@@ -22,6 +23,7 @@ export default class RecipeLayout extends React.PureComponent<Props> {
   static Details = Details;
   static Ingredients = Ingredients;
   static Steps = Steps;
+  static JumpControls = JumpControls;
 
   render() {
     const { loading, children } = this.props;

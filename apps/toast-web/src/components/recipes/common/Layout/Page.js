@@ -6,11 +6,13 @@ export default styled.div`
   z-index: -1;
   grid-area: details / details / steps / steps;
   background: var(--color-white);
-  width: ${CONTENT_WIDTH}px;
+  width: ${CONTENT_WIDTH + 2}px;
   border-radius: 10px;
   border: 1px solid var(--color-gray-light);
 
   @media (max-width: ${LARGE_BREAKPOINT}px) {
     width: auto;
+    left: -1px;
+    right: -1px;
   }
 `;

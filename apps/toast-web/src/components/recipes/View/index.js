@@ -97,6 +97,7 @@ export default class RecipeView extends React.PureComponent<Props> {
                     steps={pathOr([], ['data', 'recipe', 'steps'], response)}
                   />
                 </Layout.Steps>
+                <Layout.JumpControls />
               </React.Fragment>
             )}
           </Layout>
