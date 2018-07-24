@@ -27,7 +27,7 @@ export default ({
   ) : (
     <Bubbles
       backgroundColor="brand-light"
-      bubbleColors={['positive', 'negative']}
+      bubbleColors={['positive', 'negative', 'brand-light']}
       bubbleCount={10}
       style={{
         position: 'absolute',

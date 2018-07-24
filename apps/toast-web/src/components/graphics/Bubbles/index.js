@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { createRef } from 'react';
 import Wrapper from './Wrapper';
 import Bubble from './Bubble';
 
@@ -15,6 +15,7 @@ export type Props = {
 
 type State = {
   showBubbles: boolean,
+  bubbleSize: number,
 };
 
 export default class Bubbles extends React.PureComponent<Props, State> {
@@ -26,6 +27,25 @@ export default class Bubbles extends React.PureComponent<Props, State> {
 
   state = {
     showBubbles: !this.props.animated,
+    bubbleSize: 0,
+  };
+
+  wrapperRef = createRef();
+
+  componentDidMount() {
+    this.updateSize();
+  }
+
+  componentDidUpdate() {
+    this.updateSize();
+  }
+
+  updateSize = () => {
+    if (this.wrapperRef.current) {
+      this.setState({
+        bubbleSize: this.wrapperRef.current.clientWidth / 3,
+      });
+    }
   };
 
   onMouseEnter = () => {
@@ -50,6 +70,7 @@ export default class Bubbles extends React.PureComponent<Props, State> {
       bubbleCount,
       style,
     } = this.props;
+    const { bubbleSize } = this.state;
 
     return (
       <Wrapper
@@ -59,6 +80,7 @@ export default class Bubbles extends React.PureComponent<Props, State> {
         onTouchEnd={this.onMouseLeave}
         backgroundColor={backgroundColor}
         style={style}
+        innerRef={this.wrapperRef}
       >
         {new Array(bubbleCount)
           .fill(null)
@@ -67,6 +89,7 @@ export default class Bubbles extends React.PureComponent<Props, State> {
               colorOptions={bubbleColors}
               show={this.state.showBubbles}
               key={key}
+              size={bubbleSize}
             />
           ))}
         {children}

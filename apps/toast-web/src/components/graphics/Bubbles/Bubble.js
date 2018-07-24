@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ show, colorOptions }) => {
+export default ({ show, colorOptions, size }) => {
   const colorIdx = Math.floor(Math.random() * colorOptions.length);
 
   if (!show) {
@@ -21,7 +21,7 @@ export default ({ show, colorOptions }) => {
     );
   }
 
-  const size = Math.random() * 2 + 4;
+  const randomSize = (Math.random() * 0.5 - 0.25 + 1) * size;
   const x = Math.random() * 100;
   const y = Math.random() * 100;
   return (
@@ -34,8 +34,8 @@ export default ({ show, colorOptions }) => {
         transition: '0.2s ease-in-out all',
         top: `${y}%`,
         left: `${x}%`,
-        width: `${size}vh`,
-        height: `${size}vh`,
+        width: `${randomSize}px`,
+        height: `${randomSize}px`,
       }}
     />
   );

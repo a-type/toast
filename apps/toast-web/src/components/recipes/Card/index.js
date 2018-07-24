@@ -15,7 +15,7 @@ const RecipeCard = ({
 }) => (
   <Link.Clear to={`/recipes/${id}`}>
     <Box imageSrc={coverImage ? coverImage.url : null}>
-      <Title>{title}</Title>
+      <Title hasImage={!!coverImage}>{title}</Title>
     </Box>
   </Link.Clear>
 );

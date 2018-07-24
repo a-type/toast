@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+const mainShadow = ({ imageSrc }) =>
+  imageSrc ? 'inset 0 -36px 24px 0 #00000080' : '0';
+const hoverShadow = ({ imageSrc }) =>
+  imageSrc
+    ? 'inset 0 -36px 24px 0 #00000080, 0 0 0 8px var(--color-brand-light)'
+    : '0 0 0 8px var(--color-brand-light)';
+
 export default styled.div`
   padding: 10px;
   background-color: var(--color-white);
@@ -10,13 +17,13 @@ export default styled.div`
   display: flex;
   align-items: flex-end;
   border-radius: 5px;
-  box-shadow: inset 0 -36px 24px 0 #00000080;
+  box-shadow: ${mainShadow};
+  border: 1px solid var(--color-gray-light);
   transition: 0.2s ease all;
 
   a:focus > &,
   a:hover > & {
     background-color: var(--color-brand);
-    box-shadow: inset 0 -36px 24px 0 #00000080,
-      0 0 0 8px var(--color-brand-light);
+    box-shadow: ${hoverShadow};
   }
 `;

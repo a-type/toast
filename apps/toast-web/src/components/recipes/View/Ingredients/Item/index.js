@@ -13,9 +13,9 @@ const displayUnits = (unit, unitValue) => {
 };
 
 export default ({ unit, unitValue, name, note }) => (
-  <React.Fragment>
+  <li>
     <Units>{displayUnits(unit, unitValue)}</Units>
     <Ingredient>{name}</Ingredient>
     {note && <Note>{note}</Note>}
-  </React.Fragment>
+  </li>
 );

@@ -13,7 +13,7 @@ type RecipeIngredient {
   unit: String
   unitValue: Float!
   index: Int!
-  note: String!
+  note: String
 }
 
 input RecipeIngredientCreateInput {

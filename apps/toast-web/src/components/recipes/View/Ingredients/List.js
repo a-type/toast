@@ -1,14 +1,9 @@
 import styled from 'styled-components';
 import Units from './Item/Units';
 
-export default styled.div`
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  grid-auto-rows: var(--rhythm);
-  grid-gap: var(--rhythm) var(--spacing-sm);
+export default styled.ol`
   align-items: baseline;
-
-  & > ${Units} {
-    justify-self: end;
-  }
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
 `;
