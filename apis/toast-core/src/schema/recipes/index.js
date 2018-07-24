@@ -15,17 +15,23 @@ type Recipe {
   id: ID!
   title: String!
   description: String
+  attribution: String
+  sourceUrl: String
 }
 
 input RecipeCreateInput {
   title: String!
   description: String
+  attribution: String
+  sourceUrl: String
 }
 
 input RecipeDetailsUpdateInput {
   title: String
   description: String
   coverImage: ImageCreateInput
+  attribution: String
+  sourceUrl: String
 }
 
 input ImageCreateInput {
@@ -61,7 +67,7 @@ export const resolvers = [
       createRecipe: (_parent, args, ctx, info) =>
         createRecipe(ctx.user, args.input, ctx),
       updateRecipeDetails: (_parent, args, ctx, info) =>
-        updateRecipeDetails(args, ctx)
+        updateRecipeDetails(args.id, args.input, ctx)
     },
     Ingredient: {
       recipes: (parent, args, ctx, info) =>

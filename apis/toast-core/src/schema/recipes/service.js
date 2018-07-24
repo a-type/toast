@@ -2,17 +2,18 @@ import { pick } from 'ramda';
 import uuid from 'uuid';
 import gcloudStorage from 'services/gcloudStorage';
 
-export const createRecipe = async (user, { title, description }, ctx) => {
+const FIELDS = '.id, .title, .description, .attribution, .sourceUrl';
+
+export const createRecipe = async (user, input, ctx) => {
   const session = ctx.getSession();
   const result = await session.run(
     `
       CREATE (r:Recipe {title: $title, description: $description, id: $id}),
         (r)<-[:AUTHOR_OF]-(u:User {id: $userId})
-      RETURN r {.id, .title, .description}, u {.id, .name, .username}
+      RETURN r {${FIELDS}}, u {.id, .name, .username}
     `,
     {
-      title,
-      description,
+      input: pick(['title', 'description', 'attribution', 'sourceUrl'], input),
       id: uuid(),
       userId: user.id
     }
@@ -27,31 +28,34 @@ export const createRecipe = async (user, { title, description }, ctx) => {
   };
 };
 
-export const updateRecipeDetails = async (args, ctx) => {
+export const updateRecipeDetails = async (id, input, ctx) => {
   const session = ctx.getSession();
   return session.writeTransaction(async tx => {
     const details = await tx.run(
       `
       MATCH (recipe:Recipe {id: $id})
       SET recipe += $input
-      RETURN recipe {.id, .title, .description};
+      RETURN recipe { ${FIELDS} };
     `,
-      { id: args.id, input: pick(['title', 'description'], args.input) }
+      {
+        id,
+        input: pick(['title', 'description', 'attribution', 'sourceUrl'], input)
+      }
     );
 
     if (details.records.length === 0) {
       throw new Error("That recipe doesn't exist");
     }
 
-    if (args.input.coverImage) {
-      const file = await args.input.coverImage.file;
+    if (input.coverImage) {
+      const file = await input.coverImage.file;
       const uploaded = await gcloudStorage.upload(file, 'images');
       await tx.run(
         `
         MATCH (r:Recipe {id: $id})
         MERGE (r)-[:COVER_IMAGE]->(:Image {id: $imageId, url: $url})
         `,
-        { id: args.id, imageId: uploaded.id, url: uploaded.url }
+        { id: id, imageId: uploaded.id, url: uploaded.url }
       );
     }
 
@@ -63,7 +67,7 @@ export const getRecipe = async (id, ctx) => {
   const session = ctx.getSession();
   const recipeResult = await session.run(
     `
-      MATCH (recipe:Recipe {id: $id}) RETURN recipe { .id, .title, .description }
+      MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${FIELDS} }
     `,
     { id }
   );
@@ -84,7 +88,7 @@ export const listRecipes = async (
     const result = await tx.run(
       `
         MATCH (recipe:Recipe)
-        RETURN recipe { .id, .title, .description }
+        RETURN recipe { ${FIELDS} }
         SKIP $offset LIMIT $count
       `,
       { offset, count }
@@ -104,7 +108,7 @@ export const listRecipesForIngredient = async (
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $ingredientId })-[:INGREDIENT_OF]->(recipe:Recipe)
-        RETURN recipe { .id, .title, .description }
+        RETURN recipe { ${FIELDS} }
         SKIP $offset LIMIT $count
       `,
       {
