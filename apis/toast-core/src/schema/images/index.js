@@ -1,4 +1,4 @@
-import { getRecipeCoverImage } from './service';
+import { getRecipeCoverImage, updateRecipeCoverImage } from './service';
 
 export const typeDefs = `
 type Image {
@@ -9,14 +9,28 @@ type Image {
 extend type Recipe {
   coverImage: Image
 }
+
+input ImageCreateInput {
+  file: Upload!
+}
+
+extend type Mutation {
+  updateRecipeCoverImage(id: ID!, input: ImageCreateInput!): Recipe!
+}
 `;
 
 export const resolvers = {
   Recipe: {
     coverImage: (parent, args, ctx, info) => {
-      const coverImage = getRecipeCoverImage(parent.id, ctx);
+      if (parent.coverImage) {
+        return parent.coverImage;
+      }
 
-      return coverImage;
+      return getRecipeCoverImage(parent.id, ctx);
     }
+  },
+  Mutation: {
+    updateRecipeCoverImage: (parent, args, ctx, info) =>
+      updateRecipeCoverImage(args.id, args.input, ctx)
   }
 };

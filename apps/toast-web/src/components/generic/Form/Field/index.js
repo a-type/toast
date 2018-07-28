@@ -20,7 +20,9 @@ const renderLabel = ({ gridArea, fieldProps }) =>
 
 const renderContent = ({ gridArea, fieldProps }) =>
   fieldProps.children && (
-    <div style={{ gridArea, height: '48px' }}>{fieldProps.children}</div>
+    <div style={{ gridArea, marginBottom: 'var(--spacing-sm)' }}>
+      {fieldProps.children}
+    </div>
   );
 
 Field.Group = withProps({

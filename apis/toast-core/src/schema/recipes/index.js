@@ -29,13 +29,8 @@ input RecipeCreateInput {
 input RecipeDetailsUpdateInput {
   title: String
   description: String
-  coverImage: ImageCreateInput
   attribution: String
   sourceUrl: String
-}
-
-input ImageCreateInput {
-  file: Upload!
 }
 
 extend type Query {

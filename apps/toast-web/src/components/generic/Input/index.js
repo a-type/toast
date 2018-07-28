@@ -30,7 +30,6 @@ const sharedSolidStyles = css`
   `};
 
   padding: 5px 11px;
-  margin-bottom: -12px;
 `;
 
 const Input = styled.input`
@@ -46,7 +45,6 @@ Input.H1 = styled(Input)`
   font-family: var(--font-fancy);
   display: inline-block;
   margin-top: 6px;
-  margin-bottom: -14px;
   padding-bottom: 0;
 `;
 

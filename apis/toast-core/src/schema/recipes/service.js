@@ -2,15 +2,16 @@ import { pick } from 'ramda';
 import uuid from 'uuid';
 import gcloudStorage from 'services/gcloudStorage';
 
-const FIELDS = '.id, .title, .description, .attribution, .sourceUrl';
+export const RECIPE_FIELDS =
+  '.id, .title, .description, .attribution, .sourceUrl';
 
 export const createRecipe = async (user, input, ctx) => {
   const session = ctx.getSession();
   const result = await session.run(
     `
-      CREATE (r:Recipe {title: $title, description: $description, id: $id}),
+      CREATE (r:Recipe {title: $input.title, description: $input.description, id: $id}),
         (r)<-[:AUTHOR_OF]-(u:User {id: $userId})
-      RETURN r {${FIELDS}}, u {.id, .name, .username}
+      RETURN r {${RECIPE_FIELDS}}, u {.id, .name, .username}
     `,
     {
       input: pick(['title', 'description', 'attribution', 'sourceUrl'], input),
@@ -35,7 +36,7 @@ export const updateRecipeDetails = async (id, input, ctx) => {
       `
       MATCH (recipe:Recipe {id: $id})
       SET recipe += $input
-      RETURN recipe { ${FIELDS} };
+      RETURN recipe { ${RECIPE_FIELDS} };
     `,
       {
         id,
@@ -47,18 +48,6 @@ export const updateRecipeDetails = async (id, input, ctx) => {
       throw new Error("That recipe doesn't exist");
     }
 
-    if (input.coverImage) {
-      const file = await input.coverImage.file;
-      const uploaded = await gcloudStorage.upload(file, 'images');
-      await tx.run(
-        `
-        MATCH (r:Recipe {id: $id})
-        MERGE (r)-[:COVER_IMAGE]->(:Image {id: $imageId, url: $url})
-        `,
-        { id: id, imageId: uploaded.id, url: uploaded.url }
-      );
-    }
-
     return details.records[0].get('recipe');
   });
 };
@@ -67,7 +56,7 @@ export const getRecipe = async (id, ctx) => {
   const session = ctx.getSession();
   const recipeResult = await session.run(
     `
-      MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${FIELDS} }
+      MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${RECIPE_FIELDS} }
     `,
     { id }
   );
@@ -88,7 +77,7 @@ export const listRecipes = async (
     const result = await tx.run(
       `
         MATCH (recipe:Recipe)
-        RETURN recipe { ${FIELDS} }
+        RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,
       { offset, count }
@@ -108,7 +97,7 @@ export const listRecipesForIngredient = async (
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $ingredientId })-[:INGREDIENT_OF]->(recipe:Recipe)
-        RETURN recipe { ${FIELDS} }
+        RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,
       {

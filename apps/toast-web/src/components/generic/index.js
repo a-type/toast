@@ -12,3 +12,5 @@ export { default as Docked } from './Docked';
 export { default as Loader } from './Loader';
 export { default as P } from './P';
 export { default as Span } from './Span';
+export { default as Collapse } from './Collapse';
+export { default as Stages } from './Stages';
