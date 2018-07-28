@@ -5,8 +5,8 @@ import { Mutation } from 'react-apollo';
 import { Form, Input, Button } from 'components/generic';
 import { merge } from 'ramda';
 
-const RecipeDetailsFragment = gql`
-  fragment RecipeDetails on Recipe {
+export const RecipeCreateDetailsFragment = gql`
+  fragment RecipeCreateDetails on Recipe {
     id
     title
     description
@@ -18,21 +18,21 @@ const RecipeDetailsFragment = gql`
 const CreateRecipe = gql`
   mutation CreateRecipe($input: RecipeCreateInput!) {
     createRecipe(input: $input) {
-      ...RecipeDetails
+      ...RecipeCreateDetails
     }
   }
 
-  ${RecipeDetailsFragment}
+  ${RecipeCreateDetailsFragment}
 `;
 
 const UpdateRecipe = gql`
   mutation UpdateRecipe($id: ID!, $input: RecipeDetailsUpdateInput!) {
     updateRecipeDetails(id: $id, input: $input) {
-      ...RecipeDetails
+      ...RecipeCreateDetails
     }
   }
 
-  ${RecipeDetailsFragment}
+  ${RecipeCreateDetailsFragment}
 `;
 
 export default class RecipeCreatorDetails extends React.PureComponent {

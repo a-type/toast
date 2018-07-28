@@ -12,14 +12,16 @@ import CrossFade from '../CrossFade';
 
 export default ({ title, summary, stageIndex, children }) => (
   <Consumer>
-    {({ stage, onStageChanged }) => (
+    {({ stage, completedStage, onStageChanged }) => (
       <StageContainer>
         <HeadingRow>
           <Number
             active={stage === stageIndex}
-            complete={stage > stageIndex}
+            complete={completedStage >= stageIndex}
             onClick={
-              stage > stageIndex ? () => onStageChanged(stageIndex) : null
+              completedStage >= stageIndex - 1 && stage !== stageIndex
+                ? () => onStageChanged(stageIndex)
+                : null
             }
           >
             {stageIndex + 1}

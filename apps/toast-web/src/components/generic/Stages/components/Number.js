@@ -6,18 +6,30 @@ const SIZE = 'var(--font-size-xl)';
 const Outer = styled.div`
   border: 1px solid
     ${props => {
+      if (props.active) {
+        return 'var(--color-brand)';
+      }
       if (props.complete) {
         return 'var(--color-positive)';
       }
-      if (props.active) {
+      if (props.onClick) {
         return 'var(--color-brand)';
       }
       return 'var(--color-gray-light)';
     }};
   color: ${props =>
-    props.complete ? 'var(--color-white)' : 'var(--color-black)'};
-  background: ${props =>
-    props.complete ? 'var(--color-positive)' : 'transparent'};
+    props.complete || props.active
+      ? 'var(--color-white)'
+      : 'var(--color-black)'};
+  background: ${props => {
+    if (props.active) {
+      return 'var(--color-brand)';
+    }
+    if (props.complete) {
+      return 'var(--color-positive)';
+    }
+    return 'transparent';
+  }};
   border-radius: 100%;
   width: ${SIZE};
   height: ${SIZE};
