@@ -1,11 +1,16 @@
 import uuid from 'uuid';
+import { RECIPE_FIELDS } from '../service';
+import { pick } from 'ramda';
+
+export const RECIPE_INGREDIENT_FIELDS = '.id, .index, .unit, .unitValue, .note';
+export const INGREDIENT_FIELDS = '.id, .name, .description';
 
 export const getForRecipe = async (id, ctx) => {
   const session = ctx.getSession();
   const result = await session.run(
     `
     MATCH (ingredient:Ingredient)-[rel:INGREDIENT_OF]->(:Recipe {id: $id})
-    RETURN rel { .id, .index, .unit, .unitValue, .note }, ingredient { .name, .description, .id } ORDER BY rel.index
+    RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ingredient {${INGREDIENT_FIELDS}} ORDER BY rel.index
   `,
     { id }
   );
@@ -25,20 +30,20 @@ export const createRecipeIngredient = async (recipeId, args, ctx) => {
       OPTIONAL MATCH (recipe)<-[allIngredients:INGREDIENT_OF]-()
       WITH recipe, count(allIngredients) as index, ingredient
       CREATE (recipe)<-[rel:INGREDIENT_OF {id: $relId, index: index, unit: $unit, unitValue: $unitValue}]-(ingredient)
-      RETURN rel {.id, .index, .unit, .unitValue, .note}
+      RETURN recipe {${RECIPE_FIELDS}}
       `,
       {
         id: recipeId,
         ingredientId: args.ingredientId,
         relId: uuid(),
-        unit: args.unit,
+        unit: args.unit || null,
         unitValue: args.unitValue,
         note: args.note
       }
     );
 
     if (result.records.length) {
-      return result.records[0].get('rel');
+      return result.records[0].get('recipe');
     }
   });
 };
@@ -48,18 +53,25 @@ export const updateRecipeIngredient = async (id, args, ctx) => {
   return session.writeTransaction(async tx => {
     const result = await tx.run(
       `
-      MATCH ()<-[rel:INGREDIENT_OF {id: $relId}]-()
+      MATCH (:User {id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
       SET rel += $ingredientProps
-      RETURN rel {.id, .index, .unit, .unitValue, .note}
+      RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ing {${INGREDIENT_FIELDS}}
     `,
       {
         relId: id,
-        ingredientProps: pick(['unit', 'unitValue', 'note'], args)
+        ingredientProps: pick(['unit', 'unitValue', 'note'], args),
+        userId: ctx.user.id
       }
     );
 
     if (result.records.length) {
-      return result.records[0].get('rel');
+      const rel = result.records[0].get('rel');
+      return {
+        ...rel,
+        ingredient: result.records[0].get('ing')
+      };
+    } else {
+      throw new Error('No such recipe ingredient exists');
     }
   });
 };
@@ -103,7 +115,7 @@ export const moveRecipeIngredient = async (recipeId, args, ctx) => {
     }
 
     const recipeResult = await tx.run(
-      `MATCH (r:Recipe {id: $id}) RETURN r {.id, .title, .description}`,
+      `MATCH (r:Recipe {id: $id}) RETURN r {${RECIPE_FIELDS}}`,
       { id: recipeId }
     );
     return recipeResult.records[0].get('r');

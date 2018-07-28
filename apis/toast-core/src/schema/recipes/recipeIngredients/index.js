@@ -24,7 +24,6 @@ input RecipeIngredientCreateInput {
 }
 
 input RecipeIngredientUpdateInput {
-  id: ID!
   unit: String
   unitValue: Float
   note: String
@@ -35,9 +34,9 @@ extend type Recipe {
 }
 
 extend type Mutation {
-  updateRecipeIngredient(id: ID!, input: RecipeIngredientUpdateInput!): RecipeIngredient @authenticated @relatedToUser
-  createRecipeIngredient(recipeId: ID!, input: RecipeIngredientCreateInput!): RecipeIngredient @authenticated @relatedToUser(idArg: "recipeId")
-  moveRecipeIngredient(recipeId: ID!, input: ListMoveInput!): Recipe @authenticated @relatedToUser(idArg: "recipeId")
+  updateRecipeIngredient(id: ID!, input: RecipeIngredientUpdateInput!): RecipeIngredient! @authenticated
+  createRecipeIngredient(recipeId: ID!, input: RecipeIngredientCreateInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
+  moveRecipeIngredient(recipeId: ID!, input: ListMoveInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
 }
 `;
 

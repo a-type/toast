@@ -10,7 +10,11 @@ import IngredientSuggestion from './IngredientSuggestion';
 import Container from './Container';
 import SectionTitle from './SectionTitle';
 
-export default class SearchBar extends React.PureComponent {
+type State = {
+  active: boolean,
+};
+
+export default class SearchBar extends React.PureComponent<*, State> {
   state = {
     active: false,
   };

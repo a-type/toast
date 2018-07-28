@@ -64,16 +64,16 @@ export default class RecipeCreatorDetails extends React.PureComponent {
           >
             {({ values, handleSubmit, handleChange }) => (
               <Form onSubmit={handleSubmit}>
-                <Form.Field.Group columns={1}>
+                <Form.Field.Group columns={2}>
                   <Form.Field label="Title" required>
-                    <Input.H1
+                    <Input
                       required
                       name="title"
                       value={values.title}
                       onChange={handleChange}
                     />
                   </Form.Field>
-                  <Form.Field label="Description">
+                  <Form.Field label="Description" columnSpan={2}>
                     <Input.Block
                       name="description"
                       value={values.description}

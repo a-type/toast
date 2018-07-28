@@ -1,21 +1,44 @@
 import React from 'react';
 import Details, { RecipeCreateDetailsFragment } from './Details';
+import Ingredients, { RecipeCreateIngredientsFragment } from './Ingredients';
 import { Stages, H1 } from 'components/generic';
 import { Layout } from './components';
-import { pick } from 'ramda';
+import { pick, path } from 'ramda';
 import gql from 'graphql-tag';
 
 export const RecipeCreateViewFragment = gql`
   fragment RecipeCreateView on Recipe {
     ...RecipeCreateDetails
+    ...RecipeCreateIngredients
   }
 
   ${RecipeCreateDetailsFragment}
+  ${RecipeCreateIngredientsFragment}
 `;
 
 export default class RecipeCreator extends React.PureComponent {
+  getCompletedStage = () => {
+    if (!this.props.recipe) {
+      return -1;
+    }
+
+    const { recipe } = this.props;
+
+    if (recipe.steps) {
+      return 2;
+    }
+
+    if (recipe.ingredients) {
+      return 1;
+    }
+
+    if (recipe.title) {
+      return 0;
+    }
+  };
+
   state = {
-    stage: 0,
+    stage: this.getCompletedStage(),
   };
 
   handleStageChanged = stage => this.setState({ stage });
@@ -40,15 +63,15 @@ export default class RecipeCreator extends React.PureComponent {
   };
 
   parseProvidedData = () => {
-    const { externalParams } = this.props;
+    const { externalParams = {} } = this.props;
 
     return {
-      title: externalParams.ttl,
-      description: externalParams.dsc,
-      attribution: externalParams.att,
-      sourceUrl: externalParams.src,
-      ingredients: this.parseIngredientStrings(externalParams.ing),
-      steps: this.parseStepStrings(externalParams.stp),
+      title: path(['ttl'], externalParams),
+      description: path(['dsc'], externalParams),
+      attribution: path(['att'], externalParams),
+      sourceUrl: path(['src'], externalParams),
+      ingredients: this.parseIngredientStrings(path(['ing'], externalParams)),
+      steps: this.parseStepStrings(path(['stp'], externalParams)),
     };
   };
 
@@ -60,29 +83,9 @@ export default class RecipeCreator extends React.PureComponent {
     this.handleStageChanged(1);
   };
 
-  getCompletedStage = () => {
-    if (!this.props.recipeId) {
-      return -1;
-    }
-
-    const { recipe } = this.props;
-
-    if (recipe.steps) {
-      return 2;
-    }
-
-    if (recipe.ingredients) {
-      return 1;
-    }
-
-    if (recipe.title) {
-      return 0;
-    }
-  };
-
   detailSummary = () => {
     const { recipe } = this.props;
-    if (!recipe.title) {
+    if (!path(['title'], recipe)) {
       return 'Title, attribution, etc';
     }
     return `${recipe.title} | ${recipe.description.substring(0, 30)}...`;
@@ -90,7 +93,7 @@ export default class RecipeCreator extends React.PureComponent {
 
   ingredientSummary = () => {
     const { recipe } = this.props;
-    if (!recipe.ingredients) {
+    if (!path(['ingredients'], recipe)) {
       return 'What you need to prepare this recipe';
     }
 
@@ -134,7 +137,10 @@ export default class RecipeCreator extends React.PureComponent {
             title="Ingredients &amp; Prep"
             summary={this.ingredientSummary()}
           >
-            <div>foo</div>
+            <Ingredients
+              recipeId={recipeId}
+              ingredients={path(['ingredients'], provided)}
+            />
           </Stages.Stage>
         </Stages>
       </Layout>

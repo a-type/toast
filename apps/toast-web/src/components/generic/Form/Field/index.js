@@ -20,7 +20,12 @@ const renderLabel = ({ gridArea, fieldProps }) =>
 
 const renderContent = ({ gridArea, fieldProps }) =>
   fieldProps.children && (
-    <div style={{ gridArea, marginBottom: 'var(--spacing-sm)' }}>
+    <div
+      style={{
+        gridArea,
+        marginBottom: 'var(--spacing-sm)',
+      }}
+    >
       {fieldProps.children}
     </div>
   );

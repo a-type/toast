@@ -21,7 +21,7 @@ export default props => (
     variables={{ id: props.recipeId }}
   >
     {result => {
-      if (result.loading) {
+      if (props.recipeId && result.loading) {
         return <Loader />;
       }
       if (result.error) {

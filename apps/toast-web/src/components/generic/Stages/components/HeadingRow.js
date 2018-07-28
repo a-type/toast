@@ -6,6 +6,8 @@ export default styled.div`
 
   margin-bottom: var(--spacing-sm);
 
+  cursor: ${props => (props.onClick ? 'pointer' : 'default')};
+
   & > * {
     margin-top: auto;
     margin-bottom: auto;

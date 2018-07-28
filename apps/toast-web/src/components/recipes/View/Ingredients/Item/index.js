@@ -16,6 +16,11 @@ export default ({ unit, unitValue, name, note }) => (
   <li>
     <Units>{displayUnits(unit, unitValue)}</Units>
     <Ingredient>{name}</Ingredient>
-    {note && <Note>{note}</Note>}
+    {note && (
+      <React.Fragment>
+        <span> | </span>
+        <Note>{note}</Note>
+      </React.Fragment>
+    )}
   </li>
 );

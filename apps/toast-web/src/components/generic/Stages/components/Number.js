@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const SIZE = 'var(--font-size-xl)';
 
 const Outer = styled.div`
-  border: 1px solid
+  border: 2px ${props => (props.available || props.active ? 'solid' : 'dotted')}
     ${props => {
       if (props.active) {
         return 'var(--color-brand)';
@@ -12,21 +12,16 @@ const Outer = styled.div`
       if (props.complete) {
         return 'var(--color-positive)';
       }
-      if (props.onClick) {
+      if (props.available) {
         return 'var(--color-brand)';
       }
       return 'var(--color-gray-light)';
     }};
   color: ${props =>
-    props.complete || props.active
-      ? 'var(--color-white)'
-      : 'var(--color-black)'};
+    props.active ? 'var(--color-white)' : 'var(--color-black)'};
   background: ${props => {
     if (props.active) {
       return 'var(--color-brand)';
-    }
-    if (props.complete) {
-      return 'var(--color-positive)';
     }
     return 'transparent';
   }};
@@ -34,7 +29,6 @@ const Outer = styled.div`
   width: ${SIZE};
   height: ${SIZE};
   text-align: center;
-  cursor: ${props => (props.onClick ? 'pointer' : 'default')};
   display: flex;
 
   transition: 0.2s ease all;

@@ -5,4 +5,5 @@ export default styled.h2`
   font-family: var(--font-fancy);
   font-weight: var(--normal);
   font-size: var(--font-size-lg);
+  margin-top: 0;
 `;
