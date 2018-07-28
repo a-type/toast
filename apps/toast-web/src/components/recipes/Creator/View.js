@@ -52,8 +52,11 @@ export default class RecipeCreator extends React.PureComponent {
     };
   };
 
-  handleRecipeCreate = recipeId => {
-    this.props.onCreate(recipeId);
+  handleDetailsSave = recipeId => {
+    if (!this.props.recipeId) {
+      this.props.onCreate(recipeId);
+    }
+
     this.handleStageChanged(1);
   };
 
@@ -77,6 +80,28 @@ export default class RecipeCreator extends React.PureComponent {
     }
   };
 
+  detailSummary = () => {
+    const { recipe } = this.props;
+    if (!recipe.title) {
+      return 'Title, attribution, etc';
+    }
+    return `${recipe.title} | ${recipe.description.substring(0, 30)}...`;
+  };
+
+  ingredientSummary = () => {
+    const { recipe } = this.props;
+    if (!recipe.ingredients) {
+      return 'What you need to prepare this recipe';
+    }
+
+    return (
+      recipe.ingredients
+        .slice(0, 3)
+        .map(({ ingredient: { name } }) => name)
+        .join(', ') + ' ...'
+    );
+  };
+
   render() {
     const { recipeId, recipe } = this.props;
 
@@ -84,7 +109,7 @@ export default class RecipeCreator extends React.PureComponent {
 
     return (
       <Layout>
-        <H1>{recipeId ? 'Update Recipe' : 'Submit a Recipe'}</H1>
+        <H1>{recipeId ? recipe.title : 'Submit a Recipe'}</H1>
         <Stages
           stage={this.state.stage}
           onStageChanged={this.handleStageChanged}
@@ -93,11 +118,11 @@ export default class RecipeCreator extends React.PureComponent {
           <Stages.Stage
             stageIndex={0}
             title="Basic Details"
-            summary="Basic information about this recipe"
+            summary={this.detailSummary()}
           >
             <Details
               recipeId={recipeId}
-              onCreate={this.handleRecipeCreate}
+              onSave={this.handleDetailsSave}
               initialValues={pick(
                 ['title', 'description', 'attribution', 'sourceUrl'],
                 provided,
@@ -107,7 +132,7 @@ export default class RecipeCreator extends React.PureComponent {
           <Stages.Stage
             stageIndex={1}
             title="Ingredients &amp; Prep"
-            summary="What you need to prepare this recipe"
+            summary={this.ingredientSummary()}
           >
             <div>foo</div>
           </Stages.Stage>

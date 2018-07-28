@@ -37,7 +37,7 @@ const UpdateRecipe = gql`
 
 export default class RecipeCreatorDetails extends React.PureComponent {
   render() {
-    const { recipeId, onCreate, initialValues } = this.props;
+    const { recipeId, onSave, initialValues } = this.props;
 
     const defaultedInitialValues = merge(
       {
@@ -58,9 +58,8 @@ export default class RecipeCreatorDetails extends React.PureComponent {
               const result = await save({
                 variables: { id: recipeId, input: values },
               });
-              if (!recipeId) {
-                onCreate(result.data.createRecipe.id);
-              }
+              const keyName = recipeId ? 'updateRecipeDetails' : 'createRecipe';
+              onSave(result.data[keyName].id);
             }}
           >
             {({ values, handleSubmit, handleChange }) => (
@@ -97,7 +96,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                   </Form.Field>
                   <Form.Field>
                     <Button type="submit">
-                      {recipeId ? 'Next' : 'Save & Continue'}
+                      {recipeId ? 'Save' : 'Save & Continue'}
                     </Button>
                   </Form.Field>
                 </Form.Field.Group>
