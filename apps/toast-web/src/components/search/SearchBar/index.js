@@ -77,9 +77,9 @@ export default class SearchBar extends React.PureComponent<*, State> {
                               this.setInactive();
                             }}
                           >
-                            Search for recipes with "{state.inputValue}"
+                            Search for "{state.inputValue}"
                           </TermSuggestion>
-                          <SectionTitle>Ingredients</SectionTitle>
+                          <SectionTitle>Include / Exclude:</SectionTitle>
                           {state.suggestions.ingredients.map(sug => (
                             <IngredientSuggestion
                               key={sug.ingredient.id}

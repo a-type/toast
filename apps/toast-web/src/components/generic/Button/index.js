@@ -40,13 +40,13 @@ Button.Ghost = styled(Button)`
   background: transparent;
   border: 1px solid transparent;
 
-  &:hover,
-  &:focus {
+  &:active {
     border-color: var(--color-brand);
     background: transparent;
   }
 
-  &:active {
+  &:hover,
+  &:focus {
     background: var(--color-brand-light);
     border-color: var(--color-brand-light);
     color: var(--color-dark);

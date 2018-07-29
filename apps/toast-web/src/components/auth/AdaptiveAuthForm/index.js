@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { Form } from 'components/generic';
+import { Form, Field } from 'components/generic';
 import { H1, Button, Input } from 'components/typeset';
 import { sentence } from 'change-case';
 import gql from 'graphql-tag';
@@ -46,15 +46,15 @@ export default class AdaptiveAuthForm extends React.PureComponent {
       case 'LOG_IN':
         return (
           <React.Fragment>
-            <Form.Field label="Your email">
+            <Field label="Your email">
               <Input
                 value={values.email}
                 onChange={handleChange}
                 name="email"
                 required
               />
-            </Form.Field>
-            <Form.Field label="Your password">
+            </Field>
+            <Field label="Your password">
               <Input
                 value={values.password}
                 onChange={handleChange}
@@ -62,21 +62,21 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 type="password"
                 required
               />
-            </Form.Field>
+            </Field>
           </React.Fragment>
         );
       case 'SIGN_UP':
         return (
           <React.Fragment>
-            <Form.Field label="Your email">
+            <Field label="Your email">
               <Input
                 value={values.email}
                 onChange={handleChange}
                 name="email"
                 required
               />
-            </Form.Field>
-            <Form.Field label="Your password">
+            </Field>
+            <Field label="Your password">
               <Input
                 value={values.password}
                 onChange={handleChange}
@@ -84,23 +84,23 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 type="password"
                 required
               />
-            </Form.Field>
-            <Form.Field label="Your name">
+            </Field>
+            <Field label="Your name">
               <Input
                 value={values.name}
                 onChange={handleChange}
                 name="name"
                 required
               />
-            </Form.Field>
-            <Form.Field label="A unique username">
+            </Field>
+            <Field label="A unique username">
               <Input
                 value={values.username}
                 onChange={handleChange}
                 name="username"
                 required
               />
-            </Form.Field>
+            </Field>
           </React.Fragment>
         );
     }
@@ -111,16 +111,16 @@ export default class AdaptiveAuthForm extends React.PureComponent {
     switch (mode) {
       case 'LOG_IN':
         return (
-          <Form.Field columnSpan={2}>
+          <Field columnSpan={2}>
             <div>
               <Button.Ghost onClick={this.signup}>Sign up instead</Button.Ghost>
               <Button type="submit">Log in</Button>
             </div>
-          </Form.Field>
+          </Field>
         );
       case 'SIGN_UP':
         return (
-          <Form.Field columnSpan={2}>
+          <Field columnSpan={2}>
             <div
               style={{
                 display: 'flex',
@@ -131,7 +131,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
               <Button.Ghost onClick={this.login}>Log in instead</Button.Ghost>
               <Button type="submit">Sign up</Button>
             </div>
-          </Form.Field>
+          </Field>
         );
     }
   };
@@ -141,10 +141,8 @@ export default class AdaptiveAuthForm extends React.PureComponent {
       {({ values, handleChange, handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
           <H1>{sentence(this.state.mode)}</H1>
-          <Form.Field.Group>
-            {this.renderFields(values, handleChange)}
-            {this.renderControls()}
-          </Form.Field.Group>
+          {this.renderFields(values, handleChange)}
+          {this.renderControls()}
         </Form>
       )}
     </Formik>
