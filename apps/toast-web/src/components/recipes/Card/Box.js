@@ -25,5 +25,6 @@ export default styled.div`
   a:hover > & {
     background-color: var(--color-brand);
     box-shadow: ${hoverShadow};
+    border-color: var(--color-brand);
   }
 `;

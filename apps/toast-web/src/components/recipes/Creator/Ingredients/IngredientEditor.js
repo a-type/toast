@@ -6,6 +6,7 @@ import { Form, Input, Button, H3, Field } from 'components/generic';
 import { merge, pick } from 'ramda';
 import styled from 'styled-components';
 import { title } from 'change-case';
+import DeleteButton from './DeleteButton';
 
 const Container = styled.div`
   margin-bottom: var(--spacing-lg);
@@ -61,7 +62,7 @@ export default ({ ingredient }) => {
               });
             }}
           >
-            {({ values, handleSubmit, handleChange }) => (
+            {({ values, handleSubmit, handleChange, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <H3>{title(ingredient.ingredient.name)}</H3>
                 <Field label="How much?" required>
@@ -73,7 +74,7 @@ export default ({ ingredient }) => {
                     name="unitValue"
                   />
                 </Field>
-                <Field label="Unit Type" helpText="e.g. 'cups'">
+                <Field label="Unit Type" helpText="e.g. 'cup, tablespoon'">
                   <Input
                     value={values.unit}
                     onChange={handleChange}
@@ -87,9 +88,10 @@ export default ({ ingredient }) => {
                     name="note"
                   />
                 </Field>
-                <Field>
-                  <Button type="submit">Save</Button>
-                </Field>
+                <Button type="submit" disabled={!dirty}>
+                  {dirty ? 'Save' : 'Saved'}
+                </Button>
+                <DeleteButton ingredientId={ingredient.id} />
               </Form>
             )}
           </Formik>

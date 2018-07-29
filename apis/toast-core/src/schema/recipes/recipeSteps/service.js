@@ -41,6 +41,27 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
   });
 };
 
+export const deleteRecipeStep = async (id, ctx) => {
+  const session = ctx.getSession();
+  return session.writeTransaction(async tx => {
+    const result = await tx.run(
+      `
+      MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:STEP_OF {id: $id}]-()
+      DELETE rel
+      RETURN recipe {${RECIPE_FIELDS}}
+      `,
+      {
+        id,
+        userId: ctx.user.id
+      }
+    );
+
+    if (result.records.length) {
+      return result.records[0].get('recipe');
+    }
+  });
+};
+
 export const updateRecipeStep = async (id, args, ctx) => {
   const session = ctx.getSession();
   return session.writeTransaction(async tx => {

@@ -2,7 +2,8 @@ import {
   getForRecipe,
   createRecipeStep,
   updateRecipeStep,
-  moveRecipeStep
+  moveRecipeStep,
+  deleteRecipeStep
 } from './service';
 
 export const typeDefs = `
@@ -30,6 +31,7 @@ extend type Mutation {
   updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep! @authenticated
   createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
   moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
+  deleteRecipeStep(id: ID!): Recipe! @authenticated
 }
 `;
 
@@ -43,6 +45,8 @@ export const resolvers = {
     updateRecipeStep: (parent, args, ctx, info) =>
       updateRecipeStep(args.id, args.input, ctx),
     moveRecipeStep: (parent, args, ctx, info) =>
-      moveRecipeStep(args.recipeId, args.input, ctx)
+      moveRecipeStep(args.recipeId, args.input, ctx),
+    deleteRecipeStep: (parent, args, ctx, info) =>
+      deleteRecipeStep(args.id, ctx)
   }
 };

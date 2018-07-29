@@ -21,7 +21,7 @@ extend type Recipe {
 
 export const resolvers = {
   Query: {
-    me: neo4jgraphql,
+    me: (parent, args, ctx, info) => ctx.user,
     user: neo4jgraphql,
     users: neo4jgraphql
   },

@@ -3,7 +3,8 @@ import {
   updateRecipeDetails,
   getRecipe,
   listRecipes,
-  listRecipesForIngredient
+  listRecipesForIngredient,
+  publishRecipe
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -17,6 +18,7 @@ type Recipe {
   description: String
   attribution: String
   sourceUrl: String
+  published: Boolean!
 }
 
 input RecipeCreateInput {
@@ -41,7 +43,7 @@ extend type Query {
 extend type Mutation {
   createRecipe(input: RecipeCreateInput!): Recipe @authenticated
   updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe @authenticated @relatedToUser
-  deleteRecipe(id: ID!): Recipe @authenticated @relatedToUser
+  publishRecipe(id: ID!): Recipe @authenticated @relatedToUser
 }
 
 extend type Ingredient {
@@ -62,7 +64,8 @@ export const resolvers = [
       createRecipe: (_parent, args, ctx, info) =>
         createRecipe(ctx.user, args.input, ctx),
       updateRecipeDetails: (_parent, args, ctx, info) =>
-        updateRecipeDetails(args.id, args.input, ctx)
+        updateRecipeDetails(args.id, args.input, ctx),
+      publishRecipe: (_parent, args, ctx, info) => publishRecipe(args.id, ctx)
     },
     Ingredient: {
       recipes: (parent, args, ctx, info) =>

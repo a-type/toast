@@ -2,8 +2,9 @@ import React from 'react';
 import Details, { RecipeCreateDetailsFragment } from './Details';
 import Ingredients, { RecipeCreateIngredientsFragment } from './Ingredients';
 import Steps, { RecipeCreateStepsFragment } from './Steps';
+import Publish, { RecipeCreatePublishFragment } from './Publish';
 import { Stages, H1 } from 'components/generic';
-import { Layout } from './components';
+import { Layout, PublishedTag } from './components';
 import { pick, path } from 'ramda';
 import gql from 'graphql-tag';
 
@@ -12,11 +13,13 @@ export const RecipeCreateViewFragment = gql`
     ...RecipeCreateDetails
     ...RecipeCreateIngredients
     ...RecipeCreateSteps
+    ...RecipeCreatePublish
   }
 
   ${RecipeCreateDetailsFragment}
   ${RecipeCreateIngredientsFragment}
   ${RecipeCreateStepsFragment}
+  ${RecipeCreatePublishFragment}
 `;
 
 export default class RecipeCreator extends React.PureComponent {
@@ -26,6 +29,10 @@ export default class RecipeCreator extends React.PureComponent {
     }
 
     const { recipe } = this.props;
+
+    if (recipe.published) {
+      return 3;
+    }
 
     if (recipe.steps && recipe.steps.length) {
       return 2;
@@ -40,8 +47,17 @@ export default class RecipeCreator extends React.PureComponent {
     }
   };
 
+  getStartingStage = () => {
+    // if the whole thing is done, just go back to the beginning.
+    const completed = this.getCompletedStage();
+    if (completed === 3) {
+      return 0;
+    }
+    return completed + 1;
+  };
+
   state = {
-    stage: this.getCompletedStage(),
+    stage: this.getStartingStage(),
   };
 
   handleStageChanged = stage => this.setState({ stage });
@@ -117,6 +133,15 @@ export default class RecipeCreator extends React.PureComponent {
     return `${recipe.steps.length} steps`;
   };
 
+  publishSummary = () => {
+    const { recipe } = this.props;
+    if (!path(['published'], recipe)) {
+      return 'Make this recipe public';
+    }
+
+    return 'Already published';
+  };
+
   render() {
     const { recipeId, recipe } = this.props;
 
@@ -124,7 +149,10 @@ export default class RecipeCreator extends React.PureComponent {
 
     return (
       <Layout>
-        <H1>{recipeId ? recipe.title : 'Submit a Recipe'}</H1>
+        <H1>
+          {recipeId ? recipe.title : 'Submit a Recipe'}
+          {recipe && !recipe.published && <PublishedTag>Draft</PublishedTag>}
+        </H1>
         <Stages
           stage={this.state.stage}
           onStageChanged={this.handleStageChanged}
@@ -160,6 +188,16 @@ export default class RecipeCreator extends React.PureComponent {
             summary={this.stepSummary()}
           >
             <Steps recipeId={recipeId} steps={path(['steps'], provided)} />
+          </Stages.Stage>
+          <Stages.Stage
+            stageIndex={3}
+            title="Publish"
+            summary={this.publishSummary()}
+          >
+            <Publish
+              recipeId={recipeId}
+              published={path(['published'], provided)}
+            />
           </Stages.Stage>
         </Stages>
       </Layout>

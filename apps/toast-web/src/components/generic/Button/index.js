@@ -2,26 +2,31 @@ import React from 'react';
 import styled from 'styled-components';
 import Icon from '../Icon';
 import { getCss } from 'components/utils/rhythm';
+import { focusShadow } from 'components/generic/common/effects';
 
 const Button = styled.button`
-  border: 1px solid var(--color-gray);
-  color: var(--color-gray);
+  border: 2px solid var(--color-brand);
+  color: var(--color-brand);
   cursor: pointer;
   background: var(--color-white);
   font-family: var(--font-default);
   font-style: italic;
   font-size: var(--font-size-md);
-  border-radius: 6px;
+  border-radius: 8px;
   transition: 0.25s ease-in-out;
   display: inline-block;
   vertical-align: top;
 
-  &:hover,
-  &:focus {
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
     outline: none;
     border-color: var(--color-brand);
     background: var(--color-brand);
     color: var(--color-dark);
+  }
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: ${focusShadow};
   }
 
   &:active {
@@ -29,16 +34,29 @@ const Button = styled.button`
     border-color: var(--color-brand-light);
     background: var(--color-brand-light);
     color: var(--color-dark);
+    box-shadow: none;
   }
 
-  ${getCss(24)};
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+    border-color: var(--color-gray-light);
+    background: var(--color-gray-lightest);
+    color: var(--color-gray);
+  }
+
   padding: 5px 11px;
-  margin-bottom: -12px;
+
+  & + & {
+    margin-left: var(--spacing-sm);
+  }
 `;
 
 Button.Ghost = styled(Button)`
   background: transparent;
-  border: 1px solid transparent;
+  border-style: dotted;
+  border-color: var(--color-gray-light);
+  color: var(--color-gray);
 
   &:active {
     border-color: var(--color-brand);
@@ -47,7 +65,7 @@ Button.Ghost = styled(Button)`
 
   &:hover,
   &:focus {
-    background: var(--color-brand-light);
+    background: var(--color-white);
     border-color: var(--color-brand-light);
     color: var(--color-dark);
   }

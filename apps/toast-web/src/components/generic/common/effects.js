@@ -15,3 +15,5 @@ export const loading = css`
   background-size: 400% 400%;
   animation: ${loadingAnimation} 3s ease infinite;
 `;
+
+export const focusShadow = '0 0 0 var(--spacing-xs) var(--color-brand-light)';

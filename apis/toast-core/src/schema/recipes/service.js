@@ -3,15 +3,26 @@ import uuid from 'uuid';
 import gcloudStorage from 'services/gcloudStorage';
 
 export const RECIPE_FIELDS =
-  '.id, .title, .description, .attribution, .sourceUrl';
+  '.id, .title, .description, .attribution, .sourceUrl, .published';
+export const DEFAULTS = {
+  title: 'Untitled',
+  published: false
+};
+
+const defaulted = recipe =>
+  Object.keys(DEFAULTS).reduce(
+    (acc, key) =>
+      recipe[key] !== null ? acc : { ...acc, [key]: DEFAULTS[key] },
+    recipe
+  );
 
 export const createRecipe = async (user, input, ctx) => {
   const session = ctx.getSession();
   const result = await session.run(
     `
-      CREATE (r:Recipe {title: $input.title, description: $input.description, id: $id}),
+      CREATE (r:Recipe {title: $input.title, description: $input.description, id: $id, published: false}),
         (r)<-[:AUTHOR_OF]-(u:User {id: $userId})
-      RETURN r {${RECIPE_FIELDS}}, u {.id, .name, .username}
+      RETURN r {${RECIPE_FIELDS}}
     `,
     {
       input: pick(['title', 'description', 'attribution', 'sourceUrl'], input),
@@ -21,12 +32,8 @@ export const createRecipe = async (user, input, ctx) => {
   );
 
   const recipe = result.records[0].get('r');
-  const author = result.records[0].get('u');
 
-  return {
-    ...recipe,
-    author
-  };
+  return defaulted(recipe);
 };
 
 export const updateRecipeDetails = async (id, input, ctx) => {
@@ -48,24 +55,26 @@ export const updateRecipeDetails = async (id, input, ctx) => {
       throw new Error("That recipe doesn't exist");
     }
 
-    return details.records[0].get('recipe');
+    return defaulted(details.records[0].get('recipe'));
   });
 };
 
 export const getRecipe = async (id, ctx) => {
   const session = ctx.getSession();
-  const recipeResult = await session.run(
-    `
-      MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${RECIPE_FIELDS} }
-    `,
-    { id }
-  );
+  return session.readTransaction(async tx => {
+    const recipeResult = await tx.run(
+      `
+        MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${RECIPE_FIELDS} }
+      `,
+      { id }
+    );
 
-  if (recipeResult.records.length === 0) {
-    return null;
-  }
+    if (recipeResult.records.length === 0) {
+      return null;
+    }
 
-  return recipeResult.records[0].get('recipe');
+    return defaulted(recipeResult.records[0].get('recipe'));
+  });
 };
 
 export const listRecipes = async (
@@ -83,7 +92,7 @@ export const listRecipes = async (
       { offset, count }
     );
 
-    return result.records.map(rec => rec.get('recipe'));
+    return result.records.map(rec => defaulted(rec.get('recipe')));
   });
 };
 
@@ -107,6 +116,26 @@ export const listRecipesForIngredient = async (
       }
     );
 
-    return result.records.map(rec => rec.get('recipe'));
+    return result.records.map(rec => defaulted(rec.get('recipe')));
+  });
+};
+
+export const publishRecipe = async (id, ctx) => {
+  const session = ctx.getSession();
+  return session.writeTransaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (recipe:Recipe { id: $id })
+        SET recipe.published = true
+        RETURN recipe {${RECIPE_FIELDS}}
+      `,
+      { id }
+    );
+
+    if (!result.records[0]) {
+      throw new Error('No such recipe');
+    }
+
+    return defaulted(result.records[0].get('recipe'));
   });
 };

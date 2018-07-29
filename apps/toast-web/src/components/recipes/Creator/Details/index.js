@@ -62,7 +62,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
               onSave(result.data[keyName].id);
             }}
           >
-            {({ values, handleSubmit, handleChange }) => (
+            {({ values, handleSubmit, handleChange, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <Field label="Title" required>
                   <Input
@@ -94,8 +94,8 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                   />
                 </Field>
                 <Field>
-                  <Button type="submit">
-                    {recipeId ? 'Save' : 'Save & Continue'}
+                  <Button type="submit" disabled={!dirty}>
+                    {recipeId ? (dirty ? 'Save' : 'Saved') : 'Save & Continue'}
                   </Button>
                 </Field>
               </Form>

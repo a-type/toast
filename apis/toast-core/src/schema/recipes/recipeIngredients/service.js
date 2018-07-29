@@ -121,3 +121,24 @@ export const moveRecipeIngredient = async (recipeId, args, ctx) => {
     return recipeResult.records[0].get('r');
   });
 };
+
+export const deleteRecipeIngredient = async (id, ctx) => {
+  const session = ctx.getSession();
+  return session.writeTransaction(async tx => {
+    const result = await tx.run(
+      `
+      MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $id}]-()
+      DELETE rel
+      RETURN recipe {${RECIPE_FIELDS}}
+      `,
+      {
+        id,
+        userId: ctx.user.id
+      }
+    );
+
+    if (result.records.length) {
+      return result.records[0].get('recipe');
+    }
+  });
+};

@@ -55,7 +55,7 @@ export default ({ step }) => {
               });
             }}
           >
-            {({ values, handleSubmit, handleChange }) => (
+            {({ values, handleSubmit, handleChange, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <Field label="Instructions" required>
                   <Input.Block
@@ -66,7 +66,9 @@ export default ({ step }) => {
                   />
                 </Field>
                 <Field>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit" disabled={!dirty}>
+                    {dirty ? 'Save' : 'Saved'}
+                  </Button>
                 </Field>
               </Form>
             )}

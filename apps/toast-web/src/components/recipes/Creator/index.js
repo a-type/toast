@@ -3,11 +3,19 @@ import View, { RecipeCreateViewFragment } from './View';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
+import { Redirect } from 'react-router-dom';
 
-const GetRecipe = gql`
-  query GetRecipe($id: ID!) {
+const GetRecipeForEditing = gql`
+  query GetRecipeForEditing($id: ID!) {
     recipe(id: $id) {
       ...RecipeCreateView
+      author {
+        id
+      }
+    }
+
+    me {
+      id
     }
   }
 
@@ -16,7 +24,7 @@ const GetRecipe = gql`
 
 export default props => (
   <Query
-    query={GetRecipe}
+    query={GetRecipeForEditing}
     skip={!props.recipeId}
     variables={{ id: props.recipeId }}
   >
@@ -26,6 +34,10 @@ export default props => (
       }
       if (result.error) {
         return <div>{result.error.message}</div>;
+      }
+
+      if (result.data.recipe.author.id !== result.data.me.id) {
+        return <Redirect to={`/recipes/${props.recipeId}`} />;
       }
 
       return <View {...props} recipe={result.data.recipe} />;

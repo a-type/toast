@@ -8,6 +8,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { pathOr } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
+import { Redirect } from 'react-router-dom';
 
 const FullRecipeQuery = gql`
   query FullRecipeQuery($id: ID!) {
@@ -43,6 +44,10 @@ const FullRecipeQuery = gql`
         url
       }
     }
+
+    me {
+      id
+    }
   }
 `;
 
@@ -65,43 +70,56 @@ export default class RecipeView extends React.PureComponent<Props> {
 
     return (
       <Query query={FullRecipeQuery} variables={{ id: recipeId }}>
-        {(response: QueryResponse) => (
-          <Layout loading={response.loading}>
-            {!response.loading && (
-              <React.Fragment>
-                <Layout.Header>
-                  <Layout.Header.CoverImage
-                    imageSrc={pathOr(
-                      null,
-                      ['data', 'recipe', 'coverImage', 'url'],
-                      response,
-                    )}
-                  />
-                </Layout.Header>
-                <Layout.Details>
-                  <Details
-                    recipe={pathOr(null, ['data', 'recipe'], response)}
-                  />
-                </Layout.Details>
-                <Layout.Ingredients>
-                  <Ingredients
-                    ingredients={pathOr(
-                      [],
-                      ['data', 'recipe', 'ingredients'],
-                      response,
-                    )}
-                  />
-                </Layout.Ingredients>
-                <Layout.Steps>
-                  <Steps
-                    steps={pathOr([], ['data', 'recipe', 'steps'], response)}
-                  />
-                </Layout.Steps>
-                <Layout.JumpControls />
-              </React.Fragment>
-            )}
-          </Layout>
-        )}
+        {(response: QueryResponse) => {
+          if (
+            !response.loading &&
+            response.data.recipe &&
+            !response.data.recipe.published
+          ) {
+            if (response.data.recipe.author.id === response.data.me.id) {
+              return <Redirect to={`/recipes/edit/${recipeId}`} />;
+            }
+            return <Redirect to="/" />;
+          }
+
+          return (
+            <Layout loading={response.loading}>
+              {!response.loading && (
+                <React.Fragment>
+                  <Layout.Header>
+                    <Layout.Header.CoverImage
+                      imageSrc={pathOr(
+                        null,
+                        ['data', 'recipe', 'coverImage', 'url'],
+                        response,
+                      )}
+                    />
+                  </Layout.Header>
+                  <Layout.Details>
+                    <Details
+                      recipe={pathOr(null, ['data', 'recipe'], response)}
+                    />
+                  </Layout.Details>
+                  <Layout.Ingredients>
+                    <Ingredients
+                      ingredients={pathOr(
+                        [],
+                        ['data', 'recipe', 'ingredients'],
+                        response,
+                      )}
+                    />
+                  </Layout.Ingredients>
+                  <Layout.Steps>
+                    <Steps
+                      steps={pathOr([], ['data', 'recipe', 'steps'], response)}
+                    />
+                  </Layout.Steps>
+                  <Layout.JumpControls />
+                </React.Fragment>
+              )}
+            </Layout>
+          );
+        }}
       </Query>
     );
   }

@@ -128,7 +128,9 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 alignItems: 'flex-end',
               }}
             >
-              <Button.Ghost onClick={this.login}>Log in instead</Button.Ghost>
+              <Button.Ghost type="button" onClick={this.login}>
+                Log in instead
+              </Button.Ghost>
               <Button type="submit">Sign up</Button>
             </div>
           </Field>

@@ -28,6 +28,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
     const result = await session.run(
       `
         CALL apoc.index.search("recipes", $term) YIELD node, weight
+        WHERE node.published = true
         WITH node as r, weight, count(node) as total
         RETURN total, r {.id, .title, .description} ORDER BY weight DESC SKIP $offset LIMIT $count
       `,
@@ -46,6 +47,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       MATCH (r:Recipe)
       WHERE none(x in $exclude WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
       AND all(c in $include WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
+      AND r.published = true
       WITH r, count(r) as total
       RETURN total, r {.id, .title, .description} SKIP $offset LIMIT $count;
       `,
@@ -60,6 +62,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       WITH node as r, weight
       WHERE none(x in $exclude WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
       AND all(c in $include WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
+      AND r.published = true
       WITH r, count(r) as total, weight
       RETURN total, r {.id, .title, .description} ORDER BY weight DESC SKIP $offset LIMIT $count;
       `,

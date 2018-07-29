@@ -4,7 +4,7 @@ export default styled.div`
   display: flex;
   flex-direction: row;
 
-  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
 
   cursor: ${props => (props.onClick ? 'pointer' : 'default')};
 
