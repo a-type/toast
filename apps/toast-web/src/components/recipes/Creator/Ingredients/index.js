@@ -5,7 +5,7 @@ import IngredientEditor, {
 } from './IngredientEditor';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { H3 } from 'components/generic';
+import { H3, Field } from 'components/generic';
 
 export const RecipeCreateIngredientsFragment = gql`
   fragment RecipeCreateIngredients on Recipe {
@@ -33,24 +33,26 @@ export default ({ recipeId, ingredients }) => (
     {ingredients.map(ingredient => (
       <IngredientEditor key={ingredient.id} ingredient={ingredient} />
     ))}
-    <div>
+    <div style={{ width: '100%' }}>
       <H3>Add an Ingredient</H3>
       <Mutation mutation={CreateIngredient}>
         {createIngredient => (
-          <IngredientPicker
-            onChange={async ingredient => {
-              createIngredient({
-                variables: {
-                  recipeId,
-                  input: {
-                    ingredientId: ingredient.id,
-                    unitValue: 1,
+          <Field label="Search for Ingredient Name" required>
+            <IngredientPicker
+              onChange={async ingredient => {
+                createIngredient({
+                  variables: {
+                    recipeId,
+                    input: {
+                      ingredientId: ingredient.id,
+                      unitValue: 1,
+                    },
                   },
-                },
-              });
-            }}
-            canCreate={false}
-          />
+                });
+              }}
+              canCreate={false}
+            />
+          </Field>
         )}
       </Mutation>
     </div>

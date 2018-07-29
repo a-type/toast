@@ -41,7 +41,6 @@ type Props = {
 class IngredientPicker extends React.Component<Props, *> {
   handleChange = async newValue => {
     const { onChange, create } = this.props;
-    console.log(newValue);
 
     if (!newValue.id) {
       const result = await create(newValue.name);
@@ -63,14 +62,14 @@ class IngredientPicker extends React.Component<Props, *> {
     highlightedIndex,
   }: ControllerStateAndHelpers) => {
     return (
-      <div>
+      <div style={{ width: '100%' }}>
         <Docked isDockedVisible={isOpen}>
           {({ anchorRef, renderDocked }) => (
             <React.Fragment>
               <Input
                 {...getInputProps({
-                  placeholder: 'Ingredient name...',
                   innerRef: anchorRef,
+                  style: { width: '100%' },
                 })}
               />
               {isOpen &&
