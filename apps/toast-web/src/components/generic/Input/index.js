@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { loading } from '../common/effects';
+import { loading, focusShadow } from '../common/effects';
 
 const sharedSolidStyles = css`
   font-size: var(--font-size-md);
@@ -11,6 +11,7 @@ const sharedSolidStyles = css`
   font-family: var(--font-default);
   display: inline-block;
   vertical-align: top;
+  transition: 0.2s ease all;
 
   &:disabled {
     background: var(--color-disabled-background);
@@ -21,6 +22,7 @@ const sharedSolidStyles = css`
   &:active:not(:disabled),
   &:focus:not(:disabled) {
     outline: none;
+    box-shadow: ${focusShadow};
   }
 
   ${props =>

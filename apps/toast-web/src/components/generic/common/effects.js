@@ -16,4 +16,4 @@ export const loading = css`
   animation: ${loadingAnimation} 3s ease infinite;
 `;
 
-export const focusShadow = '0 0 0 var(--spacing-xs) var(--color-brand-light)';
+export const focusShadow = '0 0 0 4px var(--color-brand-light)';

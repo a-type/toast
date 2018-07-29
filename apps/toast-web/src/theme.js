@@ -85,4 +85,11 @@ br {
 * {
   box-sizing: border-box;
 }
+
+::selection {
+  background: var(--color-brand-light);
+}
+::-moz-selection {
+  background: var(--color-brand-light);
+}
 `;
