@@ -1,6 +1,7 @@
 import React from 'react';
 import Details, { RecipeCreateDetailsFragment } from './Details';
 import Ingredients, { RecipeCreateIngredientsFragment } from './Ingredients';
+import Steps, { RecipeCreateStepsFragment } from './Steps';
 import { Stages, H1 } from 'components/generic';
 import { Layout } from './components';
 import { pick, path } from 'ramda';
@@ -10,10 +11,12 @@ export const RecipeCreateViewFragment = gql`
   fragment RecipeCreateView on Recipe {
     ...RecipeCreateDetails
     ...RecipeCreateIngredients
+    ...RecipeCreateSteps
   }
 
   ${RecipeCreateDetailsFragment}
   ${RecipeCreateIngredientsFragment}
+  ${RecipeCreateStepsFragment}
 `;
 
 export default class RecipeCreator extends React.PureComponent {
@@ -24,11 +27,11 @@ export default class RecipeCreator extends React.PureComponent {
 
     const { recipe } = this.props;
 
-    if (recipe.steps) {
+    if (recipe.steps && recipe.steps.length) {
       return 2;
     }
 
-    if (recipe.ingredients) {
+    if (recipe.ingredients && recipe.ingredients.length) {
       return 1;
     }
 
@@ -105,6 +108,15 @@ export default class RecipeCreator extends React.PureComponent {
     );
   };
 
+  stepSummary = () => {
+    const { recipe } = this.props;
+    if (!path(['steps'], recipe)) {
+      return 'How to make the food';
+    }
+
+    return `${recipe.steps.length} steps`;
+  };
+
   render() {
     const { recipeId, recipe } = this.props;
 
@@ -141,6 +153,13 @@ export default class RecipeCreator extends React.PureComponent {
               recipeId={recipeId}
               ingredients={path(['ingredients'], provided)}
             />
+          </Stages.Stage>
+          <Stages.Stage
+            stageIndex={2}
+            title="Steps &amp; Procedure"
+            summary={this.stepSummary()}
+          >
+            <Steps recipeId={recipeId} steps={path(['steps'], provided)} />
           </Stages.Stage>
         </Stages>
       </Layout>

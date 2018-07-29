@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Form, Input, Button } from 'components/generic';
+import { Form, Input, Button, Field } from 'components/generic';
 import { merge } from 'ramda';
 
 export const RecipeCreateDetailsFragment = gql`
@@ -64,42 +64,40 @@ export default class RecipeCreatorDetails extends React.PureComponent {
           >
             {({ values, handleSubmit, handleChange }) => (
               <Form onSubmit={handleSubmit}>
-                <Form.Field.Group columns={2}>
-                  <Form.Field label="Title" required>
-                    <Input
-                      required
-                      name="title"
-                      value={values.title}
-                      onChange={handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field label="Description" columnSpan={2}>
-                    <Input.Block
-                      name="description"
-                      value={values.description}
-                      onChange={handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field label="Attribution">
-                    <Input
-                      name="attribution"
-                      value={values.attribution}
-                      onChange={handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field label="Source URL">
-                    <Input
-                      name="sourceUrl"
-                      value={values.sourceUrl}
-                      onChange={handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <Button type="submit">
-                      {recipeId ? 'Save' : 'Save & Continue'}
-                    </Button>
-                  </Form.Field>
-                </Form.Field.Group>
+                <Field label="Title" required>
+                  <Input
+                    required
+                    name="title"
+                    value={values.title}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Description" columnSpan={2}>
+                  <Input.Block
+                    name="description"
+                    value={values.description}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Attribution">
+                  <Input
+                    name="attribution"
+                    value={values.attribution}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Source URL">
+                  <Input
+                    name="sourceUrl"
+                    value={values.sourceUrl}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field>
+                  <Button type="submit">
+                    {recipeId ? 'Save' : 'Save & Continue'}
+                  </Button>
+                </Field>
               </Form>
             )}
           </Formik>

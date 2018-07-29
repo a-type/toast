@@ -27,9 +27,9 @@ extend type Recipe {
 }
 
 extend type Mutation {
-  updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep @authenticated @relatedToUser
-  createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): RecipeStep @authenticated @relatedToUser(idArg: "recipeId")
-  moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe @authenticated @relatedToUser(idArg: "recipeId")
+  updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep! @authenticated
+  createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
+  moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
 }
 `;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Formik } from 'formik';
-import { Form, Input, Button, H3 } from 'components/generic';
+import { Form, Input, Button, H3, Field } from 'components/generic';
 import { merge, pick } from 'ramda';
 import styled from 'styled-components';
 import { title } from 'change-case';
@@ -14,6 +14,7 @@ const Container = styled.div`
 export const RecipeCreateIngredientFragment = gql`
   fragment RecipeCreateIngredient on RecipeIngredient {
     id
+    index
     unit
     unitValue
     note
@@ -63,33 +64,32 @@ export default ({ ingredient }) => {
             {({ values, handleSubmit, handleChange }) => (
               <Form onSubmit={handleSubmit}>
                 <H3>{title(ingredient.ingredient.name)}</H3>
-                <Form.Field.Group columns={2}>
-                  <Form.Field label="How much?">
-                    <Input
-                      type="number"
-                      value={values.unitValue}
-                      onChange={handleChange}
-                      name="unitValue"
-                    />
-                  </Form.Field>
-                  <Form.Field label="Unit Type (e.g., 'cups')">
-                    <Input
-                      value={values.unit}
-                      onChange={handleChange}
-                      name="unit"
-                    />
-                  </Form.Field>
-                  <Form.Field label="Notes" columnSpan={2}>
-                    <Input.Block
-                      value={values.note}
-                      onChange={handleChange}
-                      name="note"
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <Button type="submit">Save</Button>
-                  </Form.Field>
-                </Form.Field.Group>
+                <Field label="How much?" required>
+                  <Input
+                    type="number"
+                    required
+                    value={values.unitValue}
+                    onChange={handleChange}
+                    name="unitValue"
+                  />
+                </Field>
+                <Field label="Unit Type" helpText="e.g. 'cups'">
+                  <Input
+                    value={values.unit}
+                    onChange={handleChange}
+                    name="unit"
+                  />
+                </Field>
+                <Field label="Notes" columnSpan={2}>
+                  <Input.Block
+                    value={values.note}
+                    onChange={handleChange}
+                    name="note"
+                  />
+                </Field>
+                <Field>
+                  <Button type="submit">Save</Button>
+                </Field>
               </Form>
             )}
           </Formik>

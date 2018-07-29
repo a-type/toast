@@ -1,11 +1,16 @@
 import uuid from 'uuid';
+import { RECIPE_FIELDS } from '../service';
+import { pick } from 'ramda';
+
+export const RECIPE_STEP_FIELDS = '.id, .index';
+export const STEP_FIELDS = '.id, .text';
 
 export const getForRecipe = async (id, ctx) => {
   const session = ctx.getSession();
   const result = await session.run(
     `
     MATCH (step:Step)-[rel:STEP_OF]->(:Recipe {id: $id})
-    RETURN rel { .id, .index }, step { .id, .text } ORDER BY rel.index
+    RETURN rel { ${RECIPE_STEP_FIELDS} }, step {${STEP_FIELDS}} ORDER BY rel.index
   `,
     { id }
   );
@@ -24,14 +29,14 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
       MATCH (recipe:Recipe {id: $id})
       OPTIONAL MATCH (recipe)<-[allSteps:STEP_OF]-()
       WITH recipe, count(allSteps) as index
-      CREATE (recipe)<-[rel:STEP_OF {id: $relId, index: index}]-(step:Step {text: $text})
-      RETURN rel {.id, .index}
+      CREATE (recipe)<-[rel:STEP_OF {id: $relId, index: index}]-(step:Step {id: $stepId, text: $text})
+      RETURN recipe {${RECIPE_FIELDS}}
       `,
-      { id: recipeId, relId: uuid(), text: args.text }
+      { id: recipeId, relId: uuid(), stepId: uuid(), text: args.text }
     );
 
     if (result.records.length) {
-      return result.records[0].get('rel');
+      return result.records[0].get('recipe');
     }
   });
 };
@@ -41,18 +46,22 @@ export const updateRecipeStep = async (id, args, ctx) => {
   return session.writeTransaction(async tx => {
     const result = await tx.run(
       `
-      MATCH ()<-[rel:STEP_OF {id: $relId}]-(step)
+      MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:STEP_OF {id: $relId}]-(step)
       SET step += $stepProps
-      RETURN rel {.id, .index}
+      RETURN rel {${RECIPE_STEP_FIELDS}}, step {${STEP_FIELDS}}
       `,
       {
         relId: id,
-        stepProps: pick(['text'], args)
+        stepProps: pick(['text'], args),
+        userId: ctx.user.id
       }
     );
 
     if (result.records.length) {
-      return result.records[0].get('rel');
+      return {
+        ...result.records[0].get('rel'),
+        step: result.records[0].get('step')
+      };
     }
   });
 };
