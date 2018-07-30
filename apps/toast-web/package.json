@@ -9,7 +9,7 @@
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "echo No tests!"
+    "test": "jest"
   },
   "lint-staged": {
     "*.{js,json,css.md}": [
@@ -19,6 +19,9 @@
   },
   "author": "",
   "license": "ISC",
+  "jest": {
+    "testURL": "http://localhost"
+  },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.15",
     "@storybook/addon-knobs": "^4.0.0-alpha.1",
@@ -26,6 +29,7 @@
     "@storybook/addons": "^3.3.15",
     "@storybook/react": "^4.0.0-alpha.1",
     "babel-core": "^6.26.0",
+    "babel-jest": "^23.4.2",
     "babel-loader": "^7.1.4",
     "babel-plugin-graphql-tag": "^1.5.0",
     "babel-plugin-styled-components": "^1.5.1",
@@ -43,6 +47,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.0.6",
     "image-webpack-loader": "^4.2.0",
+    "jest": "^23.4.2",
     "ncp": "^2.0.0",
     "npm-run-all": "^4.1.3",
     "react-hot-loader": "^4.1.2",
