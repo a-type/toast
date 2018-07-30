@@ -7,6 +7,7 @@ import { merge, pick } from 'ramda';
 import styled from 'styled-components';
 import { title } from 'change-case';
 import DeleteButton from './DeleteButton';
+import ParsingInput from './ParsingInput';
 
 const Container = styled.div`
   margin-bottom: var(--spacing-lg);
@@ -40,7 +41,7 @@ export default ({ ingredient }) => {
   const defaultValues = merge(
     {
       unit: '',
-      unitValue: 1,
+      unitValue: 0,
       note: '',
     },
     pick(['unit', 'unitValue', 'note'], ingredient),
@@ -62,25 +63,15 @@ export default ({ ingredient }) => {
               });
             }}
           >
-            {({ values, handleSubmit, handleChange, dirty }) => (
+            {({ values, handleSubmit, handleChange, setFieldValue, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <H3>{title(ingredient.ingredient.name)}</H3>
-                <Field label="How much?" required>
-                  <Input
-                    type="number"
-                    required
-                    value={values.unitValue}
-                    onChange={handleChange}
-                    name="unitValue"
-                  />
-                </Field>
-                <Field label="Unit Type" helpText="e.g. 'cup, tablespoon'">
-                  <Input
-                    value={values.unit}
-                    onChange={handleChange}
-                    name="unit"
-                  />
-                </Field>
+                <ParsingInput
+                  unit={values.unit}
+                  unitValue={values.unitValue}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
+                />
                 <Field label="Notes" columnSpan={2}>
                   <Input.Block
                     value={values.note}

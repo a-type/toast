@@ -45,7 +45,7 @@ export default ({ recipeId, ingredients }) => (
                     recipeId,
                     input: {
                       ingredientId: ingredient.id,
-                      unitValue: 1,
+                      unitValue: 0,
                     },
                   },
                 });

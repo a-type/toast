@@ -20,6 +20,10 @@ describe('number parser for ingredient parsing', () => {
         { number: 0.75, remainingText: 'cup of milk' },
       ],
       ['a pinch of salt', { number: 1, remainingText: 'pinch of salt' }],
+      ['eighteen', { number: 18, remainingText: '' }],
+      ['1', { number: 1, remainingText: '' }],
+      ['0.5 g cinnamon', { number: 0.5, remainingText: 'g cinnamon' }],
+      ['bbbbb', { number: null, remainingText: 'bbbbb' }],
     ].forEach(([input, expected]) => {
       expect(numberParser(input)).toEqual(expected);
     });

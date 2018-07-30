@@ -16,6 +16,7 @@ const FullRecipeQuery = gql`
       id
       title
       description
+      published
       author {
         id
         name
