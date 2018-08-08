@@ -2,8 +2,13 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const webpack = require('webpack');
+const history = require('connect-history-api-fallback');
+const convert = require('koa-connect');
+const proxy = require('http-proxy-middleware');
 
 module.exports = {
+  mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
+
   entry: [
     'babel-polyfill',
     'resize-observer-polyfill',
@@ -55,19 +60,13 @@ module.exports = {
       inject: true,
     }),
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
     new ErrorOverlayPlugin(),
   ],
-  devServer: {
-    historyApiFallback: true,
-    contentBase: path.join(__dirname, 'public'),
-    hot: true,
-    overlay: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:4000',
-        secure: false,
-      },
+  serve: {
+    content: [path.resolve(__dirname, 'public')],
+    add: (app, middleware, options) => {
+      app.use(convert(proxy('/api', { target: 'http://localhost:4000' })));
+      app.use(convert(history()));
     },
   },
 };

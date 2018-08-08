@@ -9,7 +9,7 @@ module.exports = {
     neo4j: {
       endpoint: process.env.NEO4J_BOLT_HOST || 'bolt://localhost:7687',
       user: process.env.NEO4J_USERNAME || 'neo4j',
-      password: process.env.NEO4J_PASSWORD || 'toast'
+      password: process.env.NEO4J_PASSWORD || 'toast1'
     }
   },
   aws: {

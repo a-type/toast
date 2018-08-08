@@ -72,13 +72,6 @@ export default ({ ingredient }) => {
                   handleChange={handleChange}
                   setFieldValue={setFieldValue}
                 />
-                <Field label="Notes" columnSpan={2}>
-                  <Input.Block
-                    value={values.note}
-                    onChange={handleChange}
-                    name="note"
-                  />
-                </Field>
                 <Button type="submit" disabled={!dirty}>
                   {dirty ? 'Save' : 'Saved'}
                 </Button>
