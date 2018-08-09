@@ -30,27 +30,50 @@ const initialValue = Value.fromJSON({
 
 export default class IngredientParsingInput extends React.PureComponent {
   state = {
-    value: initialValue,
+    textState: initialValue,
     active: !this.props.unitValue,
-    detectedUnit: null,
-    detectedUnitValue: null,
-    invalid: false,
+    unit: null,
+    unitTextMatch: null,
+    value: null,
+    valueTextMatch: null,
+    ingredientTextMatch: null,
   };
 
-  handleChange = ({ value }) => {
-    const parsed = parse(Plain.serialize(value));
-    console.info(parsed);
+  handleKeyDown = (event, change, editor) => {
+    if (event.key === 'space') {
+      const parsed = parse(Plain.serialize(change.value));
+      console.info(parsed);
+      this.setState({
+        unit: parsed.unit.normalized,
+        unitTextMatch: parsed.unit.raw,
+        value: parsed.value.normalized,
+        valueTextMatch: parsed.value.raw,
+        ingredientTextMatch: parsed.ingredient.raw,
+      });
+    }
+  };
 
+  handleChange = ({ value: textState }) => {
     this.setState({
-      value,
+      textState,
     });
   };
 
-  disable = () => this.setState({ active: false });
+  renderNode = props => {
+    const { node, children } = props;
+    switch (node.type) {
+      case 'unit':
+        return <b {...props}>Unit: {children}</b>;
+      case 'value':
+        return <b {...props}>Value: {children}</b>;
+      case 'ingredient':
+        return <b {...props}>Ingredient: {children}</b>;
+    }
+  };
 
   render() {
-    const { active, value } = this.state;
-    const { unit, unitValue, handleChange } = this.props;
+    const { textState } = this.state;
+    const { ingredient } = this.props;
 
     return (
       <div>
@@ -59,7 +82,13 @@ export default class IngredientParsingInput extends React.PureComponent {
           label="Describe the ingredient"
           helpText="Like '1/3 tablespoon nutmeg'"
         >
-          <Editor required value={value} onChange={this.handleChange} />
+          <Editor
+            required
+            value={textState}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+            renderNode={this.renderNode}
+          />
         </Field>
       </div>
     );

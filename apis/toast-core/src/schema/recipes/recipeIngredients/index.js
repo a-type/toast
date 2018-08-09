@@ -9,25 +9,35 @@ import {
 export const typeDefs = `
 type RecipeIngredient {
   id: ID!
+  text: String!
   ingredient: Ingredient!
+  ingredientTextMatch: String!
   recipe: Recipe!
   unit: String
-  unitValue: Float!
+  unitTextMatch: String
+  value: Float!
+  valueTextMatch: String
   index: Int!
-  note: String
 }
 
 input RecipeIngredientCreateInput {
+  text: String!
   ingredientId: ID!
+  ingredientTextMatch: String!
+  value: Float
+  valueTextMatch: String
   unit: String
-  unitValue: Float!
-  note: String
+  unitTextMatch: String
 }
 
 input RecipeIngredientUpdateInput {
   unit: String
-  unitValue: Float
-  note: String
+  unitTextMatch: String
+  value: Float
+  valueTextMatch: String
+  ingredientId: ID
+  ingredientTextMatch: String
+  text: String
 }
 
 extend type Recipe {

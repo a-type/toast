@@ -34,17 +34,17 @@ const seed = async () => {
     await tx.run(`
     MATCH (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "Toast", description: "Just toast!", id: "${uuid()}"}),
-      (r)<-[:INGREDIENT_OF {unit: "slice", unitValue: 1, index: 0, note: "white or wheat", id: "${uuid()}"}]-(i:Ingredient {id: "${uuid()}", name: "Bread", description: "Bread!"}),
+      (r)<-[:INGREDIENT_OF {unit: "slice", value: 1, index: 0, id: "${uuid()}", text: "1 slice of bread", unitTextMatch: "slice", valueTextMatch: "1", ingredientTextMatch: "bread"}]-(i:Ingredient {id: "${uuid()}", name: "bread", description: "Bread!"}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 0}]-(s:Step {id: "${uuid()}", text: "Toast bread in toaster."}),
       (r)<-[:AUTHOR_OF]-(u)
     RETURN r;
     `);
     await tx.run(`
-    MATCH (bread:Ingredient {name: "Bread"}), (u:User {id: "${userId}"})
+    MATCH (bread:Ingredient {name: "bread"}), (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "French Toast", description: "Better toast", id: "${uuid()}"}),
-      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "slice", unitValue: 4, note: "try spongy breads like challah", index: 0}]-(bread),
-      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unitValue: 1, index: 1}]-(egg:Ingredient {id: "${uuid()}", name: "Egg"}),
-      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "cup", unitValue: 0.25, index: 2}]-(milk:Ingredient {id: "${uuid()}", name: "Milk"}),
+      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "slice", value: 4, index: 0, text: "4 slices of bread", unitTextMatch: "slices", valueTextMatch: "4", ingredientTextMatch: "bread"}]-(bread),
+      (r)<-[:INGREDIENT_OF {id: "${uuid()}", value: 1, index: 1, text: "1 egg", unitTextMatch: null, ingredientTextMatch: "egg", valueTextMatch: "1"}]-(egg:Ingredient {id: "${uuid()}", name: "egg"}),
+      (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "cup", value: 0.25, index: 2, text: "1/4 cup milk", unitTextMatch: "cup", valueTextMatch: "1/4", ingredientTextMatch: "milk"}]-(milk:Ingredient {id: "${uuid()}", name: "milk"}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 0}]-(:Step {id: "${uuid()}", text: "Mix egg and milk."}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 1}]-(:Step {id: "${uuid()}", text: "Dip bread in mixture."}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 2}]-(:Step {id: "${uuid()}", text: "Fry soaked bread in pan with butter."}),

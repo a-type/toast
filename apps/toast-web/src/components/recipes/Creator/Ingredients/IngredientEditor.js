@@ -17,9 +17,12 @@ export const RecipeCreateIngredientFragment = gql`
   fragment RecipeCreateIngredient on RecipeIngredient {
     id
     index
+    text
     unit
-    unitValue
-    note
+    unitTextMatch
+    value
+    valueTextMatch
+    ingredientTextMatch
     ingredient {
       id
       name
@@ -37,50 +40,24 @@ const UpdateIngredient = gql`
   ${RecipeCreateIngredientFragment}
 `;
 
-export default ({ ingredient }) => {
-  const defaultValues = merge(
-    {
-      unit: '',
-      unitValue: 0,
-      note: '',
-    },
-    pick(['unit', 'unitValue', 'note'], ingredient),
-  );
+export default class IngredientEditor extends React.PureComponent {
+  render() {
+    const { ingredient } = this.props;
 
-  return (
-    <Container>
+    return (
       <Mutation mutation={UpdateIngredient}>
         {save => (
-          <Formik
-            initialValues={defaultValues}
-            enableReinitialize
-            onSubmit={async values => {
-              await save({
-                variables: {
-                  id: ingredient.id,
-                  input: values,
-                },
-              });
-            }}
-          >
-            {({ values, handleSubmit, handleChange, setFieldValue, dirty }) => (
-              <Form onSubmit={handleSubmit}>
-                <H3>{title(ingredient.ingredient.name)}</H3>
-                <ParsingInput
-                  unit={values.unit}
-                  unitValue={values.unitValue}
-                  handleChange={handleChange}
-                  setFieldValue={setFieldValue}
-                />
-                <Button type="submit" disabled={!dirty}>
-                  {dirty ? 'Save' : 'Saved'}
-                </Button>
-                <DeleteButton ingredientId={ingredient.id} />
-              </Form>
-            )}
-          </Formik>
+          <Container>
+            <ParsingInput
+              save={values =>
+                save({ variables: { input: values, id: ingredient.id } })
+              }
+              ingredient={ingredient}
+            />
+            <DeleteButton ingredientId={ingredient.id} />
+          </Container>
         )}
       </Mutation>
-    </Container>
-  );
-};
+    );
+  }
+}

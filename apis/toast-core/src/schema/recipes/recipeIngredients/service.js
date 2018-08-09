@@ -2,7 +2,8 @@ import uuid from 'uuid';
 import { RECIPE_FIELDS } from '../service';
 import { pick } from 'ramda';
 
-export const RECIPE_INGREDIENT_FIELDS = '.id, .index, .unit, .unitValue, .note';
+export const RECIPE_INGREDIENT_FIELDS =
+  '.id, .index, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
 export const INGREDIENT_FIELDS = '.id, .name, .description';
 
 export const getForRecipe = async (id, ctx) => {
@@ -21,7 +22,19 @@ export const getForRecipe = async (id, ctx) => {
   }));
 };
 
-export const createRecipeIngredient = async (recipeId, args, ctx) => {
+export const createRecipeIngredient = async (
+  recipeId,
+  {
+    text,
+    ingredientId,
+    ingredientTextMatch,
+    value,
+    valueTextMatch,
+    unit,
+    unitTextMatch
+  },
+  ctx
+) => {
   const session = ctx.getSession();
   return session.writeTransaction(async tx => {
     const result = await tx.run(
@@ -29,16 +42,19 @@ export const createRecipeIngredient = async (recipeId, args, ctx) => {
       MATCH (recipe:Recipe {id: $id}), (ingredient:Ingredient {id: $ingredientId})
       OPTIONAL MATCH (recipe)<-[allIngredients:INGREDIENT_OF]-()
       WITH recipe, count(allIngredients) as index, ingredient
-      CREATE (recipe)<-[rel:INGREDIENT_OF {id: $relId, index: index, unit: $unit, unitValue: $unitValue}]-(ingredient)
+      CREATE (recipe)<-[rel:INGREDIENT_OF {id: $relId, index: index, unit: $unit, unitTextMatch: $unitTextMatch, value: $value, valueTextMatch: $valueTextMatch, ingredientTextMatch: $ingredientTextMatch}]-(ingredient)
       RETURN recipe {${RECIPE_FIELDS}}
       `,
       {
         id: recipeId,
-        ingredientId: args.ingredientId,
+        ingredientId,
+        ingredientTextMatch,
+        text,
         relId: uuid(),
-        unit: args.unit || null,
-        unitValue: args.unitValue,
-        note: args.note
+        value: value || 1,
+        valueTextMatch,
+        unit,
+        unitTextMatch
       }
     );
 
@@ -51,6 +67,20 @@ export const createRecipeIngredient = async (recipeId, args, ctx) => {
 export const updateRecipeIngredient = async (id, args, ctx) => {
   const session = ctx.getSession();
   return session.writeTransaction(async tx => {
+    if (args.ingredientId) {
+      await tx.run(
+        `
+        MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]
+        MATCH (ingredient:Ingredient {id: $ingredientId})
+        CALL apoc.refactor.from(rel, ingredient)
+        `,
+        {
+          relId: id,
+          userId: ctx.user.id,
+          ingredientId: args.ingredientId
+        }
+      );
+    }
     const result = await tx.run(
       `
       MATCH (:User {id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
@@ -59,7 +89,17 @@ export const updateRecipeIngredient = async (id, args, ctx) => {
     `,
       {
         relId: id,
-        ingredientProps: pick(['unit', 'unitValue', 'note'], args),
+        ingredientProps: pick(
+          [
+            'text',
+            'unit',
+            'unitTextMatch',
+            'value',
+            'valueTextMatch',
+            'ingredientTextMatch'
+          ],
+          args
+        ),
         userId: ctx.user.id
       }
     );
