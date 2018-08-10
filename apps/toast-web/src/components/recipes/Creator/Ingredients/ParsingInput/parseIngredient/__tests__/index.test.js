@@ -51,4 +51,38 @@ describe('ingredient parser', () => {
       },
     });
   });
+
+  test('four', () => {
+    expect(parse('four')).toEqual({
+      value: {
+        raw: 'four',
+        normalized: 4,
+      },
+      unit: {
+        raw: null,
+        normalized: null,
+      },
+      ingredient: {
+        raw: null,
+        normalized: null,
+      },
+    });
+  });
+
+  test('1 egg', () => {
+    expect(parse('1 egg')).toEqual({
+      value: {
+        raw: '1',
+        normalized: 1,
+      },
+      unit: {
+        raw: null,
+        normalized: null,
+      },
+      ingredient: {
+        raw: 'egg',
+        normalized: 'egg',
+      },
+    });
+  });
 });

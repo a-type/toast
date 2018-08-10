@@ -73,6 +73,7 @@
     "compromise": "^11.12.0",
     "compromise-plugin": "0.0.8",
     "downshift": "^1.30.0",
+    "draft-js": "^0.10.5",
     "field-day": "^0.3.1",
     "formik": "^0.11.11",
     "graphql": "^0.13.2",
@@ -97,7 +98,7 @@
     "react-wireframe": "^0.1.1",
     "readable-fractions": "^0.1.0",
     "recompose": "^0.26.0",
-    "slate": "^0.37.1",
+    "slate": "^0.37.3",
     "slate-plain-serializer": "^0.5.29",
     "slate-react": "^0.15.2",
     "styled-components": "^3.2.0"

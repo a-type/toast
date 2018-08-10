@@ -56,16 +56,16 @@ export default text => {
 
   return {
     ingredient: {
-      raw: ingredientRaw,
-      normalized: ingredientNormalized,
+      raw: ingredientRaw || null,
+      normalized: ingredientNormalized || null,
     },
     unit: {
-      raw: unitRaw,
-      normalized: unitNormalized,
+      raw: unitRaw || null,
+      normalized: unitNormalized || null,
     },
     value: {
-      raw: valueRaw,
-      normalized: valueNormalized,
+      raw: valueRaw || null,
+      normalized: valueNormalized || null,
     },
   };
 };
