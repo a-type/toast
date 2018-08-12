@@ -18,43 +18,12 @@ export const RecipeCreateIngredientsFragment = gql`
   ${RecipeCreateIngredientFragment}
 `;
 
-const CreateIngredient = gql`
-  mutation CreateIngredient($recipeId: ID!, $input: RecipeIngredientCreateInput!) {
-    createRecipeIngredient(recipeId: $recipeId, input: $input) {
-      ...RecipeCreateIngredients
-    }
-
-    ${RecipeCreateIngredientsFragment}
-  }
-`;
-
 export default ({ recipeId, ingredients }) => (
   <div>
     {ingredients.map(ingredient => (
-      <IngredientEditor key={ingredient.id} ingredient={ingredient} />
+      <IngredientEditor key={ingredient.id} recipeIngredient={ingredient} />
     ))}
-    <div style={{ width: '100%' }}>
-      <H3>Add an Ingredient</H3>
-      <Mutation mutation={CreateIngredient}>
-        {createIngredient => (
-          <Field label="Search for Ingredient Name" required>
-            <IngredientPicker
-              onChange={async ingredient => {
-                createIngredient({
-                  variables: {
-                    recipeId,
-                    input: {
-                      ingredientId: ingredient.id,
-                      unitValue: 0,
-                    },
-                  },
-                });
-              }}
-              canCreate={false}
-            />
-          </Field>
-        )}
-      </Mutation>
-    </div>
+    <H3>Add an Ingredient</H3>
+    <IngredientEditor recipeId={recipeId} />
   </div>
 );

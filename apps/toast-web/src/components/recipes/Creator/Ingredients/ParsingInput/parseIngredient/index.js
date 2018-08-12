@@ -8,6 +8,13 @@ const plugin = {
       isA: 'Noun',
     },
   },
+  words: {
+    pinch: 'Unit',
+    can: 'Unit',
+    box: 'Unit',
+    ear: 'Unit',
+    head: 'Unit',
+  },
   patterns: {
     '#Noun': 'Ingredient',
     '#Adjective? #Noun': 'Ingredient',
@@ -16,6 +23,27 @@ const plugin = {
 };
 
 nlp.plugin(plug.pack(plugin));
+
+const abbreviations = {
+  tsp: 'teaspoon',
+  tbsp: 'tablespoon',
+  c: 'cup',
+  gal: 'gallon',
+  g: 'gram',
+  lb: 'pound',
+};
+
+const unabbreviate = input => {
+  const matches = Object.keys(abbreviations).sort(
+    (a, b) => a.length - b.length,
+  );
+  for (var i = 0; i < matches.length; i++) {
+    if (matches[i] === input) {
+      return abbreviations[matches[i]];
+    }
+  }
+  return input;
+};
 
 export default text => {
   const doc = nlp(text);
@@ -27,10 +55,12 @@ export default text => {
 
   const unitRaw = unit.out('text').trim();
 
-  const unitNormalized = unit
-    .normalize({ plurals: true })
-    .out('text')
-    .trim();
+  const unitNormalized = unabbreviate(
+    unit
+      .normalize({ plurals: true, case: true })
+      .out('text')
+      .trim(),
+  ).replace('slouse', 'slice'); // kinda funny error.
 
   const value = doc
     .clone()
@@ -50,7 +80,7 @@ export default text => {
   const ingredientRaw = ingredient.out('text').trim();
 
   const ingredientNormalized = ingredient
-    .normalize({ plurals: true })
+    .normalize({ plurals: true, case: true })
     .out('text')
     .trim();
 

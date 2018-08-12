@@ -24,6 +24,7 @@ const sharedSolidStyles = css`
     outline: none;
     box-shadow: ${focusShadow};
   }
+  box-shadow: ${props => (props.focused ? focusShadow : 'none')};
 
   ${props =>
     props.invalid &&

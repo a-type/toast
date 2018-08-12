@@ -85,4 +85,38 @@ describe('ingredient parser', () => {
       },
     });
   });
+
+  test('3 tbsp flour', () => {
+    expect(parse('3 tbsp flour')).toEqual({
+      value: {
+        raw: '3',
+        normalized: 3,
+      },
+      unit: {
+        raw: 'tbsp',
+        normalized: 'tablespoon',
+      },
+      ingredient: {
+        raw: 'flour',
+        normalized: 'flour',
+      },
+    });
+  });
+
+  test('1 slice of Bread', () => {
+    expect(parse('1 slice of Bread')).toEqual({
+      value: {
+        raw: '1',
+        normalized: 1,
+      },
+      unit: {
+        raw: 'slice',
+        normalized: 'slice',
+      },
+      ingredient: {
+        raw: 'Bread',
+        normalized: 'bread',
+      },
+    });
+  });
 });

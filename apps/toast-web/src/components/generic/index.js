@@ -16,3 +16,4 @@ export { default as Span } from './Span';
 export { default as Collapse } from './Collapse';
 export { default as Stages } from './Stages';
 export { default as Field } from './Field';
+export { default as Tip } from './Tip';
