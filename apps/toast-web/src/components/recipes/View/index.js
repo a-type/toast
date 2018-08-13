@@ -74,6 +74,7 @@ export default class RecipeView extends React.PureComponent<Props> {
         {(response: QueryResponse) => {
           if (
             !response.loading &&
+            response.data &&
             response.data.recipe &&
             !response.data.recipe.published
           ) {
@@ -81,6 +82,10 @@ export default class RecipeView extends React.PureComponent<Props> {
               return <Redirect to={`/recipes/edit/${recipeId}`} />;
             }
             return <Redirect to="/" />;
+          }
+
+          if (response.error) {
+            return <div>{response.error.message}</div>;
           }
 
           return (
