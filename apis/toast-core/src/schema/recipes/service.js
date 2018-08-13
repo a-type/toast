@@ -1,5 +1,5 @@
 import { pick } from 'ramda';
-import uuid from 'uuid';
+import { id } from 'util';
 import gcloudStorage from 'services/gcloudStorage';
 
 export const RECIPE_FIELDS =
@@ -26,7 +26,7 @@ export const createRecipe = async (user, input, ctx) => {
     `,
     {
       input: pick(['title', 'description', 'attribution', 'sourceUrl'], input),
-      id: uuid(),
+      id: id(input.title),
       userId: user.id
     }
   );

@@ -61,6 +61,7 @@
     "neo4j-graphql-js": "^0.1.14",
     "parse-unit": "^1.0.1",
     "ramda": "^0.25.0",
+    "shortid": "^2.2.12",
     "text2num": "0.0.1",
     "uuid": "^3.2.1"
   },

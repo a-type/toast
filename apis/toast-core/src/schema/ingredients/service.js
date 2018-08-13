@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { id } from 'util';
 
 const FIELDS = `.id, .name, .description, .attribution`;
 
@@ -49,7 +49,7 @@ export const createIngredient = (
         name: name.toLowerCase(),
         description: description || null,
         attribution,
-        id: uuid()
+        id: id(name)
       }
     );
 

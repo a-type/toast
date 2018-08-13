@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import uuid from 'uuid';
+import { id } from 'util';
 
 export const signup = async (user, credential, context) => {
   const password = await bcrypt.hash(credential.password, 10);
@@ -16,7 +16,7 @@ export const signup = async (user, credential, context) => {
       password,
       name: user.name,
       username: user.username,
-      id: uuid()
+      id: id(user.username)
     }
   );
 
