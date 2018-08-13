@@ -5,6 +5,7 @@ import { withApollo, type ApolloClient } from 'react-apollo';
 import gql from 'graphql-tag';
 import { type Ingredient } from 'types';
 import debounce from 'lodash.debounce';
+import { sentence } from 'change-case';
 
 const SearchIngredients = gql`
   query SearchIngredients($term: String!) {
@@ -25,10 +26,18 @@ type Props = {
   onChange(newIngredient: Ingredient): mixed,
 };
 
-class IngredientFinder extends React.PureComponent<Props> {
+type State = {
+  loading: boolean,
+};
+
+class IngredientFinder extends React.PureComponent<Props, State> {
+  state = {
+    loading: false,
+  };
+
   componentDidUpdate(oldProps) {
-    const { term } = this.props;
-    if (term && term !== oldProps.term) {
+    const { term, ingredient } = this.props;
+    if (term && term !== oldProps.term && !(!oldProps.term && ingredient)) {
       this.debouncedSearchAndChange();
     }
   }
@@ -39,22 +48,34 @@ class IngredientFinder extends React.PureComponent<Props> {
       return;
     }
 
+    this.setState({ loading: true });
+
     const result = await client.query({
       query: SearchIngredients,
       variables: { term },
     });
+
     if (result.data.searchIngredients.items.length) {
       onChange(result.data.searchIngredients.items[0]);
     }
+
+    this.setState({ loading: false });
   };
   debouncedSearchAndChange = debounce(this.searchAndChange, 500);
 
   render() {
     const { ingredient } = this.props;
+    const { loading } = this.state;
+
+    if (loading) {
+      return 'Searching...';
+    }
+
     if (!ingredient) {
       return 'Ingredient';
     }
-    return ingredient.name;
+
+    return sentence(ingredient.name);
   }
 }
 

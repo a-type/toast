@@ -65,7 +65,7 @@ export class IngredientEditor extends React.PureComponent {
     valid: false,
     dirty: false,
     loading: false,
-    text: '',
+    text: this.props.seedText || '',
     randomKey: `${Math.floor(Math.random() * 10000000)}`,
   };
 
@@ -104,9 +104,10 @@ export class IngredientEditor extends React.PureComponent {
         ingredientData: ingredient,
       });
     } else {
+      console.log(this.props);
       this.setState({
         loading: false,
-        text: '',
+        text: this.props.seedText || '',
         value: null,
         ingredient: null,
         unit: null,
@@ -160,7 +161,7 @@ export class IngredientEditor extends React.PureComponent {
       dirty,
       loading,
     } = this.state;
-    const { client, recipeIngredient, recipeId } = this.props;
+    const { client, recipeIngredient, recipeId, onSave } = this.props;
 
     if (!dirty || !valid || loading) {
       return;
@@ -185,6 +186,9 @@ export class IngredientEditor extends React.PureComponent {
         },
       });
       this.reinitialize();
+      if (onSave) {
+        onSave();
+      }
     } catch (err) {
       this.setState({ loading: false });
     }
@@ -196,7 +200,7 @@ export class IngredientEditor extends React.PureComponent {
     this.setState({ ingredientData: ingredient });
 
   render() {
-    const { recipeIngredient } = this.props;
+    const { recipeIngredient, seedText } = this.props;
     const {
       unit,
       value,
@@ -223,6 +227,7 @@ export class IngredientEditor extends React.PureComponent {
           updateMatchedIngredient={this.updateMatchedIngredient}
           key={randomKey}
           onSave={this.save}
+          seedText={seedText}
         />
         <Button onClick={this.save} disabled={!canSave}>
           {canSave ? 'Save' : loading ? 'Loading' : 'Saved'}

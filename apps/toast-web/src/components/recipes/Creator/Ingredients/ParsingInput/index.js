@@ -42,6 +42,17 @@ export default class IngredientParsingInput extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.seedText) {
+      this.handleChange(
+        EditorState.createWithContent(
+          ContentState.createFromText(this.props.seedText),
+          this.decorator,
+        ),
+      );
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { recipeIngredient } = this.props;
     if (prevProps.recipeIngredient !== recipeIngredient) {

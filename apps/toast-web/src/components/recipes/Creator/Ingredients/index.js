@@ -5,7 +5,7 @@ import IngredientEditor, {
 } from './IngredientEditor';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { H3, Field } from 'components/generic';
+import { H3, HelpText, Field } from 'components/generic';
 
 export const RecipeCreateIngredientsFragment = gql`
   fragment RecipeCreateIngredients on Recipe {
@@ -18,8 +18,28 @@ export const RecipeCreateIngredientsFragment = gql`
   ${RecipeCreateIngredientFragment}
 `;
 
-export default ({ recipeId, ingredients }) => (
+export default ({
+  recipeId,
+  ingredients,
+  seedIngredientStrings,
+  expireSeedIngredientString,
+}) => (
   <div>
+    {seedIngredientStrings &&
+      !!seedIngredientStrings.length && (
+        <div>
+          <H3>Imported Ingredients</H3>
+          <HelpText>Please review and save before proceeding</HelpText>
+        </div>
+      )}
+    {seedIngredientStrings.map(ingredientString => (
+      <IngredientEditor
+        key={ingredientString}
+        recipeId={recipeId}
+        seedText={ingredientString}
+        onSave={() => expireSeedIngredientString(ingredientString)}
+      />
+    ))}
     {ingredients.map(ingredient => (
       <IngredientEditor key={ingredient.id} recipeIngredient={ingredient} />
     ))}

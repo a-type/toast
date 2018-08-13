@@ -5,7 +5,7 @@ import Steps, { RecipeCreateStepsFragment } from './Steps';
 import Publish, { RecipeCreatePublishFragment } from './Publish';
 import { Stages, H1 } from 'components/generic';
 import { Layout, PublishedTag } from './components';
-import { pick, path } from 'ramda';
+import { pick, path, mergeDeepLeft } from 'ramda';
 import gql from 'graphql-tag';
 
 export const RecipeCreateViewFragment = gql`
@@ -56,21 +56,12 @@ export default class RecipeCreator extends React.PureComponent {
     return completed + 1;
   };
 
-  state = {
-    stage: this.getStartingStage(),
-  };
-
-  handleStageChanged = stage => this.setState({ stage });
-
   parseIngredientStrings = ingredientStrings => {
     if (!ingredientStrings) {
       return null;
     }
 
-    const ingredientArray = [].concat(ingredientStrings);
-
-    // TODO
-    return null;
+    return [].concat(ingredientStrings);
   };
 
   parseStepStrings = stepStrings => {
@@ -89,10 +80,19 @@ export default class RecipeCreator extends React.PureComponent {
       description: path(['dsc'], externalParams),
       attribution: path(['att'], externalParams),
       sourceUrl: path(['src'], externalParams),
-      ingredients: this.parseIngredientStrings(path(['ing'], externalParams)),
-      steps: this.parseStepStrings(path(['stp'], externalParams)),
+      seedIngredientStrings: this.parseIngredientStrings(
+        path(['ing'], externalParams),
+      ),
+      seedSteps: this.parseStepStrings(path(['stp'], externalParams)),
     };
   };
+
+  state = {
+    stage: this.getStartingStage(),
+    queryData: this.parseProvidedData(),
+  };
+
+  handleStageChanged = stage => this.setState({ stage });
 
   handleDetailsSave = recipeId => {
     if (!this.props.recipeId) {
@@ -142,10 +142,22 @@ export default class RecipeCreator extends React.PureComponent {
     return 'Already published';
   };
 
+  expireSeedIngredientString = ingredientString => {
+    this.setState(state => ({
+      queryData: {
+        ...state.queryData,
+        seedIngredientStrings: state.queryData.seedIngredientStrings.filter(
+          str => str !== ingredientString,
+        ),
+      },
+    }));
+  };
+
   render() {
     const { recipeId, recipe } = this.props;
+    const { queryData } = this.state;
 
-    const provided = recipe || this.parseProvidedData();
+    const provided = mergeDeepLeft(recipe || {}, queryData);
 
     return (
       <Layout>
@@ -180,6 +192,8 @@ export default class RecipeCreator extends React.PureComponent {
             <Ingredients
               recipeId={recipeId}
               ingredients={path(['ingredients'], provided)}
+              seedIngredientStrings={path(['seedIngredientStrings'], provided)}
+              expireSeedIngredientString={this.expireSeedIngredientString}
             />
           </Stages.Stage>
           <Stages.Stage

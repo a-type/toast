@@ -1,5 +1,7 @@
 import React from 'react';
-import { Label, Container, HelpText } from './components';
+import { Container } from './components';
+import HelpText from '../HelpText';
+import Label from '../Label';
 
 export default ({ children, label, helpText, required }) => (
   <Container>
