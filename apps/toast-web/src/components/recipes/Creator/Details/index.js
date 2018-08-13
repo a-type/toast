@@ -94,7 +94,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                   />
                 </Field>
                 <Field>
-                  <Button type="submit" disabled={!dirty}>
+                  <Button type="submit" disabled={recipeId && !dirty}>
                     {recipeId ? (dirty ? 'Save' : 'Saved') : 'Save & Continue'}
                   </Button>
                 </Field>

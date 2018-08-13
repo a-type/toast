@@ -131,7 +131,7 @@ export default class IngredientParsingInput extends React.Component {
   handleBlur = () => this.setState({ focused: false });
 
   keyBindingFn = ev => {
-    if (ev.keyCode === 'Enter') {
+    if (ev.key === 'Enter') {
       return 'custom-save';
     }
     return getDefaultKeyBinding(ev);
@@ -143,6 +143,13 @@ export default class IngredientParsingInput extends React.Component {
       return 'handled';
     }
     return 'not-handled';
+  };
+
+  editorRef = component => {
+    // only auto-focus create input
+    if (component && !this.props.recipeIngredient) {
+      component.focus();
+    }
   };
 
   render() {
@@ -172,6 +179,7 @@ export default class IngredientParsingInput extends React.Component {
               onChange={this.handleChange}
               keyBindingFn={this.keyBindingFn}
               handleKeyCommand={this.handleKeyCommand}
+              ref={this.editorRef}
             />
           </InputDiv>
           <StatusRow>

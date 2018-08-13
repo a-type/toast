@@ -36,6 +36,10 @@ export default props => (
         return <div>{result.error.message}</div>;
       }
 
+      if (!result.data.recipe) {
+        return <View {...props} />;
+      }
+
       if (result.data.recipe.author.id !== result.data.me.id) {
         return <Redirect to={`/recipes/${props.recipeId}`} />;
       }

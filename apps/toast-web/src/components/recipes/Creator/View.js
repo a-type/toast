@@ -107,7 +107,9 @@ export default class RecipeCreator extends React.PureComponent {
     if (!path(['title'], recipe)) {
       return 'Title, attribution, etc';
     }
-    return `${recipe.title} | ${recipe.description.substring(0, 30)}...`;
+    return `${recipe.title} ${
+      recipe.description ? `| ${recipe.description.substring(0, 30)}...` : ''
+    }`;
   };
 
   ingredientSummary = () => {

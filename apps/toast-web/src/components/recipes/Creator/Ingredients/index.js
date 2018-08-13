@@ -32,14 +32,15 @@ export default ({
           <HelpText>Please review and save before proceeding</HelpText>
         </div>
       )}
-    {seedIngredientStrings.map(ingredientString => (
-      <IngredientEditor
-        key={ingredientString}
-        recipeId={recipeId}
-        seedText={ingredientString}
-        onSave={() => expireSeedIngredientString(ingredientString)}
-      />
-    ))}
+    {seedIngredientStrings &&
+      seedIngredientStrings.map(ingredientString => (
+        <IngredientEditor
+          key={ingredientString}
+          recipeId={recipeId}
+          seedText={ingredientString}
+          onSave={() => expireSeedIngredientString(ingredientString)}
+        />
+      ))}
     {ingredients.map(ingredient => (
       <IngredientEditor key={ingredient.id} recipeIngredient={ingredient} />
     ))}

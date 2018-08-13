@@ -4,7 +4,9 @@ import queryString from 'query-string';
 
 export default class EditRecipePage extends React.PureComponent {
   redirectOnCreate = recipeId => {
-    this.props.history.push(`/recipes/edit/${recipeId}`);
+    const { location } = this.props;
+    const query = location.search;
+    this.props.history.push(`/recipes/edit/${recipeId}${query}`);
   };
 
   render() {

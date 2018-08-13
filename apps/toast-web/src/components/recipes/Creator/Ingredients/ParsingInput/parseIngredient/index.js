@@ -14,6 +14,8 @@ const plugin = {
     box: 'Unit',
     ear: 'Unit',
     head: 'Unit',
+
+    garlic: 'Ingredient',
   },
   patterns: {
     '#Noun': 'Ingredient',
@@ -46,7 +48,8 @@ const unabbreviate = input => {
 };
 
 export default text => {
-  const doc = nlp(text);
+  const withoutExtras = text.replace(/\(.*\)/g, '');
+  const doc = nlp(withoutExtras);
 
   const unit = doc
     .clone()
