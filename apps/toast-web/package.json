@@ -101,9 +101,6 @@
     "react-wireframe": "^0.1.1",
     "readable-fractions": "^0.1.0",
     "recompose": "^0.26.0",
-    "slate": "^0.37.3",
-    "slate-plain-serializer": "^0.5.29",
-    "slate-react": "^0.15.2",
     "styled-components": "^3.2.0"
   }
 }
