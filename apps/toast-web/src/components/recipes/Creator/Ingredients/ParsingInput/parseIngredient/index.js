@@ -62,7 +62,8 @@ export default text => {
     unit
       .normalize({ plurals: true, case: true })
       .out('text')
-      .trim(),
+      .trim()
+      .toLowerCase(),
   ).replace('slouse', 'slice'); // kinda funny error.
 
   const value = doc
@@ -85,7 +86,8 @@ export default text => {
   const ingredientNormalized = ingredient
     .normalize({ plurals: true, case: true })
     .out('text')
-    .trim();
+    .trim()
+    .toLowerCase();
 
   return {
     ingredient: {
