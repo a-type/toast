@@ -12,15 +12,4 @@ const displayUnits = (unit, unitValue) => {
   return `${toDisplay(unitValue)} ${unit}${unitValue > 1 ? 's' : ''}`;
 };
 
-export default ({ unit, unitValue, name, note }) => (
-  <li>
-    <Units>{displayUnits(unit, unitValue)}</Units>
-    <Ingredient>{name}</Ingredient>
-    {note && (
-      <React.Fragment>
-        <span> | </span>
-        <Note>{note}</Note>
-      </React.Fragment>
-    )}
-  </li>
-);
+export default ({ text }) => <li>{text}</li>;

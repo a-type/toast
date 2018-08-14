@@ -9,14 +9,8 @@ export default ({ ingredients }: { ingredients: Array<RecipeIngredient> }) => (
   <div>
     <H2>Ingredients</H2>
     <List>
-      {ingredients.map(({ unit, unitValue, note, ingredient: { name } }) => (
-        <Item
-          unit={unit}
-          unitValue={unitValue}
-          note={note}
-          name={name}
-          key={name}
-        />
+      {ingredients.map(ingredient => (
+        <Item {...ingredient} key={ingredient.id} />
       ))}
     </List>
   </div>

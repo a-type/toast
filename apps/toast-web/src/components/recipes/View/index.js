@@ -24,8 +24,11 @@ const FullRecipeQuery = gql`
       ingredients {
         id
         unit
-        unitValue
-        note
+        unitTextMatch
+        value
+        valueTextMatch
+        text
+        ingredientTextMatch
         index
         ingredient {
           id

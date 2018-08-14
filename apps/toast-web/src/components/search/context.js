@@ -219,6 +219,11 @@ class SearchProvider extends React.PureComponent<Props, InternalState> {
     }
 
     const { location, history } = this.props;
+
+    if (location.pathname !== '/search') {
+      history.push('/search');
+    }
+
     const ingredients = this.sortIngredientFilters(filters.ingredients);
     console.info(ingredients);
     const input = {
@@ -236,11 +241,15 @@ class SearchProvider extends React.PureComponent<Props, InternalState> {
       const results = data.searchRecipes.items;
       this.setState({
         results,
+        filters: {
+          ingredients: [],
+        },
+        term: '',
+        inputValue: '',
+        suggestions: {
+          ingredients: [],
+        },
       });
-
-      if (location.pathname !== '/search') {
-        history.push('/search');
-      }
     } catch (err) {
       this.setState({ loading: false, error: err.message });
     }

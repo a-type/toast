@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  display: flex;
-  flex-direction: column;
+  padding: var(--spacing-lg);
+  max-width: 900px;
+  margin: auto;
 `;
