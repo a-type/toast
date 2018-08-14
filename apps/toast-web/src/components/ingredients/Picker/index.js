@@ -65,27 +65,27 @@ class IngredientPicker extends React.Component<Props, *> {
   }: ControllerStateAndHelpers) => {
     return (
       <div style={{ width: '100%' }}>
-        <Docked isDockedVisible={isOpen}>
-          {({ anchorRef, renderDocked }) => (
-            <React.Fragment>
-              <Input
-                {...getInputProps({
-                  innerRef: anchorRef,
-                  style: { width: '100%' },
-                })}
+        <Docked
+          dockedContent={
+            isOpen && (
+              <Suggestions
+                term={inputValue}
+                getItemProps={getItemProps}
+                selectedItem={selectedItem}
+                highlightedIndex={highlightedIndex}
+                onCreate={this.handleChange}
+                canCreate={this.props.canCreate}
               />
-              {isOpen &&
-                renderDocked(
-                  <Suggestions
-                    term={inputValue}
-                    getItemProps={getItemProps}
-                    selectedItem={selectedItem}
-                    highlightedIndex={highlightedIndex}
-                    onCreate={this.handleChange}
-                    canCreate={this.props.canCreate}
-                  />,
-                )}
-            </React.Fragment>
+            )
+          }
+        >
+          {({ ref }) => (
+            <Input
+              {...getInputProps({
+                innerRef: ref,
+                style: { width: '100%' },
+              })}
+            />
           )}
         </Docked>
       </div>

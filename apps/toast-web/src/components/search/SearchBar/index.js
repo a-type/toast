@@ -48,16 +48,38 @@ export default class SearchBar extends React.PureComponent<*, State> {
 
   render() {
     return (
-      <Consumer>
-        {({ state, actions }: SearchContext) => (
-          <Docked>
-            {({ anchorRef, renderDocked }) => (
-              <Container
-                active={this.state.active}
-                innerRef={this.containerRef}
-              >
+      <Container innerRef={this.containerRef}>
+        <Consumer>
+          {({ state, actions }: SearchContext) => (
+            <Docked
+              dockedContent={
+                this.state.active &&
+                (state.suggestions.length ||
+                  (state.inputValue.length > 2 && (
+                    <Suggestions innerRef={this.suggestionsRef}>
+                      <TermSuggestion
+                        onClick={() => {
+                          actions.setTerm(state.inputValue);
+                          this.setInactive();
+                        }}
+                      >
+                        Search for "{state.inputValue}" recipes
+                      </TermSuggestion>
+                      <SectionTitle>Include / Exclude:</SectionTitle>
+                      {state.suggestions.ingredients.map(sug => (
+                        <IngredientSuggestion
+                          key={sug.ingredient.id}
+                          suggestion={sug}
+                          onSelected={this.setInactive}
+                        />
+                      ))}
+                    </Suggestions>
+                  )))
+              }
+            >
+              {({ ref }) => (
                 <Input
-                  innerRef={anchorRef}
+                  innerRef={ref}
                   name="searchInput"
                   value={state.inputValue}
                   onChange={actions.onInputChange}
@@ -66,34 +88,11 @@ export default class SearchBar extends React.PureComponent<*, State> {
                   autoComplete="off"
                   placeholder="Search for recipes or ingredients..."
                 />
-                {this.state.active &&
-                  (state.suggestions.length ||
-                    (state.inputValue.length > 2 &&
-                      renderDocked(
-                        <Suggestions innerRef={this.suggestionsRef}>
-                          <TermSuggestion
-                            onClick={() => {
-                              actions.setTerm(state.inputValue);
-                              this.setInactive();
-                            }}
-                          >
-                            Search for "{state.inputValue}" recipes
-                          </TermSuggestion>
-                          <SectionTitle>Include / Exclude:</SectionTitle>
-                          {state.suggestions.ingredients.map(sug => (
-                            <IngredientSuggestion
-                              key={sug.ingredient.id}
-                              suggestion={sug}
-                              onSelected={this.setInactive}
-                            />
-                          ))}
-                        </Suggestions>,
-                      )))}
-              </Container>
-            )}
-          </Docked>
-        )}
-      </Consumer>
+              )}
+            </Docked>
+          )}
+        </Consumer>
+      </Container>
     );
   }
 }
