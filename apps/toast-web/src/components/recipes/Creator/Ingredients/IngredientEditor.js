@@ -142,7 +142,8 @@ export class IngredientEditor extends React.PureComponent {
       (unit && unit.raw !== recipeIngredient.unitTextMatch) ||
       (unit && unit.normalized !== recipeIngredient.unit) ||
       (ingredient && ingredient.raw !== recipeIngredient.ingredientTextMatch) ||
-      text !== recipeIngredient.text;
+      text !== recipeIngredient.text ||
+      (ingredientData && ingredientData.id !== recipeIngredient.ingredient.id);
 
     this.setState({
       valid,

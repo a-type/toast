@@ -41,8 +41,10 @@ type Props = {
 class IngredientPicker extends React.Component<Props, *> {
   handleChange = async newValue => {
     const { onChange, create } = this.props;
+    console.info(newValue);
 
     if (!newValue.id) {
+      console.log('creating', newValue.name);
       const result = await create(newValue.name);
       if (result) {
         onChange(result);
@@ -79,7 +81,7 @@ class IngredientPicker extends React.Component<Props, *> {
                     getItemProps={getItemProps}
                     selectedItem={selectedItem}
                     highlightedIndex={highlightedIndex}
-                    onCreate={this.props.onChange}
+                    onCreate={this.handleChange}
                     canCreate={this.props.canCreate}
                   />,
                 )}

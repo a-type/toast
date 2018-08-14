@@ -33,7 +33,6 @@ type SuggestionsProps = {
   selectedItem: any,
   highlightedIndex: number,
   data: QueryData,
-  create(name: string): Promise<Ingredient>,
   onCreate(newValue: Ingredient): any,
   canCreate: boolean,
 };
@@ -61,7 +60,6 @@ class Suggestions extends React.PureComponent<SuggestionsProps, *> {
       selectedItem,
       highlightedIndex,
       data,
-      create,
       canCreate,
     } = this.props;
     if (data.loading) return null;

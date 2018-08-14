@@ -112,6 +112,7 @@ const InternalIconButton = styled.button`
   cursor: pointer;
   padding: 0;
   margin: auto;
+  color: inherit;
 
   &:focus > i,
   &:hover > i {
@@ -119,9 +120,9 @@ const InternalIconButton = styled.button`
   }
 `;
 
-Button.Icon = ({ name, ...others }) => (
+Button.Icon = ({ name, iconProps, ...others }) => (
   <InternalIconButton {...others}>
-    <Icon name={name} />
+    <Icon name={name} {...iconProps} />
   </InternalIconButton>
 );
 

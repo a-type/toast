@@ -14,6 +14,7 @@ import SimpleDecorator from 'draft-js-simpledecorator';
 import IngredientElement from './IngredientElement';
 import IngredientFinder from './IngredientFinder';
 import StatusRow from './StatusRow';
+import { ValueTag, UnitTag, IngredientTag } from './tags';
 
 const InputDiv = Input.Block.withComponent('div');
 
@@ -126,6 +127,14 @@ export default class IngredientParsingInput extends React.Component {
       textState,
     });
   };
+  handleValueChange = value =>
+    this.props.updateParsedValues({
+      value: { raw: this.props.value.raw, normalized: value },
+    });
+  handleUnitChange = unit =>
+    this.props.updateParsedValues({
+      unit: { raw: this.props.unit.raw, normalized: unit },
+    });
 
   handleFocus = () => this.setState({ focused: true });
   handleBlur = () => this.setState({ focused: false });
@@ -183,22 +192,22 @@ export default class IngredientParsingInput extends React.Component {
             />
           </InputDiv>
           <StatusRow>
-            <StatusRow.Value empty={!value || !value.normalized}>
-              {value && value.normalized
-                ? toReadableFraction(value.normalized, true)
-                : 'Qty'}
-            </StatusRow.Value>
+            <ValueTag
+              value={value && value.normalized ? value.normalized : ''}
+              onChange={this.handleValueChange}
+            />
             {unit &&
               unit.normalized && (
-                <StatusRow.Unit>{unit.normalized}</StatusRow.Unit>
+                <UnitTag
+                  value={unit.normalized}
+                  onChange={this.handleUnitChange}
+                />
               )}
-            <StatusRow.Ingredient empty={!ingredientData}>
-              <IngredientFinder
-                term={ingredient && ingredient.normalized}
-                ingredient={ingredientData}
-                onChange={updateMatchedIngredient}
-              />
-            </StatusRow.Ingredient>
+            <IngredientTag
+              term={ingredient && ingredient.normalized}
+              value={ingredientData}
+              onChange={updateMatchedIngredient}
+            />
           </StatusRow>
         </Field>
       </div>

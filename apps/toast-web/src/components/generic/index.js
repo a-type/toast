@@ -19,3 +19,4 @@ export { default as Field } from './Field';
 export { default as Tip } from './Tip';
 export { default as HelpText } from './HelpText';
 export { default as Label } from './Label';
+export { default as Modal } from './Modal';
