@@ -241,14 +241,7 @@ class SearchProvider extends React.PureComponent<Props, InternalState> {
       const results = data.searchRecipes.items;
       this.setState({
         results,
-        filters: {
-          ingredients: [],
-        },
-        term: '',
         inputValue: '',
-        suggestions: {
-          ingredients: [],
-        },
       });
     } catch (err) {
       this.setState({ loading: false, error: err.message });

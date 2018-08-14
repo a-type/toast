@@ -21,6 +21,7 @@ export default styled.div`
     grid-area: search;
     margin: auto;
     justify-self: center;
+    width: 100%;
   }
   & > *:nth-child(3) {
     grid-area: user;
@@ -29,18 +30,24 @@ export default styled.div`
     margin-bottom: auto;
   }
 
-  @media (min-width: 700px) {
+  @media (min-width: 900px) {
+    width: auto;
     grid-template-areas: 'logo search user';
-    grid-template-columns: calc(100px - var(--spacing-sm)) 1fr calc(
-        100px - var(--spacing-sm)
-      );
+    grid-template-columns: auto auto auto;
     grid-template-rows: auto;
+    margin-left: 0;
     height: calc(var(--rhythm) * 2);
-    padding: 0 var(--spacing-md);
+    padding: 0 var(--spacing-lg);
+    max-width: 900px;
+
+    & > *:nth-child(2) {
+      width: 600px;
+    }
   }
 
-  @media (min-width: 800px) {
-    grid-template-columns: 1fr 600px 1fr;
-    max-width: 1200px;
+  @media (min-width: 1600px) {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
   }
 `;

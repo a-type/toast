@@ -3,12 +3,14 @@ import React from 'react';
 import Ingredients from './Ingredients';
 import Steps from './Steps';
 import Details from './Details';
-import Layout from 'components/recipes/common/Layout';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { pathOr } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
+import { SingleColumn } from 'components/layouts';
+import { Loader } from 'components/generic';
+import JumpControls from './JumpControls';
 
 const FullRecipeQuery = gql`
   query FullRecipeQuery($id: ID!) {
@@ -91,42 +93,37 @@ export default class RecipeView extends React.PureComponent<Props> {
             return <div>{response.error.message}</div>;
           }
 
+          if (response.loading) {
+            return <Loader />;
+          }
+
           return (
-            <Layout loading={response.loading}>
-              {!response.loading && (
-                <React.Fragment>
-                  <Layout.Header>
-                    <Layout.Header.CoverImage
-                      imageSrc={pathOr(
-                        null,
-                        ['data', 'recipe', 'coverImage', 'url'],
-                        response,
-                      )}
-                    />
-                  </Layout.Header>
-                  <Layout.Details>
-                    <Details
-                      recipe={pathOr(null, ['data', 'recipe'], response)}
-                    />
-                  </Layout.Details>
-                  <Layout.Ingredients>
-                    <Ingredients
-                      ingredients={pathOr(
-                        [],
-                        ['data', 'recipe', 'ingredients'],
-                        response,
-                      )}
-                    />
-                  </Layout.Ingredients>
-                  <Layout.Steps>
-                    <Steps
-                      steps={pathOr([], ['data', 'recipe', 'steps'], response)}
-                    />
-                  </Layout.Steps>
-                  <Layout.JumpControls />
-                </React.Fragment>
+            <SingleColumn
+              headerImageSrc={pathOr(
+                null,
+                ['data', 'recipe', 'coverImage', 'url'],
+                response,
               )}
-            </Layout>
+            >
+              <SingleColumn.Content>
+                <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
+              </SingleColumn.Content>
+              <SingleColumn.Content>
+                <Ingredients
+                  ingredients={pathOr(
+                    [],
+                    ['data', 'recipe', 'ingredients'],
+                    response,
+                  )}
+                />
+              </SingleColumn.Content>
+              <SingleColumn.Content>
+                <Steps
+                  steps={pathOr([], ['data', 'recipe', 'steps'], response)}
+                />
+              </SingleColumn.Content>
+              <JumpControls />
+            </SingleColumn>
           );
         }}
       </Query>

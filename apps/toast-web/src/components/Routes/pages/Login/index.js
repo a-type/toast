@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from 'components/auth/AdaptiveAuthForm';
-import Layout from 'components/generic/layouts/SingleCenterContent';
+import { SingleColumn } from 'components/layouts';
 
 export default class LoginPage extends React.PureComponent {
   handleLogin = () => {
@@ -9,9 +9,11 @@ export default class LoginPage extends React.PureComponent {
 
   render() {
     return (
-      <Layout>
-        <Login onLogin={this.handleLogin} />
-      </Layout>
+      <SingleColumn>
+        <SingleColumn.Content>
+          <Login onLogin={this.handleLogin} />
+        </SingleColumn.Content>
+      </SingleColumn>
     );
   }
 }

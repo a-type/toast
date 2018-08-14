@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { LARGE_BREAKPOINT } from '../constants';
 
 export default styled.div`
   position: fixed;
@@ -18,7 +17,7 @@ export default styled.div`
     flex: 1;
   }
 
-  @media (min-width: ${LARGE_BREAKPOINT}px) {
+  @media (min-width: 900px) {
     display: none;
   }
 `;
