@@ -1,11 +1,19 @@
 // @flow
 import React, { type Node } from 'react';
 import { Icon, Pill } from 'components/generic';
+import readAndCompressImage from 'browser-image-resizer';
+
+const defaultImageConfig = {
+  quality: 0.9,
+  maxWidth: 1080,
+  maxHeight: 900,
+};
 
 type Props = {
   onImageChange(image: ?File): any,
   id: ?string,
   children: Node,
+  config: {},
 };
 
 export default class ImageChooser extends React.Component<Props> {
@@ -15,9 +23,13 @@ export default class ImageChooser extends React.Component<Props> {
 
   id: string = `fileUpload_${Math.floor(Math.random() * 1000000000)}`;
 
-  handleChange = (ev: Event) => {
-    if (ev.target.files && ev.target.files[0]) {
-      this.props.onImageChange(ev.target.files[0]);
+  handleChange = async (ev: Event) => {
+    const config = this.props.config || defaultImageConfig;
+    const file = ev.target.files && ev.target.files[0];
+
+    if (file) {
+      const resizedImage = await readAndCompressImage(file, config);
+      this.props.onImageChange(resizedImage);
     } else {
       this.props.onImageChange(null);
     }

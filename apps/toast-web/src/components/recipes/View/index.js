@@ -9,7 +9,7 @@ import { pathOr } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
 import { SingleColumn } from 'components/layouts';
-import { Loader } from 'components/generic';
+import { Loader, H2 } from 'components/generic';
 import JumpControls from './JumpControls';
 
 const FullRecipeQuery = gql`
@@ -107,8 +107,7 @@ export default class RecipeView extends React.PureComponent<Props> {
             >
               <SingleColumn.Content>
                 <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
-              </SingleColumn.Content>
-              <SingleColumn.Content>
+                <H2>Ingredients</H2>
                 <Ingredients
                   ingredients={pathOr(
                     [],
@@ -116,8 +115,7 @@ export default class RecipeView extends React.PureComponent<Props> {
                     response,
                   )}
                 />
-              </SingleColumn.Content>
-              <SingleColumn.Content>
+                <H2>Steps</H2>
                 <Steps
                   steps={pathOr([], ['data', 'recipe', 'steps'], response)}
                 />
