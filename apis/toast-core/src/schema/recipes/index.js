@@ -4,7 +4,8 @@ import {
   getRecipe,
   listRecipes,
   listRecipesForIngredient,
-  publishRecipe
+  publishRecipe,
+  listRecipesForUser
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -49,6 +50,10 @@ extend type Mutation {
 extend type Ingredient {
   recipes(input: ListPaginationInput): [Recipe!]!
 }
+
+extend type User {
+  recipes(input: ListPaginationInput): [Recipe!]!
+}
 `,
   recipeIngredients.typeDefs,
   recipeSteps.typeDefs
@@ -70,6 +75,14 @@ export const resolvers = [
     Ingredient: {
       recipes: (parent, args, ctx, info) =>
         listRecipesForIngredient(
+          parent.id,
+          args.input || { offset: 0, count: 25 },
+          ctx
+        )
+    },
+    User: {
+      recipes: (parent, args, ctx, info) =>
+        listRecipesForUser(
           parent.id,
           args.input || { offset: 0, count: 25 },
           ctx

@@ -15,7 +15,7 @@ export default {
     const { stream, filename, mimetype, encoding } = file;
 
     const directory = config.gcloud.storage.directories[mediaType];
-    const fileName = `${directory}/${filename}`;
+    const fileName = `${directory}/${id}`;
 
     const gFile = storage.bucket(bucket).file(fileName);
 

@@ -5,6 +5,7 @@ import Link from 'components/generic/Link';
 import { Consumer } from 'components/search/context';
 import SearchBar from 'components/search/SearchBar';
 import { withRouter } from 'react-router-dom';
+import { SelfLink } from 'components/users';
 
 export default withRouter(({ location }) => (
   <Layout>
@@ -16,6 +17,6 @@ export default withRouter(({ location }) => (
       )}
     </Consumer>
     <SearchBar />
-    {/* <Link to="/login">Log in / Sign up</Link> */}
+    <SelfLink />
   </Layout>
 ));

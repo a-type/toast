@@ -26,6 +26,7 @@ RecipeCard.fragments = {
       id
       title
       coverImage {
+        id
         url
       }
     }

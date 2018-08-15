@@ -30,7 +30,7 @@ export default props => (
   >
     {result => {
       if (props.recipeId && result.loading) {
-        return <Loader />;
+        return <Loader size="72px" />;
       }
       if (result.error) {
         return <div>{result.error.message}</div>;

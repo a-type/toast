@@ -94,7 +94,7 @@ export default class RecipeView extends React.PureComponent<Props> {
           }
 
           if (response.loading) {
-            return <Loader />;
+            return <Loader size="72px" />;
           }
 
           return (
