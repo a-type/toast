@@ -22,9 +22,9 @@ const sharedSolidStyles = css`
   &:active:not(:disabled),
   &:focus:not(:disabled) {
     outline: none;
-    box-shadow: ${focusShadow};
+    box-shadow: ${focusShadow('brand')};
   }
-  box-shadow: ${props => (props.focused ? focusShadow : 'none')};
+  box-shadow: ${props => (props.focused ? focusShadow('brand') : 'none')};
 
   ${props =>
     props.invalid &&

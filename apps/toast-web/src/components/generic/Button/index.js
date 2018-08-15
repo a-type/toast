@@ -26,7 +26,7 @@ const Button = styled.button`
   }
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
-    box-shadow: ${focusShadow};
+    box-shadow: ${focusShadow.default};
   }
 
   &:active {
