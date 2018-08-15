@@ -5,7 +5,7 @@ export default styled.div`
   grid-template-areas: 'logo user' 'search search';
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
-  grid-gap: var(--spacing-md);
+  grid-gap: var(--spacing-lg);
   width: 100%;
   padding: var(--spacing-md);
   align-content: end;
