@@ -2,13 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Content = styled.div`
-  margin: 0 var(--spacing-sm);
+  margin: 0;
   background: var(--color-white);
   transition: 0.2s ease all;
   border-radius: var(--spacing-xs);
 
   @media (min-width: 900px) {
-    padding: var(--spacing-sm);
     margin: 0 var(--spacing-lg);
   }
 `;
@@ -25,7 +24,7 @@ const Layout = styled.div`
   }
 
   & > ${Content} {
-    padding: ${props => (props.hasHeaderImage ? 'var(--spacing-xs)' : '0')};
+    padding: ${props => (props.hasHeaderImage ? 'var(--spacing-sm)' : '0')};
   }
 
   @media (min-width: 900px) {
