@@ -39,7 +39,7 @@ export default class RecipeCreator extends React.PureComponent {
     }
 
     if (recipe.steps && recipe.steps.length) {
-      return 2;
+      return 4;
     }
 
     if (recipe.ingredients && recipe.ingredients.length) {
@@ -54,7 +54,11 @@ export default class RecipeCreator extends React.PureComponent {
   getStartingStage = () => {
     // if the whole thing is done, just go back to the beginning.
     const completed = this.getCompletedStage();
-    if (completed === 3) {
+    if (completed === 4) {
+      // encourage users to add an image
+      if (!path(['recipe', 'coverImage', 'id'], this.props)) {
+        return 3;
+      }
       return 0;
     }
     return completed + 1;

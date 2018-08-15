@@ -6,4 +6,8 @@ export default styled.div`
   display: flex;
   flex-direction: column;
   align-content: center;
+
+  & > *:first-child {
+    flex: 0 0 auto;
+  }
 `;
