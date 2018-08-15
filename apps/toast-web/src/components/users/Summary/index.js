@@ -1,6 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { H1, P, Loader } from 'components/generic';
+import { Loader } from 'components/generic';
+import { H1, P } from 'components/typeset';
 import gql from 'graphql-tag';
 import RecipeCard from 'components/recipes/Card';
 

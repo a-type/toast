@@ -7,7 +7,7 @@ export default styled.button`
   /* height: calc(var(--rhythm) * 2); */
   line-height: calc(var(--rhythm) * 2);
   list-style-type: none;
-  padding: 0 var(--spacing-md);
+  padding: 0 var(--spacing-lg);
   cursor: pointer;
   border: 0;
   outline: none;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Consumer, type SearchContext } from '../context';
 import Container from './Container';
-import { H2 } from 'components/generic';
+import { H2 } from 'components/typeset';
 import Filter from './Filter';
 
 export default () => (

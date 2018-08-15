@@ -2,7 +2,8 @@ import React from 'react';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Formik } from 'formik';
-import { Form, Input, Button, H3, Field } from 'components/generic';
+import { Form, Input, Button, Field } from 'components/generic';
+import { H3 } from 'components/typeset';
 import { merge, pick } from 'ramda';
 import styled from 'styled-components';
 import { title } from 'change-case';
@@ -10,7 +11,7 @@ import DeleteButton from './DeleteButton';
 import ParsingInput from './ParsingInput';
 
 const Container = styled.div`
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
 `;
 
 export const RecipeCreateIngredientFragment = gql`

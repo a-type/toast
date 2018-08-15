@@ -23,7 +23,7 @@ const renderContent = ({ gridArea, fieldProps }) =>
     <div
       style={{
         gridArea,
-        marginBottom: 'var(--spacing-sm)',
+        marginBottom: 'var(--spacing-md)',
       }}
     >
       {fieldProps.children}

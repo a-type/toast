@@ -1,7 +1,8 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { H3, Form, Input, Field, Button } from 'components/generic';
+import { Form, Input, Field, Button } from 'components/generic';
+import { H3 } from 'components/typeset';
 import { Formik } from 'formik';
 import StepEditor, { RecipeCreateStepFragment } from './StepEditor';
 

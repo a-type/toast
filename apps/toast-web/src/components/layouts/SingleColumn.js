@@ -5,10 +5,10 @@ const Content = styled.div`
   margin: 0;
   background: var(--color-white);
   transition: 0.2s ease all;
-  border-radius: var(--spacing-xs);
+  border-radius: var(--spacing-sm);
 
   @media (min-width: 900px) {
-    margin: 0 var(--spacing-lg);
+    margin: 0 var(--spacing-xl);
   }
 `;
 
@@ -20,16 +20,16 @@ const Layout = styled.div`
 
   & > ${Content}:first-child {
     margin-top: ${props =>
-      props.hasHeaderImage ? '20vh' : 'var(--spacing-lg)'};
+      props.hasHeaderImage ? '20vh' : 'var(--spacing-xl)'};
   }
 
   & > ${Content} {
-    padding: ${props => (props.hasHeaderImage ? 'var(--spacing-sm)' : '0')};
+    padding: ${props => (props.hasHeaderImage ? 'var(--spacing-md)' : '0')};
   }
 
   @media (min-width: 900px) {
     & > ${Content} {
-      padding: ${props => (props.hasHeaderImage ? 'var(--spacing-lg)' : '0')};
+      padding: ${props => (props.hasHeaderImage ? 'var(--spacing-xl)' : '0')};
     }
   }
 

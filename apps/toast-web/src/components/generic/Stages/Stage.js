@@ -7,7 +7,7 @@ import {
   StageContainer,
 } from './components';
 import { Consumer } from './Context';
-import { H2 } from 'components/generic';
+import { H2 } from 'components/typeset';
 import CrossFade from '../CrossFade';
 
 export default ({ title, summary, stageIndex, children }) => (

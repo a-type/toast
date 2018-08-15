@@ -6,4 +6,5 @@ export default styled.ol`
   margin: 0;
   list-style-type: none;
   padding: 0;
+  margin-bottom: var(--spacing-lg);
 `;

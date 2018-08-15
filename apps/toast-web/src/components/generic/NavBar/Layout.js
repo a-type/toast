@@ -5,9 +5,9 @@ export default styled.div`
   grid-template-areas: 'logo user' 'search search';
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
-  grid-gap: var(--spacing-sm);
+  grid-gap: var(--spacing-md);
   width: 100%;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
   align-content: end;
   height: auto;
   margin-left: auto;
@@ -37,7 +37,7 @@ export default styled.div`
     grid-template-rows: auto;
     margin-left: 0;
     height: calc(var(--rhythm) * 2);
-    padding: 0 var(--spacing-lg);
+    padding: 0 var(--spacing-xl);
     max-width: 900px;
 
     & > *:nth-child(2) {

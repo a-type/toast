@@ -1,7 +1,14 @@
 import styled from 'styled-components';
-import { getCss } from 'components/utils/rhythm';
+import { getSize } from 'theme';
 
-export default styled.p`
+const P = styled.p`
   font-size: var(${props => `--font-size-${props.textSize || 'md'}`});
-  ${props => getCss(props.textSize, props.spacing)};
+  margin-top: -0.16em;
+  margin-bottom: calc(${props => getSize(props.spaceBelow)} - 0.36em);
 `;
+
+P.defaultProps = {
+  spaceBelow: 'lg',
+};
+
+export default P;

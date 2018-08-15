@@ -16,6 +16,17 @@ export const capHeights = {
   xl: 0.8666666666666666,
 };
 
+export const spaceSizes = {
+  md: 12,
+  sm: 6,
+  lg: 24,
+  xs: 3,
+  xl: 48,
+};
+
+export const getSize = (sizeName = '0px') =>
+  `${spaceSizes[sizeName]}px` || sizeName;
+
 injectGlobal`
 :root {
   --rhythm: ${rhythmHeight}px;
@@ -57,11 +68,11 @@ injectGlobal`
 
   --color-dark: #280f34;
 
-  --spacing-md: ${rhythmHeight}px;
-  --spacing-sm: ${Math.round(rhythmHeight / 2)}px;
-  --spacing-lg: ${rhythmHeight * 2}px;
-  --spacing-xs: ${Math.round(rhythmHeight / 4)}px;
-  --spacing-xl: ${rhythmHeight * 4}px;
+  --spacing-md: ${spaceSizes.md}px;
+  --spacing-sm: ${spaceSizes.sm}px;
+  --spacing-lg: ${spaceSizes.lg}px;
+  --spacing-xs: ${spaceSizes.xs}px;
+  --spacing-xl: ${spaceSizes.xl}px;
 }
 
 html, body {
@@ -70,7 +81,7 @@ html, body {
   font-size: var(--font-size-md);
   font-family: var(--font-default);
   font-weight: var(--normal);
-  line-height: ${rhythmHeight}px;
+  line-height: 1.5em;
 }
 
 html, body, #main {

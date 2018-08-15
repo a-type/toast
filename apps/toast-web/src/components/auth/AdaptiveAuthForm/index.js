@@ -1,7 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Form, Field } from 'components/generic';
-import { H1, Button, Input } from 'components/typeset';
+import { H1 } from 'components/typeset';
+import { Input, Button } from 'components/generic';
 import { sentence } from 'change-case';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';

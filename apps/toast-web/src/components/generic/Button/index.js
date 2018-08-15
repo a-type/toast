@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from '../Icon';
-import { getCss } from 'components/utils/rhythm';
 import { focusShadow } from 'components/generic/common/effects';
 
 const Button = styled.button`
@@ -48,7 +47,7 @@ const Button = styled.button`
   padding: 5px 11px;
 
   & + & {
-    margin-left: var(--spacing-sm);
+    margin-left: var(--spacing-md);
   }
 `;
 

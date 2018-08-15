@@ -5,7 +5,8 @@ import IngredientEditor, {
 } from './IngredientEditor';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { H3, HelpText, Field } from 'components/generic';
+import { HelpText, Field } from 'components/generic';
+import { H3 } from 'components/typeset';
 
 export const RecipeCreateIngredientsFragment = gql`
   fragment RecipeCreateIngredients on Recipe {

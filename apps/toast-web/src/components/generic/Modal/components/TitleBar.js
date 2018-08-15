@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export default styled.div`
   display: flex;
   flex-direction: row;
-  padding-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-md);
 
   & > * {
     margin: auto;

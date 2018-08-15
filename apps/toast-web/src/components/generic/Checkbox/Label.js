@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { getCss } from 'components/utils/rhythm';
 
 const SIZE = '22px';
 
@@ -52,6 +51,4 @@ export default styled.label`
   input:checked + &::after {
     background: var(--color-brand);
   }
-
-  ${getCss('md')};
 `;

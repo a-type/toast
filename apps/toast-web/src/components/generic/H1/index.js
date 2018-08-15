@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { getCss } from 'components/utils/rhythm';
 
 export default styled.h1`
   font-family: var(--font-fancy);

@@ -8,10 +8,10 @@ export default styled.div`
   margin-top: auto;
   width: 90vw;
 
-  padding: var(--spacing-lg);
+  padding: var(--spacing-xl);
   background: var(--color-white);
   box-shadow: 0 0 1080px 100px #00000020;
-  border-radius: var(--spacing-xs);
+  border-radius: var(--spacing-sm);
 
   @media (min-width: 666.666667px) {
     width: 600px;

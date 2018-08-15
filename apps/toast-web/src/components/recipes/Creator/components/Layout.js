@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
 
   & > * {
     max-width: 720px;
   }
 
   @media (min-width: 768px) {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
   }
 `;

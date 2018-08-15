@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 export default styled.div`
   position: fixed;
-  bottom: var(--spacing-sm);
-  left: var(--spacing-sm);
-  right: var(--spacing-sm);
+  bottom: var(--spacing-md);
+  left: var(--spacing-md);
+  right: var(--spacing-md);
   border-radius: 40px;
   display: flex;
   flex-direction: row;

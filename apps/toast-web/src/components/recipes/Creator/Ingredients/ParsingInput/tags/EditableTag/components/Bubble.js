@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  padding: 0 var(--spacing-sm);
+  padding: 0 var(--spacing-md);
   transition: 0.2s ease all;
   border-radius: var(--font-size-sm);
 

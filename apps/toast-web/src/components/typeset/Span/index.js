@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { getCss } from 'components/utils/rhythm';
+import { getSize } from 'theme';
 
 export default styled.span`
   font-size: var(${props => `--font-size-${props.textSize || 'md'}`});
   display: inline-block;
-  ${props => getCss(props.textSize, props.spacing)};
+  margin-top: -0.16em;
+  margin-bottom: calc(${props => getSize(props.spaceBelow)} - 0.36em);
 `;

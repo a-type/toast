@@ -9,7 +9,8 @@ import { pathOr } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
 import { SingleColumn } from 'components/layouts';
-import { Loader, H2 } from 'components/generic';
+import { Loader } from 'components/generic';
+import { H2 } from 'components/typeset';
 import JumpControls from './JumpControls';
 
 const FullRecipeQuery = gql`
