@@ -5,7 +5,7 @@ import { scroller as scroll } from 'react-scroll';
 
 export default class JumpControls extends React.PureComponent {
   jumpToIngredients = () => {
-    scroll.scrollTo('IngredientsSection', {
+    scroll.scrollTo('Title', {
       duration: 200,
       delay: 0,
       smooth: 'easeInOutQuart',

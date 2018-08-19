@@ -4,7 +4,7 @@ import gcloudStorage from 'services/gcloudStorage';
 import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
 
 export const RECIPE_FIELDS =
-  '.id, .title, .description, .attribution, .sourceUrl, .published';
+  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType';
 export const DEFAULTS = {
   title: 'Untitled',
   published: false,

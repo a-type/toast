@@ -41,10 +41,7 @@ export type User = {
   name: string,
 };
 
-export type Author = {
-  id: string,
-  user: User,
-};
+export type RecipeDisplayType = 'LINK' | 'FULL';
 
 export type Recipe = {
   id: string,
@@ -52,7 +49,11 @@ export type Recipe = {
   description: string,
   ingredients: Array<RecipeIngredient>,
   steps: Array<RecipeStep>,
-  author: Author,
+  author: User,
+  discoverer: User,
+  displayType: RecipeDisplayType,
+  attribution: string,
+  sourceUrl: string,
 };
 export type RecipeParams = {
   title?: string,

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Layout from './Layout';
-import { P, Link, H1 } from 'components/typeset';
+import { P, Link } from 'components/typeset';
 import { type Recipe } from 'types';
 
 export default ({ recipe }: { recipe: Recipe }) => {
@@ -9,15 +9,19 @@ export default ({ recipe }: { recipe: Recipe }) => {
     return null;
   }
 
-  const { author, description, title } = recipe;
+  const { author, attribution, sourceUrl, description, title } = recipe;
 
   return (
     <Layout>
-      <H1>{title}</H1>
       {author && (
         <P>
           by{' '}
           <Link to={`/users/${author.id}`}>{author.name || 'Anonymous'}</Link>
+        </P>
+      )}
+      {attribution && (
+        <P>
+          from <Link to={sourceUrl}>{attribution}</Link>
         </P>
       )}
       <P>{description || 'No description'}</P>

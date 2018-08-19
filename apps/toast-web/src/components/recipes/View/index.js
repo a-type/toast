@@ -5,13 +5,14 @@ import Steps from './Steps';
 import Details from './Details';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { pathOr } from 'ramda';
+import { pathOr, path } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
 import { SingleColumn } from 'components/layouts';
 import { Loader } from 'components/generic';
-import { H2 } from 'components/typeset';
+import { H2, H1 } from 'components/typeset';
 import JumpControls from './JumpControls';
+import LinkFrame from './LinkFrame';
 
 const FullRecipeQuery = gql`
   query FullRecipeQuery($id: ID!) {
@@ -20,6 +21,9 @@ const FullRecipeQuery = gql`
       title
       description
       published
+      displayType
+      attribution
+      sourceUrl
       author {
         id
         name
@@ -107,8 +111,11 @@ export default class RecipeView extends React.PureComponent<Props> {
               )}
             >
               <SingleColumn.Content>
+                <H1 name="Title">
+                  {pathOr('', ['data', 'recipe', 'title'], response)}
+                </H1>
                 <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
-                <H2>Ingredients</H2>
+                <H2 name="IngredientsSection">Ingredients</H2>
                 <Ingredients
                   ingredients={pathOr(
                     [],
@@ -116,10 +123,19 @@ export default class RecipeView extends React.PureComponent<Props> {
                     response,
                   )}
                 />
-                <H2>Steps</H2>
-                <Steps
-                  steps={pathOr([], ['data', 'recipe', 'steps'], response)}
-                />
+                <H2 name="StepsSection">Steps</H2>
+                {path(['data', 'recipe', 'displayType'], response) ===
+                'FULL' ? (
+                  <Steps
+                    steps={pathOr([], ['data', 'recipe', 'steps'], response)}
+                  />
+                ) : (
+                  <React.Fragment>
+                    <LinkFrame
+                      src={path(['data', 'recipe', 'sourceUrl'], response)}
+                    />
+                  </React.Fragment>
+                )}
               </SingleColumn.Content>
               <JumpControls />
             </SingleColumn>

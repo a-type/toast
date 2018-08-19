@@ -18,6 +18,6 @@ export default styled.div`
   }
 
   @media (min-width: 900px) {
-    display: none;
+    left: auto;
   }
 `;

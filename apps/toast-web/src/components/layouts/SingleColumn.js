@@ -17,6 +17,8 @@ const Layout = styled.div`
   max-width: 900px;
   display: flex;
   flex-direction: column;
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
 
   & > ${Content}:first-child {
     margin-top: ${props =>
