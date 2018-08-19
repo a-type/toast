@@ -4,6 +4,8 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import RecipeCard from 'components/recipes/Card';
+import { H1, P, H2 } from 'components/typeset';
+import { sentence } from 'change-case';
 
 export const Basic = gql`
   query IngredientBasic($id: ID!) {
@@ -29,10 +31,14 @@ const renderView = ({ data, loading, error }) => {
 
   return (
     <div>
-      <h2>{name}</h2>
-      <p>{description || 'No details'}</p>
-      {attribution && <i>{attribution}</i>}
-      <h3>Recipes</h3>
+      <H1>{sentence(name)}</H1>
+      <P>{description || 'No details'}</P>
+      {attribution && (
+        <P>
+          <i>{attribution}</i>
+        </P>
+      )}
+      <H2>Recipes</H2>
       <RecipeCard.Grid>
         {recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
       </RecipeCard.Grid>
