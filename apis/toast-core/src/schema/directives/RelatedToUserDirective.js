@@ -11,8 +11,7 @@ export default class RelatedToUserDirective extends SchemaDirectiveVisitor {
     } = this.args;
     const { resolve = defaultFieldResolver } = field;
     field.resolve = async (parent, queryArgs, ctx, info) => {
-      const session = ctx.getSession();
-      const result = await session.run(
+      const result = await ctx.tx.run(
         `MATCH (n:${labelName} { id: $id })<-[:${relationName}]-(:User { id: $userId }) RETURN n { .id }`,
         {
           id: path(idArg.split('.'))(queryArgs),

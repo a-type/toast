@@ -7,6 +7,7 @@ const H1 = styled.h1`
   font-size: var(--font-size-xl);
   margin-top: -0.16em;
   margin-bottom: calc(${props => getSize(props.spaceBelow)} - 0.36em);
+  line-height: 1.5;
 `;
 
 H1.defaultProps = {

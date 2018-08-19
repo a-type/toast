@@ -9,4 +9,5 @@ export default styled.h1`
   font-weight: var(--normal);
   color: var(--color-white);
   position: relative;
+  line-height: 1;
 `;

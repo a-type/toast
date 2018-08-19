@@ -6,6 +6,7 @@ import RecipePage from './pages/Recipe';
 import UserPage from './pages/User';
 import IngredientPage from './pages/Ingredient';
 import EditRecipePage from './pages/EditRecipe';
+import LinkRecipePage from './pages/LinkRecipe';
 import SearchPage from './pages/Search';
 
 export default () => (
@@ -13,6 +14,7 @@ export default () => (
     <Route path="/" exact component={HomePage} />
     <Route path="/login" component={LoginPage} />
     <Route path="/recipes/create" component={EditRecipePage} />
+    <Route path="/recipes/link" component={LinkRecipePage} />
     <Route path="/recipes/edit/:recipeId" component={EditRecipePage} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
     <Route path="/users/:userId" component={UserPage} />

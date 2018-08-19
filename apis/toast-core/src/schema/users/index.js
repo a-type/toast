@@ -15,7 +15,8 @@ extend type Query {
 }
 
 extend type Recipe {
-  author: User!
+  author: User
+  discoverer: User
 }
 `;
 
@@ -26,9 +27,7 @@ export const resolvers = {
     users: neo4jgraphql
   },
   Recipe: {
-    author: (parent, args, ctx, info) => {
-      const author = getRecipeAuthor(parent.id, ctx);
-      return author;
-    }
+    author: (parent, args, ctx, info) => getRecipeAuthor(parent.id, ctx),
+    discoverer: (parent, args, ctx, info) => getRecipeDiscoverer(parent.id, ctx)
   }
 };

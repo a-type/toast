@@ -6,24 +6,24 @@ export const RECIPE_STEP_FIELDS = '.id, .index';
 export const STEP_FIELDS = '.id, .text';
 
 export const getForRecipe = async (id, ctx) => {
-  const session = ctx.getSession();
-  const result = await session.run(
-    `
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
     MATCH (step:Step)-[rel:STEP_OF]->(:Recipe {id: $id})
     RETURN rel { ${RECIPE_STEP_FIELDS} }, step {${STEP_FIELDS}} ORDER BY rel.index
   `,
-    { id }
-  );
+      { id }
+    );
 
-  return result.records.map(record => ({
-    ...record.get('rel'),
-    step: record.get('step')
-  }));
+    return result.records.map(record => ({
+      ...record.get('rel'),
+      step: record.get('step')
+    }));
+  });
 };
 
 export const createRecipeStep = async (recipeId, args, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
       MATCH (recipe:Recipe {id: $id})
@@ -42,8 +42,7 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
 };
 
 export const deleteRecipeStep = async (id, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
       MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:STEP_OF {id: $id}]-()
@@ -63,8 +62,7 @@ export const deleteRecipeStep = async (id, ctx) => {
 };
 
 export const updateRecipeStep = async (id, args, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
       MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:STEP_OF {id: $relId}]-(step)
@@ -88,8 +86,7 @@ export const updateRecipeStep = async (id, args, ctx) => {
 };
 
 export const moveRecipeStep = async (recipeId, args, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const stepsResult = await tx.run(
       `
       MATCH (recipe:Recipe {id: $id})<-[rel:STEP_OF]-(step:Step)

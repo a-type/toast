@@ -17,7 +17,8 @@ const indexes = [
   ['User', 'id'],
   ['Step', 'id'],
   ['INGREDIENT_OF', 'id'],
-  ['STEP_OF', 'id']
+  ['STEP_OF', 'id'],
+  ['Recipe', 'sourceUrl']
 ];
 
 const index = async () => {

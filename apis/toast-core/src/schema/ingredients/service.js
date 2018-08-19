@@ -3,8 +3,7 @@ import { id } from 'tools';
 const FIELDS = `.id, .name, .description, .attribution`;
 
 export const listIngredients = ({ offset = 0, count = 10 }, ctx) => {
-  const session = ctx.getSession();
-  return session.readTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient)
@@ -19,8 +18,7 @@ export const listIngredients = ({ offset = 0, count = 10 }, ctx) => {
 };
 
 export const getIngredient = (id, ctx) => {
-  const session = ctx.getSession();
-  return session.readTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $id })
@@ -41,8 +39,7 @@ export const createIngredient = (
   { name, description = null, attribution = null },
   ctx
 ) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       'CREATE (i:Ingredient {name: $name, description: $description, attribution: $attribution, id: $id}) RETURN i {.id, .name, .description}',
       {
@@ -58,8 +55,7 @@ export const createIngredient = (
 };
 
 export const updateIngredient = (id, input, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $id })

@@ -3,12 +3,11 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import { id } from 'util';
 
-export const signup = async (user, credential, context) => {
+export const signup = async (user, credential, ctx) => {
   const password = await bcrypt.hash(credential.password, 10);
-  const session = context.getSession();
-  const result = await session.run(
+  const result = await ctx.transaction(
     `
-      MERGE (u:User {name: $name, username: $username, id: $id})<-[:AUTHENTICATES]-(c:Credential {email: $email, password: $password}) 
+      MERGE (u:User {name: $name, username: $username, id: $id})<-[:AUTHENTICATES]-(c:Credential {email: $email, password: $password})
       RETURN u {.id, .name, .username}
     `,
     {
@@ -23,9 +22,8 @@ export const signup = async (user, credential, context) => {
   return result.records[0].get('u');
 };
 
-export const loginByEmail = async (email, password, context) => {
-  const session = context.getSession();
-  const result = await session.run(
+export const loginByEmail = async (email, password, ctx) => {
+  const result = await ctx.transaction(
     'MATCH (c:Credential {email: $email})-[:AUTHENTICATES]->(u:User) RETURN c {.password}, u {.id, .name, .username}',
     {
       email
@@ -46,13 +44,9 @@ export const loginByEmail = async (email, password, context) => {
   return null;
 };
 
-export const login = async (credential, context) => {
+export const login = async (credential, ctx) => {
   if (credential.email) {
-    return loginByEmail(
-      credential.email.email,
-      credential.email.password,
-      context
-    );
+    return loginByEmail(credential.email.email, credential.email.password, ctx);
   }
 
   throw new Error('Unknown credential type');

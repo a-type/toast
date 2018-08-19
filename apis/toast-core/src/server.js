@@ -15,7 +15,10 @@ app.use(
   '/api',
   bodyParser.json(),
   apolloUploadExpress(),
-  graphqlExpress(req => ({ schema, context: createContext(req) }))
+  graphqlExpress(async req => {
+    const context = await createContext(req);
+    return { schema, context };
+  })
 );
 app.use('/playground', playground({ endpoint: '/api' }));
 app.use(express.static('client'));

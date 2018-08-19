@@ -33,15 +33,15 @@ export default styled.div`
   @media (min-width: 900px) {
     width: auto;
     grid-template-areas: 'logo search user';
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
     margin-left: 0;
     height: calc(var(--rhythm) * 2);
     padding: 0 var(--spacing-xl);
-    max-width: 900px;
+    width: 900px;
 
     & > *:nth-child(2) {
-      width: 600px;
+      width: 100%;
     }
   }
 
@@ -49,5 +49,11 @@ export default styled.div`
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+
+    max-width: 900px;
+
+    & > *:nth-child(2) {
+      width: 600px;
+    }
   }
 `;

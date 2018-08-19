@@ -81,7 +81,7 @@ html, body {
   font-size: var(--font-size-md);
   font-family: var(--font-default);
   font-weight: var(--normal);
-  line-height: 1.5em;
+  line-height: 1.5;
 }
 
 html, body, #main {

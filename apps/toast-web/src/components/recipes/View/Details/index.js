@@ -14,9 +14,12 @@ export default ({ recipe }: { recipe: Recipe }) => {
   return (
     <Layout>
       <H1>{title}</H1>
-      <P>
-        by <Link to={`/users/${author.id}`}>{author.name || 'Anonymous'}</Link>
-      </P>
+      {author && (
+        <P>
+          by{' '}
+          <Link to={`/users/${author.id}`}>{author.name || 'Anonymous'}</Link>
+        </P>
+      )}
       <P>{description || 'No description'}</P>
     </Layout>
   );

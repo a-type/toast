@@ -1,12 +1,14 @@
-import { pick } from 'ramda';
+import { pick, omit } from 'ramda';
 import { id } from 'tools';
 import gcloudStorage from 'services/gcloudStorage';
+import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
 
 export const RECIPE_FIELDS =
   '.id, .title, .description, .attribution, .sourceUrl, .published';
 export const DEFAULTS = {
   title: 'Untitled',
-  published: false
+  published: false,
+  displayType: 'LINK'
 };
 
 const defaulted = recipe =>
@@ -16,29 +18,85 @@ const defaulted = recipe =>
     recipe
   );
 
-export const createRecipe = async (user, input, ctx) => {
-  const session = ctx.getSession();
-  const result = await session.run(
-    `
-      CREATE (r:Recipe {title: $input.title, description: $input.description, id: $id, published: false}),
+export const createRecipe = async (input, ctx) => {
+  const user = ctx.user;
+
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+      CREATE (r:Recipe $input),
         (r)<-[:AUTHOR_OF]-(u:User {id: $userId})
       RETURN r {${RECIPE_FIELDS}}
     `,
-    {
-      input: pick(['title', 'description', 'attribution', 'sourceUrl'], input),
-      id: id(input.title),
-      userId: user.id
+      {
+        input: { ...input, displayType: 'FULL', published: false },
+        id: id(input.title),
+        userId: user.id
+      }
+    );
+
+    const recipe = result.records[0].get('r');
+
+    return defaulted(recipe);
+  });
+};
+
+export const linkRecipe = async (input, ctx) => {
+  const user = ctx.user;
+
+  return ctx.transaction(async tx => {
+    const existing = await tx.run(
+      `
+      MATCH (r:Recipe {sourceUrl: $sourceUrl})
+      RETURN r {${RECIPE_FIELDS}}
+      `,
+      {
+        sourceUrl: input.sourceUrl
+      }
+    );
+
+    if (existing.records.length) {
+      return defaulted(existing.records[0].get('r'));
     }
-  );
 
-  const recipe = result.records[0].get('r');
+    const result = await tx.run(
+      `
+      MERGE (r:Recipe {sourceUrl: $sourceUrl})
+        ON CREATE SET r += $input, r.id = $id
+      WITH r
+      MERGE (r)<-[:DISCOVERER_OF]-(u:User {id: $userId})
+      RETURN r {${RECIPE_FIELDS}}
+    `,
+      {
+        sourceUrl: input.sourceUrl,
+        input: {
+          ...omit(['ingredientStrings'], input),
+          displayType: 'LINK',
+          published: true
+        },
+        id: id(input.title),
+        userId: user.id
+      }
+    );
 
-  return defaulted(recipe);
+    const recipe = result.records[0].get('r');
+
+    await Promise.all(
+      input.ingredientStrings.map(ingredientString => {
+        return parseRecipeIngredient_withTransaction(
+          recipe.id,
+          { text: ingredientString },
+          tx
+        );
+      })
+    );
+
+    return defaulted(recipe);
+  });
 };
 
 export const updateRecipeDetails = async (id, input, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const details = await tx.run(
       `
       MATCH (recipe:Recipe {id: $id})
@@ -60,8 +118,7 @@ export const updateRecipeDetails = async (id, input, ctx) => {
 };
 
 export const getRecipe = async (id, ctx) => {
-  const session = ctx.getSession();
-  return session.readTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const recipeResult = await tx.run(
       `
         MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${RECIPE_FIELDS} }
@@ -81,8 +138,7 @@ export const listRecipes = async (
   { offset, count } = { offset: 0, count: 25 },
   ctx
 ) => {
-  const session = ctx.getSession();
-  return session.readTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (recipe:Recipe)
@@ -101,8 +157,7 @@ export const listRecipesForIngredient = async (
   { offset, count },
   ctx
 ) => {
-  const session = ctx.getSession();
-  return session.readTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $ingredientId })-[:INGREDIENT_OF]->(recipe:Recipe)
@@ -121,8 +176,7 @@ export const listRecipesForIngredient = async (
 };
 
 export const publishRecipe = async (id, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (recipe:Recipe { id: $id })
@@ -141,8 +195,7 @@ export const publishRecipe = async (id, ctx) => {
 };
 
 export const listRecipesForUser = async (userId, { offset, count }, ctx) => {
-  const session = ctx.getSession();
-  return session.readTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (user:User { id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)

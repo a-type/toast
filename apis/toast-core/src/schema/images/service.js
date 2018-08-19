@@ -5,23 +5,25 @@ import uuid from 'uuid';
 export const IMAGE_FIELDS = `.id, .url`;
 
 export const getRecipeCoverImage = async (id, ctx) => {
-  const session = ctx.getSession();
-  const coverImage = await session.run(
-    `
-      MATCH (i:Image)<-[:COVER_IMAGE]-(:Recipe {id: $id})
-      RETURN i { ${IMAGE_FIELDS} }
-    `,
-    { id }
-  );
+  return ctx.transaction(async tx => {
+    const coverImage = await tx.run(
+      `
+        MATCH (i:Image)<-[:COVER_IMAGE]-(:Recipe {id: $id})
+        RETURN i { ${IMAGE_FIELDS} }
+      `,
+      { id }
+    );
 
-  return coverImage.records.length > 0 ? coverImage.records[0].get('i') : null;
+    return coverImage.records.length > 0
+      ? coverImage.records[0].get('i')
+      : null;
+  });
 };
 
 export const updateRecipeCoverImage = async (id, input, ctx) => {
-  const session = ctx.getSession();
   const file = await input.file;
   const uploaded = await gcloudStorage.upload(file, 'images');
-  return session.writeTransaction(async tx => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
       MATCH (r:Recipe { id: $id })

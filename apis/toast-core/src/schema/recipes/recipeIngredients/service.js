@@ -1,64 +1,105 @@
 import uuid from 'uuid';
 import { RECIPE_FIELDS } from '../service';
 import { pick } from 'ramda';
+import parse from './parseIngredient';
+import { searchIngredients_withTransaction } from '../../search/service';
 
 export const RECIPE_INGREDIENT_FIELDS =
   '.id, .index, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
 export const INGREDIENT_FIELDS = '.id, .name, .description';
+const UNKNOWN_INGREDIENT = 'unknown-0000';
 
-export const getForRecipe = async (id, ctx) => {
-  const session = ctx.getSession();
-  const result = await session.run(
-    `
-    MATCH (ingredient:Ingredient)-[rel:INGREDIENT_OF]->(:Recipe {id: $id})
-    RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ingredient {${INGREDIENT_FIELDS}} ORDER BY rel.index
-  `,
-    { id }
-  );
-
-  return result.records.map(record => ({
-    ...record.get('rel'),
-    ingredient: record.get('ingredient')
-  }));
+const DEFAULTS = {
+  text: '',
+  value: 1
 };
 
-export const createRecipeIngredient = async (recipeId, input, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+const defaulted = recipeIngredient =>
+  Object.keys(DEFAULTS).reduce(
+    (acc, key) =>
+      recipeIngredient[key] !== null ? acc : { ...acc, [key]: DEFAULTS[key] },
+    recipeIngredient
+  );
+
+export const getForRecipe = (id, ctx) => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
+      MATCH (ingredient:Ingredient)-[rel:INGREDIENT_OF]->(:Recipe {id: $id})
+      RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ingredient {${INGREDIENT_FIELDS}} ORDER BY rel.index
+    `,
+      { id }
+    );
+
+    return result.records.map(record =>
+      defaulted({
+        ...record.get('rel'),
+        ingredient: record.get('ingredient')
+      })
+    );
+  });
+};
+
+export const parseRecipeIngredient = (recipeId, input, ctx) => {
+  return ctx.transaction(async tx => {
+    return parseRecipeIngredient_withTransaction(recipeId, input, tx);
+  });
+};
+
+// TODO: find a better way to break up and reuse behavior
+export const parseRecipeIngredient_withTransaction = async (
+  recipeId,
+  input,
+  tx
+) => {
+  const { value, unit, ingredient } = parse(input.text);
+
+  const ingredientResults = await searchIngredients_withTransaction(
+    ingredient.raw,
+    tx
+  );
+  const foundIngredient = ingredientResults.items[0] || {
+    id: UNKNOWN_INGREDIENT,
+    name: 'unknown'
+  };
+
+  const result = await tx.run(
+    `
       MATCH (recipe:Recipe {id: $id}), (ingredient:Ingredient {id: $ingredientId})
       OPTIONAL MATCH (recipe)<-[allIngredients:INGREDIENT_OF]-()
       WITH recipe, count(allIngredients) as index, ingredient
       CREATE (recipe)<-[rel:INGREDIENT_OF {
-        id: $relId, 
-        index: index, 
-        unit: $unit, 
-        unitTextMatch: $unitTextMatch, 
-        value: $value, 
-        valueTextMatch: $valueTextMatch, 
+        id: $relId,
+        index: index,
+        unit: $unit,
+        unitTextMatch: $unitTextMatch,
+        value: $value,
+        valueTextMatch: $valueTextMatch,
         ingredientTextMatch: $ingredientTextMatch,
         text: $text
       }]-(ingredient)
       RETURN recipe {${RECIPE_FIELDS}}
       `,
-      {
-        ...input,
-        id: recipeId,
-        relId: uuid(),
-        value: input.value || 1
-      }
-    );
-
-    if (result.records.length) {
-      return result.records[0].get('recipe');
+    {
+      text: input.text,
+      unit: unit.normalized,
+      unitTextMatch: unit.raw,
+      ingredientId: foundIngredient.id,
+      ingredientTextMatch: ingredient.raw,
+      value: value.normalized,
+      valueTextMatch: value.raw || 1,
+      id: recipeId,
+      relId: uuid()
     }
-  });
+  );
+
+  if (result.records.length) {
+    return result.records[0].get('recipe');
+  }
 };
 
-export const updateRecipeIngredient = async (id, args, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+export const updateRecipeIngredient = (id, args, ctx) => {
+  return ctx.transaction(async tx => {
     const ingredientProps = pick(
       [
         'text',
@@ -101,19 +142,18 @@ export const updateRecipeIngredient = async (id, args, ctx) => {
 
     if (result.records.length) {
       const rel = result.records[0].get('rel');
-      return {
+      return defaulted({
         ...rel,
         ingredient: result.records[0].get('ing')
-      };
+      });
     } else {
       throw new Error('No such recipe ingredient exists');
     }
   });
 };
 
-export const moveRecipeIngredient = async (recipeId, args, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+export const moveRecipeIngredient = (recipeId, args, ctx) => {
+  return ctx.transaction(async tx => {
     const ingredientsResult = await tx.run(
       `
       MATCH (recipe:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(ingredient:Ingredient)
@@ -157,9 +197,8 @@ export const moveRecipeIngredient = async (recipeId, args, ctx) => {
   });
 };
 
-export const deleteRecipeIngredient = async (id, ctx) => {
-  const session = ctx.getSession();
-  return session.writeTransaction(async tx => {
+export const deleteRecipeIngredient = (id, ctx) => {
+  return ctx.transaction(async tx => {
     const result = await tx.run(
       `
       MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $id}]-()

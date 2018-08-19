@@ -1,6 +1,4 @@
 export const searchRecipes = async ({ term, ingredients }, ctx) => {
-  const session = ctx.getSession();
-
   if (!term && !ingredients) {
     return {
       items: [],
@@ -25,7 +23,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
   // FIXME: this is probably possible to express as a single query!
 
   if (term && term.length > 0 && !ingredients) {
-    const result = await session.run(
+    const result = await ctx.transaction(
       `
         CALL apoc.index.search("recipes", $term) YIELD node, weight
         WHERE node.published = true
@@ -42,7 +40,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
     return processResult(result);
   } else if (!term && ingredients) {
     const { include = [], exclude = [] } = ingredients;
-    const result = await session.run(
+    const result = await ctx.transaction(
       `
       MATCH (r:Recipe)
       WHERE none(x in $exclude WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
@@ -56,7 +54,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
     return processResult(result);
   } else {
     const { include = [], exclude = [] } = ingredients;
-    const result = await session.run(
+    const result = await ctx.transaction(
       `
       CALL apoc.index.search("recipes", $term) YIELD node, weight
       WITH node as r, weight
@@ -80,9 +78,19 @@ export const searchIngredients = async (term, ctx) => {
     };
   }
 
-  const session = ctx.getSession();
+  return ctx.transaction(tx => {
+    return searchIngredients_withTransaction(term, tx);
+  });
+};
 
-  const result = await session.run(
+export const searchIngredients_withTransaction = async (term, tx) => {
+  if (!term || term.length === 0) {
+    return {
+      items: [],
+      total: 0
+    };
+  }
+  const result = await tx.run(
     `
     CALL apoc.index.search("ingredients", $term) YIELD node, weight
     WITH node, weight, count(node) as total
