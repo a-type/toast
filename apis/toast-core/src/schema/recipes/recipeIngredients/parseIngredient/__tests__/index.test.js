@@ -97,7 +97,7 @@ describe('ingredient parser', () => {
         normalized: null
       },
       ingredient: {
-        raw: 'egg',
+        raw: 'eggs',
         normalized: 'egg'
       }
     });
@@ -133,6 +133,40 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'Bread',
         normalized: 'bread'
+      }
+    });
+  });
+
+  test('2 tsp sesame or vegetable oil', () => {
+    expect(parse('2 tsp sesame or vegetable oil')).toEqual({
+      value: {
+        raw: '2',
+        normalized: 2
+      },
+      unit: {
+        raw: 'tsp',
+        normalized: 'teaspoon'
+      },
+      ingredient: {
+        raw: 'sesame or vegetable oil',
+        normalized: 'sesame or vegetable oil'
+      }
+    });
+  });
+
+  test('kosher salt, to season', () => {
+    expect(parse('kosher salt, to season')).toEqual({
+      value: {
+        raw: null,
+        normalized: null
+      },
+      unit: {
+        raw: null,
+        normalized: null
+      },
+      ingredient: {
+        raw: 'kosher salt',
+        normalized: 'kosher salt'
       }
     });
   });

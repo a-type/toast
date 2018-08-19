@@ -6,7 +6,7 @@
   "scripts": {
     "dev":
       "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
-    "test": "cross-env NODE_PATH=src echo No tests!",
+    "test": "cross-env NODE_PATH=src jest",
     "db:index": "babel-node ./db/indexes.js",
     "db:seed": "babel-node ./db/seeds.js",
     "db-init": "run-s db:*",
@@ -56,6 +56,7 @@
     "graphql-playground-middleware-express": "^1.6.1",
     "graphql-tools": "^2.24.0",
     "imaginary": "^0.1.16",
+    "ingredients-parser": "^1.4.0",
     "jsonwebtoken": "^8.2.1",
     "mime-types": "^2.1.18",
     "neo4j-driver": "^1.5.3",
@@ -70,6 +71,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-jest": "^23.4.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-0": "^6.24.1",

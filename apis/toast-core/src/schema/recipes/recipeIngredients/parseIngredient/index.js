@@ -1,30 +1,31 @@
 import nlp from 'compromise';
 import plug from 'compromise-plugin';
+import parser from 'ingredients-parser';
 
-const plugin = {
-  name: 'ingredients-plugin',
-  tags: {
-    Ingredient: {
-      isA: 'Noun'
-    }
-  },
-  words: {
-    pinch: 'Unit',
-    can: 'Unit',
-    box: 'Unit',
-    ear: 'Unit',
-    head: 'Unit',
+// const plugin = {
+//   name: 'ingredients-plugin',
+//   tags: {
+//     Ingredient: {
+//       isA: 'Noun'
+//     }
+//   },
+//   words: {
+//     pinch: 'Unit',
+//     can: 'Unit',
+//     box: 'Unit',
+//     ear: 'Unit',
+//     head: 'Unit',
 
-    garlic: 'Ingredient'
-  },
-  patterns: {
-    '#Noun': 'Ingredient',
-    '#Adjective? #Noun': 'Ingredient',
-    '#Adverb? #Verb #Noun': 'Ingredient'
-  }
-};
+//     garlic: 'Ingredient'
+//   },
+//   patterns: {
+//     '#Noun': 'Ingredient',
+//     '#Adjective? #Noun': 'Ingredient',
+//     '#Adverb? #Verb #Noun': 'Ingredient'
+//   }
+// };
 
-nlp.plugin(plug.pack(plugin));
+// nlp.plugin(plug.pack(plugin));
 
 const abbreviations = {
   tsp: 'teaspoon',
@@ -47,43 +48,39 @@ const unabbreviate = input => {
   return input;
 };
 
+const removeAsides = text =>
+  text
+    .replace(/\(.*\)/g, '')
+    .replace(/,.*$/, '')
+    .replace(/optional/, '');
+const removeWeirdCharacters = text => text.replace(/[\*&:]/g, '');
+const isOptional = text => /optional/.match(text);
+
 export default text => {
-  const withoutExtras = text.replace(/\(.*\)/g, '');
+  const withoutExtras = removeWeirdCharacters(removeAsides(text));
+  const parsed = parser.parse(withoutExtras);
+
   const doc = nlp(withoutExtras);
 
-  const unit = doc
-    .clone()
-    .match(`#Unit`)
-    .get(0);
-
-  const unitRaw = unit.out('text').trim();
+  const unitRaw = parsed.unit;
 
   const unitNormalized = unabbreviate(
-    unit
+    nlp(unitRaw)
       .normalize({ plurals: true, case: true })
       .out('text')
       .trim()
       .toLowerCase()
   ).replace('slouse', 'slice'); // kinda funny error.
 
-  const value = doc
-    .clone()
-    .match('#Value')
-    .get(0);
+  const valueRaw = parsed.amount;
 
-  const valueRaw = value.out('text');
+  const valueNormalized = nlp(valueRaw)
+    .values()
+    .numbers()[0];
 
-  const valueNormalized = value.values().numbers()[0];
+  const ingredientRaw = parsed.ingredient;
 
-  const ingredient = doc
-    .clone()
-    .not('#Unit')
-    .not('#Value')
-    .match('#Ingredient');
-
-  const ingredientRaw = ingredient.out('text').trim();
-
-  const ingredientNormalized = ingredient
+  const ingredientNormalized = nlp(ingredientRaw)
     .normalize({ plurals: true, case: true })
     .out('text')
     .trim()
@@ -101,6 +98,7 @@ export default text => {
     value: {
       raw: valueRaw || null,
       normalized: valueNormalized || null
-    }
+    },
+    optional: isOptional(text)
   };
 };

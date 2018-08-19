@@ -89,6 +89,8 @@ export const searchIngredients = async (term, ctx) => {
   });
 };
 
+const normalizeTerm = term => term.replace(/[^a-zA-Z0-9 -]/, '');
+
 export const searchIngredients_withTransaction = async (term, tx) => {
   if (!term || term.length === 0) {
     return {
@@ -102,7 +104,7 @@ export const searchIngredients_withTransaction = async (term, tx) => {
     WITH node, weight, count(node) as total
     RETURN total, node {.id, .name, .description} ORDER BY weight DESC LIMIT 10
     `,
-    { term: `${term}~` }
+    { term: `${normalizeTerm(term)}~` }
   );
 
   if (result.records.length === 0) {
