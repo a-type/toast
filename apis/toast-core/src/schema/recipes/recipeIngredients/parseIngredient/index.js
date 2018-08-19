@@ -54,7 +54,7 @@ const removeAsides = text =>
     .replace(/,.*$/, '')
     .replace(/optional/, '');
 const removeWeirdCharacters = text => text.replace(/[\*&:]/g, '');
-const isOptional = text => /optional/.match(text);
+const isOptional = text => /optional/.test(text);
 
 export default text => {
   const withoutExtras = removeWeirdCharacters(removeAsides(text));
