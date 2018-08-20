@@ -14,7 +14,8 @@ describe('ingredient parser', () => {
       value: {
         raw: '1',
         normalized: 1
-      }
+      },
+      optional: false
     });
   });
 
@@ -31,7 +32,8 @@ describe('ingredient parser', () => {
       value: {
         raw: '1/3',
         normalized: 1 / 3.0
-      }
+      },
+      optional: false
     });
   });
 
@@ -48,7 +50,8 @@ describe('ingredient parser', () => {
       value: {
         raw: 'four',
         normalized: 4
-      }
+      },
+      optional: false
     });
   });
 
@@ -65,7 +68,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: null,
         normalized: null
-      }
+      },
+      optional: false
     });
   });
 
@@ -82,7 +86,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'egg',
         normalized: 'egg'
-      }
+      },
+      optional: false
     });
   });
 
@@ -99,7 +104,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'eggs',
         normalized: 'egg'
-      }
+      },
+      optional: false
     });
   });
 
@@ -116,7 +122,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'flour',
         normalized: 'flour'
-      }
+      },
+      optional: false
     });
   });
 
@@ -133,7 +140,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'Bread',
         normalized: 'bread'
-      }
+      },
+      optional: false
     });
   });
 
@@ -150,7 +158,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'sesame or vegetable oil',
         normalized: 'sesame or vegetable oil'
-      }
+      },
+      optional: false
     });
   });
 
@@ -167,7 +176,8 @@ describe('ingredient parser', () => {
       ingredient: {
         raw: 'kosher salt',
         normalized: 'kosher salt'
-      }
+      },
+      optional: false
     });
   });
 });

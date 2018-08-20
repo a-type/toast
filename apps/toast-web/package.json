@@ -9,7 +9,7 @@
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "jest"
+    "test": "echo 'No tests!'"
   },
   "lint-staged": {
     "*.{js,json,css.md}": [
