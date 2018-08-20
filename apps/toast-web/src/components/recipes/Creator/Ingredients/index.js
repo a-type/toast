@@ -1,8 +1,6 @@
 import React from 'react';
 import IngredientPicker from 'components/ingredients/Picker';
-import IngredientEditor, {
-  RecipeCreateIngredientFragment,
-} from './IngredientEditor';
+import IngredientEditor, { fragments } from './Editor';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { HelpText, Field } from 'components/generic';
@@ -12,11 +10,13 @@ export const RecipeCreateIngredientsFragment = gql`
   fragment RecipeCreateIngredients on Recipe {
     id
     ingredients {
-      ...RecipeCreateIngredient
+      ...ParseIngredient
+      ...FixIngredient
     }
   }
 
-  ${RecipeCreateIngredientFragment}
+  ${fragments.ParseIngredient}
+  ${fragments.FixIngredient}
 `;
 
 export default ({
@@ -43,9 +43,12 @@ export default ({
         />
       ))}
     {ingredients.map(ingredient => (
-      <IngredientEditor key={ingredient.id} recipeIngredient={ingredient} />
+      <IngredientEditor
+        key={ingredient.id}
+        recipeIngredient={ingredient}
+        recipeId={recipeId}
+      />
     ))}
-    <H3>Add an Ingredient</H3>
     <IngredientEditor recipeId={recipeId} />
   </div>
 );

@@ -1,6 +1,7 @@
 import {
   getForRecipe,
-  createRecipeIngredient,
+  parseRecipeIngredient,
+  reparseRecipeIngredient,
   updateRecipeIngredient,
   moveRecipeIngredient,
   deleteRecipeIngredient
@@ -31,7 +32,6 @@ input RecipeIngredientUpdateInput {
   valueTextMatch: String
   ingredientId: ID
   ingredientTextMatch: String
-  text: String
 }
 
 extend type Recipe {
@@ -40,7 +40,8 @@ extend type Recipe {
 
 extend type Mutation {
   updateRecipeIngredient(id: ID!, input: RecipeIngredientUpdateInput!): RecipeIngredient! @authenticated
-  parseRecipeIngredient(recipeId: ID!, input: RecipeIngredientParseInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
+  reparseRecipeIngredient(id: ID!, input: RecipeIngredientParseInput!): RecipeIngredient! @authenticated
+  addRecipeIngredient(recipeId: ID!, input: RecipeIngredientParseInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
   moveRecipeIngredient(recipeId: ID!, input: ListMoveInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
   deleteRecipeIngredient(id: ID!): Recipe! @authenticated
 }
@@ -51,10 +52,12 @@ export const resolvers = {
     ingredients: (parent, args, ctx, info) => getForRecipe(parent.id, ctx)
   },
   Mutation: {
-    parseRecipeIngredient: (parent, args, ctx, info) =>
+    addRecipeIngredient: (parent, args, ctx, info) =>
       parseRecipeIngredient(args.recipeId, args.input, ctx),
     updateRecipeIngredient: (parent, args, ctx, info) =>
       updateRecipeIngredient(args.id, args.input, ctx),
+    reparseRecipeIngredient: (parent, args, ctx, info) =>
+      reparseRecipeIngredient(args.id, args.input, ctx),
     moveRecipeIngredient: (parent, args, ctx, info) =>
       moveRecipeIngredient(args.recipeId, args.input, ctx),
     deleteRecipeIngredient: (parent, args, ctx, info) =>

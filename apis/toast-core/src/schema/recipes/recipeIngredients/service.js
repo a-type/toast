@@ -40,10 +40,56 @@ export const getForRecipe = (id, ctx) => {
   });
 };
 
+export const getRecipeIngredient = (id, ctx) => {
+  return ctx.transaction(tx => {
+    return getRecipeIngredient_withTransaction(id, tx);
+  });
+};
+
+export const getRecipeIngredient_withTransaction = async (id, tx) => {
+  const result = await tx.run(
+    `
+    MATCH ()<-[rel:INGREDIENT_OF {id: $id}]-(i:Ingredient)
+    RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, i {${INGREDIENT_FIELDS}}
+    `,
+    { id }
+  );
+
+  return result.records.length
+    ? defaulted({
+        ...result.records[0].get('rel'),
+        ingredient: result.records[0].get('i')
+      })
+    : null;
+};
+
 export const parseRecipeIngredient = (recipeId, input, ctx) => {
   return ctx.transaction(async tx => {
     return parseRecipeIngredient_withTransaction(recipeId, input, tx);
   });
+};
+
+export const parseRecipeIngredientText = async (text, tx) => {
+  const { value, unit, ingredient } = parse(text);
+
+  const ingredientResults = await searchIngredients_withTransaction(
+    ingredient.raw,
+    tx
+  );
+
+  const foundIngredient = ingredientResults.items[0] || {
+    id: UNKNOWN_INGREDIENT,
+    name: 'unknown'
+  };
+
+  return {
+    unit: unit.normalized,
+    unitTextMatch: unit.raw,
+    value: value.normalized,
+    valueTextMatch: value.raw || 1,
+    ingredientId: foundIngredient.id,
+    ingredientTextMatch: ingredient.raw
+  };
 };
 
 // TODO: find a better way to break up and reuse behavior
@@ -52,16 +98,7 @@ export const parseRecipeIngredient_withTransaction = async (
   input,
   tx
 ) => {
-  const { value, unit, ingredient } = parse(input.text);
-
-  const ingredientResults = await searchIngredients_withTransaction(
-    ingredient.raw,
-    tx
-  );
-  const foundIngredient = ingredientResults.items[0] || {
-    id: UNKNOWN_INGREDIENT,
-    name: 'unknown'
-  };
+  const parsed = await parseRecipeIngredientText(input.text, tx);
 
   const result = await tx.run(
     `
@@ -82,12 +119,7 @@ export const parseRecipeIngredient_withTransaction = async (
       `,
     {
       text: input.text,
-      unit: unit.normalized,
-      unitTextMatch: unit.raw,
-      ingredientId: foundIngredient.id,
-      ingredientTextMatch: ingredient.raw,
-      value: value.normalized,
-      valueTextMatch: value.raw || 1,
+      ...parsed,
       id: recipeId,
       relId: uuid()
     }
@@ -98,58 +130,67 @@ export const parseRecipeIngredient_withTransaction = async (
   }
 };
 
+export const reparseRecipeIngredient = async (id, input, ctx) => {
+  return ctx.transaction(async tx => {
+    const parsed = await parseRecipeIngredientText(input.text, tx);
+
+    return updateRecipeIngredient_withTransaction(id, parsed, tx, ctx);
+  });
+};
+
+const changeIngredientRelationship = (id, userId, ingredientId, tx) => {
+  return tx.run(
+    `
+    MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(),
+      (ingredient:Ingredient {id: $ingredientId})
+    CALL apoc.refactor.from(rel, ingredient) YIELD input, output, error
+    RETURN error
+    `,
+    {
+      relId: id,
+      userId,
+      ingredientId
+    }
+  );
+};
+
 export const updateRecipeIngredient = (id, args, ctx) => {
   return ctx.transaction(async tx => {
-    const ingredientProps = pick(
-      [
-        'text',
-        'unit',
-        'unitTextMatch',
-        'value',
-        'valueTextMatch',
-        'ingredientTextMatch'
-      ],
-      args
-    );
-
-    if (args.ingredientId) {
-      await tx.run(
-        `
-        MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(),
-          (ingredient:Ingredient {id: $ingredientId})
-        CALL apoc.refactor.from(rel, ingredient) YIELD input, output, error
-        RETURN error
-        `,
-        {
-          relId: id,
-          userId: ctx.user.id,
-          ingredientId: args.ingredientId
-        }
-      );
-    }
-    const result = await tx.run(
-      `
-      MATCH (:User {id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
-      SET rel += $ingredientProps
-      RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ing {${INGREDIENT_FIELDS}}
-    `,
-      {
-        relId: id,
-        ingredientProps,
-        userId: ctx.user.id
-      }
-    );
-
-    if (result.records.length) {
-      const rel = result.records[0].get('rel');
-      return defaulted({
-        ...rel,
-        ingredient: result.records[0].get('ing')
-      });
-    } else {
-      throw new Error('No such recipe ingredient exists');
-    }
+    return updateRecipeIngredient_withTransaction(id, args, tx, ctx);
   });
+};
+
+export const updateRecipeIngredient_withTransaction = async (
+  id,
+  args,
+  tx,
+  ctx
+) => {
+  if (args.ingredientId) {
+    await changeIngredientRelationship(id, ctx.user.id, args.ingredientId, tx);
+  }
+  const result = await tx.run(
+    `
+    MATCH (:User {id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
+    SET rel += $ingredientProps
+    RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ing {${INGREDIENT_FIELDS}}
+  `,
+    {
+      relId: id,
+      ingredientProps: args,
+      userId: ctx.user.id
+    }
+  );
+
+  if (result.records.length) {
+    const rel = result.records[0].get('rel');
+    return defaulted({
+      ...rel,
+      ingredient: result.records[0].get('ing')
+    });
+  } else {
+    throw new Error('No such recipe ingredient exists');
+  }
 };
 
 export const moveRecipeIngredient = (recipeId, args, ctx) => {

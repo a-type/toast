@@ -13,7 +13,6 @@ export default styled.div`
     height: 0;
     border-style: solid;
     position: absolute;
-    transform: translateY(1px) scale(${14 / 12.0}, ${13 / 12.0});
   }
   &::after {
     content: '';
@@ -32,7 +31,7 @@ export default styled.div`
     width: 12px;
     height: 8px;
     &::before {
-      border-width: 0 6px 4px 6px;
+      border-width: 0 8px 5px 8px;
       border-color: transparent transparent var(--color-brand) transparent;
     }
     &::after {
@@ -48,7 +47,7 @@ export default styled.div`
     width: 12px;
     height: 8px;
     &::before {
-      border-width: 4px 6px 0px 6px;
+      border-width: 5px 8px 0px 8px;
       border-color: var(--color-brand) transparent transparent;
     }
     &::after {
@@ -63,7 +62,7 @@ export default styled.div`
     width: 8px;
     height: 12px;
     &::before {
-      border-width: 6px 4px 6px 0;
+      border-width: 8px 5px 8px 0;
       border-color: transparent var(--color-brand) transparent transparent;
     }
     &::after {
@@ -78,7 +77,7 @@ export default styled.div`
     height: 12px;
     width: 8px;
     &::before {
-      border-width: 6px 0 6px 4px;
+      border-width: 8px 0 8px 5px;
       border-color: transparent transparent transparent var(--color-brand);
     }
     &::after {

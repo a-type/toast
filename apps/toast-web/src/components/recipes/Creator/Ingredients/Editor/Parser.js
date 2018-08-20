@@ -1,0 +1,95 @@
+import React from 'react';
+import { Input, Field, Button } from 'components/generic';
+import { Formik } from 'formik';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+import { path } from 'ramda';
+
+export const ParseIngredientFragment = gql`
+  fragment ParseIngredient on RecipeIngredient {
+    id
+    index
+    text
+    unit
+    unitTextMatch
+    value
+    valueTextMatch
+    ingredientTextMatch
+    ingredient {
+      id
+      name
+    }
+  }
+`;
+
+const ParseIngredient = gql`
+  mutation ParseIngredient($recipeId: ID!, $text: String!) {
+    addRecipeIngredient(recipeId: $recipeId, input: { text: $text }) {
+      id
+      ingredients {
+        ...ParseIngredient
+      }
+    }
+  }
+
+  ${ParseIngredientFragment}
+`;
+
+const ReparseIngredient = gql`
+  mutation ReparseIngredient($id: ID!, $text: String!) {
+    reparseRecipeIngredient(id: $id, input: { text: $text }) {
+      ...ParseIngredient
+    }
+  }
+
+  ${ParseIngredientFragment}
+`;
+
+export default class IngredientEditorParser extends React.PureComponent {
+  render() {
+    const { recipeIngredient, recipeId, onParsed } = this.props;
+
+    const initialValues = {
+      text: recipeIngredient ? recipeIngredient.text : '',
+    };
+
+    return (
+      <Mutation
+        mutation={recipeIngredient ? ReparseIngredient : ParseIngredient}
+      >
+        {parse => (
+          <Formik
+            onSubmit={async values => {
+              await parse({
+                variables: {
+                  ...values,
+                  id: path(['id'], recipeIngredient),
+                  recipeId,
+                },
+              });
+              onParsed();
+            }}
+          >
+            {({ values, handleChange, handleSubmit, dirty }) => (
+              <form onSubmit={handleSubmit}>
+                <Field label="Add an ingredient line item" required>
+                  <Input
+                    value={values.text}
+                    name="text"
+                    required
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field>
+                  <Button type="submit" disabled={!dirty}>
+                    Save
+                  </Button>
+                </Field>
+              </form>
+            )}
+          </Formik>
+        )}
+      </Mutation>
+    );
+  }
+}

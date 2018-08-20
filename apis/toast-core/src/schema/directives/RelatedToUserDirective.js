@@ -11,17 +11,19 @@ export default class RelatedToUserDirective extends SchemaDirectiveVisitor {
     } = this.args;
     const { resolve = defaultFieldResolver } = field;
     field.resolve = async (parent, queryArgs, ctx, info) => {
-      const result = await ctx.tx.run(
-        `MATCH (n:${labelName} { id: $id })<-[:${relationName}]-(:User { id: $userId }) RETURN n { .id }`,
-        {
-          id: path(idArg.split('.'))(queryArgs),
-          userId: ctx.user.id
+      return ctx.transaction(async tx => {
+        const result = await tx.run(
+          `MATCH (n:${labelName} { id: $id })<-[:${relationName}]-(:User { id: $userId }) RETURN n { .id }`,
+          {
+            id: path(idArg.split('.'))(queryArgs),
+            userId: ctx.user.id
+          }
+        );
+        if (result.records.length === 0) {
+          throw new Error("Sorry, you can't do that");
         }
-      );
-      if (result.records.length === 0) {
-        throw new Error("Sorry, you can't do that");
-      }
-      return resolve(parent, queryArgs, ctx, info);
+        return resolve(parent, queryArgs, ctx, info);
+      });
     };
   }
 }

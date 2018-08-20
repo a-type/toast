@@ -11,7 +11,7 @@ const H1 = styled.h1`
 `;
 
 H1.defaultProps = {
-  spaceBelow: 'xl',
+  spaceBelow: 'lg',
 };
 
 export default H1;
