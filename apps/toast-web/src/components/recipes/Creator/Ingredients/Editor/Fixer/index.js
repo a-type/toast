@@ -96,6 +96,9 @@ class IngredientEditorFixer extends React.PureComponent {
       valueTextMatch,
       ingredientTextMatch,
       text,
+      ingredient,
+      value,
+      unit,
     } = recipeIngredient;
 
     const parts = [];
@@ -104,19 +107,31 @@ class IngredientEditorFixer extends React.PureComponent {
     if (valueTextMatch) {
       const split = remainingText.split(valueTextMatch);
       parts.push(<span key="value-before">{split[0]}</span>);
-      parts.push(<u key="value">{valueTextMatch}</u>);
+      parts.push(
+        <ValueTag value={value} key="value">
+          {valueTextMatch}
+        </ValueTag>,
+      );
       remainingText = split[1];
     }
     if (unitTextMatch) {
       const split = remainingText.split(unitTextMatch);
       parts.push(<span key="unit-before">{split[0]}</span>);
-      parts.push(<u key="unit">{unitTextMatch}</u>);
+      parts.push(
+        <UnitTag value={unit} key="unit">
+          {unitTextMatch}
+        </UnitTag>,
+      );
       remainingText = split[1];
     }
     if (ingredientTextMatch) {
       const split = remainingText.split(ingredientTextMatch);
       parts.push(<span key="ingredient-before">{split[0]}</span>);
-      parts.push(<u key="ingredient">{ingredientTextMatch}</u>);
+      parts.push(
+        <IngredientTag value={ingredient} key="ingredient">
+          {ingredientTextMatch}
+        </IngredientTag>,
+      );
       remainingText = split[1];
     }
     parts.push(<span key="remainder">{remainingText}</span>);
@@ -134,25 +149,14 @@ class IngredientEditorFixer extends React.PureComponent {
 
     const { unit, value, ingredient } = recipeIngredient;
 
-    if (!selectingPart) {
+    if (selectingPart) {
       return (
         <StatusRow>
-          <ValueTag value={value} onChangeSelection={this.selectValue} />
-          {unit && <UnitTag value={unit} onChangeSelection={this.selectUnit} />}
-          <IngredientTag
-            value={ingredient}
-            onChangeSelection={this.selectIngredient}
-          />
+          <span>Selecting {selectingPart}</span>
+          <Button onClick={this.handleSelectionCommit}>Done</Button>
         </StatusRow>
       );
     }
-
-    return (
-      <StatusRow>
-        <span>Selecting {selectingPart}</span>
-        <Button onClick={this.handleSelectionCommit}>Done</Button>
-      </StatusRow>
-    );
   };
 
   render() {

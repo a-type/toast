@@ -50,7 +50,6 @@ export default class EditableTag extends React.PureComponent<Props, State> {
           {({ ref }) => (
             <Bubble color={color} innerRef={ref} onClick={this.showTip}>
               <span>{children}&nbsp;</span>
-              <Button.Icon name="edit" onClick={this.edit} />
             </Bubble>
           )}
         </Tip>

@@ -21,6 +21,7 @@ import {
   Divider,
   Checkbox,
   Form,
+  SelectionEditor,
 } from 'components/generic';
 import { P, H1, H2 } from 'components/typeset';
 import { Logo } from 'components/brand';
@@ -164,3 +165,35 @@ storiesOf('Vertical rhythm', module)
       <Input.Block value="Block style!" />
     </div>
   ));
+
+class SelectionState extends React.Component {
+  state = {
+    selections: [
+      { name: 'first', text: 'foo' },
+      { name: 'second', text: 'baz' },
+    ],
+    value: 'foo bar baz blarg etc',
+  };
+
+  onSelectionChanged = (name, text) => {
+    this.setState(({ selections }) => {
+      selections.find(s => s.name === name).text = text;
+      return {
+        selections,
+      };
+    });
+  };
+
+  render() {
+    const { value, selections } = this.state;
+    return (
+      <SelectionEditor
+        value={value}
+        selections={selections}
+        onSelectionChanged={this.onSelectionChanged}
+      />
+    );
+  }
+}
+
+storiesOf('SelectionEditor', module).add('basic', () => <SelectionState />);

@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { type Node } from 'react';
 import EditableTag from './EditableTag';
 import Picker from 'components/ingredients/Picker';
 import { type Ingredient } from 'types';
@@ -24,6 +24,7 @@ const SearchIngredients = gql`
 type Props = {
   value: Ingredient,
   onChangeSelection(): mixed,
+  children: Node,
 };
 
 type State = {
@@ -36,11 +37,11 @@ export default class IngredientTag extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { value, onChangeSelection } = this.props;
+    const { value, onChangeSelection, children } = this.props;
 
     return (
       <EditableTag color="brand" onChangeSelection={onChangeSelection}>
-        {value.name}
+        {children}
       </EditableTag>
     );
   }

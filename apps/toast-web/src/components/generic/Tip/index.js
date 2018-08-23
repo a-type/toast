@@ -16,7 +16,7 @@ export default ({
     {!disabled && (
       <Popper placement={placement} positionFixed={positionFixed}>
         {({ ref, style, placement, arrowProps, scheduleUpdate }) => (
-          <OutsideClickHandler onOutsideClick={onBlur}>
+          <OutsideClickHandler onOutsideClick={onBlur} display="inline-block">
             <Bubble
               onBlur={onBlur}
               innerRef={ref}

@@ -57,14 +57,18 @@ injectGlobal`
   --color-brand: #f6c667;
   --color-brand-light: #ffe1bb;
   --color-brand-dark: #ab5f0f;
+  --color-brand-highlighter: #ffe1bb32;
+
 
   --color-positive: #1ecbb4;
   --color-positive-light: #adffef;
   --color-positive-dark: #007985;
+  --color-positive-highlighter: #adffef32;
 
   --color-negative: #b30753;
   --color-negative-light: #ff95b8;
   --color-negative-dark: #6d0043;
+  --color-negative-highlighter: #ff95b832;
 
   --color-dark: #280f34;
 
