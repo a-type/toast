@@ -2,9 +2,7 @@ import React from 'react';
 import { Button } from 'components/generic';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { ValueTag, UnitTag, IngredientTag } from './tags';
-import { StatusRow } from './components';
-import { P } from 'components/typeset';
+import SelectionEditor from './SelectionEditor';
 
 export const FixIngredientFragment = gql`
   fragment FixIngredient on RecipeIngredient {
@@ -51,28 +49,24 @@ class IngredientEditorFixer extends React.PureComponent {
     }
   };
 
-  handleSelectionCommit = async () => {
+  handleSelectionCommit = async (name, newText) => {
     const selection = document.getSelection();
     const { mutate, recipeIngredient } = this.props;
 
-    const selectedText = selection.toString();
-
-    if (!recipeIngredient.text.includes(selectedText) || !selectedText.length) {
+    if (!recipeIngredient.text.includes(newText) || !newText.length) {
       console.error(
-        `Ingredient text ${
-          recipeIngredient.text
-        } does not include ${selectedText}`,
+        `Ingredient text ${recipeIngredient.text} does not include ${newText}`,
       );
       return;
     }
 
-    const matchName = this.getMatchName();
+    const matchName = `${name}TextMatch`;
 
     await mutate({
       variables: {
         id: recipeIngredient.id,
         input: {
-          [matchName]: selectedText,
+          [matchName]: newText,
         },
       },
     });
@@ -80,91 +74,33 @@ class IngredientEditorFixer extends React.PureComponent {
     this.setState({ selectingPart: null });
   };
 
-  selectValue = () => this.setState({ selectingPart: 'value' });
-  selectUnit = () => this.setState({ selectingPart: 'unit' });
-  selectIngredient = () => this.setState({ selectingPart: 'ingredient' });
-
-  renderText = () => {
-    const { recipeIngredient } = this.props;
-
-    if (!recipeIngredient) {
-      return null;
-    }
-
-    const {
-      unitTextMatch,
-      valueTextMatch,
-      ingredientTextMatch,
-      text,
-      ingredient,
-      value,
-      unit,
-    } = recipeIngredient;
-
-    const parts = [];
-    let remainingText = text;
-
-    if (valueTextMatch) {
-      const split = remainingText.split(valueTextMatch);
-      parts.push(<span key="value-before">{split[0]}</span>);
-      parts.push(
-        <ValueTag value={value} key="value">
-          {valueTextMatch}
-        </ValueTag>,
-      );
-      remainingText = split[1];
-    }
-    if (unitTextMatch) {
-      const split = remainingText.split(unitTextMatch);
-      parts.push(<span key="unit-before">{split[0]}</span>);
-      parts.push(
-        <UnitTag value={unit} key="unit">
-          {unitTextMatch}
-        </UnitTag>,
-      );
-      remainingText = split[1];
-    }
-    if (ingredientTextMatch) {
-      const split = remainingText.split(ingredientTextMatch);
-      parts.push(<span key="ingredient-before">{split[0]}</span>);
-      parts.push(
-        <IngredientTag value={ingredient} key="ingredient">
-          {ingredientTextMatch}
-        </IngredientTag>,
-      );
-      remainingText = split[1];
-    }
-    parts.push(<span key="remainder">{remainingText}</span>);
-
-    return parts;
-  };
-
-  renderStatusRow = () => {
-    const { selectingPart } = this.state;
-    const { recipeIngredient } = this.props;
-
-    if (!recipeIngredient) {
-      return null;
-    }
-
-    const { unit, value, ingredient } = recipeIngredient;
-
-    if (selectingPart) {
-      return (
-        <StatusRow>
-          <span>Selecting {selectingPart}</span>
-          <Button onClick={this.handleSelectionCommit}>Done</Button>
-        </StatusRow>
-      );
-    }
-  };
-
   render() {
+    const { recipeIngredient } = this.props;
+
+    const selections = [
+      {
+        name: 'value',
+        text: recipeIngredient.valueTextMatch,
+        color: 'positive',
+      },
+      recipeIngredient.unit && {
+        name: 'unit',
+        text: recipeIngredient.unitTextMatch,
+        color: 'negative',
+      },
+      {
+        name: 'ingredient',
+        text: recipeIngredient.ingredientTextMatch,
+        color: 'brand',
+      },
+    ].filter(Boolean);
+
     return (
-      <div>
-        <P spaceBelow="sm">{this.renderText()}</P>
-        {this.renderStatusRow()}
-      </div>
+      <SelectionEditor
+        value={recipeIngredient.text}
+        selections={selections}
+        onSelectionChanged={this.handleSelectionCommit}
+      />
     );
   }
 }

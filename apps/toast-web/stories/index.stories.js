@@ -169,10 +169,11 @@ storiesOf('Vertical rhythm', module)
 class SelectionState extends React.Component {
   state = {
     selections: [
-      { name: 'first', text: 'foo' },
-      { name: 'second', text: 'baz' },
+      { name: 'value', text: '1/2', color: 'positive' },
+      { name: 'unit', text: 'cup', color: 'negative' },
+      { name: 'ingredient', text: 'flour' },
     ],
-    value: 'foo bar baz blarg etc',
+    value: '1/2 cup of enriched flour',
   };
 
   onSelectionChanged = (name, text) => {

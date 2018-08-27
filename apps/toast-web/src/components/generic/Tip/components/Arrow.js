@@ -31,6 +31,8 @@ export default styled.div`
     width: 12px;
     height: 8px;
     &::before {
+      left: -2px;
+      top: -1px;
       border-width: 0 8px 5px 8px;
       border-color: transparent transparent var(--color-brand) transparent;
     }
