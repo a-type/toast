@@ -1,5 +1,5 @@
 import React from 'react';
-import { Selection, Handle, Container } from './components';
+import { Selection, Handle, Container, TipContent } from './components';
 import { Tip, HelpText } from 'components/generic';
 
 export default class SelectionEditor extends React.Component {
@@ -130,10 +130,10 @@ export default class SelectionEditor extends React.Component {
     }
 
     return (
-      <div>
+      <TipContent>
         {active.tipContent}
         <HelpText>Drag the handles to change the selected text</HelpText>
-      </div>
+      </TipContent>
     );
   };
 

@@ -39,7 +39,10 @@ export default class RecipeCreator extends React.PureComponent {
       return 3;
     }
 
-    if (recipe.steps && recipe.steps.length) {
+    if (
+      (recipe.steps && recipe.steps.length) ||
+      recipe.displayType === 'LINK'
+    ) {
       return 4;
     }
 
@@ -137,6 +140,11 @@ export default class RecipeCreator extends React.PureComponent {
 
   stepSummary = () => {
     const { recipe } = this.props;
+
+    if (recipe.displayType === 'LINK') {
+      return "Linked recipes don't need steps";
+    }
+
     if (!path(['steps'], recipe)) {
       return 'How to make the food';
     }

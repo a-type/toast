@@ -12,6 +12,7 @@ export const RecipeCreateDetailsFragment = gql`
     description
     attribution
     sourceUrl
+    displayType
   }
 `;
 

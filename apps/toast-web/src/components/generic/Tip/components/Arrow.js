@@ -49,6 +49,7 @@ export default styled.div`
     width: 12px;
     height: 8px;
     &::before {
+      left: -2px;
       border-width: 5px 8px 0px 8px;
       border-color: var(--color-brand) transparent transparent;
     }
@@ -64,6 +65,7 @@ export default styled.div`
     width: 8px;
     height: 12px;
     &::before {
+      top: -2px;
       border-width: 8px 5px 8px 0;
       border-color: transparent var(--color-brand) transparent transparent;
     }
@@ -79,6 +81,7 @@ export default styled.div`
     height: 12px;
     width: 8px;
     &::before {
+      top: -2px;
       border-width: 8px 0 8px 5px;
       border-color: transparent transparent transparent var(--color-brand);
     }

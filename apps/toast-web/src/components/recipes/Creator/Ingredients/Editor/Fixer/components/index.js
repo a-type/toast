@@ -1,1 +1,1 @@
-export { default as StatusRow } from './StatusRow';
+export { default as Row } from './Row';

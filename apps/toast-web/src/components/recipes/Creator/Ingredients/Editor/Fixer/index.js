@@ -3,6 +3,10 @@ import { Button } from 'components/generic';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import SelectionEditor from './SelectionEditor';
+import * as Editors from './editors';
+import { compose } from 'recompose';
+import DeleteButton from './DeleteButton';
+import { Row } from './components';
 
 export const FixIngredientFragment = gql`
   fragment FixIngredient on RecipeIngredient {
@@ -32,23 +36,6 @@ const FixIngredient = gql`
 `;
 
 class IngredientEditorFixer extends React.PureComponent {
-  state = {
-    selectingPart: null,
-  };
-
-  getMatchName = () => {
-    const { selectingPart } = this.state;
-
-    switch (selectingPart) {
-      case 'unit':
-        return 'unitTextMatch';
-      case 'value':
-        return 'valueTextMatch';
-      default:
-        return 'ingredientTextMatch';
-    }
-  };
-
   handleSelectionCommit = async (name, newText) => {
     const selection = document.getSelection();
     const { mutate, recipeIngredient } = this.props;
@@ -74,6 +61,19 @@ class IngredientEditorFixer extends React.PureComponent {
     this.setState({ selectingPart: null });
   };
 
+  handleIngredientChange = async newIngredient => {
+    const { recipeIngredient, mutate } = this.props;
+
+    await mutate({
+      variables: {
+        id: recipeIngredient.id,
+        input: {
+          ingredientId: newIngredient.id,
+        },
+      },
+    });
+  };
+
   render() {
     const { recipeIngredient } = this.props;
 
@@ -92,15 +92,24 @@ class IngredientEditorFixer extends React.PureComponent {
         name: 'ingredient',
         text: recipeIngredient.ingredientTextMatch,
         color: 'brand',
+        tipContent: (
+          <Editors.Ingredient
+            value={recipeIngredient.ingredient}
+            onChange={this.handleIngredientChange}
+          />
+        ),
       },
     ].filter(Boolean);
 
     return (
-      <SelectionEditor
-        value={recipeIngredient.text}
-        selections={selections}
-        onSelectionChanged={this.handleSelectionCommit}
-      />
+      <Row>
+        <SelectionEditor
+          value={recipeIngredient.text}
+          selections={selections}
+          onSelectionChanged={this.handleSelectionCommit}
+        />
+        <DeleteButton ingredientId={recipeIngredient.id} />
+      </Row>
     );
   }
 }

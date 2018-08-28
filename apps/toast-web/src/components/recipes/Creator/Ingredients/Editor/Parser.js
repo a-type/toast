@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { Input, Field, Button } from 'components/generic';
 import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
@@ -46,6 +46,8 @@ const ReparseIngredient = gql`
 `;
 
 export default class IngredientEditorParser extends React.PureComponent {
+  inputRef = createRef();
+
   render() {
     const { recipeIngredient, recipeId, onParsed } = this.props;
 
@@ -59,7 +61,9 @@ export default class IngredientEditorParser extends React.PureComponent {
       >
         {parse => (
           <Formik
-            onSubmit={async values => {
+            enableReinitialize
+            initialValues={initialValues}
+            onSubmit={async (values, { resetForm }) => {
               await parse({
                 variables: {
                   ...values,
@@ -67,6 +71,10 @@ export default class IngredientEditorParser extends React.PureComponent {
                   recipeId,
                 },
               });
+              resetForm();
+              if (this.inputRef.current) {
+                this.inputRef.current.focus();
+              }
               onParsed();
             }}
           >
@@ -78,6 +86,7 @@ export default class IngredientEditorParser extends React.PureComponent {
                     name="text"
                     required
                     onChange={handleChange}
+                    innerRef={this.inputRef}
                   />
                 </Field>
                 <Field>

@@ -1,15 +1,18 @@
 import React from 'react';
-import { Box, TitleBar, Background } from './components';
+import { createPortal } from 'react-dom';
+import { Box, TitleBar, Background, Layer } from './components';
 
 export default class Modal extends React.PureComponent {
   static TitleBar = TitleBar;
+  static Layer = Layer;
 
-  handleBoxClicked = ev => {
-    ev.preventDefault();
+  stopPropagation = ev => {
     ev.stopPropagation();
+    ev.nativeEvent.stopImmediatePropagation();
   };
 
-  handleBackgroundClicked = () => {
+  handleBackgroundClicked = ev => {
+    this.stopPropagation(ev);
     this.props.onClose();
   };
 
@@ -20,10 +23,24 @@ export default class Modal extends React.PureComponent {
       return null;
     }
 
-    return (
-      <Background onClick={this.handleBackgroundClicked}>
-        <Box onClick={this.handleBoxClicked}>{children}</Box>
-      </Background>
+    const el = document.getElementById('modalLayer');
+    if (!el) {
+      return null;
+    }
+
+    return createPortal(
+      <Background
+        onMouseUp={this.handleBackgroundClicked}
+        onMouseDown={this.stopPropagation}
+      >
+        <Box
+          onMouseDown={this.stopPropagation}
+          onMouseUp={this.stopPropagation}
+        >
+          {children}
+        </Box>
+      </Background>,
+      el,
     );
   }
 }
