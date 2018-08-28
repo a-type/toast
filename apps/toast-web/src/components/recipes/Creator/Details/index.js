@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Form, Input, Button, Field } from 'components/generic';
+import { Form, Input, Button, Field, RadioButton } from 'components/generic';
 import { merge } from 'ramda';
 
 export const RecipeCreateDetailsFragment = gql`
@@ -46,6 +46,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
         description: '',
         attribution: '',
         sourceUrl: '',
+        displayType: 'LINK',
       },
       initialValues,
     );
@@ -93,6 +94,24 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                     value={values.sourceUrl}
                     onChange={handleChange}
                   />
+                </Field>
+                <Field label="Display type">
+                  <RadioButton.Group>
+                    <RadioButton
+                      name="displayType"
+                      value="LINK"
+                      onChange={handleChange}
+                    >
+                      Link
+                    </RadioButton>
+                    <RadioButton
+                      name="displayType"
+                      value="FULL"
+                      onChange={handleChange}
+                    >
+                      Full
+                    </RadioButton>
+                  </RadioButton.Group>
                 </Field>
                 <Field>
                   <Button type="submit" disabled={recipeId && !dirty}>
