@@ -6,8 +6,15 @@ import { apolloUploadExpress } from 'apollo-upload-server';
 import config from 'config';
 import schema from './schema';
 import { createContext } from './context';
-import { info } from 'logger';
+import { info, warn } from 'logger';
 import path from 'path';
+import minimist from 'minimist';
+
+const argv = minimist(process.argv.slice(2));
+
+if (argv.mock) {
+  warn.important('USING MOCK DATA');
+}
 
 const app = express();
 

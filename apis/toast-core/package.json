@@ -4,8 +4,7 @@
   "description": "Toast API",
   "main": "src/server.js",
   "scripts": {
-    "dev":
-      "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
+    "dev": "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "babel-node ./db/indexes.js",
     "db:seed": "babel-node ./db/seeds.js",
@@ -21,14 +20,15 @@
     "containerize:clean": "rimraf client",
     "containerize": "run-s containerize:*",
     "start": "cross-env NODE_PATH=build node build/server.js",
-    "proxy:prod":
-      "kubectl port-forward neo4j-prod-neo4j-core-0 7474:7474 7473:7473 7687:7687 --namespace=toast-prod"
+    "mock": "npm run dev -- --mock"
   },
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/a-type/toast-backend.git"
   },
-  "keywords": ["Toast"],
+  "keywords": [
+    "Toast"
+  ],
   "author": "Grant Forrest <gaforres@gmail.com>",
   "license": "ISC",
   "bugs": {
@@ -46,6 +46,7 @@
     "aws-sdk": "^2.229.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "casual": "^1.5.19",
     "chalk": "^2.4.1",
     "compromise": "^11.12.0",
     "compromise-plugin": "0.0.8",
@@ -59,6 +60,7 @@
     "ingredients-parser": "^1.4.0",
     "jsonwebtoken": "^8.2.1",
     "mime-types": "^2.1.18",
+    "minimist": "^1.2.0",
     "neo4j-driver": "^1.5.3",
     "neo4j-graphql-binding": "^1.0.3",
     "neo4j-graphql-js": "^0.1.14",

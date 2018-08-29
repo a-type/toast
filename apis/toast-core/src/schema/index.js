@@ -1,4 +1,5 @@
-import { makeExecutableSchema } from 'graphql-tools';
+import minimist from 'minimist';
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 import { GraphQLUpload } from 'apollo-upload-server';
 import { mergeDeepRight } from 'ramda';
 import * as auth from './auth';
@@ -10,6 +11,10 @@ import * as steps from './steps';
 import * as users from './users';
 
 import * as directives from './directives';
+
+import mocks from './__mocks__';
+
+const argv = minimist(process.argv.slice(2));
 
 const globalTypeDefs = `
   scalar Upload
@@ -63,8 +68,14 @@ export const resolvers = [
   { Upload: GraphQLUpload }
 ].reduce(mergeDeepRight, globalResolvers);
 
-export default makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives: directives
 });
+
+if (argv.mock) {
+  addMockFunctionsToSchema({ schema, mocks });
+}
+
+export default schema;
