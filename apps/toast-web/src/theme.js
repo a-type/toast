@@ -77,6 +77,8 @@ injectGlobal`
   --spacing-lg: ${spaceSizes.lg}px;
   --spacing-xs: ${spaceSizes.xs}px;
   --spacing-xl: ${spaceSizes.xl}px;
+
+  --border-radius-md: 6px;
 }
 
 html, body {
@@ -86,10 +88,16 @@ html, body {
   font-family: var(--font-default);
   font-weight: var(--normal);
   line-height: 1.5;
+  color: var(--color-black);
 }
 
 html, body, #main {
   height: 100%;
+}
+
+body {
+  overflow-y: auto;
+  overflow-y: overlay;
 }
 
 br {

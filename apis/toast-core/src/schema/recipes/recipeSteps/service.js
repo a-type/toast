@@ -12,12 +12,12 @@ export const getForRecipe = async (id, ctx) => {
     MATCH (step:Step)-[rel:STEP_OF]->(:Recipe {id: $id})
     RETURN rel { ${RECIPE_STEP_FIELDS} }, step {${STEP_FIELDS}} ORDER BY rel.index
   `,
-      { id }
+      { id },
     );
 
     return result.records.map(record => ({
       ...record.get('rel'),
-      step: record.get('step')
+      step: record.get('step'),
     }));
   });
 };
@@ -32,7 +32,7 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
       CREATE (recipe)<-[rel:STEP_OF {id: $relId, index: index}]-(step:Step {id: $stepId, text: $text})
       RETURN recipe {${RECIPE_FIELDS}}
       `,
-      { id: recipeId, relId: uuid(), stepId: uuid(), text: args.text }
+      { id: recipeId, relId: uuid(), stepId: uuid(), text: args.text },
     );
 
     if (result.records.length) {
@@ -51,8 +51,8 @@ export const deleteRecipeStep = async (id, ctx) => {
       `,
       {
         id,
-        userId: ctx.user.id
-      }
+        userId: ctx.user.id,
+      },
     );
 
     if (result.records.length) {
@@ -72,14 +72,14 @@ export const updateRecipeStep = async (id, args, ctx) => {
       {
         relId: id,
         stepProps: pick(['text'], args),
-        userId: ctx.user.id
-      }
+        userId: ctx.user.id,
+      },
     );
 
     if (result.records.length) {
       return {
         ...result.records[0].get('rel'),
-        step: result.records[0].get('step')
+        step: result.records[0].get('step'),
       };
     }
   });
@@ -93,8 +93,8 @@ export const moveRecipeStep = async (recipeId, args, ctx) => {
       RETURN rel {.index}, step {.id} ORDER BY rel.index
       `,
       {
-        id: recipeId
-      }
+        id: recipeId,
+      },
     );
 
     if (stepsResult.records.length > Math.max(args.fromIndex, args.toIndex)) {
@@ -107,13 +107,13 @@ export const moveRecipeStep = async (recipeId, args, ctx) => {
         MATCH (:Recipe {id: $id})<-[rel:STEP_OF]-(:Step {id: indexAndUuid.id})
         SET rel.index = indexAndUuid.index
         `,
-        { indexAndIds, id: recipeId }
+        { indexAndIds, id: recipeId },
       );
     }
 
     const recipeResult = await tx.run(
       `MATCH (r:Recipe {id: $id}) RETURN r {.id, .title, .description}`,
-      { id: recipeId }
+      { id: recipeId },
     );
     return recipeResult.records[0].get('r');
   });

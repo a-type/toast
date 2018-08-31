@@ -25,12 +25,12 @@ app.use(
   graphqlExpress(async req => {
     const context = await createContext(req);
     return { schema, context };
-  })
+  }),
 );
 app.use('/playground', playground({ endpoint: '/api' }));
 app.use(express.static('client'));
 app.use((req, res) =>
-  res.sendFile(path.join(process.cwd(), 'client/index.html'))
+  res.sendFile(path.join(process.cwd(), 'client/index.html')),
 );
 
 app.listen(config.port, () => {

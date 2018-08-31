@@ -6,8 +6,8 @@ const s3 = new S3({
   accessKeyId: config.aws.accessKeyId,
   secretAccessKey: config.aws.secretAccessKey,
   params: {
-    Bucket: config.aws.s3.bucket
-  }
+    Bucket: config.aws.s3.bucket,
+  },
 });
 
 export default {
@@ -20,14 +20,14 @@ export default {
         Key: `${directory}/${id}`,
         ACL: 'public-read',
         Body: stream,
-        ContentType: mimetype
+        ContentType: mimetype,
       })
       .promise()
       .then(response => response.Location);
 
     return {
       url: location,
-      id
+      id,
     };
-  }
+  },
 };

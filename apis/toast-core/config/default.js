@@ -3,14 +3,14 @@ module.exports = {
   security: {
     tokenSecret: process.env.JWT_TOKEN_SECRET || 'notsecret',
     masterEmail: 'toastmaster@toastcooking.app',
-    masterPassword: 'INSECURE CHANGE THIS!'
+    masterPassword: 'INSECURE CHANGE THIS!',
   },
   database: {
     neo4j: {
       endpoint: process.env.NEO4J_BOLT_HOST || 'bolt://localhost:7687',
       user: process.env.NEO4J_USERNAME || 'neo4j',
-      password: process.env.NEO4J_PASSWORD || 'toast1'
-    }
+      password: process.env.NEO4J_PASSWORD || 'toast1',
+    },
   },
   aws: {
     accessKeyId: process.env.TOAST_AWS_ACCESS_KEY,
@@ -18,20 +18,20 @@ module.exports = {
     s3: {
       bucket: 'toast-local-media',
       directories: {
-        images: 'images'
-      }
-    }
+        images: 'images',
+      },
+    },
   },
   gcloud: {
     projectId: process.env.GCLOUD_PROJECT_ID,
     storage: {
       bucket: process.env.GCLOUD_MEDIA_BUCKET || 'toast-local-media',
       directories: {
-        images: 'images'
-      }
-    }
+        images: 'images',
+      },
+    },
   },
   imageService: {
-    host: 'http://localhost:9000'
-  }
+    host: 'http://localhost:9000',
+  },
 };

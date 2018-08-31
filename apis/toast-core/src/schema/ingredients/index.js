@@ -2,7 +2,7 @@ import {
   listIngredients,
   getIngredient,
   createIngredient,
-  updateIngredient
+  updateIngredient,
 } from './service';
 
 export const typeDefs = `
@@ -40,12 +40,12 @@ export const resolvers = {
   Query: {
     ingredients: (_parent, args, ctx, info) =>
       listIngredients(args.pagination, ctx),
-    ingredient: (_parent, args, ctx, info) => getIngredient(args.id, ctx)
+    ingredient: (_parent, args, ctx, info) => getIngredient(args.id, ctx),
   },
   Mutation: {
     createIngredient: (_parent, args, ctx, info) =>
       createIngredient(args.input, ctx),
     updateIngredient: (_parent, args, ctx, info) =>
-      updateIngredient(args.id, args.input, ctx)
-  }
+      updateIngredient(args.id, args.input, ctx),
+  },
 };

@@ -4,7 +4,7 @@ import {
   reparseRecipeIngredient,
   updateRecipeIngredient,
   moveRecipeIngredient,
-  deleteRecipeIngredient
+  deleteRecipeIngredient,
 } from './service';
 
 export const typeDefs = `
@@ -49,7 +49,7 @@ extend type Mutation {
 
 export const resolvers = {
   Recipe: {
-    ingredients: (parent, args, ctx, info) => getForRecipe(parent.id, ctx)
+    ingredients: (parent, args, ctx, info) => getForRecipe(parent.id, ctx),
   },
   Mutation: {
     addRecipeIngredient: (parent, args, ctx, info) =>
@@ -61,6 +61,6 @@ export const resolvers = {
     moveRecipeIngredient: (parent, args, ctx, info) =>
       moveRecipeIngredient(args.recipeId, args.input, ctx),
     deleteRecipeIngredient: (parent, args, ctx, info) =>
-      deleteRecipeIngredient(args.id, ctx)
-  }
+      deleteRecipeIngredient(args.id, ctx),
+  },
 };

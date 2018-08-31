@@ -6,7 +6,7 @@ import { id } from '../src/tools';
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,
-  neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password)
+  neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password),
 );
 
 const session = driver.session();
@@ -19,7 +19,7 @@ const seed = async () => {
     `);
     const hashedPassword = await bcrypt.hash(
       config.security.masterPassword,
-      10
+      10,
     );
     await tx.run(
       `
@@ -29,16 +29,16 @@ const seed = async () => {
       {
         userId,
         email: config.security.masterEmail,
-        password: hashedPassword
-      }
+        password: hashedPassword,
+      },
     );
     await tx.run(`
     MATCH (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "Toast", description: "Just toast!", id: "${id(
-      'Toast'
+      'Toast',
     )}"}),
       (r)<-[:INGREDIENT_OF {unit: "slice", value: 1, index: 0, id: "${uuid()}", text: "1 slice of bread", unitTextMatch: "slice", valueTextMatch: "1", ingredientTextMatch: "bread"}]-(i:Ingredient {id: "${id(
-      'bread'
+      'bread',
     )}", name: "bread", description: "Bread!"}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 0}]-(s:Step {id: "${uuid()}", text: "Toast bread in toaster."}),
       (r)<-[:AUTHOR_OF]-(u)
@@ -50,14 +50,14 @@ const seed = async () => {
     await tx.run(`
     MATCH (bread:Ingredient {name: "bread"}), (u:User {id: "${userId}"})
     CREATE (r:Recipe {title: "French Toast", description: "Better toast", id: "${id(
-      'French Toast'
+      'French Toast',
     )}"}),
       (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "slice", value: 4, index: 0, text: "4 slices of bread", unitTextMatch: "slices", valueTextMatch: "4", ingredientTextMatch: "bread"}]-(bread),
       (r)<-[:INGREDIENT_OF {id: "${uuid()}", value: 1, index: 1, text: "1 egg", unitTextMatch: null, ingredientTextMatch: "egg", valueTextMatch: "1"}]-(egg:Ingredient {id: "${id(
-      'egg'
+      'egg',
     )}", name: "egg"}),
       (r)<-[:INGREDIENT_OF {id: "${uuid()}", unit: "cup", value: 0.25, index: 2, text: "1/4 cup milk", unitTextMatch: "cup", valueTextMatch: "1/4", ingredientTextMatch: "milk"}]-(milk:Ingredient {id: "${id(
-      'milk'
+      'milk',
     )}", name: "milk"}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 0}]-(:Step {id: "${uuid()}", text: "Mix egg and milk."}),
       (r)<-[:STEP_OF {id: "${uuid()}", index: 1}]-(:Step {id: "${uuid()}", text: "Dip bread in mixture."}),

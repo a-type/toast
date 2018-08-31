@@ -40,11 +40,11 @@ const globalTypeDefs = `
 
 const globalResolvers = {
   Query: {
-    hello: () => 'world'
+    hello: () => 'world',
   },
   Mutation: {
-    ping: () => new Date().toISOString()
-  }
+    ping: () => new Date().toISOString(),
+  },
 };
 
 export const typeDefs = [
@@ -55,7 +55,7 @@ export const typeDefs = [
   recipes.typeDefs,
   search.typeDefs,
   steps.typeDefs,
-  users.typeDefs
+  users.typeDefs,
 ];
 export const resolvers = [
   auth.resolvers,
@@ -65,13 +65,13 @@ export const resolvers = [
   search.resolvers,
   steps.resolvers,
   users.resolvers,
-  { Upload: GraphQLUpload }
+  { Upload: GraphQLUpload },
 ].reduce(mergeDeepRight, globalResolvers);
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  schemaDirectives: directives
+  schemaDirectives: directives,
 });
 
 if (argv.mock) {

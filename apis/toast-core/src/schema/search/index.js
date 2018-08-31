@@ -40,6 +40,6 @@ export const resolvers = {
     searchRecipes: async (_parent, args, ctx, info) => {
       const recipes = await searchRecipes(args.input, ctx);
       return recipes;
-    }
-  }
+    },
+  },
 };
