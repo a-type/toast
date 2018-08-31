@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from '../Icon';
-import { focusShadow } from 'components/generic/common/effects';
+import { focusShadow } from 'components/effects';
 
 const Button = styled.button`
   border: 2px solid var(--color-brand);

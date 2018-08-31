@@ -5,7 +5,7 @@ import { Link, Button } from 'components/generic';
 export const CardContainer = styled.div`
   border-radius: var(--border-radius-md);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background: var(--color-gray-lightest);
   min-width: 5vw;
 
@@ -15,20 +15,21 @@ export const CardContainer = styled.div`
 `;
 
 const ControlGroup = styled(Button.Group)`
-  & button {
+  & button:first-child {
     border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
   }
 `;
 
 const Name = styled.div`
-  padding: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
   overflow: hidden;
+  text-transform: capitalize;
 `;
 
-export default ({ ingredient, include, exclude }) => (
-  <CardContainer>
+export default ({ ingredient, include, exclude, ...rest }) => (
+  <CardContainer {...rest}>
     <Link.Clear to={`/ingredients/${ingredient.id}`}>
       <Name>{ingredient.name}</Name>
     </Link.Clear>

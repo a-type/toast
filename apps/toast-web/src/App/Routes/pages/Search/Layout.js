@@ -5,9 +5,9 @@ const Layout = styled.div`
   grid-template-areas: 'ingredients' 'filters' 'recipes';
   grid-gap: var(--spacing-lg);
 
-  @media (min-width: 900px) {
+  @media (min-width: 1200px) {
     grid-template-areas: 'filters ingredients' 'filters recipes';
-    grid-template-columns: minmax(200px, 1fr) 4fr;
+    grid-template-columns: minmax(400px, 1fr) 4fr;
   }
 
   & > *:first-child {

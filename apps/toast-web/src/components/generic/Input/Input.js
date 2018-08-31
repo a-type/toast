@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { loading, focusShadow } from '../common/effects';
+import { loading, focusShadow } from 'components/effects';
 
 const sharedSolidStyles = css`
   font-size: var(--font-size-md);

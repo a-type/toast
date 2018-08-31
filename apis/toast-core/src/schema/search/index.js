@@ -2,12 +2,10 @@ import { searchIngredients, searchRecipes } from './service';
 
 export const typeDefs = `
 type RecipeSearchResponse {
-  total: Int!
   items: [Recipe]!
 }
 
 type IngredientSearchResponse {
-  total: Int!
   items: [Ingredient]!
 }
 

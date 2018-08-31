@@ -4,6 +4,7 @@ export default styled.div`
   display: flex;
   flex-direction: row;
   padding: var(--spacing-md);
+  padding-bottom: var(--spacing-lg);
 
   & > * {
     flex: 0 0 auto;

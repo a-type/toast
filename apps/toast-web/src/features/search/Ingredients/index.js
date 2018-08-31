@@ -24,7 +24,6 @@ const AddFilter = gql`
 const SearchIngredients = gql`
   query SearchIngredients($input: IngredientSearchInput!) {
     searchIngredients(input: $input) {
-      total
       items {
         id
         name
@@ -42,21 +41,19 @@ export default class SearchRecipeResults extends React.Component {
     if (loading) {
       return (
         <div>
-          <H1>... ingredients</H1>
+          <H1>Ingredients</H1>
           <Layout>
-            {new Array(10).fill(null).map((_, idx) => (
-              <Skeleton key={idx} />
-            ))}
+            {new Array(10).fill(null).map((_, idx) => <Skeleton key={idx} />)}
           </Layout>
         </div>
       );
     }
 
-    const { total, items } = data.searchIngredients;
+    const { items } = data.searchIngredients;
 
     return (
       <div>
-        <H1>{total} ingredients</H1>
+        <H1>Ingredients</H1>
         <Layout>
           <Mutation mutation={AddFilter}>
             {mutate =>

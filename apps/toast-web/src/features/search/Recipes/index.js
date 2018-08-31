@@ -18,7 +18,6 @@ const GetFilters = gql`
 const SearchRecipes = gql`
   query SearchRecipes($input: RecipeSearchInput!) {
     searchRecipes(input: $input) {
-      total
       items {
         id
         title
@@ -39,28 +38,20 @@ export default class SearchRecipeResults extends React.Component {
 
     if (loading) {
       return (
-        <div>
-          <H1>... recipes</H1>
-          <Card.Grid>
-            {new Array(50).fill(null).map((_, idx) => (
-              <Card.Skeleton key={idx} />
-            ))}
-          </Card.Grid>
-        </div>
+        <Card.Grid loading>
+          {new Array(50)
+            .fill(null)
+            .map((_, idx) => <Card.Skeleton key={idx} />)}
+        </Card.Grid>
       );
     }
 
-    const { total, items } = data.searchRecipes;
+    const { items } = data.searchRecipes;
 
     return (
-      <div>
-        <H1>{total} recipes</H1>
-        <Card.Grid>
-          {items.map(recipe => (
-            <Card key={recipe.id} recipe={recipe} />
-          ))}
-        </Card.Grid>
-      </div>
+      <Card.Grid>
+        {items.map(recipe => <Card key={recipe.id} recipe={recipe} />)}
+      </Card.Grid>
     );
   };
 
@@ -98,9 +89,12 @@ export default class SearchRecipeResults extends React.Component {
           };
 
           return (
-            <Query query={SearchRecipes} variables={{ input: searchInput }}>
-              {this.renderSearchResults}
-            </Query>
+            <div>
+              <H1>{filters.length ? 'Search Results' : 'Explore'}</H1>
+              <Query query={SearchRecipes} variables={{ input: searchInput }}>
+                {this.renderSearchResults}
+              </Query>
+            </div>
           );
         }}
       </Query>

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { loading } from '../common/effects';
+import { loading } from 'components/effects';
 
 const Pill = styled.div`
   border-width: 1px;
