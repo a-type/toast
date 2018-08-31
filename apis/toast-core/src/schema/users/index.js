@@ -24,10 +24,11 @@ export const resolvers = {
   Query: {
     me: (parent, args, ctx, info) => ctx.user,
     user: neo4jgraphql,
-    users: neo4jgraphql
+    users: neo4jgraphql,
   },
   Recipe: {
     author: (parent, args, ctx, info) => getRecipeAuthor(parent.id, ctx),
-    discoverer: (parent, args, ctx, info) => getRecipeDiscoverer(parent.id, ctx)
-  }
+    discoverer: (parent, args, ctx, info) =>
+      getRecipeDiscoverer(parent.id, ctx),
+  },
 };

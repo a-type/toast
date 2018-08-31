@@ -33,12 +33,12 @@ const abbreviations = {
   c: 'cup',
   gal: 'gallon',
   g: 'gram',
-  lb: 'pound'
+  lb: 'pound',
 };
 
 const unabbreviate = input => {
   const matches = Object.keys(abbreviations).sort(
-    (a, b) => a.length - b.length
+    (a, b) => a.length - b.length,
   );
   for (var i = 0; i < matches.length; i++) {
     if (matches[i] === input) {
@@ -69,7 +69,7 @@ export default text => {
       .normalize({ plurals: true, case: true })
       .out('text')
       .trim()
-      .toLowerCase()
+      .toLowerCase(),
   ).replace('slouse', 'slice'); // kinda funny error.
 
   const valueRaw = parsed.amount;
@@ -89,16 +89,16 @@ export default text => {
   return {
     ingredient: {
       raw: ingredientRaw || null,
-      normalized: ingredientNormalized || null
+      normalized: ingredientNormalized || null,
     },
     unit: {
       raw: unitRaw || null,
-      normalized: unitNormalized || null
+      normalized: unitNormalized || null,
     },
     value: {
       raw: valueRaw || null,
-      normalized: valueNormalized || null
+      normalized: valueNormalized || null,
     },
-    optional: isOptional(text)
+    optional: isOptional(text),
   };
 };

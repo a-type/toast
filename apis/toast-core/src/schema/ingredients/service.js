@@ -10,7 +10,7 @@ export const listIngredients = ({ offset = 0, count = 10 }, ctx) => {
         RETURN ingredient { ${FIELDS} }
         SKIP $offset LIMIT $count
       `,
-      { offset, count }
+      { offset, count },
     );
 
     return result.records.map(rec => rec.get('ingredient'));
@@ -24,7 +24,7 @@ export const getIngredient = (id, ctx) => {
         MATCH (ingredient:Ingredient { id: $id })
         RETURN ingredient { ${FIELDS} }
       `,
-      { id }
+      { id },
     );
 
     if (result.records.length === 0) {
@@ -37,7 +37,7 @@ export const getIngredient = (id, ctx) => {
 
 export const createIngredient = (
   { name, description = null, attribution = null },
-  ctx
+  ctx,
 ) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
@@ -46,8 +46,8 @@ export const createIngredient = (
         name: name.toLowerCase(),
         description: description || null,
         attribution,
-        id: id(name)
-      }
+        id: id(name),
+      },
     );
 
     return result.records[0].get('i');
@@ -62,7 +62,7 @@ export const updateIngredient = (id, input, ctx) => {
         SET ingredient += $input
         RETURN ingredient { ${FIELDS} }
       `,
-      { id, input: pick(['name', 'description', 'attribution'], input) }
+      { id, input: pick(['name', 'description', 'attribution'], input) },
     );
 
     if (result.records.length === 0) {

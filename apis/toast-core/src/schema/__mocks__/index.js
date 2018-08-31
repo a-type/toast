@@ -1,14 +1,11 @@
 import casual from 'casual';
 import { MockList } from 'graphql-tools';
+import uuid from 'uuid';
 
-const UNITS = [
-  'cup',
-  'tablespoon',
-  'teaspoon',
-  'pound',
-  'can'
-];
+const UNITS = ['cup', 'tablespoon', 'teaspoon', 'pound', 'can'];
 casual.define('unit', () => UNITS[casual.integer(0, UNITS.length)]);
+
+casual.define('image', () => 'https://placeimg.com/640/480/nature');
 
 export default {
   Recipe: () => ({
@@ -17,6 +14,17 @@ export default {
     published: () => true,
     ingredients: () => new MockList([2, 8]),
     steps: () => new MockList([4, 12]),
+    coverImage: () => {
+      if (casual.integer(0, 10) < 3) {
+        return {
+          id: uuid(),
+          url: casual.image,
+        };
+      }
+      return null;
+    },
+    sourceUrl: null,
+    displayType: 'FULL',
   }),
 
   Step: () => ({
@@ -59,4 +67,8 @@ export default {
       items: () => new MockList(total),
     };
   },
-}
+
+  Image: () => ({
+    url: casual.image,
+  }),
+};

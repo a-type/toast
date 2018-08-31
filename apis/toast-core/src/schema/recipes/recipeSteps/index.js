@@ -3,7 +3,7 @@ import {
   createRecipeStep,
   updateRecipeStep,
   moveRecipeStep,
-  deleteRecipeStep
+  deleteRecipeStep,
 } from './service';
 
 export const typeDefs = `
@@ -37,7 +37,7 @@ extend type Mutation {
 
 export const resolvers = {
   Recipe: {
-    steps: (parent, args, ctx, info) => getForRecipe(parent.id, ctx)
+    steps: (parent, args, ctx, info) => getForRecipe(parent.id, ctx),
   },
   Mutation: {
     createRecipeStep: (parent, args, ctx, info) =>
@@ -47,6 +47,6 @@ export const resolvers = {
     moveRecipeStep: (parent, args, ctx, info) =>
       moveRecipeStep(args.recipeId, args.input, ctx),
     deleteRecipeStep: (parent, args, ctx, info) =>
-      deleteRecipeStep(args.id, ctx)
-  }
+      deleteRecipeStep(args.id, ctx),
+  },
 };

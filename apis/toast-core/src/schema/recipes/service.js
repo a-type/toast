@@ -8,14 +8,14 @@ export const RECIPE_FIELDS =
 export const DEFAULTS = {
   title: 'Untitled',
   published: false,
-  displayType: 'LINK'
+  displayType: 'LINK',
 };
 
 const defaulted = recipe =>
   Object.keys(DEFAULTS).reduce(
     (acc, key) =>
       recipe[key] !== null ? acc : { ...acc, [key]: DEFAULTS[key] },
-    recipe
+    recipe,
   );
 
 export const createRecipe = async (input, ctx) => {
@@ -31,8 +31,8 @@ export const createRecipe = async (input, ctx) => {
       {
         input: { ...input, displayType: 'FULL', published: false },
         id: id(input.title),
-        userId: user.id
-      }
+        userId: user.id,
+      },
     );
 
     const recipe = result.records[0].get('r');
@@ -51,8 +51,8 @@ export const linkRecipe = async (input, ctx) => {
       RETURN r {${RECIPE_FIELDS}}
       `,
       {
-        sourceUrl: input.sourceUrl
-      }
+        sourceUrl: input.sourceUrl,
+      },
     );
 
     if (existing.records.length) {
@@ -72,11 +72,11 @@ export const linkRecipe = async (input, ctx) => {
         input: {
           ...omit(['ingredientStrings'], input),
           displayType: 'LINK',
-          published: true
+          published: true,
         },
         id: id(input.title),
-        userId: user.id
-      }
+        userId: user.id,
+      },
     );
 
     const recipe = result.records[0].get('r');
@@ -86,9 +86,9 @@ export const linkRecipe = async (input, ctx) => {
         return parseRecipeIngredient_withTransaction(
           recipe.id,
           { text: ingredientString },
-          tx
+          tx,
         );
-      })
+      }),
     );
 
     return defaulted(recipe);
@@ -105,8 +105,11 @@ export const updateRecipeDetails = async (id, input, ctx) => {
     `,
       {
         id,
-        input: pick(['title', 'description', 'attribution', 'sourceUrl'], input)
-      }
+        input: pick(
+          ['title', 'description', 'attribution', 'sourceUrl'],
+          input,
+        ),
+      },
     );
 
     if (details.records.length === 0) {
@@ -123,7 +126,7 @@ export const getRecipe = async (id, ctx) => {
       `
         MATCH (recipe:Recipe {id: $id}) RETURN recipe { ${RECIPE_FIELDS} }
       `,
-      { id }
+      { id },
     );
 
     if (recipeResult.records.length === 0) {
@@ -136,7 +139,7 @@ export const getRecipe = async (id, ctx) => {
 
 export const listRecipes = async (
   { offset, count } = { offset: 0, count: 25 },
-  ctx
+  ctx,
 ) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
@@ -145,7 +148,7 @@ export const listRecipes = async (
         RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,
-      { offset, count }
+      { offset, count },
     );
 
     return result.records.map(rec => defaulted(rec.get('recipe')));
@@ -155,7 +158,7 @@ export const listRecipes = async (
 export const listRecipesForIngredient = async (
   ingredientId,
   { offset, count },
-  ctx
+  ctx,
 ) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
@@ -167,8 +170,8 @@ export const listRecipesForIngredient = async (
       {
         ingredientId,
         offset,
-        count
-      }
+        count,
+      },
     );
 
     return result.records.map(rec => defaulted(rec.get('recipe')));
@@ -183,7 +186,7 @@ export const publishRecipe = async (id, ctx) => {
         SET recipe.published = true
         RETURN recipe {${RECIPE_FIELDS}}
       `,
-      { id }
+      { id },
     );
 
     if (!result.records[0]) {
@@ -205,8 +208,8 @@ export const listRecipesForUser = async (userId, { offset, count }, ctx) => {
       {
         userId,
         offset,
-        count
-      }
+        count,
+      },
     );
 
     return result.records.map(rec => defaulted(rec.get('recipe')));

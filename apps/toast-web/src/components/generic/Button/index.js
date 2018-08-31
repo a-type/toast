@@ -5,9 +5,9 @@ import { focusShadow } from 'components/generic/common/effects';
 
 const Button = styled.button`
   border: 2px solid var(--color-brand);
-  color: var(--color-brand);
+  color: var(--color-dark);
   cursor: pointer;
-  background: var(--color-white);
+  background: var(--color-brand);
   font-family: var(--font-default);
   font-style: italic;
   font-size: var(--font-size-md);
@@ -15,17 +15,13 @@ const Button = styled.button`
   transition: 0.25s ease-in-out;
   display: inline-block;
   vertical-align: top;
+  position: relative;
 
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
     outline: none;
-    border-color: var(--color-brand);
-    background: var(--color-brand);
-    color: var(--color-dark);
-  }
-  &:hover:not(:disabled),
-  &:focus:not(:disabled) {
     box-shadow: ${focusShadow.default};
+    z-index: 1;
   }
 
   &:active {
@@ -51,6 +47,68 @@ const Button = styled.button`
   }
 `;
 
+Button.Positive = styled(Button)`
+  border-color: var(--color-positive);
+  background: var(--color-positive);
+  color: var(--color-white);
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: ${focusShadow('positive-light')};
+  }
+
+  &:active {
+    border-color: var(--color-positive-light);
+    background: var(--color-positive-light);
+  }
+`;
+
+Button.PositiveLight = styled(Button)`
+  border-color: var(--color-positive-light);
+  background: var(--color-positive-light);
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: ${focusShadow('positive')};
+  }
+
+  &:active {
+    border-color: var(--color-positive);
+    background: var(--color-positive);
+  }
+`;
+
+Button.Negative = styled(Button)`
+  border-color: var(--color-negative);
+  background: var(--color-negative);
+  color: var(--color-white);
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: ${focusShadow('negative-light')};
+  }
+
+  &:active {
+    border-color: var(--color-negative-light);
+    background: var(--color-negative-light);
+  }
+`;
+
+Button.NegativeLight = styled(Button)`
+  border-color: var(--color-negative-light);
+  background: var(--color-negative-light);
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: ${focusShadow('negative')};
+  }
+
+  &:active {
+    border-color: var(--color-negative);
+    background: var(--color-negative);
+  }
+`;
+
 Button.Ghost = styled(Button)`
   background: transparent;
   border-style: dotted;
@@ -67,40 +125,6 @@ Button.Ghost = styled(Button)`
     background: var(--color-white);
     border-color: var(--color-brand-light);
     color: var(--color-dark);
-  }
-`;
-
-Button.Positive = styled(Button)`
-  border-color: var(--color-positive);
-  color: var(--color-positive);
-
-  &:hover,
-  &:focus {
-    border-color: var(--color-positive);
-    background: var(--color-positive-light);
-  }
-
-  &:active {
-    border-color: var(--color-positive);
-    background: var(--color-positive);
-    color: var(--color-white);
-  }
-`;
-
-Button.Negative = styled(Button)`
-  border-color: var(--color-negative);
-  color: var(--color-negative);
-
-  &:hover,
-  &:active {
-    border-color: var(--color-negative);
-    background: var(--color-negative-light);
-  }
-
-  &:focus {
-    border-color: var(--color-negative);
-    background: var(--color-negative);
-    color: var(--color-white);
   }
 `;
 
@@ -124,5 +148,26 @@ Button.Icon = ({ name, iconProps, ...others }) => (
     <Icon name={name} {...iconProps} />
   </InternalIconButton>
 );
+
+Button.Group = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  & > button {
+    margin: 0;
+    flex: 1;
+  }
+
+  & > button:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  & > button + button {
+    margin-left: 0 !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+`;
 
 export default Button;

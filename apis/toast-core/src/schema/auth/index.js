@@ -27,7 +27,7 @@ export const resolvers = {
       const user = await signup(
         { name: args.name, username: args.username },
         args.credential.email,
-        ctx
+        ctx,
       );
       return { token: createToken(user) };
     },
@@ -37,6 +37,6 @@ export const resolvers = {
         throw new Error('Invalid credentials');
       }
       return { token: createToken(user) };
-    }
-  }
+    },
+  },
 };

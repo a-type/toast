@@ -11,14 +11,14 @@ const UNKNOWN_INGREDIENT = 'unknown-0000';
 
 const DEFAULTS = {
   text: '',
-  value: 1
+  value: 1,
 };
 
 const defaulted = recipeIngredient =>
   Object.keys(DEFAULTS).reduce(
     (acc, key) =>
       recipeIngredient[key] !== null ? acc : { ...acc, [key]: DEFAULTS[key] },
-    recipeIngredient
+    recipeIngredient,
   );
 
 export const getForRecipe = (id, ctx) => {
@@ -28,14 +28,14 @@ export const getForRecipe = (id, ctx) => {
       MATCH (ingredient:Ingredient)-[rel:INGREDIENT_OF]->(:Recipe {id: $id})
       RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ingredient {${INGREDIENT_FIELDS}} ORDER BY rel.index
     `,
-      { id }
+      { id },
     );
 
     return result.records.map(record =>
       defaulted({
         ...record.get('rel'),
-        ingredient: record.get('ingredient')
-      })
+        ingredient: record.get('ingredient'),
+      }),
     );
   });
 };
@@ -52,13 +52,13 @@ export const getRecipeIngredient_withTransaction = async (id, tx) => {
     MATCH ()<-[rel:INGREDIENT_OF {id: $id}]-(i:Ingredient)
     RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, i {${INGREDIENT_FIELDS}}
     `,
-    { id }
+    { id },
   );
 
   return result.records.length
     ? defaulted({
         ...result.records[0].get('rel'),
-        ingredient: result.records[0].get('i')
+        ingredient: result.records[0].get('i'),
       })
     : null;
 };
@@ -74,12 +74,12 @@ export const parseRecipeIngredientText = async (text, tx) => {
 
   const ingredientResults = await searchIngredients_withTransaction(
     ingredient.raw,
-    tx
+    tx,
   );
 
   const foundIngredient = ingredientResults.items[0] || {
     id: UNKNOWN_INGREDIENT,
-    name: 'unknown'
+    name: 'unknown',
   };
 
   return {
@@ -88,7 +88,7 @@ export const parseRecipeIngredientText = async (text, tx) => {
     value: value.normalized,
     valueTextMatch: value.raw || 1,
     ingredientId: foundIngredient.id,
-    ingredientTextMatch: ingredient.raw
+    ingredientTextMatch: ingredient.raw,
   };
 };
 
@@ -96,7 +96,7 @@ export const parseRecipeIngredientText = async (text, tx) => {
 export const parseRecipeIngredient_withTransaction = async (
   recipeId,
   input,
-  tx
+  tx,
 ) => {
   const parsed = await parseRecipeIngredientText(input.text, tx);
 
@@ -121,8 +121,8 @@ export const parseRecipeIngredient_withTransaction = async (
       text: input.text,
       ...parsed,
       id: recipeId,
-      relId: uuid()
-    }
+      relId: uuid(),
+    },
   );
 
   if (result.records.length) {
@@ -149,8 +149,8 @@ const changeIngredientRelationship = (id, userId, ingredientId, tx) => {
     {
       relId: id,
       userId,
-      ingredientId
-    }
+      ingredientId,
+    },
   );
 };
 
@@ -164,7 +164,7 @@ export const updateRecipeIngredient_withTransaction = async (
   id,
   args,
   tx,
-  ctx
+  ctx,
 ) => {
   if (args.ingredientId) {
     await changeIngredientRelationship(id, ctx.user.id, args.ingredientId, tx);
@@ -178,15 +178,15 @@ export const updateRecipeIngredient_withTransaction = async (
     {
       relId: id,
       ingredientProps: args,
-      userId: ctx.user.id
-    }
+      userId: ctx.user.id,
+    },
   );
 
   if (result.records.length) {
     const rel = result.records[0].get('rel');
     return defaulted({
       ...rel,
-      ingredient: result.records[0].get('ing')
+      ingredient: result.records[0].get('ing'),
     });
   } else {
     throw new Error('No such recipe ingredient exists');
@@ -201,24 +201,24 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
       RETURN rel {.index}, ingredient {.id} ORDER BY rel.index
       `,
       {
-        id: recipeId
-      }
+        id: recipeId,
+      },
     );
 
     if (
       ingredientsResult.records.length > Math.max(args.fromIndex, args.toIndex)
     ) {
       const ingredientIds = ingredientsResult.records.map(
-        rec => rec.get('ingredient').id
+        rec => rec.get('ingredient').id,
       );
       ingredientIds.splice(
         args.toIndex,
         0,
-        ingredientIds.splice(args.fromIndex, 1)[0]
+        ingredientIds.splice(args.fromIndex, 1)[0],
       );
       const indexAndIds = ingredientIds.map((id, idx) => ({
         id,
-        index: idx
+        index: idx,
       }));
       await tx.run(
         `
@@ -226,13 +226,13 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
         MATCH (:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(:Ingredient {id: indexAndUuid.id})
         SET rel.index = indexAndUuid.index
         `,
-        { indexAndIds, id: recipeId }
+        { indexAndIds, id: recipeId },
       );
     }
 
     const recipeResult = await tx.run(
       `MATCH (r:Recipe {id: $id}) RETURN r {${RECIPE_FIELDS}}`,
-      { id: recipeId }
+      { id: recipeId },
     );
     return recipeResult.records[0].get('r');
   });
@@ -248,8 +248,8 @@ export const deleteRecipeIngredient = (id, ctx) => {
       `,
       {
         id,
-        userId: ctx.user.id
-      }
+        userId: ctx.user.id,
+      },
     );
 
     if (result.records.length) {

@@ -5,7 +5,7 @@ export const getRecipeAuthor = (id, ctx) => {
       MATCH (u:User)-[:AUTHOR_OF]->(:Recipe {id: $id})
       RETURN u {.id, .name, .username}
     `,
-      { id }
+      { id },
     );
 
     return result.records.length ? result.records[0].get('u') : null;
@@ -19,7 +19,7 @@ export const getRecipeDiscoverer = (id, ctx) => {
       MATCH (u:User)-[:DISCOVERER_OF]->(:Recipe {id: $id})
       RETURN u {.id, .name, .username}
     `,
-      { id }
+      { id },
     );
 
     return result.records.length ? result.records[0].get('u') : null;

@@ -4,7 +4,7 @@ import uuid from 'uuid';
 import logger from 'logger';
 
 const storage = new Storage({
-  projectId: config.gcloud.projectId
+  projectId: config.gcloud.projectId,
 });
 
 const bucket = config.gcloud.storage.bucket;
@@ -24,8 +24,8 @@ export default {
         .pipe(
           gFile.createWriteStream({
             public: true,
-            metadata: { contentType: mimetype }
-          })
+            metadata: { contentType: mimetype },
+          }),
         )
         .on('error', err => {
           logger.fatal('GCloud image upload failure');
@@ -35,9 +35,9 @@ export default {
         .on('finish', () => {
           resolve({
             id,
-            url: `https://storage.googleapis.com/${bucket}/${fileName}`
+            url: `https://storage.googleapis.com/${bucket}/${fileName}`,
           });
         });
     });
-  }
+  },
 };

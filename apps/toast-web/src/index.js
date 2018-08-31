@@ -4,7 +4,7 @@ import { ApolloProvider } from 'react-apollo';
 import apolloClient from './apolloClient';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import App from 'components/App';
+import App from './App';
 import './theme';
 
 ReactDOM.render(

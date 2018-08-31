@@ -6,7 +6,7 @@ import {
   listRecipesForIngredient,
   publishRecipe,
   listRecipesForUser,
-  linkRecipe
+  linkRecipe,
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -73,7 +73,7 @@ extend type User {
 }
 `,
   recipeIngredients.typeDefs,
-  recipeSteps.typeDefs
+  recipeSteps.typeDefs,
 ];
 
 export const resolvers = [
@@ -88,32 +88,32 @@ export const resolvers = [
           console.dir(err);
           throw err;
         }
-      }
+      },
     },
     Mutation: {
       createRecipe: (_parent, args, ctx, info) => createRecipe(args.input, ctx),
       linkRecipe: (_parent, args, ctx, info) => linkRecipe(args.input, ctx),
       updateRecipeDetails: (_parent, args, ctx, info) =>
         updateRecipeDetails(args.id, args.input, ctx),
-      publishRecipe: (_parent, args, ctx, info) => publishRecipe(args.id, ctx)
+      publishRecipe: (_parent, args, ctx, info) => publishRecipe(args.id, ctx),
     },
     Ingredient: {
       recipes: (parent, args, ctx, info) =>
         listRecipesForIngredient(
           parent.id,
           args.input || { offset: 0, count: 25 },
-          ctx
-        )
+          ctx,
+        ),
     },
     User: {
       recipes: (parent, args, ctx, info) =>
         listRecipesForUser(
           parent.id,
           args.input || { offset: 0, count: 25 },
-          ctx
-        )
-    }
+          ctx,
+        ),
+    },
   },
   recipeIngredients.resolvers,
-  recipeSteps.resolvers
+  recipeSteps.resolvers,
 ].reduce(mergeDeepRight, {});

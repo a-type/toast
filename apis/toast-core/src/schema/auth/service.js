@@ -15,8 +15,8 @@ export const signup = async (user, credential, ctx) => {
       password,
       name: user.name,
       username: user.username,
-      id: id(user.username)
-    }
+      id: id(user.username),
+    },
   );
 
   return result.records[0].get('u');
@@ -26,8 +26,8 @@ export const loginByEmail = async (email, password, ctx) => {
   const result = await ctx.transaction(
     'MATCH (c:Credential {email: $email})-[:AUTHENTICATES]->(u:User) RETURN c {.password}, u {.id, .name, .username}',
     {
-      email
-    }
+      email,
+    },
   );
 
   if (!result.records.length) {

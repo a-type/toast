@@ -6,15 +6,17 @@ const Content = styled.div`
   background: var(--color-white);
   transition: 0.2s ease all;
   border-radius: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
 
   @media (min-width: 900px) {
-    margin: 0 var(--spacing-xl);
+    margin-left: var(--spacing-xl);
+    margin-right: var(--spacing-xl);
   }
 `;
 
 const Layout = styled.div`
   width: 100%;
-  max-width: 900px;
+  max-width: ${props => (props.wide ? 'auto' : '900px')};
   display: flex;
   flex-direction: column;
   padding-left: var(--spacing-md);
@@ -52,8 +54,8 @@ const HeaderImage = styled.div`
   background-size: cover;
 `;
 
-const SingleColumnLayout = ({ headerImageSrc, children }) => (
-  <Layout hasHeaderImage={!!headerImageSrc}>
+const SingleColumnLayout = ({ headerImageSrc, children, wide }) => (
+  <Layout hasHeaderImage={!!headerImageSrc} wide={wide}>
     {children}
     {headerImageSrc && <HeaderImage src={headerImageSrc} />}
   </Layout>

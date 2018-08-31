@@ -3,7 +3,7 @@ import config from 'config';
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,
-  neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password)
+  neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password),
 );
 
 const session = driver.session();
@@ -18,13 +18,13 @@ const indexes = [
   ['Step', 'id'],
   ['INGREDIENT_OF', 'id'],
   ['STEP_OF', 'id'],
-  ['Recipe', 'sourceUrl']
+  ['Recipe', 'sourceUrl'],
 ];
 
 const index = async () => {
   console.info(`indexing properties...`);
   await Promise.all(
-    indexes.map(pair => session.run(`CREATE INDEX ON :${pair[0]}(${pair[1]})`))
+    indexes.map(pair => session.run(`CREATE INDEX ON :${pair[0]}(${pair[1]})`)),
   );
 
   // APOC full-text indexing

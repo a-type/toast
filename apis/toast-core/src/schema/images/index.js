@@ -27,10 +27,10 @@ export const resolvers = {
       }
 
       return getRecipeCoverImage(parent.id, ctx);
-    }
+    },
   },
   Mutation: {
     updateRecipeCoverImage: (parent, args, ctx, info) =>
-      updateRecipeCoverImage(args.id, args.input, ctx)
-  }
+      updateRecipeCoverImage(args.id, args.input, ctx),
+  },
 };

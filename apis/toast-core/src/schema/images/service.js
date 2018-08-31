@@ -11,7 +11,7 @@ export const getRecipeCoverImage = async (id, ctx) => {
         MATCH (i:Image)<-[:COVER_IMAGE]-(:Recipe {id: $id})
         RETURN i { ${IMAGE_FIELDS} }
       `,
-      { id }
+      { id },
     );
 
     return coverImage.records.length > 0
@@ -33,8 +33,8 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
       {
         id,
         imageId: uploaded.id,
-        url: uploaded.url
-      }
+        url: uploaded.url,
+      },
     );
 
     const recipe = result.records[0].get('r');

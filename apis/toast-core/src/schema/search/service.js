@@ -2,7 +2,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
   if (!term && !ingredients) {
     return {
       items: [],
-      total: 0
+      total: 0,
     };
   }
 
@@ -10,13 +10,13 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
     if (result.records.length === 0) {
       return {
         items: [],
-        total: 0
+        total: 0,
       };
     }
 
     return {
       items: result.records.map(record => record.get('r')),
-      total: result.records[0].get('total')
+      total: result.records[0].get('total'),
     };
   };
 
@@ -34,8 +34,8 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
         {
           term: `${term}~`,
           offset: 0,
-          count: 100
-        }
+          count: 100,
+        },
       );
 
       return processResult(result);
@@ -52,7 +52,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       WITH r, count(r) as total
       RETURN total, r {.id, .title, .description} SKIP $offset LIMIT $count;
       `,
-        { include, exclude, offset: 0, count: 100 }
+        { include, exclude, offset: 0, count: 100 },
       );
       return processResult(result);
     });
@@ -69,7 +69,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       WITH r, count(r) as total, weight
       RETURN total, r {.id, .title, .description} ORDER BY weight DESC SKIP $offset LIMIT $count;
       `,
-        { term: `${term}~`, include, exclude, offset: 0, count: 100 }
+        { term: `${term}~`, include, exclude, offset: 0, count: 100 },
       );
       return processResult(result);
     });
@@ -80,7 +80,7 @@ export const searchIngredients = async (term, ctx) => {
   if (!term || term.length === 0) {
     return {
       items: [],
-      total: 0
+      total: 0,
     };
   }
 
@@ -95,7 +95,7 @@ export const searchIngredients_withTransaction = async (term, tx) => {
   if (!term || term.length === 0) {
     return {
       items: [],
-      total: 0
+      total: 0,
     };
   }
   const result = await tx.run(
@@ -104,18 +104,18 @@ export const searchIngredients_withTransaction = async (term, tx) => {
     WITH node, weight, count(node) as total
     RETURN total, node {.id, .name, .description} ORDER BY weight DESC LIMIT 10
     `,
-    { term: `${normalizeTerm(term)}~` }
+    { term: `${normalizeTerm(term)}~` },
   );
 
   if (result.records.length === 0) {
     return {
       items: [],
-      total: 0
+      total: 0,
     };
   }
 
   return {
     items: result.records.map(record => record.get('node')),
-    total: result.records[0].get('total')
+    total: result.records[0].get('total'),
   };
 };
