@@ -98,6 +98,10 @@ export default class SearchRecipeResults extends React.Component {
 
           const { searchInputValue } = data;
 
+          if (!searchInputValue) {
+            return null;
+          }
+
           const searchInput = {
             term: searchInputValue,
           };

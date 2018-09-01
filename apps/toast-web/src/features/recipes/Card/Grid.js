@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { loading } from 'components/effects';
 
 export default styled.div`
   display: grid;
@@ -6,6 +7,8 @@ export default styled.div`
   grid-auto-rows: 20vh;
   grid-gap: 20px;
   grid-auto-flow: dense;
+
+  ${props => (props.loading ? loading : '')};
 
   @media (min-height: 900px) {
     grid-auto-rows: 10vh;

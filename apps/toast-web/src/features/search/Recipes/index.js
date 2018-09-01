@@ -65,6 +65,10 @@ export default class SearchRecipeResults extends React.Component {
 
           const { searchFilters: filters } = data;
 
+          if (loading || !filters.length) {
+            return null;
+          }
+
           const include = filters.reduce((list, filter) => {
             if (filter.type === 'includeIngredient') {
               return list.concat([filter.subject]);

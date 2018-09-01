@@ -37,6 +37,10 @@ export default class Filters extends React.Component {
 
           const { searchFilters } = data;
 
+          if (loading || !searchFilters.length) {
+            return null;
+          }
+
           return (
             <div>
               <H2>Filters</H2>
