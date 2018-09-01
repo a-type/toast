@@ -5,6 +5,7 @@ import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import gql from 'graphql-tag';
 import { parse } from 'query-string';
+import debounce from 'lodash.debounce';
 
 const AddMatchFilter = gql`
   mutation AddMatchFilter($value: String!) {
@@ -37,11 +38,16 @@ const ResetSearch = gql`
 class SearchBar extends React.Component {
   state = {
     returnTo: '/',
+    inputValue: '',
   };
 
   handleInputChanged = ev => {
-    this.props.setInputValue(ev.target.value);
+    this.setState({ inputValue: ev.target.value });
+    this.debouncedSetMatchTerm();
   };
+
+  setMatchTerm = () => this.props.setInputValue(this.state.inputValue);
+  debouncedSetMatchTerm = debounce(this.setMatchTerm, 200);
 
   handleKeyDown = ev => {
     if (ev.key === 'Enter') {
@@ -66,16 +72,16 @@ class SearchBar extends React.Component {
   };
 
   render() {
-    const { value } = this.props;
+    const { inputValue } = this.state;
 
     return (
       <Input.Group
-        value={value}
+        value={inputValue}
         onChange={this.handleInputChanged}
         placeholder="Search recipes or ingredients..."
         onKeyDown={this.handleKeyDown}
       >
-        {value.length > 0 && (
+        {inputValue.length > 0 && (
           <Input.Group.Button onClick={this.reset}>&times;</Input.Group.Button>
         )}
       </Input.Group>
