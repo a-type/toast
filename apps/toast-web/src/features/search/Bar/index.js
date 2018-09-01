@@ -38,7 +38,7 @@ const ResetSearch = gql`
 class SearchBar extends React.Component {
   state = {
     returnTo: '/',
-    inputValue: '',
+    inputValue: this.props.value,
   };
 
   handleInputChanged = ev => {
@@ -51,10 +51,13 @@ class SearchBar extends React.Component {
 
   handleKeyDown = ev => {
     if (ev.key === 'Enter') {
-      this.props.addMatchFilter(this.props.value);
+      this.setState({
+        inputValue: '',
+      });
+      this.props.addMatchFilter(this.state.inputValue);
     } else {
-      const { value, history, location } = this.props;
-      if (value.length > 1 && location.pathname !== '/search') {
+      const { history, location } = this.props;
+      if (this.state.inputValue.length > 1 && location.pathname !== '/search') {
         this.setState({ returnTo: location.pathname });
         history.push('/search');
       }
@@ -62,9 +65,12 @@ class SearchBar extends React.Component {
   };
 
   reset = async () => {
-    const { history, setInputValue } = this.props;
+    const { history, reset } = this.props;
 
-    await setInputValue('');
+    this.setState({
+      inputValue: '',
+    });
+    await reset();
 
     if (this.state.returnTo) {
       history.push(this.state.returnTo);

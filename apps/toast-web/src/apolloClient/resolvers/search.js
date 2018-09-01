@@ -139,7 +139,7 @@ export default {
       return removed;
     },
 
-    resetSearch: ({ cache }) => {
+    resetSearch: (_, __, { cache }) => {
       cache.writeData({ data: initial });
       writeToQuery(initial);
 
