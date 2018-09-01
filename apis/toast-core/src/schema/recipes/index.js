@@ -8,6 +8,7 @@ import {
   listRecipesForUser,
   linkRecipe,
   listDiscoveredRecipesForUser,
+  recordRecipeView,
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -28,6 +29,11 @@ type Recipe {
   sourceUrl: String
   published: Boolean!
   displayType: RecipeDisplayType
+
+  createdAt: String!
+  updatedAt: String!
+  viewedAt: String!
+  views: Int!
 }
 
 input RecipeCreateInput {
@@ -63,6 +69,7 @@ extend type Mutation {
   linkRecipe(input: RecipeLinkInput!): Recipe! @authenticated
   updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe @authenticated @relatedToUser
   publishRecipe(id: ID!): Recipe @authenticated @relatedToUser
+  recordRecipeView(id: ID!): Recipe
 }
 
 extend type Ingredient {
@@ -98,6 +105,7 @@ export const resolvers = [
       updateRecipeDetails: (_parent, args, ctx, info) =>
         updateRecipeDetails(args.id, args.input, ctx),
       publishRecipe: (_parent, args, ctx, info) => publishRecipe(args.id, ctx),
+      recordRecipeView: (_parent, args, ctx) => recordRecipeView(args.id, ctx),
     },
     Ingredient: {
       recipes: (parent, args, ctx, info) =>

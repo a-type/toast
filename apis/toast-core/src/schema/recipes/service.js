@@ -1,14 +1,18 @@
 import { pick, omit } from 'ramda';
-import { id } from 'tools';
+import { id, timestamp } from 'tools';
 import gcloudStorage from 'services/gcloudStorage';
 import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
 
 export const RECIPE_FIELDS =
-  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType';
+  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt';
 export const DEFAULTS = {
   title: 'Untitled',
   published: false,
   displayType: 'LINK',
+  createdAt: timestamp(new Date('2018-08-31T00:00:00')),
+  updatedAt: timestamp(new Date('2018-08-31T00:00:00')),
+  viewedAt: timestamp(new Date('2018-08-31T00:00:00')),
+  views: 0,
 };
 
 const defaulted = recipe =>
@@ -20,6 +24,7 @@ const defaulted = recipe =>
 
 export const createRecipe = async (input, ctx) => {
   const user = ctx.user;
+  const time = timestamp();
 
   return ctx.transaction(async tx => {
     const result = await tx.run(
@@ -29,7 +34,14 @@ export const createRecipe = async (input, ctx) => {
       RETURN r {${RECIPE_FIELDS}}
     `,
       {
-        input: { ...input, displayType: 'FULL', published: false },
+        input: {
+          ...input,
+          displayType: 'FULL',
+          published: false,
+          createdAt: time,
+          updatedAt: time,
+          viewedAt: time,
+        },
         id: id(input.title),
         userId: user.id,
       },
@@ -43,6 +55,7 @@ export const createRecipe = async (input, ctx) => {
 
 export const linkRecipe = async (input, ctx) => {
   const user = ctx.user;
+  const time = timestamp();
 
   return ctx.transaction(async tx => {
     const existing = await tx.run(
@@ -73,6 +86,9 @@ export const linkRecipe = async (input, ctx) => {
           ...omit(['ingredientStrings'], input),
           displayType: 'LINK',
           published: true,
+          createdAt: time,
+          updatedAt: time,
+          viewedAt: time,
         },
         id: id(input.title),
         userId: user.id,
@@ -105,10 +121,10 @@ export const updateRecipeDetails = async (id, input, ctx) => {
     `,
       {
         id,
-        input: pick(
-          ['title', 'description', 'attribution', 'sourceUrl'],
-          input,
-        ),
+        input: {
+          ...pick(['title', 'description', 'attribution', 'sourceUrl'], input),
+          updatedAt: timestamp(),
+        },
       },
     );
 
@@ -146,6 +162,7 @@ export const listRecipes = async (
       `
         MATCH (recipe:Recipe)
         RETURN recipe { ${RECIPE_FIELDS} }
+        ORDER BY recipe.views DESC
         SKIP $offset LIMIT $count
       `,
       { offset, count },
@@ -183,10 +200,10 @@ export const publishRecipe = async (id, ctx) => {
     const result = await tx.run(
       `
         MATCH (recipe:Recipe { id: $id })
-        SET recipe.published = true
+        SET recipe.published = true, recipe.updatedAt = $time
         RETURN recipe {${RECIPE_FIELDS}}
       `,
-      { id },
+      { id, time: timestamp() },
     );
 
     if (!result.records[0]) {
@@ -238,3 +255,22 @@ export const listDiscoveredRecipesForUser = async (
     return result.records.map(rec => defaulted(rec.get('recipe')));
   });
 };
+
+export const recordRecipeView = (id, ctx) =>
+  ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+      MATCH (r:Recipe { id: $id })
+      WITH r,
+        CASE WHEN r.viewedAt + duration("P1M") < $time THEN 1 ELSE 0 END as increment
+      SET r.views = coalesce(r.views, 0) + increment, r.viewedAt = $time
+      RETURN r { ${RECIPE_FIELDS} }
+    `,
+      {
+        id,
+        time: timestamp(),
+      },
+    );
+
+    return result.records.map(rec => defaulted(rec.get('r')));
+  });

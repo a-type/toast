@@ -13,6 +13,7 @@ import { Loader } from 'components/generic';
 import { H2, H1 } from 'components/typeset';
 import JumpControls from './JumpControls';
 import LinkFrame from './LinkFrame';
+import ViewSpy from './ViewSpy';
 
 const FullRecipeQuery = gql`
   query FullRecipeQuery($id: ID!) {
@@ -133,14 +134,13 @@ export default class RecipeView extends React.Component<Props> {
                     steps={pathOr([], ['data', 'recipe', 'steps'], response)}
                   />
                 ) : (
-                  <React.Fragment>
-                    <LinkFrame
-                      src={path(['data', 'recipe', 'sourceUrl'], response)}
-                    />
-                  </React.Fragment>
+                  <LinkFrame
+                    src={path(['data', 'recipe', 'sourceUrl'], response)}
+                  />
                 )}
               </SingleColumn.Content>
               <JumpControls />
+              <ViewSpy recipeId={recipeId} />
             </SingleColumn>
           );
         }}
