@@ -88,7 +88,10 @@ export default class RecipeView extends React.Component<Props> {
             response.data.recipe &&
             !response.data.recipe.published
           ) {
-            if (response.data.recipe.author.id === response.data.me.id) {
+            if (
+              pathOr(['data', 'recipe', 'author', 'id'], 'none', response) ===
+              path(['data', 'me', 'id'], response)
+            ) {
               return <Redirect to={`/recipes/edit/${recipeId}`} />;
             }
             return <Redirect to="/" />;

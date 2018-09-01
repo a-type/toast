@@ -33,6 +33,11 @@ const Signup = gql`
   }
 `;
 
+const initialValues = {
+  login: { email: '', password: '' },
+  signup: { email: '', password: '', username: '', name: '' },
+};
+
 export default class AdaptiveAuthForm extends React.PureComponent {
   state = {
     mode: 'LOG_IN',
@@ -114,8 +119,8 @@ export default class AdaptiveAuthForm extends React.PureComponent {
         return (
           <Field columnSpan={2}>
             <div>
-              <Button.Ghost onClick={this.signup}>Sign up instead</Button.Ghost>
               <Button type="submit">Log in</Button>
+              <Button.Ghost onClick={this.signup}>Sign up instead</Button.Ghost>
             </div>
           </Field>
         );
@@ -129,10 +134,10 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 alignItems: 'flex-end',
               }}
             >
+              <Button type="submit">Sign up</Button>
               <Button.Ghost type="button" onClick={this.login}>
                 Log in instead
               </Button.Ghost>
-              <Button type="submit">Sign up</Button>
             </div>
           </Field>
         );
@@ -142,7 +147,11 @@ export default class AdaptiveAuthForm extends React.PureComponent {
   renderForm = handleSubmit => (
     <Formik onSubmit={handleSubmit}>
       {({ values, handleChange, handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
+        <Form
+          onSubmit={handleSubmit}
+          initialValues={initialValues[this.state.mode]}
+          enableReinitialize
+        >
           <H1>{sentence(this.state.mode)}</H1>
           {this.renderFields(values, handleChange)}
           {this.renderControls()}

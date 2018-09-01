@@ -7,6 +7,7 @@ export default styled.div`
   grid-auto-rows: 20vh;
   grid-gap: 20px;
   grid-auto-flow: dense;
+  margin-bottom: var(--spacing-lg);
 
   ${props => (props.loading ? loading : '')};
 
@@ -17,5 +18,9 @@ export default styled.div`
   & > *.large {
     grid-column-end: span 2;
     grid-row-end: span 2;
+  }
+
+  & > *.wide {
+    grid-column-end: span 2;
   }
 `;

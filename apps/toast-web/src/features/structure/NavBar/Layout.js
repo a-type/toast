@@ -53,7 +53,7 @@ export default styled.div`
     max-width: 900px;
 
     & > *:nth-child(2) {
-      width: 600px;
+      /* width: 600px; */
     }
   }
 `;

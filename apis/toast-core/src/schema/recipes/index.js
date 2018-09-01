@@ -7,6 +7,7 @@ import {
   publishRecipe,
   listRecipesForUser,
   linkRecipe,
+  listDiscoveredRecipesForUser,
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -70,6 +71,7 @@ extend type Ingredient {
 
 extend type User {
   recipes(input: ListPaginationInput): [Recipe!]!
+  discoveredRecipes(input: ListPaginationInput): [Recipe!]!
 }
 `,
   recipeIngredients.typeDefs,
@@ -108,6 +110,12 @@ export const resolvers = [
     User: {
       recipes: (parent, args, ctx, info) =>
         listRecipesForUser(
+          parent.id,
+          args.input || { offset: 0, count: 25 },
+          ctx,
+        ),
+      discoveredRecipes: (parent, args, ctx, info) =>
+        listDiscoveredRecipesForUser(
           parent.id,
           args.input || { offset: 0, count: 25 },
           ctx,

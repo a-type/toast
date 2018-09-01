@@ -8,17 +8,22 @@ import gql from 'graphql-tag';
 import Grid from './Grid';
 import Skeleton from './Skeleton';
 
-const RecipeCard = ({
-  recipe: { id, title, coverImage },
-}: {
-  recipe: Recipe,
-}) => (
-  <Link.Clear
-    to={`/recipes/${id}`}
-    className={!!coverImage ? 'large' : 'normal'}
-  >
-    <Box imageSrc={coverImage ? coverImage.url : null}>
-      <Title hasImage={!!coverImage}>{title}</Title>
+const getClassName = recipe => {
+  if (recipe.coverImage) {
+    return 'large';
+  }
+
+  if (recipe.title.length > 32) {
+    return 'wide';
+  }
+
+  return 'normal';
+};
+
+const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
+  <Link.Clear to={`/recipes/${recipe.id}`} className={getClassName(recipe)}>
+    <Box imageSrc={recipe.coverImage ? recipe.coverImage.url : null}>
+      <Title hasImage={!!recipe.coverImage}>{recipe.title}</Title>
     </Box>
   </Link.Clear>
 );

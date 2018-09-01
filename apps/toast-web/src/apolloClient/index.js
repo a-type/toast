@@ -6,6 +6,7 @@ import { InMemoryCache, HttpLink } from 'apollo-boost';
 import { withClientState } from 'apollo-link-state';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
+import gql from 'graphql-tag';
 
 const cache = new InMemoryCache();
 const stateLink = withClientState({ resolvers, defaults, cache });

@@ -215,3 +215,26 @@ export const listRecipesForUser = async (userId, { offset, count }, ctx) => {
     return result.records.map(rec => defaulted(rec.get('recipe')));
   });
 };
+
+export const listDiscoveredRecipesForUser = async (
+  userId,
+  { offset, count },
+  ctx,
+) => {
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (user:User { id: $userId })-[:DISCOVERER_OF]->(recipe:Recipe)
+        RETURN recipe { ${RECIPE_FIELDS} }
+        SKIP $offset LIMIT $count
+      `,
+      {
+        userId,
+        offset,
+        count,
+      },
+    );
+
+    return result.records.map(rec => defaulted(rec.get('recipe')));
+  });
+};

@@ -9,7 +9,7 @@ type User {
 }
 
 extend type Query {
-  me: User! @authenticated
+  me: User
   users: [User!]!
   user(id: ID!): User
 }
@@ -22,7 +22,7 @@ extend type Recipe {
 
 export const resolvers = {
   Query: {
-    me: (parent, args, ctx, info) => ctx.user,
+    me: (parent, args, ctx, info) => ctx.user || null,
     user: neo4jgraphql,
     users: neo4jgraphql,
   },
