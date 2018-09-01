@@ -73,12 +73,12 @@ extend type Mutation {
 }
 
 extend type Ingredient {
-  recipes(input: ListPaginationInput): [Recipe!]!
+  recipes(pagination: ListPaginationInput): [Recipe!]!
 }
 
 extend type User {
-  recipes(input: ListPaginationInput): [Recipe!]!
-  discoveredRecipes(input: ListPaginationInput): [Recipe!]!
+  recipes(pagination: ListPaginationInput): [Recipe!]!
+  discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
 }
 `,
   recipeIngredients.typeDefs,
@@ -119,13 +119,13 @@ export const resolvers = [
       recipes: (parent, args, ctx, info) =>
         listRecipesForUser(
           parent.id,
-          args.input || { offset: 0, count: 25 },
+          args.pagination || { offset: 0, count: 25 },
           ctx,
         ),
       discoveredRecipes: (parent, args, ctx, info) =>
         listDiscoveredRecipesForUser(
           parent.id,
-          args.input || { offset: 0, count: 25 },
+          args.pagination || { offset: 0, count: 25 },
           ctx,
         ),
     },

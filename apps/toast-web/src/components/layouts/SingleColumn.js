@@ -50,14 +50,28 @@ const HeaderImage = styled.div`
   right: 0;
   z-index: -1;
   height: 40vh;
-  background: url(${props => props.src});
+  background-color: var(--color-gray-lightest);
+  background-image: url(${props => props.src});
   background-size: cover;
 `;
 
-const SingleColumnLayout = ({ headerImageSrc, children, wide }) => (
-  <Layout hasHeaderImage={!!headerImageSrc} wide={wide}>
+const SingleColumnLayout = ({
+  headerImageSrc,
+  children,
+  wide,
+  loading,
+  ...rest
+}) => (
+  <Layout
+    hasHeaderImage={!!headerImageSrc || loading}
+    wide={wide}
+    loading={loading}
+    {...rest}
+  >
     {children}
-    {headerImageSrc && <HeaderImage src={headerImageSrc} />}
+    {(headerImageSrc || loading) && (
+      <HeaderImage src={headerImageSrc} loading={loading} />
+    )}
   </Layout>
 );
 
