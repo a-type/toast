@@ -4,7 +4,7 @@ import gcloudStorage from 'services/gcloudStorage';
 import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
 
 export const RECIPE_FIELDS =
-  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt';
+  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt, .views';
 export const DEFAULTS = {
   title: 'Untitled',
   published: false,
@@ -162,7 +162,7 @@ export const listRecipes = async (
       `
         MATCH (recipe:Recipe)
         RETURN recipe { ${RECIPE_FIELDS} }
-        ORDER BY recipe.views DESC
+        ORDER BY coalesce(recipe.views, 0) DESC
         SKIP $offset LIMIT $count
       `,
       { offset, count },
@@ -262,7 +262,7 @@ export const recordRecipeView = (id, ctx) =>
       `
       MATCH (r:Recipe { id: $id })
       WITH r,
-        CASE WHEN r.viewedAt + duration("P1M") < $time THEN 1 ELSE 0 END as increment
+        CASE WHEN datetime(coalesce(r.viewedAt, '2018-08-31T00:00:00')) + duration("PT1M") < $time THEN 1 ELSE 0 END as increment
       SET r.views = coalesce(r.views, 0) + increment, r.viewedAt = $time
       RETURN r { ${RECIPE_FIELDS} }
     `,
@@ -272,5 +272,5 @@ export const recordRecipeView = (id, ctx) =>
       },
     );
 
-    return result.records.map(rec => defaulted(rec.get('r')));
+    return defaulted(result.records[0].get('r'));
   });
