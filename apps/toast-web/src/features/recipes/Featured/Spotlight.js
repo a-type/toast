@@ -3,15 +3,16 @@ import gql from 'graphql-tag';
 import { Link } from 'components/generic';
 import { H1, P, Span, H2 } from 'components/typeset';
 
-const Spotlight = ({ recipe }) => (
-  <Link.Clear to={`/recipes/${recipe.id}`}>
-    <div>
-      <H2 spaceBelow="lg">Featured Recipe</H2>
-      <H1>{recipe.title}</H1>
-      <P>{recipe.description}</P>
-    </div>
-  </Link.Clear>
-);
+const Spotlight = ({ recipe }) =>
+  recipe ? (
+    <Link.Clear to={`/recipes/${recipe.id}`}>
+      <div>
+        <H2 spaceBelow="lg">Featured Recipe</H2>
+        <H1>{recipe.title}</H1>
+        <P>{recipe.description}</P>
+      </div>
+    </Link.Clear>
+  ) : null;
 
 Spotlight.Skeleton = () => (
   <div>

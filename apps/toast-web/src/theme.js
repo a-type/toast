@@ -78,7 +78,7 @@ injectGlobal`
   --spacing-xs: ${spaceSizes.xs}px;
   --spacing-xl: ${spaceSizes.xl}px;
 
-  --border-radius-md: 6px;
+  --border-radius-md: 8px;
 }
 
 html, body {

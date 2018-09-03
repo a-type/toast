@@ -9,6 +9,7 @@ import {
   linkRecipe,
   listDiscoveredRecipesForUser,
   recordRecipeView,
+  listDraftRecipesForUser,
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
@@ -79,6 +80,7 @@ extend type Ingredient {
 extend type User {
   recipes(pagination: ListPaginationInput): [Recipe!]!
   discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
+  draftRecipes(pagination: ListPaginationInput): [Recipe!]!
 }
 `,
   recipeIngredients.typeDefs,
@@ -124,6 +126,12 @@ export const resolvers = [
         ),
       discoveredRecipes: (parent, args, ctx, info) =>
         listDiscoveredRecipesForUser(
+          parent.id,
+          args.pagination || { offset: 0, count: 25 },
+          ctx,
+        ),
+      draftRecipes: (parent, args, ctx, info) =>
+        listDraftRecipesForUser(
           parent.id,
           args.pagination || { offset: 0, count: 25 },
           ctx,

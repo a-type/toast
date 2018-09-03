@@ -100,6 +100,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                     <RadioButton
                       name="displayType"
                       value="LINK"
+                      checked={values.displayType === 'LINK'}
                       onChange={handleChange}
                     >
                       Link
@@ -107,6 +108,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                     <RadioButton
                       name="displayType"
                       value="FULL"
+                      checked={values.displayType === 'FULL'}
                       onChange={handleChange}
                     >
                       Full

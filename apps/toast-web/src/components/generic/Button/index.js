@@ -11,7 +11,7 @@ const Button = styled.button`
   font-family: var(--font-default);
   font-style: italic;
   font-size: var(--font-size-md);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   transition: 0.25s ease-in-out;
   display: inline-block;
   vertical-align: top;

@@ -122,7 +122,10 @@ export const updateRecipeDetails = async (id, input, ctx) => {
       {
         id,
         input: {
-          ...pick(['title', 'description', 'attribution', 'sourceUrl'], input),
+          ...pick(
+            ['title', 'description', 'attribution', 'sourceUrl', 'displayType'],
+            input,
+          ),
           updatedAt: timestamp(),
         },
       },
@@ -161,6 +164,7 @@ export const listRecipes = async (
     const result = await tx.run(
       `
         MATCH (recipe:Recipe)
+        WHERE recipe.published = true
         RETURN recipe { ${RECIPE_FIELDS} }
         ORDER BY coalesce(recipe.views, 0) DESC
         SKIP $offset LIMIT $count
@@ -181,6 +185,7 @@ export const listRecipesForIngredient = async (
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $ingredientId })-[:INGREDIENT_OF]->(recipe:Recipe)
+        WHERE recipe.published = true
         RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,
@@ -219,6 +224,7 @@ export const listRecipesForUser = async (userId, { offset, count }, ctx) => {
     const result = await tx.run(
       `
         MATCH (user:User { id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)
+        WHERE recipe.published = true
         RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,
@@ -242,6 +248,31 @@ export const listDiscoveredRecipesForUser = async (
     const result = await tx.run(
       `
         MATCH (user:User { id: $userId })-[:DISCOVERER_OF]->(recipe:Recipe)
+        WHERE recipe.published = true
+        RETURN recipe { ${RECIPE_FIELDS} }
+        SKIP $offset LIMIT $count
+      `,
+      {
+        userId,
+        offset,
+        count,
+      },
+    );
+
+    return result.records.map(rec => defaulted(rec.get('recipe')));
+  });
+};
+
+export const listDraftRecipesForUser = async (
+  userId,
+  { offset, count },
+  ctx,
+) => {
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (user:User { id: $userId })-[]->(recipe:Recipe)
+        WHERE coalesce(recipe.published, false) = false
         RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,
@@ -262,7 +293,7 @@ export const recordRecipeView = (id, ctx) =>
       `
       MATCH (r:Recipe { id: $id })
       WITH r,
-        CASE WHEN datetime(coalesce(r.viewedAt, '2018-08-31T00:00:00')) + duration("PT1M") < $time THEN 1 ELSE 0 END as increment
+        CASE WHEN datetime(coalesce(r.viewedAt, '2018-08-31T00:00:00')) + duration("PT1M") < datetime($time) THEN 1 ELSE 0 END as increment
       SET r.views = coalesce(r.views, 0) + increment, r.viewedAt = $time
       RETURN r { ${RECIPE_FIELDS} }
     `,
