@@ -28,12 +28,16 @@ export default styled.div`
   color: var(--color-dark);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
+  border-color: var(--color-brand);
+  border-width: 2px;
+  border-style: solid;
   box-shadow: 0 4px 8px 0 #00000080;
   display: flex;
   flex-direction: column;
   position: relative;
   font-size: 0.9rem;
   animation-fill-mode: forwards;
+  transition: 0.1s ease all;
 
   animation-name: ${show};
   animation-duration: 200;
