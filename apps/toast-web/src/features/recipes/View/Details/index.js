@@ -9,7 +9,14 @@ export default ({ recipe }: { recipe: Recipe }) => {
     return null;
   }
 
-  const { author, attribution, sourceUrl, description, title } = recipe;
+  const {
+    author,
+    attribution,
+    sourceUrl,
+    description,
+    title,
+    servings,
+  } = recipe;
 
   return (
     <Layout>
@@ -25,6 +32,7 @@ export default ({ recipe }: { recipe: Recipe }) => {
         </P>
       )}
       <P>{description || 'No description'}</P>
+      <P>Serves {servings}</P>
     </Layout>
   );
 };

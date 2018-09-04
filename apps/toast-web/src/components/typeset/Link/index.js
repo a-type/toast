@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link as LibLink } from 'react-router-dom';
+import LibLink from './BaseLink';
 import Clear from './Clear';
 import { getSize } from 'theme';
 

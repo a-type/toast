@@ -1,7 +1,8 @@
 // @flow
 
 import React, { type Node } from 'react';
-import { Link, Tip } from 'components/generic';
+import { Tip } from 'components/generic';
+import { Link } from 'components/typeset';
 import { type Ingredient } from 'types';
 import { sentence } from 'change-case';
 

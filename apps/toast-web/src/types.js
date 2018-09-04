@@ -55,6 +55,7 @@ export type Recipe = {
   displayType: RecipeDisplayType,
   attribution: string,
   sourceUrl: string,
+  servings: number,
 };
 export type RecipeParams = {
   title?: string,

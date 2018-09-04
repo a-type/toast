@@ -13,6 +13,7 @@ export const RecipeCreateDetailsFragment = gql`
     attribution
     sourceUrl
     displayType
+    servings
   }
 `;
 
@@ -47,6 +48,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
         attribution: '',
         sourceUrl: '',
         displayType: 'LINK',
+        servings: 1,
       },
       initialValues,
     );
@@ -74,10 +76,18 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                     onChange={handleChange}
                   />
                 </Field>
-                <Field label="Description" columnSpan={2}>
+                <Field label="Description">
                   <Input.Block
                     name="description"
                     value={values.description}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Servings">
+                  <Input
+                    type="number"
+                    name="servings"
+                    value={values.servings}
                     onChange={handleChange}
                   />
                 </Field>

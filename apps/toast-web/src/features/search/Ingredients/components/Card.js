@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, Button } from 'components/generic';
+import { Button } from 'components/generic';
+import { Link } from 'components/typeset';
 
 export const CardContainer = styled.div`
   border-radius: var(--border-radius-md);

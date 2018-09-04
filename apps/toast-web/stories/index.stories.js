@@ -16,14 +16,13 @@ import Grid from './components/Grid';
 import {
   Button,
   Input,
-  Link,
   Pill,
   Divider,
   Checkbox,
   Form,
   SelectionEditor,
 } from 'components/generic';
-import { P, H1, H2 } from 'components/typeset';
+import { P, H1, H2, Link } from 'components/typeset';
 import { Logo } from 'components/brand';
 
 storiesOf('Button', module).add('demo', () => (

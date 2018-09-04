@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box, Title } from './components';
-import { Link } from 'components/generic';
+import { Link } from 'components/typeset';
 import { type Recipe } from 'types';
 import gql from 'graphql-tag';
 import Grid from './Grid';

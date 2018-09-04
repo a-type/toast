@@ -68,40 +68,8 @@ export default class RecipeCreator extends React.PureComponent {
     return completed + 1;
   };
 
-  parseIngredientStrings = ingredientStrings => {
-    if (!ingredientStrings) {
-      return null;
-    }
-
-    return [].concat(ingredientStrings);
-  };
-
-  parseStepStrings = stepStrings => {
-    if (!stepStrings) {
-      return null;
-    }
-
-    return [].concat(stepStrings);
-  };
-
-  parseProvidedData = () => {
-    const { externalParams = {} } = this.props;
-
-    return {
-      title: path(['ttl'], externalParams),
-      description: path(['dsc'], externalParams),
-      attribution: path(['att'], externalParams),
-      sourceUrl: path(['src'], externalParams),
-      seedIngredientStrings: this.parseIngredientStrings(
-        path(['ing'], externalParams),
-      ),
-      seedSteps: this.parseStepStrings(path(['stp'], externalParams)),
-    };
-  };
-
   state = {
     stage: this.getStartingStage(),
-    queryData: this.parseProvidedData(),
   };
 
   handleStageChanged = stage => this.setState({ stage });
@@ -170,17 +138,6 @@ export default class RecipeCreator extends React.PureComponent {
     return 'Cover image supplied';
   };
 
-  expireSeedIngredientString = ingredientString => {
-    this.setState(state => ({
-      queryData: {
-        ...state.queryData,
-        seedIngredientStrings: state.queryData.seedIngredientStrings.filter(
-          str => str !== ingredientString,
-        ),
-      },
-    }));
-  };
-
   renderTitle = () => {
     const { recipe, recipeId } = this.props;
 
@@ -208,10 +165,8 @@ export default class RecipeCreator extends React.PureComponent {
     const { recipeId, recipe } = this.props;
     const { queryData } = this.state;
 
-    const provided = mergeDeepLeft(recipe || {}, queryData);
-
     return (
-      <SingleColumn headerImageSrc={path(['coverImage', 'url'], provided)}>
+      <SingleColumn headerImageSrc={path(['coverImage', 'url'], recipe)}>
         <SingleColumn.Content>
           {this.renderTitle()}
           <Stages
@@ -228,8 +183,15 @@ export default class RecipeCreator extends React.PureComponent {
                 recipeId={recipeId}
                 onSave={this.handleDetailsSave}
                 initialValues={pick(
-                  ['title', 'description', 'attribution', 'sourceUrl'],
-                  provided,
+                  [
+                    'title',
+                    'description',
+                    'attribution',
+                    'sourceUrl',
+                    'displayType',
+                    'servings',
+                  ],
+                  recipe,
                 )}
               />
             </Stages.Stage>
@@ -240,12 +202,7 @@ export default class RecipeCreator extends React.PureComponent {
             >
               <Ingredients
                 recipeId={recipeId}
-                ingredients={path(['ingredients'], provided)}
-                seedIngredientStrings={path(
-                  ['seedIngredientStrings'],
-                  provided,
-                )}
-                expireSeedIngredientString={this.expireSeedIngredientString}
+                ingredients={path(['ingredients'], recipe)}
               />
             </Stages.Stage>
             <Stages.Stage
@@ -253,7 +210,7 @@ export default class RecipeCreator extends React.PureComponent {
               title="Steps &amp; Procedure"
               summary={this.stepSummary()}
             >
-              <Steps recipeId={recipeId} steps={path(['steps'], provided)} />
+              <Steps recipeId={recipeId} steps={path(['steps'], recipe)} />
             </Stages.Stage>
             <Stages.Stage
               stageIndex={3}
@@ -262,7 +219,7 @@ export default class RecipeCreator extends React.PureComponent {
             >
               <Images
                 recipeId={recipeId}
-                coverImage={path(['coverImage'], provided)}
+                coverImage={path(['coverImage'], recipe)}
               />
             </Stages.Stage>
             <Stages.Stage
@@ -272,7 +229,7 @@ export default class RecipeCreator extends React.PureComponent {
             >
               <Publish
                 recipeId={recipeId}
-                published={path(['published'], provided)}
+                published={path(['published'], recipe)}
               />
             </Stages.Stage>
           </Stages>

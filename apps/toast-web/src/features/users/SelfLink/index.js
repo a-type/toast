@@ -1,7 +1,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Link, Loader } from 'components/generic';
+import { Loader } from 'components/generic';
+import { Link } from 'components/typeset';
 import auth from 'apolloClient/auth';
 
 const Me = gql`

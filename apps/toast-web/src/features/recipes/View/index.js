@@ -25,6 +25,7 @@ const FullRecipeQuery = gql`
       displayType
       attribution
       sourceUrl
+      servings
       author {
         id
         name
@@ -139,7 +140,9 @@ export default class RecipeView extends React.Component<Props> {
                   />
                 )}
               </SingleColumn.Content>
-              <JumpControls />
+              <SingleColumn.Content>
+                <JumpControls />
+              </SingleColumn.Content>
               <ViewSpy recipeId={recipeId} />
             </SingleColumn>
           );

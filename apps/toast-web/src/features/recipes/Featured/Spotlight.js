@@ -1,6 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { Link } from 'components/generic';
+import { Link } from 'components/typeset';
 import { H1, P, Span, H2 } from 'components/typeset';
 
 const Spotlight = ({ recipe }) =>

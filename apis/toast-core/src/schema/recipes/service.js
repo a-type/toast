@@ -4,11 +4,12 @@ import gcloudStorage from 'services/gcloudStorage';
 import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
 
 export const RECIPE_FIELDS =
-  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt, .views';
+  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt, .views, .servings';
 export const DEFAULTS = {
   title: 'Untitled',
   published: false,
   displayType: 'LINK',
+  servings: 1,
   createdAt: timestamp(new Date('2018-08-31T00:00:00')),
   updatedAt: timestamp(new Date('2018-08-31T00:00:00')),
   viewedAt: timestamp(new Date('2018-08-31T00:00:00')),
@@ -123,7 +124,14 @@ export const updateRecipeDetails = async (id, input, ctx) => {
         id,
         input: {
           ...pick(
-            ['title', 'description', 'attribution', 'sourceUrl', 'displayType'],
+            [
+              'title',
+              'description',
+              'attribution',
+              'sourceUrl',
+              'displayType',
+              'servings',
+            ],
             input,
           ),
           updatedAt: timestamp(),

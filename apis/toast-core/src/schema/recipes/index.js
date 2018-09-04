@@ -31,6 +31,8 @@ type Recipe {
   published: Boolean!
   displayType: RecipeDisplayType
 
+  servings: Int!
+
   createdAt: String!
   updatedAt: String!
   viewedAt: String!
@@ -58,6 +60,7 @@ input RecipeDetailsUpdateInput {
   attribution: String
   sourceUrl: String
   displayType: RecipeDisplayType
+  servings: Int
 }
 
 extend type Query {
