@@ -10,5 +10,6 @@ export default styled.div`
 
   @media (min-width: 720px) {
     left: auto;
+    max-width: 300px;
   }
 `;

@@ -16,3 +16,4 @@ export { default as HelpText } from './HelpText';
 export { default as Label } from './Label';
 export { default as Modal } from './Modal';
 export { default as RadioButton } from './RadioButton';
+export { default as Message } from './Message';

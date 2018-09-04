@@ -39,9 +39,9 @@ export default class SearchRecipeResults extends React.Component {
     if (loading) {
       return (
         <Card.Grid loading>
-          {new Array(50)
-            .fill(null)
-            .map((_, idx) => <Card.Skeleton key={idx} />)}
+          {new Array(50).fill(null).map((_, idx) => (
+            <Card.Skeleton key={idx} />
+          ))}
         </Card.Grid>
       );
     }
@@ -50,7 +50,9 @@ export default class SearchRecipeResults extends React.Component {
 
     return (
       <Card.Grid>
-        {items.map(recipe => <Card key={recipe.id} recipe={recipe} />)}
+        {items.map(recipe => (
+          <Card key={recipe.id} recipe={recipe} />
+        ))}
       </Card.Grid>
     );
   };

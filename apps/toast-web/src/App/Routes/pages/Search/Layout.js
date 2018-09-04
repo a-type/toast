@@ -9,17 +9,19 @@ const Layout = styled.div`
     grid-template-areas: 'filters ingredients' 'filters recipes';
     grid-template-columns: minmax(400px, 1fr) 4fr;
   }
+`;
 
-  & > *:first-child {
-    grid-area: ingredients;
-    overflow-x: auto;
-  }
-  & > *:nth-child(2) {
-    grid-area: filters;
-  }
-  & > *:nth-child(3) {
-    grid-area: recipes;
-  }
+Layout.Ingredients = styled.div`
+  grid-area: ingredients;
+  overflow-x: auto;
+`;
+
+Layout.Filters = styled.div`
+  grid-area: filters;
+`;
+
+Layout.Recipes = styled.div`
+  grid-area: recipes;
 `;
 
 export default Layout;

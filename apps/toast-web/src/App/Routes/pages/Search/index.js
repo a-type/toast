@@ -9,9 +9,15 @@ export default () => (
   <SingleColumn wide>
     <SingleColumn.Content>
       <Layout>
-        <Ingredients />
-        <Filters />
-        <Recipes />
+        <Layout.Ingredients>
+          <Ingredients />
+        </Layout.Ingredients>
+        <Layout.Filters>
+          <Filters />
+        </Layout.Filters>
+        <Layout.Recipes>
+          <Recipes />
+        </Layout.Recipes>
       </Layout>
     </SingleColumn.Content>
   </SingleColumn>

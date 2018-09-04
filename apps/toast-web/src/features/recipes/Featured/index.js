@@ -31,9 +31,9 @@ export default () => (
             <SingleColumn.Content>
               <H2>Popular Recipes</H2>
               <Card.Grid loading>
-                {new Array(9)
-                  .fill(null)
-                  .map((_, idx) => <Card.Skeleton key={idx} />)}
+                {new Array(9).fill(null).map((_, idx) => (
+                  <Card.Skeleton key={idx} />
+                ))}
               </Card.Grid>
             </SingleColumn.Content>
           </SingleColumn>
@@ -54,9 +54,9 @@ export default () => (
           <SingleColumn.Content>
             <H2>Popular Recipes</H2>
             <Card.Grid>
-              {recipes
-                .slice(1)
-                .map(recipe => <Card recipe={recipe} key={recipe.id} />)}
+              {recipes.slice(1).map(recipe => (
+                <Card recipe={recipe} key={recipe.id} />
+              ))}
             </Card.Grid>
           </SingleColumn.Content>
         </SingleColumn>

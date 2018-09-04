@@ -15,9 +15,9 @@ P.Skeleton = class PSkeleton extends React.PureComponent {
   render() {
     return (
       <P>
-        {new Array(this.wordCount)
-          .fill(null)
-          .map((_, idx) => <Span.Skeleton key={idx} />)}
+        {new Array(this.wordCount).fill(null).map((_, idx) => (
+          <Span.Skeleton key={idx} />
+        ))}
       </P>
     );
   }

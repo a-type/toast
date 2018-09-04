@@ -1,0 +1,1 @@
+export const DISMISS_ANIMATION_MS = 200;

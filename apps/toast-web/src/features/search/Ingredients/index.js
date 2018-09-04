@@ -43,7 +43,9 @@ export default class SearchRecipeResults extends React.Component {
         <div>
           <H1>Ingredients</H1>
           <Layout>
-            {new Array(10).fill(null).map((_, idx) => <Skeleton key={idx} />)}
+            {new Array(10).fill(null).map((_, idx) => (
+              <Skeleton key={idx} />
+            ))}
           </Layout>
         </div>
       );
