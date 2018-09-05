@@ -13,6 +13,7 @@ extend type Recipe {
 
 input ImageCreateInput {
   file: Upload!
+  attribution: String
 }
 
 extend type Mutation {
