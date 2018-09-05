@@ -3,7 +3,6 @@ import Routes from './Routes';
 import Layout from './Layout';
 import { NavBar } from 'features/structure';
 import { hot } from 'react-hot-loader';
-import { Modal } from 'components/generic';
 import { Global as GlobalMessages } from 'features/messages';
 import { show } from '../messages';
 
@@ -27,9 +26,12 @@ class App extends React.Component {
   render() {
     return (
       <Layout>
-        <NavBar />
-        <Routes />
-        <Modal.Layer />
+        <Layout.Navigation>
+          <NavBar />
+        </Layout.Navigation>
+        <Layout.Content>
+          <Routes />
+        </Layout.Content>
         <GlobalMessages />
       </Layout>
     );

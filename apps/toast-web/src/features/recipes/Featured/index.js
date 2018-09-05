@@ -4,12 +4,17 @@ import { Query } from 'react-apollo';
 import { SingleColumn } from 'components/layouts';
 import Card from '../Card';
 import Spotlight from './Spotlight';
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 import { H2 } from 'components/typeset';
 
 const FeaturedRecipes = gql`
   query FeaturedRecipes($count: Int!) {
     recipes(pagination: { offset: 0, count: $count }) {
+      coverImage {
+        id
+        url
+        attribution
+      }
       ...RecipeCard
       ...RecipeSpotlight
     }
@@ -47,7 +52,7 @@ export default () => (
       const { recipes } = data;
 
       return (
-        <SingleColumn headerImageSrc={path(['coverImage', 'url'], recipes[0])}>
+        <SingleColumn headerImage={pathOr(null, ['coverImage'], recipes[0])}>
           <SingleColumn.Content>
             <Spotlight recipe={recipes[0]} />
           </SingleColumn.Content>

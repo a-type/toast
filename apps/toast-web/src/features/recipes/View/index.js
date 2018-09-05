@@ -47,6 +47,7 @@ const FullRecipeQuery = gql`
       coverImage {
         id
         url
+        attribution
       }
     }
 
@@ -103,9 +104,9 @@ export default class RecipeView extends React.Component<Props> {
 
           return (
             <SingleColumn
-              headerImageSrc={pathOr(
+              headerImage={pathOr(
                 null,
-                ['data', 'recipe', 'coverImage', 'url'],
+                ['data', 'recipe', 'coverImage'],
                 response,
               )}
             >

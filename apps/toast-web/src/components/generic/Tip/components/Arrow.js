@@ -61,7 +61,7 @@ export default styled.div`
 
   [data-placement*='right'] > & {
     left: 0;
-    margin-left: -4px;
+    margin-left: -8px;
     width: 8px;
     height: 12px;
     &::before {
@@ -77,7 +77,7 @@ export default styled.div`
 
   [data-placement*='left'] > & {
     right: 0;
-    margin-right: -4px;
+    margin-right: -8px;
     height: 12px;
     width: 8px;
     &::before {

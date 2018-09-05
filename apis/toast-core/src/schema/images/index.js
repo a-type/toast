@@ -4,6 +4,7 @@ export const typeDefs = `
 type Image {
   id: ID!
   url: String!
+  attribution: String
 }
 
 extend type Recipe {

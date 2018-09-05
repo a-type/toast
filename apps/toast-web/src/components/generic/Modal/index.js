@@ -1,10 +1,9 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { Box, TitleBar, Background, Layer } from './components';
+import { Box, TitleBar, Background } from './components';
 
 export default class Modal extends React.PureComponent {
   static TitleBar = TitleBar;
-  static Layer = Layer;
 
   stopPropagation = ev => {
     ev.stopPropagation();

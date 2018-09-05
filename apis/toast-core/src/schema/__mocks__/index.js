@@ -15,7 +15,7 @@ export default {
     ingredients: () => new MockList([2, 8]),
     steps: () => new MockList([4, 12]),
     coverImage: () => {
-      if (casual.integer(0, 10) < 3) {
+      if (casual.integer(0, 10) < 5) {
         return {
           id: uuid(),
           url: casual.image,
@@ -53,7 +53,7 @@ export default {
   },
 
   RecipeSearchResponse: () => {
-    const total = casual.integer(1, 30);
+    const total = casual.integer(3, 25);
     return {
       total: () => total,
       items: () => new MockList(total),
@@ -61,7 +61,7 @@ export default {
   },
 
   IngredientSearchResponse: () => {
-    const total = casual.integer(1, 30);
+    const total = casual.integer(6, 25);
     return {
       total: () => total,
       items: () => new MockList(total),
