@@ -13,11 +13,7 @@ export default class TipToggle extends React.PureComponent {
     const { children, ...rest } = this.props;
 
     return (
-      <Tip
-        disabled={!this.state.show}
-        onBlur={this.hide}
-        {...rest}
-      >
+      <Tip disabled={!this.state.show} onBlur={this.hide} {...rest}>
         {({ ref }) => children({ ref, onClick: this.show })}
       </Tip>
     );

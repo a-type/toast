@@ -24,7 +24,7 @@ class IngredientItem extends React.Component {
 
     return (
       <b key={`value-${key}`}>
-        {toDisplay(preferredServings / servings * value)}
+        {toDisplay((preferredServings / servings) * value)}
       </b>
     );
   };

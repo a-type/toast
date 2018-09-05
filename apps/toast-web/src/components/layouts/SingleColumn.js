@@ -27,8 +27,7 @@ const Layout = styled.div`
   position: relative;
   z-index: 1;
   pointer-events: none;
-  top: ${props =>
-    props.hasHeaderImage ? '20vh' : 'var(--spacing-xl)'};
+  top: ${props => (props.hasHeaderImage ? '20vh' : 'var(--spacing-xl)')};
 
   & > ${Content} {
     pointer-events: initial;
@@ -67,10 +66,10 @@ const ImageAttributionIcon = styled.div`
   opacity: 0.5;
 
   &:hover {
-    cursor: pointer
+    cursor: pointer;
   }
 
-  @media(min-width: 720px) {
+  @media (min-width: 720px) {
     bottom: var(--spacing-xs);
     right: var(--spacing-lg);
   }
@@ -78,7 +77,11 @@ const ImageAttributionIcon = styled.div`
 
 const ImageAttribution = ({ attribution }) => (
   <Tip.Toggle placement="left" tipContent={`Image © ${attribution}`}>
-    {({ ref, onClick }) => (<ImageAttributionIcon innerRef={ref} onClick={onClick}>©</ImageAttributionIcon>)}
+    {({ ref, onClick }) => (
+      <ImageAttributionIcon innerRef={ref} onClick={onClick}>
+        ©
+      </ImageAttributionIcon>
+    )}
   </Tip.Toggle>
 );
 
@@ -99,7 +102,9 @@ const SingleColumnLayout = ({
     {(headerImage || loading) && (
       <Background>
         <HeaderImage src={pathOr(null, ['url'], headerImage)} loading={loading}>
-          {path(['attribution'], headerImage) && <ImageAttribution attribution={headerImage.attribution} />}
+          {path(['attribution'], headerImage) && (
+            <ImageAttribution attribution={headerImage.attribution} />
+          )}
         </HeaderImage>
       </Background>
     )}

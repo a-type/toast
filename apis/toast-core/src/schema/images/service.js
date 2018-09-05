@@ -34,7 +34,7 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
         id,
         imageId: uploaded.id,
         url: uploaded.url,
-        attribution: input.attribution
+        attribution: input.attribution,
       },
     );
 
