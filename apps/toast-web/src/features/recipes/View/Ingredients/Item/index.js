@@ -19,7 +19,7 @@ class IngredientItem extends React.Component {
     const { servings, preferredServings, value, valueTextMatch } = this.props;
 
     if (!preferredServings) {
-      return <span key={`value-${key}`}>{valueTextMatch}</span>;
+      return <b key={`value-${key}`}>{valueTextMatch}</b>;
     }
 
     return (
