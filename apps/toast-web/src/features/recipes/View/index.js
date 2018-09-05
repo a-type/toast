@@ -20,6 +20,7 @@ const FullRecipeQuery = gql`
     recipe(id: $id) {
       id
       published
+      displayType
       ...RecipeDetails
       ingredients {
         id
