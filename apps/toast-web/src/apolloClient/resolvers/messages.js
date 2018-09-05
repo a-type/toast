@@ -18,7 +18,6 @@ export default {
   Mutation: {
     showMessage: (_, { contents }, { cache }) => {
       const previous = cache.readQuery({ query }).messages;
-      console.log(previous);
 
       const newMessage = {
         contents,
@@ -27,7 +26,6 @@ export default {
       };
 
       const messages = previous.concat([newMessage]);
-      console.log(messages);
 
       const data = {
         messages,

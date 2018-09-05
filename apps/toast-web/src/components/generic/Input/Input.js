@@ -10,7 +10,6 @@ const sharedSolidStyles = css`
   border: 1px solid var(--color-gray-lightest);
   font-family: var(--font-default);
   display: inline-block;
-  vertical-align: top;
   transition: 0.2s ease all;
 
   &:disabled {

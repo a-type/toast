@@ -5,7 +5,7 @@ import Button from '../Button';
 import { focusShadow } from 'components/effects';
 
 const Container = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
 
   & > * {

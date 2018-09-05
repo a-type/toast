@@ -122,6 +122,7 @@ export default class RecipeView extends React.Component<Props> {
                 <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
                 <H2 name="IngredientsSection">Ingredients</H2>
                 <Ingredients
+                  servings={path(['data', 'recipe', 'servings'], response)}
                   ingredients={pathOr(
                     [],
                     ['data', 'recipe', 'ingredients'],

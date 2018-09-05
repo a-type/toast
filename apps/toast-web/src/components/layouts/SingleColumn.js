@@ -6,11 +6,12 @@ const Content = styled.div`
   background: var(--color-white);
   transition: 0.2s ease all;
   border-radius: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 
   @media (min-width: 900px) {
     margin-left: var(--spacing-xl);
     margin-right: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
   }
 `;
 

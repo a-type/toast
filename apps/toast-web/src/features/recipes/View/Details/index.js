@@ -3,6 +3,7 @@ import React from 'react';
 import Layout from './Layout';
 import { P, Link } from 'components/typeset';
 import { type Recipe } from 'types';
+import Servings from './Servings';
 
 export default ({ recipe }: { recipe: Recipe }) => {
   if (!recipe) {
@@ -31,8 +32,8 @@ export default ({ recipe }: { recipe: Recipe }) => {
           from <Link to={sourceUrl}>{attribution}</Link>
         </P>
       )}
-      <P>{description || 'No description'}</P>
-      <P>Serves {servings}</P>
+      {description && <P>{description}</P>}
+      <Servings servings={servings} />
     </Layout>
   );
 };

@@ -4,10 +4,15 @@ import List from './List';
 import Item from './Item';
 import { type RecipeIngredient } from 'types';
 
-export default ({ ingredients }: { ingredients: Array<RecipeIngredient> }) => (
+type Props = {
+  ingredients: RecipeIngredient[],
+  servings: number,
+};
+
+export default ({ ingredients, servings }: Props) => (
   <List>
     {ingredients.map(ingredient => (
-      <Item {...ingredient} key={ingredient.id} />
+      <Item {...ingredient} key={ingredient.id} servings={servings} />
     ))}
   </List>
 );
