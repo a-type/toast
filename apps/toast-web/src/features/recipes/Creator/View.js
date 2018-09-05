@@ -147,9 +147,9 @@ export default class RecipeCreator extends React.PureComponent {
 
     if (recipe.published) {
       return (
-        <H1>
-          <Link to={`/recipes/${recipeId}`}>{recipe.title}</Link>
-        </H1>
+        <Link to={`/recipes/${recipeId}`}>
+          <H1>{recipe.title}</H1>
+        </Link>
       );
     }
 

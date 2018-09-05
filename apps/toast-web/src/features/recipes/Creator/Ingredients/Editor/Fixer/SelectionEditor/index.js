@@ -25,6 +25,10 @@ export default class SelectionEditor extends React.Component {
     this.props.value.substr(start, end - start);
 
   handlePointerOverChar = ev => {
+    this.reactToHover(ev.target);
+  };
+
+  reactToHover = charElement => {
     const { selecting, activeSelection, draggingHandleType } = this.state;
     const { onSelectionChanged } = this.props;
 
@@ -32,8 +36,8 @@ export default class SelectionEditor extends React.Component {
       return;
     }
 
-    const idx = parseInt(ev.target.getAttribute('data-char-idx'));
-    const charSelection = ev.target.getAttribute('data-selection-name');
+    const idx = parseInt(charElement.getAttribute('data-char-idx'));
+    const charSelection = charElement.getAttribute('data-selection-name');
 
     if (!!charSelection && charSelection !== activeSelection) {
       return;
@@ -46,6 +50,13 @@ export default class SelectionEditor extends React.Component {
     } else if (draggingHandleType === 'end' && idx > range.start) {
       this.setState({ hypotheticalRange: { start: range.start, end: idx } });
     }
+  };
+
+  handleTouchMove = ev => {
+    const touch = ev.touches[0];
+
+    const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
+    this.reactToHover(overElement);
   };
 
   handleHandleDown = ev => {
@@ -159,7 +170,7 @@ export default class SelectionEditor extends React.Component {
               interactive={isActive}
               data-selection-name={name}
               data-handle-type="start"
-              onPointerDown={this.handleHandleDown}
+              onTouchStart={this.handleHandleDown}
               onMouseDown={this.handleHandleDown}
               color={color || 'brand'}
               active={selecting && this.state.draggingHandleType === 'start'}
@@ -170,7 +181,7 @@ export default class SelectionEditor extends React.Component {
               interactive={isActive}
               data-selection-name={name}
               data-handle-type="end"
-              onPointerDown={this.handleHandleDown}
+              onTouchStart={this.handleHandleDown}
               onMouseDown={this.handleHandleDown}
               color={color || 'brand'}
               active={selecting && this.state.draggingHandleType === 'end'}
@@ -207,8 +218,9 @@ export default class SelectionEditor extends React.Component {
 
     return (
       <Container
-        onPointerUp={this.handlePointerUp}
+        onTouchEnd={this.handlePointerUp}
         onMouseUp={this.handlePointerUp}
+        onTouchMove={this.handleTouchMove}
       >
         {parts}
       </Container>

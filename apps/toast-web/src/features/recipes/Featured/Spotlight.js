@@ -1,17 +1,18 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Link } from 'components/typeset';
-import { H1, P, Span, H2 } from 'components/typeset';
+import { H1, P, Span, H2, Aside } from 'components/typeset';
 
 const Spotlight = ({ recipe }) =>
   recipe ? (
-    <Link.Clear to={`/recipes/${recipe.id}`}>
-      <div>
-        <H2 spaceBelow="lg">Featured Recipe</H2>
+    <div>
+      <H2 spaceBelow="lg">Featured Recipe</H2>
+      <Link to={`/recipes/${recipe.id}`}>
         <H1>{recipe.title}</H1>
-        <P>{recipe.description}</P>
-      </div>
-    </Link.Clear>
+      </Link>
+      {recipe.description && <P>{recipe.description}</P>}
+      {recipe.attribution && <Aside>from {recipe.attribution}</Aside>}
+    </div>
   ) : null;
 
 Spotlight.Skeleton = () => (
@@ -28,6 +29,7 @@ Spotlight.fragments = {
   Recipe: gql`
     fragment RecipeSpotlight on Recipe {
       description
+      attribution
       author {
         id
         name

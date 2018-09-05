@@ -40,7 +40,10 @@ export default props => (
         return <View {...props} />;
       }
 
-      if (result.data.recipe.author.id !== result.data.me.id) {
+      if (
+        result.data.recipe.author &&
+        result.data.recipe.author.id !== result.data.me.id
+      ) {
         return <Redirect to={`/recipes/${props.recipeId}`} />;
       }
 
