@@ -4,8 +4,10 @@ import Layout from './Layout';
 import { P, Link } from 'components/typeset';
 import { type Recipe } from 'types';
 import Servings from './Servings';
+import gql from 'graphql-tag';
+import Time from './Time';
 
-export default ({ recipe }: { recipe: Recipe }) => {
+const RecipeDetails = ({ recipe }: { recipe: Recipe }) => {
   if (!recipe) {
     return null;
   }
@@ -17,6 +19,9 @@ export default ({ recipe }: { recipe: Recipe }) => {
     description,
     title,
     servings,
+    cookTime,
+    prepTime,
+    unattendedTime,
   } = recipe;
 
   return (
@@ -34,6 +39,34 @@ export default ({ recipe }: { recipe: Recipe }) => {
       )}
       {description && <P>{description}</P>}
       <Servings servings={servings} />
+      <Time
+        cookTime={cookTime}
+        prepTime={prepTime}
+        unattendedTime={unattendedTime}
+      />
     </Layout>
   );
 };
+
+RecipeDetails.fragments = {
+  Recipe: gql`
+    fragment RecipeDetails on Recipe {
+      id
+      title
+      description
+      attribution
+      sourceUrl
+      servings
+      cookTime
+      prepTime
+      unattendedTime
+
+      author {
+        id
+        name
+      }
+    }
+  `,
+};
+
+export default RecipeDetails;

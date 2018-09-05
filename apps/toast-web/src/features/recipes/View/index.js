@@ -19,17 +19,8 @@ const FullRecipeQuery = gql`
   query FullRecipeQuery($id: ID!) {
     recipe(id: $id) {
       id
-      title
-      description
       published
-      displayType
-      attribution
-      sourceUrl
-      servings
-      author {
-        id
-        name
-      }
+      ...RecipeDetails
       ingredients {
         id
         unit
@@ -62,6 +53,8 @@ const FullRecipeQuery = gql`
       id
     }
   }
+
+  ${Details.fragments.Recipe}
 `;
 
 export type QueryResponse = {

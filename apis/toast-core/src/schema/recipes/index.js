@@ -32,6 +32,10 @@ type Recipe {
   displayType: RecipeDisplayType
 
   servings: Int!
+  # all times in minutes
+  cookTime: Int
+  prepTime: Int
+  unattendedTime: Int
 
   createdAt: String!
   updatedAt: String!
@@ -61,6 +65,9 @@ input RecipeDetailsUpdateInput {
   sourceUrl: String
   displayType: RecipeDisplayType
   servings: Int
+  cookTime: Int
+  prepTime: Int
+  unattendedTime: Int
 }
 
 extend type Query {

@@ -14,6 +14,9 @@ export const RecipeCreateDetailsFragment = gql`
     sourceUrl
     displayType
     servings
+    cookTime
+    prepTime
+    unattendedTime
   }
 `;
 
@@ -102,6 +105,33 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                   <Input
                     name="sourceUrl"
                     value={values.sourceUrl}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Cook time (min)">
+                  <Input
+                    name="cookTime"
+                    type="number"
+                    min={0}
+                    value={values.cookTime}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Prep time (min)">
+                  <Input
+                    name="prepTime"
+                    type="number"
+                    min={0}
+                    value={values.prepTime}
+                    onChange={handleChange}
+                  />
+                </Field>
+                <Field label="Unattended time (min)">
+                  <Input
+                    name="unattendedTime"
+                    type="number"
+                    min={0}
+                    value={values.unattendedTime}
                     onChange={handleChange}
                   />
                 </Field>

@@ -190,6 +190,9 @@ export default class RecipeCreator extends React.PureComponent {
                     'sourceUrl',
                     'displayType',
                     'servings',
+                    'cookTime',
+                    'prepTime',
+                    'unattendedTime',
                   ],
                   recipe,
                 )}

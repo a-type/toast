@@ -24,6 +24,10 @@ export default class RecipeLinker extends React.PureComponent {
       attribution: path(['att'], externalParams),
       sourceUrl: path(['src'], externalParams),
       ingredientStrings: [].concat(path(['ing'], externalParams)),
+      servings: path(['srv'], externalParams),
+      cookTime: path(['ctm'], externalParams),
+      prepTime: path(['ptm'], externalParams),
+      unattendedTime: path(['utm'], externalParams),
     };
   };
 

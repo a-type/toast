@@ -4,7 +4,7 @@ import gcloudStorage from 'services/gcloudStorage';
 import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
 
 export const RECIPE_FIELDS =
-  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt, .views, .servings';
+  '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt, .views, .servings, .cookTime, .prepTime, .unattendedTime';
 export const DEFAULTS = {
   title: 'Untitled',
   published: false,
@@ -131,6 +131,9 @@ export const updateRecipeDetails = async (id, input, ctx) => {
               'sourceUrl',
               'displayType',
               'servings',
+              'cookTime',
+              'prepTime',
+              'unattendedTime',
             ],
             input,
           ),
