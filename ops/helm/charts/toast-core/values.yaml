@@ -22,7 +22,7 @@ tls:
 db:
   creds:
     secretName: neo4j-creds
-  hosts: 
+  hosts:
     bolt: bolt+routing://neo4j-prod-neo4j-core-0.neo4j-prod-neo4j.toast-prod.svc.cluster.local:7687
 
 resources: {}
@@ -48,3 +48,6 @@ application:
   port: 4000
   jwt:
     secretName: jwt-token-secret
+  storage:
+    bucketNameSecretName: media-bucket-prod
+    projectIdSecretName: project-id

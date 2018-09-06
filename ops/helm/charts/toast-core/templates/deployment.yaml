@@ -47,6 +47,16 @@ spec:
                 key: tokenSecret
           - name: PORT
             value: "{{ .Values.application.port }}"
+          - name: GCLOUD_MEDIA_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.application.storage.bucketNameSecretName }}
+                key: bucket
+          - name: GCLOUD_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.application.storage.projectIdSecretName }}
+                key: id
       volumes:
       - name: tls-secret
         secret:
