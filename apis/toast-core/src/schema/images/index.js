@@ -12,7 +12,7 @@ extend type Recipe {
 }
 
 input ImageCreateInput {
-  file: Upload!
+  file: Upload
   attribution: String
 }
 

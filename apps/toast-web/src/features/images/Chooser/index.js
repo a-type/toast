@@ -1,7 +1,31 @@
 // @flow
 import React, { type Node } from 'react';
-import { Icon, Pill } from 'components/generic';
+import { Icon, Pill, Button } from 'components/generic';
 import readAndCompressImage from 'browser-image-resizer';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+const Input = styled.input`
+  display: block;
+  height: 0;
+  width: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  opacity: 0;
+`;
+const Label = Button.withComponent('label');
+const Preview = styled.div`
+  width: 41px;
+  height: 41px;
+  background-image: url(${props => props.src});
+  background-size: cover;
+  border-radius: var(--border-radius-md);
+  margin-left: var(--spacing-sm);
+`;
 
 const defaultImageConfig = {
   quality: 0.9,
@@ -10,18 +34,48 @@ const defaultImageConfig = {
 };
 
 type Props = {
-  onImageChange(image: ?File): any,
+  onChange(image: ?File): any,
   id: ?string,
   children: Node,
   config: {},
+  value: File | string | null,
 };
 
-export default class ImageChooser extends React.Component<Props> {
+type State = {
+  preview: ?string,
+};
+
+export default class ImageChooser extends React.Component<Props, State> {
   static defaultProps = {
     id: null,
+    preview: null,
+  };
+
+  state = {
+    preview: null,
   };
 
   id: string = `fileUpload_${Math.floor(Math.random() * 1000000000)}`;
+
+  componentDidMount() {
+    if (this.props.value && typeof this.props.value === 'string') {
+      this.setState({ preview: this.props.value });
+    }
+  }
+
+  componentDidUpdate(oldProps) {
+    if (oldProps.value !== this.props.value) {
+      if (typeof this.props.value === 'string') {
+        this.setState({ preview: this.props.value });
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.setState({ preview: reader.result });
+        };
+        reader.readAsDataURL(this.props.value);
+      }
+    }
+  }
 
   handleChange = async (ev: Event) => {
     const config = this.props.config || defaultImageConfig;
@@ -29,27 +83,28 @@ export default class ImageChooser extends React.Component<Props> {
 
     if (file) {
       const resizedImage = await readAndCompressImage(file, config);
-      this.props.onImageChange(resizedImage);
+      this.props.onChange(resizedImage);
     } else {
-      this.props.onImageChange(null);
+      this.props.onChange(null);
     }
   };
 
   render() {
-    const { id } = this.props;
+    const { id, children, onChange, config, value, ...rest } = this.props;
+    const { preview } = this.state;
 
     return (
-      <div>
-        <input
+      <Container>
+        <Input
           style={{ display: 'none' }}
           type="file"
           id={id || this.id}
           onChange={this.handleChange}
+          {...rest}
         />
-        <label htmlFor={id || this.id} style={{ cursor: 'pointer' }}>
-          {this.props.children}
-        </label>
-      </div>
+        <Label htmlFor={id || this.id}>{children}</Label>
+        {preview && <Preview src={preview} />}
+      </Container>
     );
   }
 }

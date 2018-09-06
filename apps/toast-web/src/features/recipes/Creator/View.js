@@ -166,7 +166,7 @@ export default class RecipeCreator extends React.PureComponent {
     const { queryData } = this.state;
 
     return (
-      <SingleColumn headerImageSrc={path(['coverImage', 'url'], recipe)}>
+      <SingleColumn headerImage={path(['coverImage'], recipe)}>
         <SingleColumn.Content>
           {this.renderTitle()}
           <Stages
