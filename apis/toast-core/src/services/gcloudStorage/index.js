@@ -3,6 +3,9 @@ import config from 'config';
 import uuid from 'uuid';
 import logger from 'logger';
 
+logger.info('GCloud Project ID: ', config.gcloud.projectId);
+logger.info('GCloud Media Bucket: ', config.gcloud.storage.bucket);
+
 const storage = new Storage({
   projectId: config.gcloud.projectId,
 });
