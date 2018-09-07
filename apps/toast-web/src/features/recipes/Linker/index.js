@@ -25,8 +25,8 @@ const LinkRecipe = gql`
   }
 `;
 
-const UploadImage = gql`
-  mutation UploadImage($id: ID!, $input: ImageCreateInput!) {
+const SetImage = gql`
+  mutation SetImage($id: ID!, $input: ImageCreateInput!) {
     updateRecipeCoverImage(id: $id, input: $input) {
       id
       coverImage {
@@ -95,12 +95,8 @@ class RecipeLinker extends React.PureComponent {
     // attach an image if one was provided
     const { recipeData } = this.state;
 
-    console.log(recipeData);
-
     if (recipeData.image) {
-      const blob = await binaryStringToBlob(recipeData.image);
-
-      await this.props.uploadImage(recipe.id, blob, recipeData.attribution);
+      await this.props.setImage(recipe.id, recipeData.image, recipeData.attribution);
     }
 
     this.props.onDone(recipe);
@@ -131,6 +127,6 @@ class RecipeLinker extends React.PureComponent {
   }
 }
 
-export default graphql(UploadImage, { props: ({ mutate }) => ({
-  uploadImage: (id, image, attribution) => mutate({ variables: { id, input: { file: image, attribution, }}})
+export default graphql(SetImage, { props: ({ mutate }) => ({
+  setImage: (id, image, attribution) => mutate({ variables: { id, input: { url: image, attribution, }}})
 })})(RecipeLinker);

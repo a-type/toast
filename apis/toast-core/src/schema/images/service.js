@@ -1,6 +1,7 @@
 import gcloudStorage from 'services/gcloudStorage';
 import { RECIPE_FIELDS } from 'schema/recipes/service';
 import uuid from 'uuid';
+import fetch from 'node-fetch';
 
 export const IMAGE_FIELDS = `.id, .url, .attribution`;
 
@@ -21,7 +22,12 @@ export const getRecipeCoverImage = async (id, ctx) => {
 };
 
 export const updateRecipeCoverImage = async (id, input, ctx) => {
-  const file = await input.file;
+  let file = await input.file;
+  if (!file && input.url) {
+    const response = await fetch(input.url);
+    file = await response.blob();
+  }
+
   if (file) {
     const uploaded = await gcloudStorage.upload(file, 'images');
     return ctx.transaction(async tx => {

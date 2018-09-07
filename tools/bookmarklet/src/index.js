@@ -30,20 +30,10 @@ const run = async () => {
 
   const nutrition = data.nutrition || {};
 
-  let img = null;
-  if (data.image) {
-    // find image element
-    const recipeContext = document.querySelector('[itemscope][itemtype="http://schema.org/Recipe"]');
-    const img = recipeContext.querySelector('[itemprop="image"]');
-    const imageCanvas = await imgToCanvas(img);
-    const blob = await canvasToBlob(imageCanvas);
-    img = await blobToBinaryString(blob);
-  }
-
   const query = {
     ttl: data.name.trim(),
     dsc: data.description.trim(),
-    img,
+    img: data.image,
     att: data.author.trim() + ' on ' + sitename,
     aut: data.author,
     cph: data.copyrightHolder,

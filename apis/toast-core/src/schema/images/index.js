@@ -13,6 +13,7 @@ extend type Recipe {
 
 input ImageCreateInput {
   file: Upload
+  url: String
   attribution: String
 }
 

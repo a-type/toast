@@ -60,6 +60,7 @@
     "neo4j-driver": "^1.5.3",
     "neo4j-graphql-binding": "^1.0.3",
     "neo4j-graphql-js": "^0.1.14",
+    "node-fetch": "^2.2.0",
     "parse-unit": "^1.0.1",
     "ramda": "^0.25.0",
     "shortid": "^2.2.12",
