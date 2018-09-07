@@ -1,8 +1,21 @@
 import React from 'react';
-import { Mutation } from 'react-apollo';
+import { Mutation, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Display from './Display';
-import { path } from 'ramda';
+import { path, pick } from 'ramda';
+import { binaryStringToBlob } from 'blob-util';
+
+const linkProps = [
+  'title',
+  'description',
+  'attribution',
+  'sourceUrl',
+  'ingredientStrings',
+  'servings',
+  'cookTime',
+  'prepTime',
+  'unattendedTime',
+];
 
 const LinkRecipe = gql`
   mutation LinkRecipe($input: RecipeLinkInput!) {
@@ -12,12 +25,23 @@ const LinkRecipe = gql`
   }
 `;
 
-export default class RecipeLinker extends React.PureComponent {
-  state = { error: null };
+const UploadImage = gql`
+  mutation UploadImage($id: ID!, $input: ImageCreateInput!) {
+    updateRecipeCoverImage(id: $id, input: $input) {
+      id
+      coverImage {
+        id
+        url
+        attribution
+      }
+    }
+  }
+`;
 
-  parseProvidedData = () => {
-    const { externalParams = {} } = this.props;
+class RecipeLinker extends React.PureComponent {
+  state = { error: null, recipeData: null };
 
+  parseProvidedData = externalParams => {
     return {
       title: path(['ttl'], externalParams),
       description: path(['dsc'], externalParams),
@@ -28,28 +52,77 @@ export default class RecipeLinker extends React.PureComponent {
       cookTime: path(['ctm'], externalParams),
       prepTime: path(['ptm'], externalParams),
       unattendedTime: path(['utm'], externalParams),
+      image: path(['img'], externalParams),
+      nutrition: {
+        calories: path(['ncal'], externalParams),
+        carbohydrateContent: path(['ncrb'], externalParams),
+        cholesterolContent: path(['ncol'], externalParams),
+        fatContent: path(['nfat'], externalParams),
+        fiberContent: path(['fbr'], externalParams),
+        proteinContent: path(['nprt'], externalParams),
+        saturatedFatContent: path(['nsft'], externalParams),
+        servingSize: path(['nsvs'], externalParams),
+        sodiumContent: path(['nsdm'], externalParams),
+        sugarContent: path(['nsgr'], externalParams),
+        transFatContent: path(['ntft'], externalParams),
+        unsaturatedFatContent: path(['nuft'], externalParams),
+      },
     };
   };
+
+  componentDidMount() {
+    if (this.props.externalParams) {
+      if (this.props.externalParams.mode !== 'postMessage') {
+        this.setState({ recipeData: this.parseProvidedData(this.props.externalParams) });
+      } else {
+        // wait for post message
+        window.addEventListener('message', this.handleMessage, false);
+      }
+    }
+  }
+
+  handleMessage = message => {
+    if (message.data && message.data.type === 'recipeData') {
+      this.setState({ recipeData: this.parseProvidedData(message.data.data) });
+    }
+  }
 
   handleError = err => {
     this.setState({ error: err });
   };
 
+  handleDone = async recipe => {
+    // attach an image if one was provided
+    const { recipeData } = this.state;
+
+    console.log(recipeData);
+
+    if (recipeData.image) {
+      const blob = await binaryStringToBlob(recipeData.image);
+
+      await this.props.uploadImage(recipe.id, blob, recipeData.attribution);
+    }
+
+    this.props.onDone(recipe);
+  };
+
   render() {
-    const { error } = this.state;
+    const { error, recipeData } = this.state;
 
     if (error) {
       return <div>{error.message}</div>;
     }
 
-    const parsed = this.parseProvidedData();
+    if (!recipeData) {
+      return null;
+    }
 
     return (
-      <Mutation mutation={LinkRecipe} variables={{ input: parsed }}>
+      <Mutation mutation={LinkRecipe} variables={{ input: pick(linkProps, recipeData) }}>
         {save => (
           <Display
             save={save}
-            onDone={this.props.onDone}
+            onDone={this.handleDone}
             onError={this.handleError}
           />
         )}
@@ -57,3 +130,7 @@ export default class RecipeLinker extends React.PureComponent {
     );
   }
 }
+
+export default graphql(UploadImage, { props: ({ mutate }) => ({
+  uploadImage: (id, image, attribution) => mutate({ variables: { id, input: { file: image, attribution, }}})
+})})(RecipeLinker);

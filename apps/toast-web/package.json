@@ -71,6 +71,7 @@
     "apollo-link-http": "^1.5.4",
     "apollo-link-state": "^0.4.1",
     "apollo-upload-client": "^8.0.0",
+    "blob-util": "^2.0.2",
     "browser-image-resizer": "^1.2.0",
     "change-case": "^3.0.2",
     "compromise": "^11.12.0",

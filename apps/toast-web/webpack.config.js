@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const history = require('connect-history-api-fallback');
 const convert = require('koa-connect');
 const proxy = require('http-proxy-middleware');
+const fs = require('fs');
 
 module.exports = {
   mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
@@ -72,5 +73,9 @@ module.exports = {
       app.use(convert(proxy('/api', { target: 'http://localhost:4000' })));
       app.use(convert(history()));
     },
+    https: {
+      key: fs.readFileSync(process.env.SSL_KEY_PATH),
+      cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+    }
   },
 };

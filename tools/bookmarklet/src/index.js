@@ -1,10 +1,13 @@
 import microdata from 'microdata';
 import querystring from 'query-string';
 import { toSeconds } from 'iso8601-duration';
+import sendToFrame from './sendToFrame';
+import { blobToBinaryString, imgSrcToBlob, canvasToBlob } from 'blob-util';
+import imgToCanvas from './imgToCanvas';
 
-const HOST = 'http://localhost:8080';
+const HOST = 'https://localhost:8080';
 
-const run = () => {
+const run = async () => {
   const data = microdata('http://schema.org/Recipe')[0];
   console.info(data);
   const sitenameMeta = document.head.querySelector(
@@ -27,10 +30,20 @@ const run = () => {
 
   const nutrition = data.nutrition || {};
 
+  let img = null;
+  if (data.image) {
+    // find image element
+    const recipeContext = document.querySelector('[itemscope][itemtype="http://schema.org/Recipe"]');
+    const img = recipeContext.querySelector('[itemprop="image"]');
+    const imageCanvas = await imgToCanvas(img);
+    const blob = await canvasToBlob(imageCanvas);
+    img = await blobToBinaryString(blob);
+  }
+
   const query = {
     ttl: data.name.trim(),
     dsc: data.description.trim(),
-    img: data.image,
+    img,
     att: data.author.trim() + ' on ' + sitename,
     aut: data.author,
     cph: data.copyrightHolder,
@@ -64,8 +77,10 @@ const run = () => {
     return filtered;
   }, {});
 
-  const url = HOST + '/recipes/link?' + querystring.stringify(filteredQuery);
-  window.open(url, '_blank');
+  // const url = HOST + '/recipes/link?' + querystring.stringify(filteredQuery);
+  // window.open(url, '_blank');
+
+  sendToFrame(filteredQuery, HOST);
 };
 
-run();
+run().then(() => { console.log('done'); }).catch(console.error);
