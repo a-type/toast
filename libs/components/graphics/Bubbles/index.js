@@ -82,14 +82,16 @@ export default class Bubbles extends React.PureComponent<Props, State> {
         style={style}
         innerRef={this.wrapperRef}
       >
-        {new Array(bubbleCount).fill(null).map((_, key) => (
-          <Bubble
-            colorOptions={bubbleColors}
-            show={this.state.showBubbles}
-            key={key}
-            size={bubbleSize}
-          />
-        ))}
+        {new Array(bubbleCount)
+          .fill(null)
+          .map((_, key) => (
+            <Bubble
+              colorOptions={bubbleColors}
+              show={this.state.showBubbles}
+              key={key}
+              size={bubbleSize}
+            />
+          ))}
         {children}
       </Wrapper>
     );

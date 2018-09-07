@@ -1,18 +1,15 @@
 const path = require('path');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const webpack = require('webpack');
-const history = require('connect-history-api-fallback');
-const convert = require('koa-connect');
-const proxy = require('http-proxy-middleware');
+const cors = require('@koa/cors');
 
 module.exports = {
-  mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 
   entry: ['babel-polyfill', 'resize-observer-polyfill', './src/index.js'],
   output: {
     publicPath: '/',
     path: path.resolve(process.cwd(), 'dist'),
+    filename: 'toast-bookmarklet.js',
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
@@ -58,19 +55,11 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebPackPlugin({
-      template: './public/index.html',
-      inject: true,
-    }),
-    new webpack.NamedModulesPlugin(),
-    new ErrorOverlayPlugin(),
-  ],
+  plugins: [new webpack.NamedModulesPlugin()],
   serve: {
     content: [path.resolve(__dirname, 'public')],
     add: (app, middleware, options) => {
-      app.use(convert(proxy('/api', { target: 'http://localhost:4000' })));
-      app.use(convert(history()));
+      app.use(cors({ origin: '*' }));
     },
   },
 };

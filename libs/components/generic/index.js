@@ -7,7 +7,6 @@ export { default as Checkbox } from './Checkbox';
 export { default as Icon } from './Icon';
 export { default as Docked } from './Docked';
 export { default as Loader } from './Loader';
-export { default as Collapse } from './Collapse';
 export { default as Stages } from './Stages';
 export { default as Field } from './Field';
 export { default as Tip } from './Tip';
