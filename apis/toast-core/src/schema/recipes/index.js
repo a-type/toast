@@ -56,6 +56,10 @@ input RecipeLinkInput {
   attribution: String!
   sourceUrl: String!
   ingredientStrings: [String!]!
+  cookTime: Int
+  prepTime: Int
+  unattendedTime: Int
+  servings: Int
 }
 
 input RecipeDetailsUpdateInput {

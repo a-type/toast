@@ -2,31 +2,6 @@ import nlp from 'compromise';
 import plug from 'compromise-plugin';
 import parser from 'ingredients-parser';
 
-// const plugin = {
-//   name: 'ingredients-plugin',
-//   tags: {
-//     Ingredient: {
-//       isA: 'Noun'
-//     }
-//   },
-//   words: {
-//     pinch: 'Unit',
-//     can: 'Unit',
-//     box: 'Unit',
-//     ear: 'Unit',
-//     head: 'Unit',
-
-//     garlic: 'Ingredient'
-//   },
-//   patterns: {
-//     '#Noun': 'Ingredient',
-//     '#Adjective? #Noun': 'Ingredient',
-//     '#Adverb? #Verb #Noun': 'Ingredient'
-//   }
-// };
-
-// nlp.plugin(plug.pack(plugin));
-
 const abbreviations = {
   tsp: 'teaspoon',
   tbsp: 'tablespoon',

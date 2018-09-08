@@ -24,7 +24,7 @@ class IngredientItem extends React.Component {
 
     return (
       <b key={`value-${key}`}>
-        {toDisplay((preferredServings / servings) * value)}
+        {toDisplay(preferredServings / servings * value)}
       </b>
     );
   };
@@ -52,8 +52,10 @@ class IngredientItem extends React.Component {
   textArraySubstituted = (textArray, match, substituteFn) =>
     textArray.reduce((newArray, item, idx) => {
       if (typeof item === 'string' && item.includes(match)) {
-        const split = item.split(match);
-        return [...newArray, split[0], substituteFn(idx), split[1]];
+        const index = item.indexOf(match);
+        const before = item.slice(0, index);
+        const after = item.slice(index + match.length);
+        return [...newArray, before, substituteFn(idx), after];
       }
       return [...newArray, item];
     }, []);

@@ -19,9 +19,9 @@ export default class Logo extends React.PureComponent {
         onTouchStart={this.onMouseEnter}
         onTouchEnd={this.onMouseLeave}
       >
-        {new Array(5).fill(null).map((_, key) => (
-          <Bubble show={this.state.showBubbles} key={key} />
-        ))}
+        {new Array(5)
+          .fill(null)
+          .map((_, key) => <Bubble show={this.state.showBubbles} key={key} />)}
         <Text>Toast</Text>
       </Wrapper>
     );
