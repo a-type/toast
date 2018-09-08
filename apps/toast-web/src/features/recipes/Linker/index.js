@@ -7,7 +7,6 @@ import { binaryStringToBlob } from 'blob-util';
 
 const linkProps = [
   'title',
-  'description',
   'attribution',
   'sourceUrl',
   'ingredientStrings',
@@ -73,7 +72,9 @@ class RecipeLinker extends React.PureComponent {
   componentDidMount() {
     if (this.props.externalParams) {
       if (this.props.externalParams.mode !== 'postMessage') {
-        this.setState({ recipeData: this.parseProvidedData(this.props.externalParams) });
+        this.setState({
+          recipeData: this.parseProvidedData(this.props.externalParams),
+        });
       } else {
         // wait for post message
         window.addEventListener('message', this.handleMessage, false);
@@ -85,7 +86,7 @@ class RecipeLinker extends React.PureComponent {
     if (message.data && message.data.type === 'recipeData') {
       this.setState({ recipeData: this.parseProvidedData(message.data.data) });
     }
-  }
+  };
 
   handleError = err => {
     this.setState({ error: err });
@@ -96,7 +97,11 @@ class RecipeLinker extends React.PureComponent {
     const { recipeData } = this.state;
 
     if (recipeData.image) {
-      await this.props.setImage(recipe.id, recipeData.image, recipeData.attribution);
+      await this.props.setImage(
+        recipe.id,
+        recipeData.image,
+        recipeData.attribution,
+      );
     }
 
     this.props.onDone(recipe);
@@ -114,7 +119,10 @@ class RecipeLinker extends React.PureComponent {
     }
 
     return (
-      <Mutation mutation={LinkRecipe} variables={{ input: pick(linkProps, recipeData) }}>
+      <Mutation
+        mutation={LinkRecipe}
+        variables={{ input: pick(linkProps, recipeData) }}
+      >
         {save => (
           <Display
             save={save}
@@ -127,6 +135,9 @@ class RecipeLinker extends React.PureComponent {
   }
 }
 
-export default graphql(SetImage, { props: ({ mutate }) => ({
-  setImage: (id, image, attribution) => mutate({ variables: { id, input: { url: image, attribution, }}})
-})})(RecipeLinker);
+export default graphql(SetImage, {
+  props: ({ mutate }) => ({
+    setImage: (id, image, attribution) =>
+      mutate({ variables: { id, input: { url: image, attribution } } }),
+  }),
+})(RecipeLinker);

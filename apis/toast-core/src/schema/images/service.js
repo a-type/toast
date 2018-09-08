@@ -29,8 +29,7 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
     const response = await fetch(input.url);
     const filename = input.url.split('/').pop();
     const fileExt = filename.split('.').pop();
-    const blob = await response.blob();
-    const buffer = blob.buffer;
+    const buffer = await response.buffer();
     const stream = new Readable();
     stream._read = () => {};
     stream.push(buffer);
