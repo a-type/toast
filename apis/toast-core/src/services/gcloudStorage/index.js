@@ -15,7 +15,7 @@ const bucket = config.gcloud.storage.bucket;
 export default {
   upload: async (file, mediaType) => {
     const id = uuid();
-    const { stream, filename, mimetype, encoding } = file;
+    const { stream, filename, mimetype } = file;
 
     const directory = config.gcloud.storage.directories[mediaType];
     const fileName = `${directory}/${id}`;

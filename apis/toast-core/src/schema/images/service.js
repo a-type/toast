@@ -2,6 +2,8 @@ import gcloudStorage from 'services/gcloudStorage';
 import { RECIPE_FIELDS } from 'schema/recipes/service';
 import uuid from 'uuid';
 import fetch from 'node-fetch';
+import { Readable } from 'stream';
+import mime from 'mime-types';
 
 export const IMAGE_FIELDS = `.id, .url, .attribution`;
 
@@ -25,7 +27,20 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
   let file = await input.file;
   if (!file && input.url) {
     const response = await fetch(input.url);
-    file = await response.blob();
+    const filename = input.url.split('/').pop();
+    const fileExt = filename.split('.').pop();
+    const blob = await response.blob();
+    const buffer = blob.buffer;
+    const stream = new Readable();
+    stream._read = () => {};
+    stream.push(buffer);
+    stream.push(null);
+
+    file = {
+      stream,
+      filename,
+      mimetype: mime.lookup(fileExt),
+    };
   }
 
   if (file) {

@@ -180,4 +180,22 @@ describe('ingredient parser', () => {
       optional: false,
     });
   });
+
+  test('1 (15 ounce) can kidney beans, drained and rinsed', () => {
+    expect(parse('1 (15 ounce) can kidney beans, drained and rinsed')).toEqual({
+      value: {
+        raw: '1',
+        normalized: 1,
+      },
+      unit: {
+        raw: 'can',
+        normalized: 'can',
+      },
+      ingredient: {
+        raw: 'kidney beans',
+        normalized: 'kidney bean',
+      },
+      optional: false,
+    });
+  });
 });

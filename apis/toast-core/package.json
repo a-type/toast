@@ -4,7 +4,8 @@
   "description": "Toast API",
   "main": "src/server.js",
   "scripts": {
-    "dev": "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
+    "dev":
+      "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "babel-node ./db/indexes.js",
     "db:seed": "babel-node ./db/seeds.js",
@@ -26,9 +27,7 @@
     "type": "git",
     "url": "git+https://gitlab.com/a-type/toast-backend.git"
   },
-  "keywords": [
-    "Toast"
-  ],
+  "keywords": ["Toast"],
   "author": "Grant Forrest <gaforres@gmail.com>",
   "license": "ISC",
   "bugs": {
@@ -41,6 +40,7 @@
     "apollo-upload-server": "^5.0.0",
     "aws-sdk": "^2.229.1",
     "bcryptjs": "^2.4.3",
+    "blob-to-stream": "^1.0.3",
     "body-parser": "^1.18.2",
     "casual": "^1.5.19",
     "chalk": "^2.4.1",
