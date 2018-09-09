@@ -74,8 +74,10 @@ module.exports = {
       app.use(convert(history()));
     },
     https: {
-      key: fs.readFileSync(process.env.SSL_KEY_PATH),
-      cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-    }
+      key:
+        process.env.SSL_KEY_PATH && fs.readFileSync(process.env.SSL_KEY_PATH),
+      cert:
+        process.env.SSL_CERT_PATH && fs.readFileSync(process.env.SSL_CERT_PATH),
+    },
   },
 };
