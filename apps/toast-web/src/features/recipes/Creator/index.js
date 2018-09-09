@@ -29,15 +29,12 @@ export default props => (
     variables={{ id: props.recipeId }}
   >
     {result => {
-      if (props.recipeId && result.loading) {
-        return <Loader size="72px" />;
-      }
       if (result.error) {
         return <div>{result.error.message}</div>;
       }
 
       if (!result.data.recipe) {
-        return <View {...props} />;
+        return <View loading={result.loading} {...props} />;
       }
 
       if (
@@ -47,7 +44,9 @@ export default props => (
         return <Redirect to={`/recipes/${props.recipeId}`} />;
       }
 
-      return <View {...props} recipe={result.data.recipe} />;
+      return (
+        <View loading={result.loading} {...props} recipe={result.data.recipe} />
+      );
     }}
   </Query>
 );

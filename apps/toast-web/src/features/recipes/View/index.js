@@ -8,7 +8,7 @@ import gql from 'graphql-tag';
 import { pathOr, path } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
-import { SingleColumn } from 'components/layouts';
+import { Content, Hero } from 'components/layouts';
 import { Loader } from 'components/generic';
 import { H2, H1 } from 'components/typeset';
 import JumpControls from './JumpControls';
@@ -98,19 +98,13 @@ export default class RecipeView extends React.Component<Props> {
             return <div>{response.error.message}</div>;
           }
 
-          if (response.loading) {
-            return <Loader size="72px" />;
-          }
-
           return (
-            <SingleColumn
-              headerImage={pathOr(
-                null,
-                ['data', 'recipe', 'coverImage'],
-                response,
-              )}
-            >
-              <SingleColumn.Content>
+            <React.Fragment>
+              <Hero
+                image={pathOr(null, ['data', 'recipe', 'coverImage'], response)}
+                loading={response.loading}
+              />
+              <Content>
                 <H1 name="Title">
                   {pathOr('', ['data', 'recipe', 'title'], response)}
                 </H1>
@@ -135,12 +129,12 @@ export default class RecipeView extends React.Component<Props> {
                     src={path(['data', 'recipe', 'sourceUrl'], response)}
                   />
                 )}
-              </SingleColumn.Content>
-              <SingleColumn.Content>
+              </Content>
+              <Content>
                 <JumpControls />
-              </SingleColumn.Content>
+              </Content>
               <ViewSpy recipeId={recipeId} />
-            </SingleColumn>
+            </React.Fragment>
           );
         }}
       </Query>

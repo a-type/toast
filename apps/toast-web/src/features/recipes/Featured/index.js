@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { SingleColumn } from 'components/layouts';
+import { Content, Hero } from 'components/layouts';
 import Card from '../Card';
 import Spotlight from './Spotlight';
 import { path, pathOr } from 'ramda';
@@ -29,19 +29,20 @@ export default () => (
     {({ data, loading, error }) => {
       if (loading) {
         return (
-          <SingleColumn loading>
-            <SingleColumn.Content>
+          <React.Fragment>
+            <Hero loading />
+            <Content>
               <Spotlight.Skeleton />
-            </SingleColumn.Content>
-            <SingleColumn.Content>
+            </Content>
+            <Content>
               <H2>Popular Recipes</H2>
               <Card.Grid loading>
-                {new Array(9).fill(null).map((_, idx) => (
-                  <Card.Skeleton key={idx} />
-                ))}
+                {new Array(9)
+                  .fill(null)
+                  .map((_, idx) => <Card.Skeleton key={idx} />)}
               </Card.Grid>
-            </SingleColumn.Content>
-          </SingleColumn>
+            </Content>
+          </React.Fragment>
         );
       }
 
@@ -52,19 +53,20 @@ export default () => (
       const { recipes } = data;
 
       return (
-        <SingleColumn headerImage={pathOr(null, ['coverImage'], recipes[0])}>
-          <SingleColumn.Content>
+        <React.Fragment>
+          <Hero image={pathOr(null, ['coverImage'], recipes[0])} />
+          <Content>
             <Spotlight recipe={recipes[0]} />
-          </SingleColumn.Content>
-          <SingleColumn.Content>
+          </Content>
+          <Content>
             <H2>Popular Recipes</H2>
             <Card.Grid>
-              {recipes.slice(1).map(recipe => (
-                <Card recipe={recipe} key={recipe.id} />
-              ))}
+              {recipes
+                .slice(1)
+                .map(recipe => <Card recipe={recipe} key={recipe.id} />)}
             </Card.Grid>
-          </SingleColumn.Content>
-        </SingleColumn>
+          </Content>
+        </React.Fragment>
       );
     }}
   </Query>

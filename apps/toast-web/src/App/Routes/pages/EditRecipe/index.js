@@ -1,5 +1,6 @@
 import React from 'react';
 import Editor from 'features/recipes/Creator';
+import { SingleColumn } from 'components/layouts';
 import queryString from 'query-string';
 
 export default class EditRecipePage extends React.PureComponent {
@@ -18,11 +19,13 @@ export default class EditRecipePage extends React.PureComponent {
     const query = queryString.parse(location.search);
 
     return (
-      <Editor
-        recipeId={params.recipeId}
-        onCreate={this.redirectOnCreate}
-        externalParams={query}
-      />
+      <SingleColumn>
+        <Editor
+          recipeId={params.recipeId}
+          onCreate={this.redirectOnCreate}
+          externalParams={query}
+        />
+      </SingleColumn>
     );
   }
 }

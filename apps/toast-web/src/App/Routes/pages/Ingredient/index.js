@@ -6,8 +6,6 @@ import Details from 'features/ingredients/Details';
 
 export default ({ match: { params } }) => (
   <SingleColumn>
-    <SingleColumn.Content>
-      <Details ingredientId={params.ingredientId} />
-    </SingleColumn.Content>
+    <Details ingredientId={params.ingredientId} />
   </SingleColumn>
 );

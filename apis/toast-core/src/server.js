@@ -9,6 +9,7 @@ import { createContext } from './context';
 import { info, warn } from 'logger';
 import path from 'path';
 import minimist from 'minimist';
+import cors from 'cors';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -28,6 +29,11 @@ app.use(
   }),
 );
 app.use('/playground', playground({ endpoint: '/api' }));
+app.use('/bookmarklet/toast-bookmarklet.js', cors(), (req, res) =>
+  res.sendFile(
+    path.join(process.cwd(), 'client/bookmarklet/toast-bookmarklet.js'),
+  ),
+);
 app.use(express.static('client'));
 app.use((req, res) =>
   res.sendFile(path.join(process.cwd(), 'client/index.html')),

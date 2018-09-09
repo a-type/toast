@@ -1,6 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
+import { Content } from 'components/layouts';
 import { H1, H2, P } from 'components/typeset';
 import gql from 'graphql-tag';
 import RecipeCard from 'features/recipes/Card';
@@ -36,14 +37,14 @@ export default class extends React.Component {
     }
 
     return (
-      <React.Fragment>
+      <Content>
         <H2>{title}</H2>
         <RecipeCard.Grid>
           {recipes.map(recipe => (
             <RecipeCard recipe={recipe} key={recipe.id} />
           ))}
         </RecipeCard.Grid>
-      </React.Fragment>
+      </Content>
     );
   };
 
@@ -61,12 +62,14 @@ export default class extends React.Component {
           const { name, recipes, discoveredRecipes, draftRecipes } = data.user;
 
           return (
-            <div>
-              <H1>{name || 'Anonymous'}</H1>
+            <React.Fragment>
+              <Content>
+                <H1>{name || 'Anonymous'}</H1>
+              </Content>
               {this.renderRecipes('Your Drafts', draftRecipes)}
               {this.renderRecipes('Your Recipes', recipes)}
               {this.renderRecipes('Your Finds', discoveredRecipes)}
-            </div>
+            </React.Fragment>
           );
         }}
       </Query>

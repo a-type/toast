@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { Form, Field } from 'components/generic';
+import { Form, Field, Input, Button } from 'components/generic';
 import { H1 } from 'components/typeset';
-import { Input, Button } from 'components/generic';
+import { Content } from 'components/layouts';
 import { sentence } from 'change-case';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
@@ -51,7 +51,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
     switch (mode) {
       case 'LOG_IN':
         return (
-          <React.Fragment>
+          <Content>
             <Field label="Your email">
               <Input
                 value={values.email}
@@ -69,11 +69,11 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 required
               />
             </Field>
-          </React.Fragment>
+          </Content>
         );
       case 'SIGN_UP':
         return (
-          <React.Fragment>
+          <Content>
             <Field label="Your email">
               <Input
                 value={values.email}
@@ -107,7 +107,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 required
               />
             </Field>
-          </React.Fragment>
+          </Content>
         );
     }
   };

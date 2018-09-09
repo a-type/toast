@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import Display from './Display';
 import { path, pick } from 'ramda';
 import { binaryStringToBlob } from 'blob-util';
+import { Content } from 'components/layouts';
 
 const linkProps = [
   'title',
@@ -119,18 +120,20 @@ class RecipeLinker extends React.PureComponent {
     }
 
     return (
-      <Mutation
-        mutation={LinkRecipe}
-        variables={{ input: pick(linkProps, recipeData) }}
-      >
-        {save => (
-          <Display
-            save={save}
-            onDone={this.handleDone}
-            onError={this.handleError}
-          />
-        )}
-      </Mutation>
+      <Content>
+        <Mutation
+          mutation={LinkRecipe}
+          variables={{ input: pick(linkProps, recipeData) }}
+        >
+          {save => (
+            <Display
+              save={save}
+              onDone={this.handleDone}
+              onError={this.handleError}
+            />
+          )}
+        </Mutation>
+      </Content>
     );
   }
 }

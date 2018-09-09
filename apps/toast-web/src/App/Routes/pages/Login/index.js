@@ -10,9 +10,7 @@ export default class LoginPage extends React.PureComponent {
   render() {
     return (
       <SingleColumn>
-        <SingleColumn.Content>
-          <Login onLogin={this.handleLogin} />
-        </SingleColumn.Content>
+        <Login onLogin={this.handleLogin} />
       </SingleColumn>
     );
   }

@@ -7,7 +7,7 @@ import Publish, { RecipeCreatePublishFragment } from './Publish';
 import { Stages } from 'components/generic';
 import { H1, Link } from 'components/typeset';
 import { PublishedTag } from './components';
-import { SingleColumn } from 'components/layouts';
+import { Content, Hero } from 'components/layouts';
 import { pick, path, mergeDeepLeft } from 'ramda';
 import gql from 'graphql-tag';
 
@@ -162,12 +162,17 @@ export default class RecipeCreator extends React.PureComponent {
   };
 
   render() {
-    const { recipeId, recipe } = this.props;
+    const { recipeId, recipe, loading } = this.props;
     const { queryData } = this.state;
 
+    if (loading) {
+      return <Hero loading />;
+    }
+
     return (
-      <SingleColumn headerImage={path(['coverImage'], recipe)}>
-        <SingleColumn.Content>
+      <React.Fragment>
+        <Hero loading={loading} image={path(['coverImage'], recipe)} />
+        <Content>
           {this.renderTitle()}
           <Stages
             stage={this.state.stage}
@@ -236,8 +241,8 @@ export default class RecipeCreator extends React.PureComponent {
               />
             </Stages.Stage>
           </Stages>
-        </SingleColumn.Content>
-      </SingleColumn>
+        </Content>
+      </React.Fragment>
     );
   }
 }

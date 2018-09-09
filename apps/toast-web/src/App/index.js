@@ -4,6 +4,7 @@ import Layout from './Layout';
 import { NavBar } from 'features/structure';
 import { hot } from 'react-hot-loader';
 import { Global as GlobalMessages } from 'features/messages';
+import { Background } from 'components/generic';
 import { show } from '../messages';
 
 class App extends React.Component {
@@ -25,15 +26,17 @@ class App extends React.Component {
 
   render() {
     return (
-      <Layout>
-        <Layout.Navigation>
-          <NavBar />
-        </Layout.Navigation>
-        <Layout.Content>
-          <Routes />
-        </Layout.Content>
-        <GlobalMessages />
-      </Layout>
+      <Background.Manager>
+        <Layout>
+          <Layout.Navigation>
+            <NavBar />
+          </Layout.Navigation>
+          <Layout.Content>
+            <Routes />
+          </Layout.Content>
+          <GlobalMessages />
+        </Layout>
+      </Background.Manager>
     );
   }
 }

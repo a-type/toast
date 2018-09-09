@@ -5,6 +5,7 @@ import { Query } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import RecipeCard from 'features/recipes/Card';
 import { H1, P, H2 } from 'components/typeset';
+import { Content } from 'components/layouts';
 import { sentence } from 'change-case';
 
 export const Basic = gql`
@@ -30,7 +31,7 @@ const renderView = ({ data, loading, error }) => {
   const { name, description, attribution, recipes } = data.ingredient;
 
   return (
-    <div>
+    <Content>
       <H1>{sentence(name)}</H1>
       <P>{description || 'No details'}</P>
       {attribution && (
@@ -40,11 +41,9 @@ const renderView = ({ data, loading, error }) => {
       )}
       <H2>Recipes</H2>
       <RecipeCard.Grid>
-        {recipes.map(recipe => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
+        {recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
       </RecipeCard.Grid>
-    </div>
+    </Content>
   );
 };
 

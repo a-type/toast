@@ -1,13 +1,13 @@
 // @flow
 
 import React from 'react';
-import { SingleColumn } from 'components/layouts';
+import { SingleColumn, Content } from 'components/layouts';
 import Layout from './Layout';
 import { Filters, Recipes, Ingredients } from 'features/search';
 
 export default () => (
   <SingleColumn wide>
-    <SingleColumn.Content>
+    <Content>
       <Layout>
         <Layout.Ingredients>
           <Ingredients />
@@ -19,6 +19,6 @@ export default () => (
           <Recipes />
         </Layout.Recipes>
       </Layout>
-    </SingleColumn.Content>
+    </Content>
   </SingleColumn>
 );

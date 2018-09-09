@@ -1,5 +1,6 @@
 import React from 'react';
 import Linker from 'features/recipes/Linker';
+import { SingleColumn } from 'components/layouts';
 import queryString from 'query-string';
 
 export default class LinkRecipePage extends React.PureComponent {
@@ -12,6 +13,10 @@ export default class LinkRecipePage extends React.PureComponent {
 
     const query = queryString.parse(location.search);
 
-    return <Linker onDone={this.redirectOnDone} externalParams={query} />;
+    return (
+      <SingleColumn>
+        <Linker onDone={this.redirectOnDone} externalParams={query} />
+      </SingleColumn>
+    );
   }
 }
