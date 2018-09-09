@@ -5,16 +5,20 @@ const cors = require('@koa/cors');
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 
-  entry: ['babel-polyfill', 'resize-observer-polyfill', './src/index.js'],
+  entry: [
+    'babel-polyfill',
+    'resize-observer-polyfill',
+    path.resolve(__dirname, './src/index.js'),
+  ],
   output: {
     publicPath: '/',
-    path: path.resolve(process.cwd(), 'dist'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'toast-bookmarklet.js',
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
-      components: path.resolve(__dirname, '../../libs/components'),
+      components: path.resolve(__dirname, '../../../libs/components'),
       'styled-components': path.resolve(
         __dirname,
         'node_modules/styled-components',

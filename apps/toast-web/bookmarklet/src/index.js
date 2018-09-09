@@ -73,4 +73,8 @@ const run = async () => {
   sendToFrame(filteredQuery, HOST);
 };
 
-run().then(() => { console.log('done'); }).catch(console.error);
+run()
+  .then(() => {
+    console.log('done');
+  })
+  .catch(console.error);

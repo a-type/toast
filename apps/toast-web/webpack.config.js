@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const history = require('connect-history-api-fallback');
 const convert = require('koa-connect');
 const proxy = require('http-proxy-middleware');
+const cors = require('@koa/cors');
 const fs = require('fs');
 
 module.exports = {
@@ -18,7 +19,6 @@ module.exports = {
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
-      components: path.resolve(__dirname, '../../libs/components'),
       'styled-components': path.resolve(
         __dirname,
         'node_modules/styled-components',
@@ -71,7 +71,11 @@ module.exports = {
     content: [path.resolve(__dirname, 'public')],
     add: (app, middleware, options) => {
       app.use(convert(proxy('/api', { target: 'http://localhost:4000' })));
+      app.use(
+        convert(proxy('/bookmarklet', { target: 'http://localhost:9001' })),
+      );
       app.use(convert(history()));
+      app.use(cors({ origin: '*' }));
     },
     https: {
       key:
