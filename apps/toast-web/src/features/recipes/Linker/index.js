@@ -1,10 +1,41 @@
 import React from 'react';
 import { Mutation, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Display } from './components';
 import { path, pick } from 'ramda';
 import { binaryStringToBlob } from 'blob-util';
 import { Content } from 'components/layouts';
+import { compose } from 'recompose';
+import { Loader, Icon } from 'components/generic';
+import { Link } from 'components/typeset';
+import Foreground from 'components/generic/Foreground';
+import styled from 'styled-components';
+
+const Overlay = styled.div`
+  pointer-events: initial;
+  background: var(--color-brand);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100000;
+
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    margin-left: auto;
+    margin-right: auto;
+
+    &:first-child {
+      margin-top: auto;
+    }
+
+    &:last-child {
+      margin-bottom: auto;
+    }
+  }
+`;
 
 const linkProps = [
   'title',
@@ -39,7 +70,7 @@ const SetImage = gql`
 `;
 
 class RecipeLinker extends React.PureComponent {
-  state = { recipeData: null };
+  state = { recipeData: null, created: null, error: null };
 
   parseProvidedData = externalParams => {
     return {
@@ -73,9 +104,7 @@ class RecipeLinker extends React.PureComponent {
   componentDidMount() {
     if (this.props.externalParams) {
       if (this.props.externalParams.mode !== 'postMessage') {
-        this.setState({
-          recipeData: this.parseProvidedData(this.props.externalParams),
-        });
+        this.link(this.parseProvidedData(this.props.externalParams));
       } else {
         // wait for post message
         window.addEventListener('message', this.handleMessage, false);
@@ -83,58 +112,85 @@ class RecipeLinker extends React.PureComponent {
     }
   }
 
-  handleMessage = message => {
-    if (message.data && message.data.type === 'recipeData') {
-      this.setState({ recipeData: this.parseProvidedData(message.data.data) });
+  link = async recipeData => {
+    try {
+      const { data } = await this.props.link(recipeData);
+      const recipe = data.linkRecipe;
+
+      // attach an image if one was provided
+      if (recipeData.image) {
+        await this.props.setImage(
+          recipe.id,
+          recipeData.image,
+          recipeData.attribution,
+        );
+      }
+
+      this.setState({ created: data.linkRecipe });
+
+      if (this.props.externalParams.mode !== 'postMessage') {
+        this.props.onDone();
+      }
+    } catch (err) {
+      console.error(err);
+      this.setState({ error: err });
     }
   };
 
-  handleError = err => {};
-
-  handleDone = async recipe => {
-    // attach an image if one was provided
-    const { recipeData } = this.state;
-
-    if (recipeData.image) {
-      await this.props.setImage(
-        recipe.id,
-        recipeData.image,
-        recipeData.attribution,
-      );
+  handleMessage = message => {
+    if (message.data && message.data.type === 'recipeData') {
+      this.link(this.parseProvidedData(message.data.data));
     }
-
-    // this.props.onDone(recipe);
   };
 
   render() {
-    const { recipeData } = this.state;
+    const { error, created } = this.state;
 
-    if (!recipeData) {
-      return null;
+    if (error) {
+      return (
+        <Foreground>
+          <Overlay>
+            <Icon name="explanation-mark" size="72px" />
+            <div>
+              Sorry, we couldn't scan this recipe. You can still add it
+              manually, though.
+            </div>
+          </Overlay>
+        </Foreground>
+      );
     }
 
     return (
-      <Content>
-        <Mutation
-          mutation={LinkRecipe}
-          variables={{ input: pick(linkProps, recipeData) }}
-        >
-          {save => (
-            <Display
-              save={save}
-              onDone={this.handleDone}
-              onError={this.handleError}
-            />
+      <Foreground>
+        <Overlay>
+          {created ? (
+            <React.Fragment>
+              <div>Scanned!</div>
+              <div>Click below to view this recipe in Toast</div>
+              <Link.Clear newTab to={`/recipes/${created.id}`}>
+                <Icon name="next-step" size="72px" />
+              </Link.Clear>
+            </React.Fragment>
+          ) : (
+            <Loader size="72px" />
           )}
-        </Mutation>
-      </Content>
+        </Overlay>
+      </Foreground>
     );
   }
 }
 
-export default graphql(SetImage, {
-  props: ({ mutate }) => ({
-    setImage: (id, image, attribution) =>
-      mutate({ variables: { id, input: { url: image, attribution } } }),
+export default compose(
+  graphql(SetImage, {
+    props: ({ mutate }) => ({
+      setImage: (id, image, attribution) =>
+        mutate({ variables: { id, input: { url: image, attribution } } }),
+    }),
   }),
-})(RecipeLinker);
+  graphql(LinkRecipe, {
+    props: ({ mutate }) => ({
+      link: recipeData =>
+        mutate({ variables: { input: pick(linkProps, recipeData) } }),
+    }),
+  }),
+)(RecipeLinker);
