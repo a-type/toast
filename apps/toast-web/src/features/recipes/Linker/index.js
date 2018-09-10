@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mutation, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import Display from './Display';
+import { Display } from './components';
 import { path, pick } from 'ramda';
 import { binaryStringToBlob } from 'blob-util';
 import { Content } from 'components/layouts';
@@ -39,7 +39,7 @@ const SetImage = gql`
 `;
 
 class RecipeLinker extends React.PureComponent {
-  state = { error: null, recipeData: null };
+  state = { recipeData: null };
 
   parseProvidedData = externalParams => {
     return {
@@ -89,9 +89,7 @@ class RecipeLinker extends React.PureComponent {
     }
   };
 
-  handleError = err => {
-    this.setState({ error: err });
-  };
+  handleError = err => {};
 
   handleDone = async recipe => {
     // attach an image if one was provided
@@ -105,15 +103,11 @@ class RecipeLinker extends React.PureComponent {
       );
     }
 
-    this.props.onDone(recipe);
+    // this.props.onDone(recipe);
   };
 
   render() {
-    const { error, recipeData } = this.state;
-
-    if (error) {
-      return <div>{error.message}</div>;
-    }
+    const { recipeData } = this.state;
 
     if (!recipeData) {
       return null;

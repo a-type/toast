@@ -5,24 +5,6 @@ import { pathOr, path } from 'ramda';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
-const Banner = styled.div`
-  background: var(--color-brand);
-  color: var(--color-white);
-  padding: var(--spacing-md);
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  @media (min-width: 720px) {
-    padding: var(--spacing-lg);
-  }
-
-  @media (min-width: 900px) {
-    padding: var(--spacing-xl);
-  }
-`;
-
 const Layout = styled.div`
   width: 100%;
   max-width: ${props => (props.wide ? 'auto' : '900px')};
@@ -35,19 +17,19 @@ const Layout = styled.div`
   pointer-events: none;
   top: ${props => (props.hasHeaderImage ? '20vh' : 'var(--spacing-xl)')};
 
-  & > ${CLASS_NAMES.CONTENT} {
+  & > * {
     pointer-events: initial;
-    padding: ${props => (props.hasHeaderImage ? 'var(--spacing-md)' : '0')};
+  }
+
+  & > .${CLASS_NAMES.CONTENT} {
     margin: 0;
-    background: var(--color-white);
     transition: 0.2s ease all;
     border-radius: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
   }
 
   @media (min-width: 900px) {
-    & > ${CLASS_NAMES.CONTENT} {
-      padding: ${props => (props.hasHeaderImage ? 'var(--spacing-xl)' : '0')};
+    & > .${CLASS_NAMES.CONTENT} {
       margin-left: var(--spacing-xl);
       margin-right: var(--spacing-xl);
       margin-bottom: var(--spacing-lg);

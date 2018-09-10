@@ -70,12 +70,17 @@ module.exports = {
   serve: {
     content: [path.resolve(__dirname, 'public')],
     add: (app, middleware, options) => {
+      app.use(cors({ origin: '*' }));
       app.use(convert(proxy('/api', { target: 'http://localhost:4000' })));
       app.use(
-        convert(proxy('/bookmarklet', { target: 'http://localhost:9001' })),
+        convert(
+          proxy('/bookmarklet', {
+            target: 'http://localhost:9001',
+            pathRewrite: path => path.replace('/bookmarklet', ''),
+          }),
+        ),
       );
       app.use(convert(history()));
-      app.use(cors({ origin: '*' }));
     },
     https: {
       key:

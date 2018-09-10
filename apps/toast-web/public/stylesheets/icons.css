@@ -1,5 +1,5 @@
 /*
- * Icon Font toast_icons
+ * Icon Font font_icons8
  * Made with love by Icons8 [ https://icons8.com/ ] using FontCustom [ https://github.com/FontCustom/fontcustom ]
  *
  * Contacts:
@@ -13,21 +13,21 @@
  */
 
 @font-face {
-  font-family: 'toast_icons';
-  src: url('../fonts/toast_icons.eot');
-  src: url('../fonts/toast_icons.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/toast_icons.woff2') format('woff2'),
-    url('../fonts/toast_icons.woff') format('woff'),
-    url('../fonts/toast_icons.ttf') format('truetype'),
-    url('../fonts/toast_icons.svg#toast_icons') format('svg');
+  font-family: 'font_icons8';
+  src: url('../fonts/font_icons8.eot');
+  src: url('../fonts/font_icons8.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/font_icons8.woff2') format('woff2'),
+    url('../fonts/font_icons8.woff') format('woff'),
+    url('../fonts/font_icons8.ttf') format('truetype'),
+    url('../fonts/font_icons8.svg#font_icons8') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
-    font-family: 'toast_icons';
-    src: url('../fonts/toast_icons.svg#toast_icons') format('svg');
+    font-family: 'font_icons8';
+    src: url('../fonts/font_icons8.svg#font_icons8') format('svg');
   }
 }
 
@@ -43,10 +43,12 @@
 .icons8-delete:before,
 .icons8-delete-button:before,
 .icons8-edit:before,
+.icons8-explanation-mark:before,
 .icons8-image:before,
+.icons8-next-step:before,
 .icons8-profile-picture:before {
   display: inline-block;
-  font-family: 'toast_icons';
+  font-family: 'font_icons8';
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -77,7 +79,13 @@
 .icons8-edit:before {
   content: '\f105';
 }
+.icons8-explanation-mark:before {
+  content: '\f109';
+}
 .icons8-image:before {
+  content: '\f107';
+}
+.icons8-next-step:before {
   content: '\f108';
 }
 .icons8-profile-picture:before {

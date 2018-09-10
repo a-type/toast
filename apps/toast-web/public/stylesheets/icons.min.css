@@ -25,7 +25,9 @@
 .icons8-delete-button:before,
 .icons8-delete:before,
 .icons8-edit:before,
+.icons8-explanation-mark:before,
 .icons8-image:before,
+.icons8-next-step:before,
 .icons8-profile-picture:before,
 [data-icons8]:before {
   display: inline-block;
@@ -59,7 +61,13 @@
 .icons8-edit:before {
   content: '\f105';
 }
+.icons8-explanation-mark:before {
+  content: '\f109';
+}
 .icons8-image:before {
+  content: '\f107';
+}
+.icons8-next-step:before {
   content: '\f108';
 }
 .icons8-profile-picture:before {

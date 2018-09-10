@@ -1,3 +1,6 @@
+process.env.NODE_ENV = 'production';
+process.env.BABEL_ENV = 'production';
+
 const path = require('path');
 const fs = require('fs-extra');
 const webpack = require('webpack');

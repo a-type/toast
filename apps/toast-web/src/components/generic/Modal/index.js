@@ -1,6 +1,6 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
 import { Box, TitleBar, Background } from './components';
+import Foreground from '../Foreground';
 
 export default class Modal extends React.PureComponent {
   static TitleBar = TitleBar;
@@ -22,24 +22,20 @@ export default class Modal extends React.PureComponent {
       return null;
     }
 
-    const el = document.getElementById('modalLayer');
-    if (!el) {
-      return null;
-    }
-
-    return createPortal(
-      <Background
-        onMouseUp={this.handleBackgroundClicked}
-        onMouseDown={this.stopPropagation}
-      >
-        <Box
+    return (
+      <Foreground>
+        <Background
+          onMouseUp={this.handleBackgroundClicked}
           onMouseDown={this.stopPropagation}
-          onMouseUp={this.stopPropagation}
         >
-          {children}
-        </Box>
-      </Background>,
-      el,
+          <Box
+            onMouseDown={this.stopPropagation}
+            onMouseUp={this.stopPropagation}
+          >
+            {children}
+          </Box>
+        </Background>
+      </Foreground>
     );
   }
 }

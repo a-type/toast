@@ -25,7 +25,7 @@ export const spaceSizes = {
 };
 
 export const getSize = (sizeName = '0px') =>
-  `${spaceSizes[sizeName]}px` || sizeName;
+  spaceSizes[sizeName] ? `${spaceSizes[sizeName]}px` : sizeName;
 
 injectGlobal`
 :root {

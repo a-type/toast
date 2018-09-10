@@ -16,3 +16,4 @@ export { default as Modal } from './Modal';
 export { default as RadioButton } from './RadioButton';
 export { default as Message } from './Message';
 export { default as Background } from './Background';
+export { default as Foreground } from './Foreground';

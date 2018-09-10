@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-serve --copy",
+    "start": "webpack-serve",
     "build": "node scripts/build.js",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test": "echo 'No tests!'",
-    "bookmarklet": "webpack-serve ./bookmarklet/webpack.config.js"
+    "bookmarklet": "webpack-serve ./bookmarklet/webpack.config.js --port 9001"
   },
   "lint-staged": {
     "*.{js,json,css.md}": [

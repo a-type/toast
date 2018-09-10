@@ -4,7 +4,7 @@ import { loading } from 'components/effects';
 export default styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-auto-rows: minmax(100px, 20vmin);
+  grid-auto-rows: 10vh;
 
   grid-gap: 20px;
   grid-auto-flow: dense;

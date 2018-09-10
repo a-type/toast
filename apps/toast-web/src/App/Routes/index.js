@@ -8,6 +8,7 @@ import IngredientPage from './pages/Ingredient';
 import EditRecipePage from './pages/EditRecipe';
 import LinkRecipePage from './pages/LinkRecipe';
 import SearchPage from './pages/Search';
+import ScannerPage from './pages/Scanner';
 
 export default () => (
   <Switch>
@@ -20,5 +21,6 @@ export default () => (
     <Route path="/users/:userId" component={UserPage} />
     <Route path="/ingredients/:ingredientId" component={IngredientPage} />
     <Route path="/search" component={SearchPage} />
+    <Route path="/scanner" component={ScannerPage} />
   </Switch>
 );

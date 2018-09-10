@@ -13,6 +13,7 @@ export default styled.div`
   background-image: ${({ imageSrc }) =>
     imageSrc ? `url(${imageSrc})` : 'none'};
   background-size: cover;
+  background-position: center;
   height: 100%;
   display: flex;
   align-items: flex-end;

@@ -14,7 +14,6 @@ const Button = styled.button`
   border-radius: var(--border-radius-md);
   transition: 0.25s ease-in-out;
   display: inline-block;
-  vertical-align: top;
   position: relative;
 
   &:hover:not(:disabled),

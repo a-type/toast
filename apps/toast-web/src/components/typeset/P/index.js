@@ -7,6 +7,11 @@ const P = styled.p`
   font-size: var(${props => `--font-size-${props.textSize || 'md'}`});
   margin-top: -0.16em;
   margin-bottom: calc(${props => getSize(props.spaceBelow)} - 0.36em);
+
+  & > ${Span} {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
 `;
 
 P.Skeleton = class PSkeleton extends React.PureComponent {
