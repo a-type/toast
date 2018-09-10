@@ -2,10 +2,8 @@ import microdata from 'microdata';
 import querystring from 'query-string';
 import { toSeconds } from 'iso8601-duration';
 import sendToFrame from './sendToFrame';
-import { blobToBinaryString, imgSrcToBlob, canvasToBlob } from 'blob-util';
-import imgToCanvas from './imgToCanvas';
 
-const HOST = 'https://localhost:8080';
+const ORIGIN = CONFIG.origin;
 
 const run = async () => {
   const data = microdata('http://schema.org/Recipe')[0];
@@ -70,7 +68,7 @@ const run = async () => {
   // const url = HOST + '/recipes/link?' + querystring.stringify(filteredQuery);
   // window.open(url, '_blank');
 
-  sendToFrame(filteredQuery, HOST);
+  sendToFrame(filteredQuery, ORIGIN);
 };
 
 run()

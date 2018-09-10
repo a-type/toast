@@ -7,6 +7,7 @@ const convert = require('koa-connect');
 const proxy = require('http-proxy-middleware');
 const cors = require('@koa/cors');
 const fs = require('fs');
+const config = require('config');
 
 module.exports = {
   mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
@@ -55,6 +56,14 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: './public/index.html',
       inject: true,
+    }),
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        },
+      },
+      CONFIG: JSON.stringify(config),
     }),
     new webpack.NamedModulesPlugin(),
     new ErrorOverlayPlugin(),

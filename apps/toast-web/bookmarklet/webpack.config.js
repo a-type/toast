@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const cors = require('@koa/cors');
+const config = require('config');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -59,7 +60,17 @@ module.exports = {
       },
     ],
   },
-  plugins: [new webpack.NamedModulesPlugin()],
+  plugins: [
+    new webpack.NamedModulesPlugin(),
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        },
+      },
+      CONFIG: JSON.stringify(config),
+    }),
+  ],
   serve: {
     content: [path.resolve(__dirname, 'public')],
     add: (app, middleware, options) => {

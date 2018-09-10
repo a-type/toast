@@ -1,9 +1,10 @@
-export default (data, host) => {
+export default (data, origin) => {
   const frame = document.createElement('iframe');
-  frame.src = host + '/recipes/link?mode=postMessage';
+  frame.src = origin + '/recipes/link?mode=postMessage';
   frame.style.position = 'fixed';
-  frame.style.width = '30vw';
-  frame.style.height = '30vh';
+  frame.style.width = '400px';
+  frame.style.height = '400px';
+  frame.style.maxWidth = '100%';
   frame.style.right = '10px';
   frame.style.top = '10px';
   frame.frameBorder = 'none';
