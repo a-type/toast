@@ -21,7 +21,7 @@ export default (data, origin) => {
         type: 'recipeData',
         data,
       },
-      host,
+      origin,
     );
   });
 };
