@@ -5,6 +5,21 @@ import sendToFrame from './sendToFrame';
 
 const ORIGIN = CONFIG.origin;
 
+const extractNumber = numberOrString => {
+  if (typeof numberOrString === 'number') {
+    return numberOrString;
+  }
+
+  if (typeof numberOrString === 'string') {
+    const match = /(\d+)/.exec(numberOrString);
+    if (match[1]) {
+      return parseInt(match[1]);
+    }
+  }
+
+  return undefined;
+};
+
 const run = async () => {
   const data = microdata('http://schema.org/Recipe')[0];
   console.info(data);
@@ -28,6 +43,8 @@ const run = async () => {
 
   const nutrition = data.nutrition || {};
 
+  const servings = extractNumber(data.recipeYield);
+
   const query = {
     ttl: data.name.trim(),
     dsc: data.description.trim(),
@@ -37,8 +54,8 @@ const run = async () => {
     cph: data.copyrightHolder,
     cpy: data.copyrightYear,
     src: data.url || window.location.href,
-    ing: data.recipeIngredient.map(line => line.trim()),
-    srv: data.recipeYield,
+    ing: data.recipeIngredient.map(line => line.trim().replace(/(\t|\n)/g, ' ')),
+    srv: servings,
     ctm: cookMinutes || totalMinutes,
     ptm:
       prepMinutes ||
