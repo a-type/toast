@@ -34,7 +34,7 @@ class AuthTokenStorage extends EventEmitter {
   }
 
   parseToken = () => {
-    return decode(this.authToken);
+    return this.authToken && decode(this.authToken);
   };
 }
 

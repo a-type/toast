@@ -52,7 +52,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
       case 'LOG_IN':
         return (
           <Content>
-            <Field label="Your email">
+            <Field label="Your email" required>
               <Input
                 value={values.email}
                 onChange={handleChange}
@@ -60,7 +60,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 required
               />
             </Field>
-            <Field label="Your password">
+            <Field label="Your password" required>
               <Input
                 value={values.password}
                 onChange={handleChange}
@@ -74,7 +74,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
       case 'SIGN_UP':
         return (
           <Content>
-            <Field label="Your email">
+            <Field label="Your email" required>
               <Input
                 value={values.email}
                 onChange={handleChange}
@@ -82,7 +82,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 required
               />
             </Field>
-            <Field label="Your password">
+            <Field label="Your password" required>
               <Input
                 value={values.password}
                 onChange={handleChange}
@@ -91,7 +91,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 required
               />
             </Field>
-            <Field label="Your name">
+            <Field label="Your name" required>
               <Input
                 value={values.name}
                 onChange={handleChange}
@@ -99,7 +99,7 @@ export default class AdaptiveAuthForm extends React.PureComponent {
                 required
               />
             </Field>
-            <Field label="A unique username">
+            <Field label="A unique username" required>
               <Input
                 value={values.username}
                 onChange={handleChange}

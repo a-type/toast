@@ -1,14 +1,14 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import { id } from 'util';
+import { id, timestamp } from 'tools';
 
 export const signup = async (user, credential, ctx) => {
   const password = await bcrypt.hash(credential.password, 10);
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-      MERGE (u:User {name: $name, username: $username, id: $id})<-[:AUTHENTICATES]-(c:Credential {email: $email, password: $password})
+      MERGE (u:User {name: $name, username: $username, createdAt: $timestamp, id: $id})<-[:AUTHENTICATES]-(c:Credential {email: $email, password: $password})
       RETURN u {.id, .name, .username}
     `,
       {
@@ -17,6 +17,7 @@ export const signup = async (user, credential, ctx) => {
         name: user.name,
         username: user.username,
         id: id(user.username),
+        timestamp: timestamp(),
       },
     );
 
@@ -41,6 +42,16 @@ export const loginByEmail = (email, password, ctx) =>
     const user = result.records[0].get('u');
     const matches = await bcrypt.compare(password, credential.password);
     if (matches) {
+      await tx.run(
+        `
+        MATCH (u:User {id: $id})
+        SET u.lastLoginAt = $timestamp
+        `,
+        {
+          id: user.id,
+          timestamp: timestamp(),
+        },
+      );
       return user;
     }
 
