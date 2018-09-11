@@ -6,6 +6,7 @@ import { hot } from 'react-hot-loader';
 import { Global as GlobalMessages } from 'features/messages';
 import { Background } from 'components/generic';
 import { show } from '../messages';
+import { TokenContext } from 'features/auth';
 
 class App extends React.Component {
   componentDidMount() {
@@ -26,17 +27,19 @@ class App extends React.Component {
 
   render() {
     return (
-      <Background.Manager>
-        <Layout>
-          <Layout.Navigation>
-            <NavBar />
-          </Layout.Navigation>
-          <Layout.Content>
-            <Routes />
-          </Layout.Content>
-          <GlobalMessages />
-        </Layout>
-      </Background.Manager>
+      <TokenContext.Provider>
+        <Background.Manager>
+          <Layout>
+            <Layout.Navigation>
+              <NavBar />
+            </Layout.Navigation>
+            <Layout.Content>
+              <Routes />
+            </Layout.Content>
+            <GlobalMessages />
+          </Layout>
+        </Background.Manager>
+      </TokenContext.Provider>
     );
   }
 }

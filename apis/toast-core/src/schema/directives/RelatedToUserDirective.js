@@ -11,6 +11,10 @@ export default class RelatedToUserDirective extends SchemaDirectiveVisitor {
     } = this.args;
     const { resolve = defaultFieldResolver } = field;
     field.resolve = async (parent, queryArgs, ctx, info) => {
+      if (ctx.roles.includes('admin')) {
+        return resolve(parent, queryArgs, ctx, info);
+      }
+
       return ctx.transaction(async tx => {
         const result = await tx.run(
           `MATCH (n:${labelName} { id: $id })<-[:${relationName}]-(:User { id: $userId }) RETURN n { .id }`,

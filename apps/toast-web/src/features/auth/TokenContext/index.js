@@ -30,3 +30,5 @@ class TokenProvider extends React.PureComponent {
 
 export const Provider = TokenProvider;
 export const Consumer = ctx.Consumer;
+
+export default { Provider, Consumer };

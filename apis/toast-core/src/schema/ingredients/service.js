@@ -72,3 +72,17 @@ export const updateIngredient = (id, input, ctx) => {
     return result.records[0].get('ingredient');
   });
 };
+
+export const deleteIngredient = (id, ctx) => {
+  return ctx.transaction(async tx => {
+    await tx.run(
+      `
+        MATCH (ingredient:Ingredient { id: $id })
+        DELETE ingredient
+      `,
+      { id },
+    );
+
+    return null;
+  });
+};

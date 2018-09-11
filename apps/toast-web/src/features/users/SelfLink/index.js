@@ -1,7 +1,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Loader } from 'components/generic';
+import { Loader, Tip } from 'components/generic';
+import { Icon, LinkStack } from './components';
 import { Link } from 'components/typeset';
 import auth from 'apolloClient/auth';
 
@@ -21,6 +22,21 @@ class InnerSelfLink extends React.Component {
     });
   }
 
+  logout = () => {
+    auth.logout();
+  };
+
+  renderTipContent = () => {
+    const { data } = this.props;
+
+    return (
+      <LinkStack>
+        <Link to={`/users/${data.me.id}`}>Profile</Link>
+        <Link onClick={this.logout}>Log out</Link>
+      </LinkStack>
+    );
+  };
+
   render() {
     const { data, loading, error, refetch } = this.props;
 
@@ -32,7 +48,11 @@ class InnerSelfLink extends React.Component {
       return <Loader size="1em" />;
     }
 
-    return <Link to={`/users/${data.me.id}`}>Profile</Link>;
+    return (
+      <Tip.Toggle tipContent={this.renderTipContent()}>
+        {({ ref, onClick }) => <Icon onClick={onClick} innerRef={ref} />}
+      </Tip.Toggle>
+    );
   }
 }
 

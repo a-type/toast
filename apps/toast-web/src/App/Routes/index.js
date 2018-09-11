@@ -16,7 +16,7 @@ export default () => (
     <Route path="/login" component={LoginPage} />
     <Route path="/recipes/create" component={EditRecipePage} />
     <Route path="/recipes/link" component={LinkRecipePage} />
-    <Route path="/recipes/edit/:recipeId" component={EditRecipePage} />
+    <Route exact path="/recipes/:recipeId/edit" component={EditRecipePage} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
     <Route path="/users/:userId" component={UserPage} />
     <Route path="/ingredients/:ingredientId" component={IngredientPage} />

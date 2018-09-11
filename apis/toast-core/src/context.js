@@ -48,5 +48,6 @@ export const createContext = async req => {
       return sess.readTransaction(txFunction);
     },
     user: token.user,
+    roles: token.roles,
   };
 };

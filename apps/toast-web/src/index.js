@@ -4,7 +4,6 @@ import { ApolloProvider } from 'react-apollo';
 import apolloClient from './apolloClient';
 import { Router } from 'react-router-dom';
 import history from './browserHistory';
-import { ThemeProvider } from 'styled-components';
 import App from './App';
 import './theme';
 

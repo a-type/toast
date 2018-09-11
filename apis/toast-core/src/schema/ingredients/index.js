@@ -3,6 +3,7 @@ import {
   getIngredient,
   createIngredient,
   updateIngredient,
+  deleteIngredient,
 } from './service';
 
 export const typeDefs = `
@@ -33,6 +34,7 @@ extend type Query {
 extend type Mutation {
   createIngredient(input: IngredientCreateInput!): Ingredient!
   updateIngredient(id: ID!, input: IngredientUpdateInput!): Ingredient!
+  deleteIngredient(id: ID!): Ingredient @hasRole(role: "admin")
 }
 `;
 
@@ -47,5 +49,7 @@ export const resolvers = {
       createIngredient(args.input, ctx),
     updateIngredient: (_parent, args, ctx, info) =>
       updateIngredient(args.id, args.input, ctx),
+    deleteIngredient: (_parent, args, ctx, info) =>
+      deleteIngredient(args.id, ctx),
   },
 };

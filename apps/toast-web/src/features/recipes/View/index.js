@@ -14,6 +14,7 @@ import { H2, H1 } from 'components/typeset';
 import JumpControls from './JumpControls';
 import LinkFrame from './LinkFrame';
 import ViewSpy from './ViewSpy';
+import EditButton from './EditButton';
 
 const FullRecipeQuery = gql`
   query FullRecipeQuery($id: ID!) {
@@ -107,6 +108,13 @@ export default class RecipeView extends React.Component<Props> {
               <Content>
                 <H1 name="Title">
                   {pathOr('', ['data', 'recipe', 'title'], response)}
+                  <EditButton
+                    recipeId={recipeId}
+                    authorId={path(
+                      ['data', 'recipe', 'author', 'id'],
+                      response,
+                    )}
+                  />
                 </H1>
                 <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
                 <H2 name="IngredientsSection">Ingredients</H2>

@@ -36,6 +36,14 @@ class AuthTokenStorage extends EventEmitter {
   parseToken = () => {
     return this.authToken && decode(this.authToken);
   };
+
+  logout = () => {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    this.emit(this.eventTypes.tokenStored, {
+      token: null,
+      parsedToken: null,
+    });
+  };
 }
 
 export default new AuthTokenStorage();

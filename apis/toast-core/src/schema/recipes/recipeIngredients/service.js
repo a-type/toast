@@ -21,6 +21,25 @@ const defaulted = recipeIngredient =>
     recipeIngredient,
   );
 
+const hasAccess = async (tx, recipeIngredientId, ctx) => {
+  if (ctx.roles.includes('admin')) {
+    return true;
+  }
+
+  const result = await tx.run(
+    `
+    MATCH (:Ingredient)-[:INGREDIENT_OF {id: $id}]-(:Recipe)<-[:AUTHOR_OF]-(u:User {id: $userId})
+    RETURN u;
+    `,
+    {
+      id: recipeIngredientId,
+      userId: ctx.user.id,
+    },
+  );
+
+  return !!result.records.length;
+};
+
 export const getForRecipe = (id, ctx) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
@@ -166,12 +185,18 @@ export const updateRecipeIngredient_withTransaction = async (
   tx,
   ctx,
 ) => {
+  const canAccess = await hasAccess(tx, id, ctx);
+
+  if (!canAccess) {
+    throw new Error("Sorry, you can't do that");
+  }
+
   if (args.ingredientId) {
     await changeIngredientRelationship(id, ctx.user.id, args.ingredientId, tx);
   }
   const result = await tx.run(
     `
-    MATCH (:User {id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
+    MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
     SET rel += $ingredientProps
     RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ing {${INGREDIENT_FIELDS}}
   `,
@@ -195,6 +220,12 @@ export const updateRecipeIngredient_withTransaction = async (
 
 export const moveRecipeIngredient = (recipeId, args, ctx) => {
   return ctx.transaction(async tx => {
+    const canAccess = await hasAccess(tx, id, ctx);
+
+    if (!canAccess) {
+      throw new Error("Sorry, you can't do that");
+    }
+
     const ingredientsResult = await tx.run(
       `
       MATCH (recipe:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(ingredient:Ingredient)
@@ -240,9 +271,15 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
 
 export const deleteRecipeIngredient = (id, ctx) => {
   return ctx.transaction(async tx => {
+    const canAccess = await hasAccess(tx, id, ctx);
+
+    if (!canAccess) {
+      throw new Error("Sorry, you can't do that");
+    }
+
     const result = await tx.run(
       `
-      MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $id}]-()
+      MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF {id: $id}]-()
       DELETE rel
       RETURN recipe {${RECIPE_FIELDS}}
       `,

@@ -15,7 +15,7 @@ const seed = async () => {
   const userId = id('ToastMaster');
   await session.writeTransaction(async tx => {
     await tx.run(`
-    CREATE (u:User {name: "ToastMaster", username: "toastmaster", id: "${userId}"})
+    CREATE (u:User {name: "ToastMaster", username: "toastmaster", id: "${userId}"})-[:HAS_ROLE]->(r:Role {id: "admin", name: "admin"})
     `);
     const hashedPassword = await bcrypt.hash(
       config.security.masterPassword,
