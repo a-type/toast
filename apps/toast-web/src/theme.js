@@ -97,7 +97,6 @@ html, body, #main {
 
 body {
   overflow-y: auto;
-  overflow-y: overlay;
 }
 
 br {
