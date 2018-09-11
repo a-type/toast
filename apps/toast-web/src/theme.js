@@ -33,6 +33,7 @@ injectGlobal`
 
   --font-fancy: "Prata", serif;
   --font-default: "Noto Serif", serif;
+  --font-logo: "Pacifico", serif;
 
   --font-size-md: ${fontSizes.md}px;
   --font-size-sm: ${fontSizes.sm}px;
