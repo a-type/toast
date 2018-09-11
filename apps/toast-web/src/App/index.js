@@ -7,6 +7,10 @@ import { Global as GlobalMessages } from 'features/messages';
 import { Background } from 'components/generic';
 import { show } from '../messages';
 import { TokenContext } from 'features/auth';
+import { ApolloProvider } from 'react-apollo';
+import apolloClient from 'apolloClient';
+import { Router } from 'react-router-dom';
+import history from 'browserHistory';
 
 class App extends React.Component {
   componentDidMount() {
@@ -27,19 +31,23 @@ class App extends React.Component {
 
   render() {
     return (
-      <TokenContext.Provider>
-        <Background.Manager>
-          <Layout>
-            <Layout.Navigation>
-              <NavBar />
-            </Layout.Navigation>
-            <Layout.Content>
-              <Routes />
-            </Layout.Content>
-            <GlobalMessages />
-          </Layout>
-        </Background.Manager>
-      </TokenContext.Provider>
+      <ApolloProvider client={apolloClient}>
+        <Router history={history}>
+          <TokenContext.Provider>
+            <Background.Manager>
+              <Layout>
+                <Layout.Navigation>
+                  <NavBar />
+                </Layout.Navigation>
+                <Layout.Content>
+                  <Routes />
+                </Layout.Content>
+                <GlobalMessages />
+              </Layout>
+            </Background.Manager>
+          </TokenContext.Provider>
+        </Router>
+      </ApolloProvider>
     );
   }
 }

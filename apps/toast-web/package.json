@@ -59,8 +59,10 @@
     "resize-observer-polyfill": "^1.5.0",
     "rimraf": "^2.6.2",
     "storybook-styled-components": "^1.0.1",
+    "sw-precache-webpack-plugin": "^0.11.5",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
+    "webpack-manifest-plugin": "^2.0.3",
     "webpack-serve": "^2.0.2"
   },
   "dependencies": {

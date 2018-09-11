@@ -1,0 +1,8 @@
+{
+  "short_name": "Toast",
+  "name": "Toast Cooking: Discover Recipes",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#f6c667",
+  "background_color": "#fefeff"
+}
