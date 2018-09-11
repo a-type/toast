@@ -4,7 +4,7 @@ import auth from 'apolloClient/auth';
 const ctx = createContext(auth.parsedToken);
 const InternalProvider = ctx.Provider;
 
-class TokenProvider extends React.PureComponent {
+class TokenProvider extends React.Component {
   state = auth.parsedToken;
 
   componentDidMount() {

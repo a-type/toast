@@ -1,6 +1,8 @@
+import React from 'react';
 import styled from 'styled-components';
+import Foreground from '../Foreground';
 
-export default styled.div`
+const MessageGlobalGroup = styled.div`
   position: fixed;
   bottom: var(--spacing-sm);
   left: var(--spacing-sm);
@@ -13,3 +15,9 @@ export default styled.div`
     max-width: 300px;
   }
 `;
+
+export default props => (
+  <Foreground>
+    <MessageGlobalGroup {...props} />
+  </Foreground>
+);
