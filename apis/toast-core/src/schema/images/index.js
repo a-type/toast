@@ -1,25 +1,26 @@
 import { getRecipeCoverImage, updateRecipeCoverImage } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type Image {
-  id: ID!
-  url: String!
-  attribution: String
-}
+export const typeDefs = gql`
+  type Image {
+    id: ID!
+    url: String!
+    attribution: String
+  }
 
-extend type Recipe {
-  coverImage: Image
-}
+  extend type Recipe {
+    coverImage: Image
+  }
 
-input ImageCreateInput {
-  file: Upload
-  url: String
-  attribution: String
-}
+  input ImageCreateInput {
+    file: Upload
+    url: String
+    attribution: String
+  }
 
-extend type Mutation {
-  updateRecipeCoverImage(id: ID!, input: ImageCreateInput!): Recipe!
-}
+  extend type Mutation {
+    updateRecipeCoverImage(id: ID!, input: ImageCreateInput!): Recipe!
+  }
 `;
 
 export const resolvers = {

@@ -1,5 +1,5 @@
 import { id } from 'tools';
-
+import { ApolloError } from 'apollo-server-express';
 const FIELDS = `.id, .name, .description, .attribution`;
 
 export const listIngredients = ({ offset = 0, count = 10 }, ctx) => {
@@ -66,7 +66,7 @@ export const updateIngredient = (id, input, ctx) => {
     );
 
     if (result.records.length === 0) {
-      throw new Error("That ingredient doesn't exist");
+      throw new ApolloError("That ingredient doesn't exist", 'NOT_FOUND');
     }
 
     return result.records[0].get('ingredient');

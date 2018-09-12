@@ -1,6 +1,7 @@
 import { SchemaDirectiveVisitor } from 'graphql-tools';
 import { defaultFieldResolver } from 'graphql';
 import { path } from 'ramda';
+import { ForbiddenError } from 'apollo-server-express';
 
 export default class RelatedToUserDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
@@ -24,7 +25,7 @@ export default class RelatedToUserDirective extends SchemaDirectiveVisitor {
           },
         );
         if (result.records.length === 0) {
-          throw new Error("Sorry, you can't do that");
+          throw new ForbiddenError("Sorry, you can't do that");
         }
         return resolve(parent, queryArgs, ctx, info);
       });

@@ -1,24 +1,29 @@
 import neo4jgraphql from 'neo4j-graphql-js';
 import { signup, createToken, login } from './service';
+import { gql, AuthenticationError } from 'apollo-server-express';
 
-export const typeDefs = `
-type AuthResponse {
-  token: String!
-}
+export const typeDefs = gql`
+  type AuthResponse {
+    token: String!
+  }
 
-input Credential {
-  email: EmailCredential
-}
+  input Credential {
+    email: EmailCredential
+  }
 
-input EmailCredential {
-  email: String!
-  password: String!
-}
+  input EmailCredential {
+    email: String!
+    password: String!
+  }
 
-extend type Mutation {
-  signup(name: String!, username: String!, credential: Credential!): AuthResponse!
-  login(credential: Credential!): AuthResponse!
-}
+  extend type Mutation {
+    signup(
+      name: String!
+      username: String!
+      credential: Credential!
+    ): AuthResponse!
+    login(credential: Credential!): AuthResponse!
+  }
 `;
 
 export const resolvers = {
@@ -34,7 +39,7 @@ export const resolvers = {
     login: async (_parent, args, ctx, resolution) => {
       const user = await login(args.credential, ctx);
       if (!user) {
-        throw new Error('Invalid credentials');
+        throw new AuthenticationError('Invalid credentials');
       }
       return { token: createToken(user) };
     },

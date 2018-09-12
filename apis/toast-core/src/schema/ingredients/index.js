@@ -5,37 +5,38 @@ import {
   updateIngredient,
   deleteIngredient,
 } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type Ingredient {
-  id: ID!
-  name: String!
-  description: String
-  attribution: String
-}
+export const typeDefs = gql`
+  type Ingredient {
+    id: ID!
+    name: String!
+    description: String
+    attribution: String
+  }
 
-input IngredientCreateInput {
-  name: String!
-  description: String
-  attribution: String
-}
+  input IngredientCreateInput {
+    name: String!
+    description: String
+    attribution: String
+  }
 
-input IngredientUpdateInput {
-  name: String
-  description: String
-  attribution: String
-}
+  input IngredientUpdateInput {
+    name: String
+    description: String
+    attribution: String
+  }
 
-extend type Query {
-  ingredients(pagination: ListPaginationInput): [Ingredient!]!
-  ingredient(id: ID!): Ingredient
-}
+  extend type Query {
+    ingredients(pagination: ListPaginationInput): [Ingredient!]!
+    ingredient(id: ID!): Ingredient
+  }
 
-extend type Mutation {
-  createIngredient(input: IngredientCreateInput!): Ingredient!
-  updateIngredient(id: ID!, input: IngredientUpdateInput!): Ingredient!
-  deleteIngredient(id: ID!): Ingredient @hasRole(role: "admin")
-}
+  extend type Mutation {
+    createIngredient(input: IngredientCreateInput!): Ingredient!
+    updateIngredient(id: ID!, input: IngredientUpdateInput!): Ingredient!
+    deleteIngredient(id: ID!): Ingredient @hasRole(role: "admin")
+  }
 `;
 
 export const resolvers = {

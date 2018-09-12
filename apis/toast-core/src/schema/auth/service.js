@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import { id, timestamp } from 'tools';
 import { pick } from 'ramda';
+import { AuthenticationError, UserInputError } from 'apollo-server-express';
 
 export const signup = async (user, credential, ctx) => {
   const password = await bcrypt.hash(credential.password, 10);
@@ -48,7 +49,7 @@ export const loginByEmail = (email, password, ctx) =>
     );
 
     if (!result.records.length) {
-      throw new Error('Incorrect credentials');
+      throw new AuthenticationError('Incorrect credentials');
     }
 
     const credential = result.records[0].get('c');
@@ -78,7 +79,7 @@ export const login = async (credential, ctx) => {
     return loginByEmail(credential.email.email, credential.email.password, ctx);
   }
 
-  throw new Error('Unknown credential type');
+  throw new UserInputError('Unknown credential type');
 };
 
 export const createToken = async user => {

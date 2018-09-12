@@ -10,15 +10,15 @@ import * as search from './search';
 import * as steps from './steps';
 import * as users from './users';
 import * as roles from './roles';
+import * as _directives from './directives';
+import logger from 'logger';
+import { gql } from 'apollo-server-express';
 
-import * as directives from './directives';
+export { default as mocks } from './__mocks__';
+export const directives = _directives;
 
-import mocks from './__mocks__';
-
-const argv = minimist(process.argv.slice(2));
-
-const globalTypeDefs = `
-  scalar Upload
+const globalTypeDefs = gql`
+  # scalar Upload
 
   input ListMoveInput {
     fromIndex: Int!
@@ -70,15 +70,3 @@ export const resolvers = [
   roles.resolvers,
   { Upload: GraphQLUpload },
 ].reduce(mergeDeepRight, globalResolvers);
-
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
-  schemaDirectives: directives,
-});
-
-if (argv.mock) {
-  addMockFunctionsToSchema({ schema, mocks });
-}
-
-export default schema;

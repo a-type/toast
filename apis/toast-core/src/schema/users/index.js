@@ -1,23 +1,24 @@
 import { neo4jgraphql } from 'neo4j-graphql-js';
 import { getRecipeAuthor } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type User {
-  id: ID!
-  name: String
-  username: String!
-}
+export const typeDefs = gql`
+  type User {
+    id: ID!
+    name: String
+    username: String!
+  }
 
-extend type Query {
-  me: User
-  users: [User!]!
-  user(id: ID!): User
-}
+  extend type Query {
+    me: User
+    users: [User!]!
+    user(id: ID!): User
+  }
 
-extend type Recipe {
-  author: User
-  discoverer: User
-}
+  extend type Recipe {
+    author: User
+    discoverer: User
+  }
 `;
 
 export const resolvers = {

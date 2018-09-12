@@ -14,89 +14,92 @@ import {
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
 import { mergeDeepRight } from 'ramda';
+import { gql } from 'apollo-server-express';
 
 export const typeDefs = () => [
-  `
-enum RecipeDisplayType {
-  LINK
-  FULL
-}
+  gql`
+    enum RecipeDisplayType {
+      LINK
+      FULL
+    }
 
-type Recipe {
-  id: ID!
-  title: String!
-  description: String
-  attribution: String
-  sourceUrl: String
-  published: Boolean!
-  displayType: RecipeDisplayType
+    type Recipe {
+      id: ID!
+      title: String!
+      description: String
+      attribution: String
+      sourceUrl: String
+      published: Boolean!
+      displayType: RecipeDisplayType
 
-  servings: Int!
-  # all times in minutes
-  cookTime: Int
-  prepTime: Int
-  unattendedTime: Int
+      servings: Int!
+      # all times in minutes
+      cookTime: Int
+      prepTime: Int
+      unattendedTime: Int
 
-  createdAt: String!
-  updatedAt: String!
-  viewedAt: String!
-  views: Int!
-}
+      createdAt: String!
+      updatedAt: String!
+      viewedAt: String!
+      views: Int!
+    }
 
-input RecipeCreateInput {
-  title: String!
-  description: String
-  attribution: String
-  sourceUrl: String
-}
+    input RecipeCreateInput {
+      title: String!
+      description: String
+      attribution: String
+      sourceUrl: String
+    }
 
-input RecipeLinkInput {
-  title: String!
-  description: String
-  attribution: String!
-  sourceUrl: String!
-  ingredientStrings: [String!]!
-  cookTime: Int
-  prepTime: Int
-  unattendedTime: Int
-  servings: Int
-}
+    input RecipeLinkInput {
+      title: String!
+      description: String
+      attribution: String!
+      sourceUrl: String!
+      ingredientStrings: [String!]!
+      cookTime: Int
+      prepTime: Int
+      unattendedTime: Int
+      servings: Int
+    }
 
-input RecipeDetailsUpdateInput {
-  title: String
-  description: String
-  attribution: String
-  sourceUrl: String
-  displayType: RecipeDisplayType
-  servings: Int
-  cookTime: Int
-  prepTime: Int
-  unattendedTime: Int
-}
+    input RecipeDetailsUpdateInput {
+      title: String
+      description: String
+      attribution: String
+      sourceUrl: String
+      displayType: RecipeDisplayType
+      servings: Int
+      cookTime: Int
+      prepTime: Int
+      unattendedTime: Int
+    }
 
-extend type Query {
-  recipes(pagination: ListPaginationInput): [Recipe!]!
-  recipe(id: ID!): Recipe
-}
+    extend type Query {
+      recipes(pagination: ListPaginationInput): [Recipe!]!
+      recipe(id: ID!): Recipe
+    }
 
-extend type Mutation {
-  createRecipe(input: RecipeCreateInput!): Recipe! @authenticated
-  linkRecipe(input: RecipeLinkInput!): Recipe! @authenticated
-  updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe @authenticated @relatedToUser
-  publishRecipe(id: ID!): Recipe @authenticated @relatedToUser
-  recordRecipeView(id: ID!): Recipe
-}
+    extend type Mutation {
+      createRecipe(input: RecipeCreateInput!): Recipe! @authenticated
+      linkRecipe(input: RecipeLinkInput!): Recipe! @authenticated
+      updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe
+        @authenticated
+        @relatedToUser
+      publishRecipe(id: ID!): Recipe @authenticated @relatedToUser
+      recordRecipeView(id: ID!): Recipe
+    }
 
-extend type Ingredient {
-  recipes(pagination: ListPaginationInput): [Recipe!]!
-}
+    extend type Ingredient {
+      recipes(pagination: ListPaginationInput): [Recipe!]!
+    }
 
-extend type User {
-  recipes(pagination: ListPaginationInput): [Recipe!]!
-  discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
-  draftRecipes(pagination: ListPaginationInput): [Recipe!]!
-}
-`,
+    extend type User {
+      recipes(pagination: ListPaginationInput): [Recipe!]!
+      discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
+      draftRecipes(pagination: ListPaginationInput): [Recipe!]!
+    }
+  `,
   recipeIngredients.typeDefs,
   recipeSteps.typeDefs,
 ];

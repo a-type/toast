@@ -1,14 +1,15 @@
 import { getUserRoles } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type Role {
-  id: ID!
-  name: String
-}
+export const typeDefs = gql`
+  type Role {
+    id: ID!
+    name: String
+  }
 
-extend type User {
-  roles: [Role!]!
-}
+  extend type User {
+    roles: [Role!]!
+  }
 `;
 
 export const resolvers = {

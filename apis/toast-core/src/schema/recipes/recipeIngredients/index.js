@@ -6,45 +6,57 @@ import {
   moveRecipeIngredient,
   deleteRecipeIngredient,
 } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type RecipeIngredient {
-  id: ID!
-  text: String!
-  ingredient: Ingredient!
-  ingredientTextMatch: String
-  recipe: Recipe!
-  unit: String
-  unitTextMatch: String
-  value: Float!
-  valueTextMatch: String
-  index: Int!
-}
+export const typeDefs = gql`
+  type RecipeIngredient {
+    id: ID!
+    text: String!
+    ingredient: Ingredient!
+    ingredientTextMatch: String
+    recipe: Recipe!
+    unit: String
+    unitTextMatch: String
+    value: Float!
+    valueTextMatch: String
+    index: Int!
+  }
 
-input RecipeIngredientParseInput {
-  text: String!
-}
+  input RecipeIngredientParseInput {
+    text: String!
+  }
 
-input RecipeIngredientUpdateInput {
-  unit: String
-  unitTextMatch: String
-  value: Float
-  valueTextMatch: String
-  ingredientId: ID
-  ingredientTextMatch: String
-}
+  input RecipeIngredientUpdateInput {
+    unit: String
+    unitTextMatch: String
+    value: Float
+    valueTextMatch: String
+    ingredientId: ID
+    ingredientTextMatch: String
+  }
 
-extend type Recipe {
-  ingredients: [RecipeIngredient!]!
-}
+  extend type Recipe {
+    ingredients: [RecipeIngredient!]!
+  }
 
-extend type Mutation {
-  updateRecipeIngredient(id: ID!, input: RecipeIngredientUpdateInput!): RecipeIngredient! @authenticated
-  reparseRecipeIngredient(id: ID!, input: RecipeIngredientParseInput!): RecipeIngredient! @authenticated
-  addRecipeIngredient(recipeId: ID!, input: RecipeIngredientParseInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
-  moveRecipeIngredient(recipeId: ID!, input: ListMoveInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
-  deleteRecipeIngredient(id: ID!): Recipe! @authenticated
-}
+  extend type Mutation {
+    updateRecipeIngredient(
+      id: ID!
+      input: RecipeIngredientUpdateInput!
+    ): RecipeIngredient! @authenticated
+    reparseRecipeIngredient(
+      id: ID!
+      input: RecipeIngredientParseInput!
+    ): RecipeIngredient! @authenticated
+    addRecipeIngredient(
+      recipeId: ID!
+      input: RecipeIngredientParseInput!
+    ): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
+    moveRecipeIngredient(recipeId: ID!, input: ListMoveInput!): Recipe!
+      @authenticated
+      @relatedToUser(idArg: "recipeId")
+    deleteRecipeIngredient(id: ID!): Recipe! @authenticated
+  }
 `;
 
 export const resolvers = {

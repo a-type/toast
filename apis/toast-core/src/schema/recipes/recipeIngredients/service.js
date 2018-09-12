@@ -3,6 +3,7 @@ import { RECIPE_FIELDS } from '../service';
 import { pick } from 'ramda';
 import parse from './parseIngredient';
 import { searchIngredients_withTransaction } from '../../search/service';
+import { ForbiddenError, ApolloError } from 'apollo-server-express';
 
 export const RECIPE_INGREDIENT_FIELDS =
   '.id, .index, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
@@ -188,7 +189,7 @@ export const updateRecipeIngredient_withTransaction = async (
   const canAccess = await hasAccess(tx, id, ctx);
 
   if (!canAccess) {
-    throw new Error("Sorry, you can't do that");
+    throw new ForbiddenError("Sorry, you can't do that");
   }
 
   if (args.ingredientId) {
@@ -214,7 +215,7 @@ export const updateRecipeIngredient_withTransaction = async (
       ingredient: result.records[0].get('ing'),
     });
   } else {
-    throw new Error('No such recipe ingredient exists');
+    throw new ApolloError('No such recipe ingredient exists', 'NOT_FOUND');
   }
 };
 
@@ -223,7 +224,7 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
     const canAccess = await hasAccess(tx, id, ctx);
 
     if (!canAccess) {
-      throw new Error("Sorry, you can't do that");
+      throw new ForbiddenError("Sorry, you can't do that");
     }
 
     const ingredientsResult = await tx.run(
@@ -274,7 +275,7 @@ export const deleteRecipeIngredient = (id, ctx) => {
     const canAccess = await hasAccess(tx, id, ctx);
 
     if (!canAccess) {
-      throw new Error("Sorry, you can't do that");
+      throw new ForbiddenError("Sorry, you can't do that");
     }
 
     const result = await tx.run(

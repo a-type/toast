@@ -5,34 +5,39 @@ import {
   moveRecipeStep,
   deleteRecipeStep,
 } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type RecipeStep {
-  id: ID!
-  index: Int!
-  step: Step! @cypher(
-    statement: "MATCH ()<-[this]-(s:Step) return s { .text, .id }"
-  )
-}
+export const typeDefs = gql`
+  type RecipeStep {
+    id: ID!
+    index: Int!
+    step: Step!
+      @cypher(statement: "MATCH ()<-[this]-(s:Step) return s { .text, .id }")
+  }
 
-input RecipeStepCreateInput {
-  text: String!
-}
+  input RecipeStepCreateInput {
+    text: String!
+  }
 
-input RecipeStepUpdateInput {
-  text: String
-}
+  input RecipeStepUpdateInput {
+    text: String
+  }
 
-extend type Recipe {
-  steps: [RecipeStep!]!
-}
+  extend type Recipe {
+    steps: [RecipeStep!]!
+  }
 
-extend type Mutation {
-  updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep! @authenticated
-  createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
-  moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe! @authenticated @relatedToUser(idArg: "recipeId")
-  deleteRecipeStep(id: ID!): Recipe! @authenticated
-}
+  extend type Mutation {
+    updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep!
+      @authenticated
+    createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): Recipe!
+      @authenticated
+      @relatedToUser(idArg: "recipeId")
+    moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe!
+      @authenticated
+      @relatedToUser(idArg: "recipeId")
+    deleteRecipeStep(id: ID!): Recipe! @authenticated
+  }
 `;
 
 export const resolvers = {

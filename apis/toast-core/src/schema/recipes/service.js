@@ -2,6 +2,7 @@ import { pick, omit } from 'ramda';
 import { id, timestamp } from 'tools';
 import gcloudStorage from 'services/gcloudStorage';
 import { parseRecipeIngredient_withTransaction } from './recipeIngredients/service';
+import { ApolloError } from 'apollo-server-express';
 
 export const RECIPE_FIELDS =
   '.id, .title, .description, .attribution, .sourceUrl, .published, .displayType, .createdAt, .updatedAt, .viewedAt, .views, .servings, .cookTime, .prepTime, .unattendedTime';
@@ -143,7 +144,7 @@ export const updateRecipeDetails = async (id, input, ctx) => {
     );
 
     if (details.records.length === 0) {
-      throw new Error("That recipe doesn't exist");
+      throw new ApolloError("That recipe doesn't exist", 'NOT_FOUND');
     }
 
     return defaulted(details.records[0].get('recipe'));
@@ -223,7 +224,7 @@ export const publishRecipe = async (id, ctx) => {
     );
 
     if (!result.records[0]) {
-      throw new Error('No such recipe');
+      throw new ApolloError("That recipe doesn't exist", 'NOT_FOUND');
     }
 
     return defaulted(result.records[0].get('recipe'));

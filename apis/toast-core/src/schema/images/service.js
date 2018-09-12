@@ -4,6 +4,7 @@ import uuid from 'uuid';
 import fetch from 'node-fetch';
 import { Readable } from 'stream';
 import mime from 'mime-types';
+import { UserInputError } from 'apollo-server-express';
 
 export const IMAGE_FIELDS = `.id, .url, .attribution`;
 
@@ -78,7 +79,7 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
       );
 
       if (result.records.length === 0) {
-        throw new Error('You must upload an image first');
+        throw new UserInputError('You must upload an image first');
       }
 
       const recipe = result.records[0].get('r');

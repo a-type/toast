@@ -1,32 +1,33 @@
 import { searchIngredients, searchRecipes } from './service';
+import { gql } from 'apollo-server-express';
 
-export const typeDefs = `
-type RecipeSearchResponse {
-  items: [Recipe]!
-}
+export const typeDefs = gql`
+  type RecipeSearchResponse {
+    items: [Recipe]!
+  }
 
-type IngredientSearchResponse {
-  items: [Ingredient]!
-}
+  type IngredientSearchResponse {
+    items: [Ingredient]!
+  }
 
-input RecipeSearchInput {
-  term: String
-  ingredients: IngredientFilterInput
-}
+  input RecipeSearchInput {
+    term: String
+    ingredients: IngredientFilterInput
+  }
 
-input IngredientFilterInput {
-  include: [ID!]
-  exclude: [ID!]
-}
+  input IngredientFilterInput {
+    include: [ID!]
+    exclude: [ID!]
+  }
 
-input IngredientSearchInput {
-  term: String
-}
+  input IngredientSearchInput {
+    term: String
+  }
 
-extend type Query {
-  searchRecipes(input: RecipeSearchInput!): RecipeSearchResponse!
-  searchIngredients(input: IngredientSearchInput!): IngredientSearchResponse!
-}
+  extend type Query {
+    searchRecipes(input: RecipeSearchInput!): RecipeSearchResponse!
+    searchIngredients(input: IngredientSearchInput!): IngredientSearchResponse!
+  }
 `;
 
 export const resolvers = {
