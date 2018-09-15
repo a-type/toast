@@ -2,12 +2,9 @@ import { Consumer } from '../TokenContext';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
+// TODO: admin
 export default ({ userId, children }) => (
   <Consumer>
-    {token =>
-      token &&
-      (token.user.id === userId || token.roles.includes('admin')) &&
-      children
-    }
+    {state => state && state.user && state.user.id === userId && children}
   </Consumer>
 );

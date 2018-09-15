@@ -1,11 +1,14 @@
 import React, { createContext } from 'react';
-import auth from 'apolloClient/auth';
+import auth from 'services/auth';
 
-const ctx = createContext(auth.parsedToken);
+const ctx = createContext();
 const InternalProvider = ctx.Provider;
 
 class TokenProvider extends React.Component {
-  state = auth.parsedToken;
+  state = {
+    user: auth.user,
+    isLoggedIn: auth.isLoggedIn,
+  };
 
   componentDidMount() {
     auth.addListener(auth.eventTypes.tokenStored, this.onTokenStored);
@@ -15,8 +18,11 @@ class TokenProvider extends React.Component {
     auth.removeListener(auth.eventTypes.tokenStored, this.onTokenStored);
   }
 
-  onTokenStored = ({ parsedToken }) => {
-    this.setState(parsedToken);
+  onTokenStored = () => {
+    this.setState({
+      user: auth.user,
+      isLoggedIn: auth.isLoggedIn,
+    });
   };
 
   render() {

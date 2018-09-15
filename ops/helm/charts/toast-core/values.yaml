@@ -10,7 +10,7 @@ image:
   pullPolicy: IfNotPresent
 
 ingress:
-  staticIp: "toast-primary-ingress"
+  staticIp: 'toast-primary-ingress'
   path: /
   tls:
     secretName: toastcooking-app-tls-prod
@@ -25,7 +25,8 @@ db:
   hosts:
     bolt: bolt+routing://neo4j-prod-neo4j-core-0.neo4j-prod-neo4j.toast-prod.svc.cluster.local:7687
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -44,10 +45,16 @@ tolerations: []
 affinity: {}
 
 application:
-  track: "stable"
+  track: 'stable'
   port: 4000
   jwt:
     secretName: jwt-token-secret
   storage:
     bucketNameSecretName: media-bucket-prod
     projectIdSecretName: project-id
+
+auth0:
+  domain: toastcooking.auth0.com
+  issuer: https://toastcooking.auth0.com/
+  audience: https://toastcooking.app
+  configSecretName: auth0-config

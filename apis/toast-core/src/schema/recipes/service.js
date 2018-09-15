@@ -78,8 +78,6 @@ export const linkRecipe = async (input, ctx) => {
       `
       MERGE (r:Recipe {sourceUrl: $sourceUrl})
         ON CREATE SET r += $input, r.id = $id
-      WITH r
-      MERGE (r)<-[:DISCOVERER_OF]-(u:User {id: $userId})
       RETURN r {${RECIPE_FIELDS}}
     `,
       {
@@ -98,6 +96,15 @@ export const linkRecipe = async (input, ctx) => {
     );
 
     const recipe = result.records[0].get('r');
+
+    await tx.run(
+      `
+      MATCH (r:Recipe {id: $recipeId}), (u:User {id: $userId})
+      MERGE (r)<-[:DISCOVERER_OF]-(u)
+      RETURN r
+      `,
+      { recipeId: recipe.id, userId: user.id },
+    );
 
     await Promise.all(
       input.ingredientStrings.map(ingredientString => {

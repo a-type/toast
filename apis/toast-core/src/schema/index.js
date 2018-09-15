@@ -2,7 +2,6 @@ import minimist from 'minimist';
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 import { GraphQLUpload } from 'apollo-upload-server';
 import { mergeDeepRight } from 'ramda';
-import * as auth from './auth';
 import * as images from './images';
 import * as ingredients from './ingredients';
 import * as recipes from './recipes';
@@ -50,7 +49,6 @@ const globalResolvers = {
 
 export const typeDefs = [
   globalTypeDefs,
-  auth.typeDefs,
   images.typeDefs,
   ingredients.typeDefs,
   recipes.typeDefs,
@@ -60,7 +58,6 @@ export const typeDefs = [
   roles.typeDefs,
 ];
 export const resolvers = [
-  auth.resolvers,
   images.resolvers,
   ingredients.resolvers,
   recipes.resolvers,

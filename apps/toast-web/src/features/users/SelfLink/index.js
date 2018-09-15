@@ -1,51 +1,35 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
 import { Loader, Tip } from 'components/generic';
 import { Icon, LinkStack } from './components';
 import { Link } from 'components/typeset';
-import auth from 'apolloClient/auth';
-
-const Me = gql`
-  query Me {
-    me {
-      id
-      name
-    }
-  }
-`;
+import auth from 'services/auth';
+import { Consumer } from 'features/auth/TokenContext';
 
 class InnerSelfLink extends React.Component {
-  componentDidMount() {
-    auth.on(auth.eventTypes.tokenStored, () => {
-      this.props.refetch();
-    });
-  }
+  login = () => {
+    auth.login();
+  };
 
   logout = () => {
     auth.logout();
   };
 
   renderTipContent = () => {
-    const { data } = this.props;
+    const { user, isLoggedIn } = this.props;
 
     return (
       <LinkStack>
-        <Link to={`/users/${data.me.id}`}>Profile</Link>
+        <Link to={`/users/${user.sub}`}>Profile</Link>
         <Link onClick={this.logout}>Log out</Link>
       </LinkStack>
     );
   };
 
   render() {
-    const { data, loading, error, refetch } = this.props;
+    const { isLoggedIn } = this.props;
 
-    if (error || !data.me) {
-      return <Link to="/login">Log in / Sign up</Link>;
-    }
-
-    if (loading) {
-      return <Loader size="1em" />;
+    if (!isLoggedIn) {
+      return <Link onClick={this.login}>Log in / Sign up</Link>;
     }
 
     return (
@@ -57,5 +41,9 @@ class InnerSelfLink extends React.Component {
 }
 
 export default () => (
-  <Query query={Me}>{result => <InnerSelfLink {...result} />}</Query>
+  <Consumer>
+    {({ user, isLoggedIn }) => (
+      <InnerSelfLink user={user} isLoggedIn={isLoggedIn} />
+    )}
+  </Consumer>
 );

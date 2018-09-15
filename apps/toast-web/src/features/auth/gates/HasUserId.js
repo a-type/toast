@@ -4,6 +4,10 @@ import { Redirect } from 'react-router-dom';
 
 export default ({ userId, redirectTo }) => (
   <Consumer>
-    {token => token && token.user.id !== userId && <Redirect to={redirectTo} />}
+    {state =>
+      state &&
+      state.user &&
+      state.user.id !== userId && <Redirect to={redirectTo} />
+    }
   </Consumer>
 );

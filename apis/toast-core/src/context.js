@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
 import logger from './logger';
@@ -14,18 +13,7 @@ process.on('exit', () => {
   return driver.close();
 });
 
-const getToken = req => {
-  const header = req.get('AUTHORIZATION');
-  if (!header) {
-    return { user: null };
-  }
-
-  return jwt.verify(header.replace('Bearer ', ''), config.security.tokenSecret);
-};
-
 export const createContext = async req => {
-  const token = getToken(req);
-
   const isMutation = req.body.query.startsWith('mutation');
 
   return {
@@ -47,7 +35,6 @@ export const createContext = async req => {
       const sess = driver.session();
       return sess.readTransaction(txFunction);
     },
-    user: token.user,
-    roles: token.roles,
+    user: req.user,
   };
 };

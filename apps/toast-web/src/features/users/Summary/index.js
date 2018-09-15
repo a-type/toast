@@ -11,6 +11,7 @@ const Basic = gql`
     user(id: $id) {
       id
       name
+      nickname
       recipes {
         ...RecipeCard
       }
@@ -59,12 +60,18 @@ export default class extends React.Component {
             return <div>{error.message}</div>;
           }
 
-          const { name, recipes, discoveredRecipes, draftRecipes } = data.user;
+          const {
+            name,
+            nickname,
+            recipes,
+            discoveredRecipes,
+            draftRecipes,
+          } = data.user;
 
           return (
             <React.Fragment>
               <Content>
-                <H1>{name || 'Anonymous'}</H1>
+                <H1>{nickname || 'Anonymous'}</H1>
               </Content>
               {this.renderRecipes('Your Drafts', draftRecipes)}
               {this.renderRecipes('Your Recipes', recipes)}

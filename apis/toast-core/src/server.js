@@ -11,6 +11,8 @@ import path from 'path';
 import minimist from 'minimist';
 import cors from 'cors';
 import { path as get } from 'ramda';
+import jwt from 'express-jwt';
+import jwks from 'jwks-rsa';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -19,6 +21,21 @@ if (argv.mock) {
 }
 
 const app = express();
+
+const auth = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `${config.auth0.issuer}.well-known/jwks.json`,
+  }),
+  audience: config.auth0.clientId,
+  issuer: config.auth0.issuer,
+  algorithms: ['RS256'],
+  credentialsRequired: false,
+});
+
+app.use('/api', auth, apolloUploadExpress());
 
 const apollo = new ApolloServer({
   typeDefs,
@@ -40,7 +57,6 @@ const apollo = new ApolloServer({
   mocks: argv.mock ? mocks : false,
 });
 
-app.use('/api', apolloUploadExpress());
 apollo.applyMiddleware({ app, path: '/api' });
 
 app.use('/bookmarklet/toast-bookmarklet.js', cors(), (req, res) =>

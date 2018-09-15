@@ -5,6 +5,15 @@ module.exports = {
     masterEmail: 'toastmaster@toastcooking.app',
     masterPassword: 'INSECURE CHANGE THIS!',
   },
+  auth0: {
+    domain: process.env.AUTH0_DOMAIN,
+    clientId: process.env.AUTH0_CLIENTID,
+    issuer: process.env.AUTH0_ISSUER,
+    audience: process.env.AUTH0_AUDIENCE,
+    clientSecret: process.env.AUTH0_CLIENTSECRET,
+    apiClientId: process.env.AUTH0_API_CLIENTID,
+    apiClientSecret: process.env.AUTH0_API_CLIENTSECRET,
+  },
   database: {
     neo4j: {
       endpoint: process.env.NEO4J_BOLT_HOST || 'bolt://localhost:7687',

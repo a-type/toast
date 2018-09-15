@@ -44,7 +44,6 @@ class IngredientPicker extends React.Component<Props, *> {
     console.info(newValue);
 
     if (!newValue.id) {
-      console.log('creating', newValue.name);
       const result = await create(newValue.name);
       if (result) {
         onChange(result);
