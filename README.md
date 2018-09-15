@@ -8,10 +8,11 @@ Toast Cooking
 
 ### Setup
 
-1. Install Neo4J Enterprise (ask Grant for the link)
-2. [`npm i -g devcert-cli`](https://github.com/davewasmer/devcert-cli), use `devcert generate`.
-3. Run `lerna bootstrap` (I'm still kind of figuring out Lerna...)
-4. If things seem not installed, run `npm i` in any directories where things are broken...
+0.  Add required environment variables (TODO)
+1.  Install Neo4J Enterprise (ask Grant for the link)
+1.  [`npm i -g devcert-cli`](https://github.com/davewasmer/devcert-cli), use `devcert generate`.
+1.  Run `lerna bootstrap` (I'm still kind of figuring out Lerna...)
+1.  If things seem not installed, run `npm i` in any directories where things are broken...
 
 ### Running the API
 
