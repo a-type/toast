@@ -1,68 +1,68 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: '{{ template "toast-core.fullname" . }}'
+  name: {{ template "toast-core.fullname" . }}
   labels:
-    app: '{{ template "toast-core.name" . }}'
-    chart: '{{ template "toast-core.chart" . }}'
-    release: '{{ .Release.Name }}'
-    heritage: '{{ .Release.Service }}'
+    app: {{ template "toast-core.name" . }}
+    chart: {{ template "toast-core.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
-  replicas: '{{ .Values.replicaCount }}'
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: '{{ template "toast-core.name" . }}'
-      release: '{{ .Release.Name }}'
+      app: {{ template "toast-core.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: '{{ template "toast-core.name" . }}'
-        release: '{{ .Release.Name }}'
+        app: {{ template "toast-core.name" . }}
+        release: {{ .Release.Name }}
     spec:
       containers:
-        - name: '{{ .Chart.Name }}'
+        - name: {{ .Chart.Name }}
           image: '{{ .Values.image.repository }}:{{ .Values.image.tag }}'
-          imagePullPolicy: '{{ .Values.image.pullPolicy }}'
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: https
-              containerPort: '{{ .Values.application.port }}'
+              containerPort: {{ .Values.application.port }}
               protocol: TCP
           env:
             - name: NEO4J_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.db.creds.secretName }}'
+                  name: {{ .Values.db.creds.secretName }}
                   key: user
             - name: NEO4J_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.db.creds.secretName }}'
+                  name: {{ .Values.db.creds.secretName }}
                   key: password
             - name: NEO4J_BOLT_HOST
-              value: '{{ .Values.db.hosts.bolt }}'
+              value: {{ .Values.db.hosts.bolt }}
             - name: JWT_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.application.jwt.secretName }}'
+                  name: {{ .Values.application.jwt.secretName }}
                   key: tokenSecret
             - name: PORT
               value: '{{ .Values.application.port }}'
             - name: GCLOUD_MEDIA_BUCKET
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.application.storage.bucketNameSecretName }}'
+                  name: {{ .Values.application.storage.bucketNameSecretName }}
                   key: bucket
             - name: GCLOUD_PROJECT_ID
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.application.storage.projectIdSecretName }}'
+                  name: {{ .Values.application.storage.projectIdSecretName }}
                   key: id
             - name: AUTH0_DOMAIN
               value: '{{ .Values.auth0.domain }}'
             - name: AUTH0_CLIENTID
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.auth0.configSecretName }}'
+                  name: {{ .Values.auth0.configSecretName }}
                   key: clientId
             - name: AUTH0_ISSUER
               value: '{{ .Values.auth0.issuer }}'
@@ -71,14 +71,14 @@ spec:
             - name: AUTH0_API_CLIENTID
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.auth0.configSecretName }}'
+                  name: {{ .Values.auth0.configSecretName }}
                   key: apiClientId
             - name: AUTH0_API_CLIENTSECRET
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.auth0.configSecretName }}'
+                  name: {{ .Values.auth0.configSecretName }}
                   key: apiClientSecret
       volumes:
         - name: tls-secret
           secret:
-            secretName: '{{ .Values.ingress.tls.secretName }}'
+            secretName: {{ .Values.ingress.tls.secretName }}
