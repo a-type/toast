@@ -95,7 +95,7 @@ export class Auth extends EventEmitter {
   }
 
   get httpHeader() {
-    return this.idToken ? `Bearer ${this.idToken}` : null;
+    return this.isLoggedIn && this.idToken ? `Bearer ${this.idToken}` : null;
   }
 
   get user() {

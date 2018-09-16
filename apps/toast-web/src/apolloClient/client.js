@@ -7,6 +7,7 @@ import { withClientState } from 'apollo-link-state';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
 import gql from 'graphql-tag';
+import customFetch from './fetch';
 
 const cache = new InMemoryCache();
 const stateLink = withClientState({ resolvers, defaults, cache });
@@ -55,6 +56,7 @@ const requestHandler = new ApolloLink(
 const httpLink = createUploadLink({
   uri: '/api',
   credentials: 'same-origin',
+  fetch: customFetch,
 });
 
 const link = ApolloLink.from(
