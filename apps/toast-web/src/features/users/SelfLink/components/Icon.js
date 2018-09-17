@@ -11,13 +11,17 @@ const Circle = styled.div`
   font-size: 18px;
   cursor: pointer;
 
+  background-image: url(${props => props.avatarUrl});
+  background-position: center;
+  background-size: cover;
+
   & > * {
     margin: auto;
   }
 `;
 
-export default ({ innerRef, onClick }) => (
-  <Circle innerRef={innerRef} onClick={onClick}>
-    <Icon name="profile-picture" />
+export default ({ innerRef, onClick, avatarUrl, ...rest }) => (
+  <Circle avatarUrl={avatarUrl} innerRef={innerRef} onClick={onClick} {...rest}>
+    {!avatarUrl && <Icon name="profile-picture" />}
   </Circle>
 );

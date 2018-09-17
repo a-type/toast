@@ -4,6 +4,7 @@ import { Icon, LinkStack } from './components';
 import { Link } from 'components/typeset';
 import auth from 'services/auth';
 import { Consumer } from 'features/auth/TokenContext';
+import { path } from 'ramda';
 
 class InnerSelfLink extends React.Component {
   login = () => {
@@ -26,7 +27,7 @@ class InnerSelfLink extends React.Component {
   };
 
   render() {
-    const { isLoggedIn } = this.props;
+    const { isLoggedIn, user } = this.props;
 
     if (!isLoggedIn) {
       return <Link onClick={this.login}>Log in / Sign up</Link>;
@@ -34,7 +35,13 @@ class InnerSelfLink extends React.Component {
 
     return (
       <Tip.Toggle tipContent={this.renderTipContent()}>
-        {({ ref, onClick }) => <Icon onClick={onClick} innerRef={ref} />}
+        {({ ref, onClick }) => (
+          <Icon
+            avatarUrl={path(['picture'], user)}
+            onClick={onClick}
+            innerRef={ref}
+          />
+        )}
       </Tip.Toggle>
     );
   }
