@@ -39,6 +39,7 @@ export class Auth extends EventEmitter {
 
   login = () => {
     this.auth0.authorize();
+    mixpanel.track('login');
   };
 
   logout = () => {
@@ -46,6 +47,7 @@ export class Auth extends EventEmitter {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(EXPIRES_AT_KEY);
     this.emit(this.eventTypes.tokenStored);
+    mixpanel.track('logout');
     history.replace('/');
   };
 
@@ -54,13 +56,10 @@ export class Auth extends EventEmitter {
       if (result && result.accessToken && result.idToken) {
         this.setSession(result);
 
-        console.info('Looking up backend user');
         // create or merge user
         await apolloClient.mutate({
           mutation: MergeUser,
         });
-
-        console.info('done');
 
         history.replace('/');
       } else if (err) {
