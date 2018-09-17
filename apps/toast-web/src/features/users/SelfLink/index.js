@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader, Tip } from 'components/generic';
+import { Loader, Tip, Button } from 'components/generic';
 import { Icon, LinkStack } from './components';
 import { Link } from 'components/typeset';
 import auth from 'services/auth';
@@ -20,8 +20,10 @@ class InnerSelfLink extends React.Component {
 
     return (
       <LinkStack>
-        <Link to={`/users/${user.sub}`}>Profile</Link>
-        <Link onClick={this.logout}>Log out</Link>
+        <Link.Clear to={`/users/${user.sub}`}>
+          <Button>Profile</Button>
+        </Link.Clear>
+        <Button onClick={this.logout}>Log out</Button>
       </LinkStack>
     );
   };

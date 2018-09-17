@@ -6,6 +6,10 @@ const Container = styled.div`
   position: absolute;
   right: var(--spacing-sm);
   top: var(--spacing-xs);
+
+  & > *:hover {
+    color: var(--color-white);
+  }
 `;
 
 export default props => (

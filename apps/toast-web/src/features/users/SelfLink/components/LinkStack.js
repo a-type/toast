@@ -5,6 +5,6 @@ export default styled.div`
   flex-direction: column;
 
   & > * {
-    margin: var(--spacing-sm) 0;
+    margin: var(--spacing-sm) auto;
   }
 `;

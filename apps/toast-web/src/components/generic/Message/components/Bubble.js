@@ -24,13 +24,10 @@ const dismiss = keyframes`
 `;
 
 export default styled.div`
-  background: var(--color-white);
+  background: var(--color-brand);
   color: var(--color-dark);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
-  border-color: var(--color-brand);
-  border-width: 2px;
-  border-style: solid;
   box-shadow: 0 4px 8px 0 #00000080;
   display: flex;
   flex-direction: column;
@@ -38,6 +35,7 @@ export default styled.div`
   font-size: 0.9rem;
   animation-fill-mode: forwards;
   transition: 0.1s ease all;
+  pointer-events: initial;
 
   animation-name: ${show};
   animation-duration: 200;
