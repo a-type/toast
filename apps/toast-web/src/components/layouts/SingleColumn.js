@@ -28,8 +28,7 @@ const Layout = styled.div`
   }
 
   & .${CLASS_NAMES.HERO_CONTENT} {
-    position: absolute;
-    bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
   }
 
   & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
@@ -43,6 +42,8 @@ const Layout = styled.div`
     width: 100%;
     height: 50vmax;
     margin-top: -${TOP_SPACE};
+    justify-content: flex-end;
+    padding-top: ${TOP_SPACE};
   }
 
   @media (min-width: 900px) {
@@ -62,7 +63,6 @@ const Layout = styled.div`
     }
 
     & .${CLASS_NAMES.HERO} {
-      justify-content: flex-end;
       max-width: 1200px;
       height: 60vmax;
 

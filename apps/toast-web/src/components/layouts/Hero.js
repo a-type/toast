@@ -10,12 +10,17 @@ const HeaderImage = styled.div`
   top: 0;
   right: 0;
   z-index: 0;
-  background-color: var(--color-gray-lightest);
+  background-color: var(--color-gray-light);
   background-image: url(${props => props.src});
   background-size: cover;
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: ${props => (!props.src ? 'initial' : 'relative')};
+
+  height: ${props =>
+    !props.src && !props.loading ? 'auto !important' : 'auto'};
+
+  transition: 0.2s ease all;
 `;
 
 const ImageAttributionIcon = styled.div`
@@ -54,10 +59,6 @@ export default ({
   children,
   ...rest
 }) => {
-  if (!image && !loading) {
-    return null;
-  }
-
   return (
     <HeaderImage
       className={classnames(CLASS_NAMES.HERO, className)}
