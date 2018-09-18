@@ -47,7 +47,10 @@ const GroupedContent = styled.div`
 
 const ModifiedButton = styled(Button)`
   border-radius: 0;
+  margin: 0 !important;
 `;
+ModifiedButton.Negative = ModifiedButton.withComponent(Button.Negative);
+ModifiedButton.Positive = ModifiedButton.withComponent(Button.Positive);
 
 const InputGroup = ({ children, ...inputProps }) => (
   <Container hasChildren={!!children}>

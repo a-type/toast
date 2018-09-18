@@ -2,8 +2,9 @@ import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Layout } from './components';
-import { H1 } from 'components/typeset';
+import { H1, HelpText } from 'components/typeset';
 import Card from 'features/recipes/Card';
+import { pathOr } from 'ramda';
 
 const GetFilters = gql`
   query GetFilters {
@@ -36,23 +37,21 @@ export default class SearchRecipeResults extends React.Component {
       return <div>{error.message}</div>;
     }
 
-    if (loading) {
+    const items = pathOr([], ['searchRecipes', 'items'], data);
+
+    if (loading || items.length === 0) {
       return (
         <Card.Grid loading>
-          {new Array(50).fill(null).map((_, idx) => (
-            <Card.Skeleton key={idx} />
-          ))}
+          {new Array(50)
+            .fill(null)
+            .map((_, idx) => <Card.Skeleton key={idx} />)}
         </Card.Grid>
       );
     }
 
-    const { items } = data.searchRecipes;
-
     return (
       <Card.Grid>
-        {items.map(recipe => (
-          <Card key={recipe.id} recipe={recipe} />
-        ))}
+        {items.map(recipe => <Card key={recipe.id} recipe={recipe} />)}
       </Card.Grid>
     );
   };
@@ -65,11 +64,7 @@ export default class SearchRecipeResults extends React.Component {
             return <div>{error.message}</div>;
           }
 
-          const { searchFilters: filters } = data;
-
-          if (loading || !filters.length) {
-            return null;
-          }
+          const { searchFilters: filters = [] } = data;
 
           const include = filters.reduce((list, filter) => {
             if (filter.type === 'includeIngredient') {
@@ -96,8 +91,17 @@ export default class SearchRecipeResults extends React.Component {
 
           return (
             <div>
-              <H1>{filters.length ? 'Search Results' : 'Explore'}</H1>
-              <Query query={SearchRecipes} variables={{ input: searchInput }}>
+              <H1 spaceBelow={filters.length ? 'xl' : 'sm'}>Recipes</H1>
+              {filters.length === 0 && (
+                <HelpText spaceBelow="lg">
+                  Use the search bar above to get started
+                </HelpText>
+              )}
+              <Query
+                query={SearchRecipes}
+                variables={{ input: searchInput }}
+                skip={filters.length === 0}
+              >
                 {this.renderSearchResults}
               </Query>
             </div>

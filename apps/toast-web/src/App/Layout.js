@@ -12,6 +12,8 @@ AppLayout.Navigation = styled.div`
   flex: 0 0 auto;
   z-index: 10;
   pointer-events: none;
+  position: absolute;
+  width: 100%;
 
   & > * {
     pointer-events: initial;

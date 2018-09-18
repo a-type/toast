@@ -104,8 +104,7 @@ export default class RecipeView extends React.Component<Props> {
               <Hero
                 image={pathOr(null, ['data', 'recipe', 'coverImage'], response)}
                 loading={response.loading}
-              />
-              <Content>
+              >
                 <H1 name="Title">
                   {pathOr('', ['data', 'recipe', 'title'], response)}
                   <EditButton
@@ -116,6 +115,8 @@ export default class RecipeView extends React.Component<Props> {
                     )}
                   />
                 </H1>
+              </Hero>
+              <Content>
                 <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
                 <H2 name="IngredientsSection">Ingredients</H2>
                 <Ingredients

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Layout } from './components';
+import { Layout, BorderContainer } from './components';
 import Filter from './Filter';
 import { H2 } from 'components/typeset';
 
@@ -35,21 +35,17 @@ export default class Filters extends React.Component {
             return <div>{error.message}</div>;
           }
 
-          const { searchFilters } = data;
-
-          if (loading || !searchFilters.length) {
-            return null;
-          }
+          const { searchFilters = [] } = data;
 
           return (
-            <div>
+            <BorderContainer>
               <H2>Filters</H2>
               <Layout>
                 {searchFilters.map(filter => (
                   <Filter key={filter.id} {...filter} />
                 ))}
               </Layout>
-            </div>
+            </BorderContainer>
           );
         }}
       </Query>

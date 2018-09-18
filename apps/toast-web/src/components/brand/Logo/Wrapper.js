@@ -7,4 +7,5 @@ export default styled.div`
   cursor: pointer;
   padding: 10px;
   margin: auto;
+  border-radius: var(--border-radius-md);
 `;

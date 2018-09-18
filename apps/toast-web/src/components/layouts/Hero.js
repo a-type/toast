@@ -1,25 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tip, Background } from '../generic';
+import { Tip } from '../generic';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 import { path, pathOr } from 'ramda';
 
 const HeaderImage = styled.div`
-  position: absolute;
   left: 0;
   top: 0;
   right: 0;
   z-index: 0;
-  height: 40vh;
   background-color: var(--color-gray-lightest);
   background-image: url(${props => props.src});
   background-size: cover;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 `;
 
 const ImageAttributionIcon = styled.div`
   position: absolute;
-  bottom: var(--spacing-xl);
+  bottom: var(--spacing-xs);
   right: var(--spacing-xs);
   color: white;
   opacity: 0.5;
@@ -27,11 +28,12 @@ const ImageAttributionIcon = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
 
-  @media (min-width: 720px) {
-    bottom: var(--spacing-xs);
-    right: var(--spacing-lg);
-  }
+const Content = styled.div`
+  background: var(--color-white);
+  color: var(--color-dark);
+  padding: var(--spacing-lg);
 `;
 
 const ImageAttribution = ({ attribution }) => (
@@ -44,23 +46,35 @@ const ImageAttribution = ({ attribution }) => (
   </Tip.Toggle>
 );
 
-export default ({ image, loading, className, ...rest }) => {
+export default ({
+  image,
+  loading,
+  className,
+  contentClassName,
+  children,
+  ...rest
+}) => {
   if (!image && !loading) {
     return null;
   }
 
   return (
-    <Background backgroundKey="hero">
-      <HeaderImage
-        className={classnames(CLASS_NAMES.HERO, className)}
-        src={pathOr(null, ['url'], image)}
-        loading={loading}
-        {...rest}
-      >
-        {path(['attribution'], image) && (
-          <ImageAttribution attribution={path(['attribution'], image)} />
-        )}
-      </HeaderImage>
-    </Background>
+    <HeaderImage
+      className={classnames(CLASS_NAMES.HERO, className)}
+      src={pathOr(null, ['url'], image)}
+      loading={loading}
+      {...rest}
+    >
+      {path(['attribution'], image) && (
+        <ImageAttribution attribution={path(['attribution'], image)} />
+      )}
+      {children && (
+        <Content
+          className={classnames(CLASS_NAMES.HERO_CONTENT, contentClassName)}
+        >
+          {children}
+        </Content>
+      )}
+    </HeaderImage>
   );
 };

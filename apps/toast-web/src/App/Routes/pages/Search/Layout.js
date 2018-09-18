@@ -4,10 +4,15 @@ const Layout = styled.div`
   display: grid;
   grid-template-areas: 'ingredients' 'filters' 'recipes';
   grid-gap: var(--spacing-lg);
+  min-height: 50vh;
 
   @media (min-width: 1200px) {
     grid-template-areas: 'filters ingredients' 'filters recipes';
     grid-template-columns: minmax(400px, 1fr) 4fr;
+  }
+
+  @media (min-width: 1600px) {
+    grid-template-columns: 1fr 1fr;
   }
 `;
 

@@ -49,12 +49,16 @@ class SearchBar extends React.Component {
   setMatchTerm = () => this.props.setInputValue(this.state.inputValue);
   debouncedSetMatchTerm = debounce(this.setMatchTerm, 200);
 
+  commitSearch = () => {
+    this.setState({
+      inputValue: '',
+    });
+    this.props.addMatchFilter(this.state.inputValue);
+  };
+
   handleKeyDown = ev => {
     if (ev.key === 'Enter') {
-      this.setState({
-        inputValue: '',
-      });
-      this.props.addMatchFilter(this.state.inputValue);
+      this.commitSearch();
     } else {
       const { history, location } = this.props;
       if (this.state.inputValue.length > 1 && location.pathname !== '/search') {
@@ -88,7 +92,14 @@ class SearchBar extends React.Component {
         onKeyDown={this.handleKeyDown}
       >
         {inputValue.length > 0 && (
-          <Input.Group.Button onClick={this.reset}>&times;</Input.Group.Button>
+          <React.Fragment>
+            <Input.Group.Button onClick={this.commitSearch}>
+              Match "{inputValue}"
+            </Input.Group.Button>
+            <Input.Group.Button.Negative onClick={this.reset}>
+              &times;
+            </Input.Group.Button.Negative>
+          </React.Fragment>
         )}
       </Input.Group>
     );

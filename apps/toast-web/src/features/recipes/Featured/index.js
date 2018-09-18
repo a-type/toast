@@ -6,6 +6,7 @@ import Card from '../Card';
 import Spotlight from './Spotlight';
 import { path, pathOr } from 'ramda';
 import { H2 } from 'components/typeset';
+import { PrioritizedPromotion } from '../../promotions';
 
 const FeaturedRecipes = gql`
   query FeaturedRecipes($count: Int!) {
@@ -30,10 +31,9 @@ export default () => (
       if (loading) {
         return (
           <React.Fragment>
-            <Hero loading />
-            <Content>
+            <Hero loading>
               <Spotlight.Skeleton />
-            </Content>
+            </Hero>
             <Content>
               <H2>Popular Recipes</H2>
               <Card.Grid loading>
@@ -54,10 +54,10 @@ export default () => (
 
       return (
         <React.Fragment>
-          <Hero image={pathOr(null, ['coverImage'], recipes[0])} />
-          <Content>
+          <Hero image={pathOr(null, ['coverImage'], recipes[0])}>
             <Spotlight recipe={recipes[0]} />
-          </Content>
+          </Hero>
+          <PrioritizedPromotion />
           <Content>
             <H2>Popular Recipes</H2>
             <Card.Grid>

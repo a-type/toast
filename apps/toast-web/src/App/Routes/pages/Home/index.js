@@ -7,7 +7,6 @@ import { SingleColumn } from 'components/layouts';
 
 export default () => (
   <SingleColumn>
-    <PrioritizedPromotion />
     <Featured />
   </SingleColumn>
 );

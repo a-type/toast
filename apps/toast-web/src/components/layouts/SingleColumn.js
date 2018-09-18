@@ -5,31 +5,48 @@ import { pathOr, path } from 'ramda';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
+const TOP_SPACE = '7vmax';
+
 const Layout = styled.div`
   width: 100%;
-  max-width: ${props => (props.wide ? 'auto' : '900px')};
   display: flex;
   flex-direction: column;
-  padding-left: var(--spacing-md);
-  padding-right: var(--spacing-md);
   position: relative;
   z-index: 1;
   pointer-events: none;
-  top: ${props => (props.hasHeaderImage ? '20vh' : 'var(--spacing-xl)')};
+  margin-top: ${TOP_SPACE};
 
   & > * {
     pointer-events: initial;
   }
 
-  & > .${CLASS_NAMES.CONTENT} {
+  & .${CLASS_NAMES.CONTENT} {
     margin: 0;
     transition: 0.2s ease all;
-    border-radius: var(--spacing-sm);
+    max-width: ${props => (props.wide ? 'auto' : '900px')};
+    margin-top: var(--spacing-xl);
+  }
+
+  & .${CLASS_NAMES.HERO_CONTENT} {
+    position: absolute;
+    bottom: var(--spacing-lg);
+  }
+
+  & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
+    border-radius: var(--border-radius-md);
+    margin-left: var(--spacing-md);
+    margin-right: var(--spacing-md);
     margin-bottom: var(--spacing-md);
   }
 
+  & .${CLASS_NAMES.HERO} {
+    width: 100%;
+    height: 50vmax;
+    margin-top: -${TOP_SPACE};
+  }
+
   @media (min-width: 900px) {
-    & > .${CLASS_NAMES.CONTENT} {
+    & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
       margin-left: var(--spacing-xl);
       margin-right: var(--spacing-xl);
       margin-bottom: var(--spacing-lg);
@@ -37,37 +54,26 @@ const Layout = styled.div`
   }
 
   @media (min-width: 1600px) {
-    margin-left: auto;
-    margin-right: auto;
-  }
-`;
+    & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      max-width: ${props => (props.wide ? 'auto' : '900px')};
+    }
 
-const HeaderImage = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  z-index: 0;
-  height: 40vh;
-  background-color: var(--color-gray-lightest);
-  background-image: url(${props => props.src});
-  background-size: cover;
-`;
+    & .${CLASS_NAMES.HERO} {
+      justify-content: flex-end;
+      max-width: 1200px;
+      height: 60vmax;
 
-const ImageAttributionIcon = styled.div`
-  position: absolute;
-  bottom: var(--spacing-xl);
-  right: var(--spacing-xs);
-  color: white;
-  opacity: 0.5;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-  &:hover {
-    cursor: pointer;
-  }
-
-  @media (min-width: 720px) {
-    bottom: var(--spacing-xs);
-    right: var(--spacing-lg);
+    & .${CLASS_NAMES.HERO_CONTENT} {
+      position: initial;
+      width: 900px;
+    }
   }
 `;
 
