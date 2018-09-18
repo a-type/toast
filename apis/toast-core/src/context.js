@@ -1,6 +1,7 @@
 import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
 import logger from './logger';
+import { pathOr } from 'ramda';
 
 console.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 
@@ -16,7 +17,7 @@ process.on('exit', () => {
 export const createContext = async req => {
   const isMutation = req.body.query.startsWith('mutation');
 
-  return {
+  const context = {
     driver,
     // interop / legacy
     transaction: txFunction => {
@@ -36,5 +37,8 @@ export const createContext = async req => {
       return sess.readTransaction(txFunction);
     },
     user: req.user,
+    scopes: pathOr('', ['user', 'scope'], req).split(' '),
   };
+
+  return context;
 };

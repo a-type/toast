@@ -29,7 +29,7 @@ const auth = jwt({
     jwksRequestsPerMinute: 5,
     jwksUri: `${config.auth0.issuer}.well-known/jwks.json`,
   }),
-  audience: config.auth0.clientId,
+  audience: config.auth0.audience,
   issuer: config.auth0.issuer,
   algorithms: ['RS256'],
   credentialsRequired: false,

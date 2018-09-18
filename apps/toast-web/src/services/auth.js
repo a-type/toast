@@ -8,6 +8,7 @@ import gql from 'graphql-tag';
 export const ACCESS_TOKEN_KEY = 'toast_access_token';
 export const ID_TOKEN_KEY = 'toast_id_token';
 export const EXPIRES_AT_KEY = 'toast_expires_at';
+export const SCOPES_KEY = 'toast_scopes';
 
 const MergeUser = gql`
   mutation MergeUser {
@@ -25,7 +26,8 @@ export class Auth extends EventEmitter {
     clientID: CONFIG.auth0.clientId,
     redirectUri: CONFIG.origin + '/loggedIn',
     responseType: 'token id_token',
-    scope: 'openid profile email',
+    scope: 'openid profile email ' + CONFIG.auth0.requestedScopes.join(' '),
+    audience: CONFIG.auth0.audience,
   });
 
   eventTypes = {
@@ -71,12 +73,17 @@ export class Auth extends EventEmitter {
   };
 
   setSession = authResult => {
+    console.log(authResult);
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime(),
     );
     localStorage.setItem(ID_TOKEN_KEY, authResult.idToken);
     localStorage.setItem(ACCESS_TOKEN_KEY, authResult.accessToken);
     localStorage.setItem(EXPIRES_AT_KEY, expiresAt);
+    localStorage.setItem(
+      SCOPES_KEY,
+      authResult.scope || CONFIG.auth0.requestedScopes.join(' '),
+    );
     this.emit(this.eventTypes.tokenStored);
   };
 
@@ -94,7 +101,9 @@ export class Auth extends EventEmitter {
   }
 
   get httpHeader() {
-    return this.isLoggedIn && this.idToken ? `Bearer ${this.idToken}` : null;
+    return this.isLoggedIn && this.accessToken
+      ? `Bearer ${this.accessToken}`
+      : null;
   }
 
   get user() {
