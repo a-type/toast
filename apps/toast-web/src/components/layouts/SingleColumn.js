@@ -25,17 +25,19 @@ const Layout = styled.div`
     transition: 0.2s ease all;
     max-width: ${props => (props.wide ? 'auto' : '900px')};
     margin-top: var(--spacing-xl);
+    margin-left: var(--spacing-md);
+    margin-right: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
   }
 
   & .${CLASS_NAMES.HERO_CONTENT} {
     margin-bottom: var(--spacing-lg);
+    margin-left: var(--spacing-md);
+    margin-right: auto;
   }
 
   & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
     border-radius: var(--border-radius-md);
-    margin-left: var(--spacing-md);
-    margin-right: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
   }
 
   & .${CLASS_NAMES.HERO} {
@@ -47,10 +49,14 @@ const Layout = styled.div`
   }
 
   @media (min-width: 900px) {
-    & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
+    & .${CLASS_NAMES.CONTENT} {
       margin-left: var(--spacing-xl);
       margin-right: var(--spacing-xl);
       margin-bottom: var(--spacing-lg);
+    }
+
+    & .${CLASS_NAMES.HERO_CONTENT} {
+      margin-left: var(--spacing-xl);
     }
   }
 
@@ -64,7 +70,7 @@ const Layout = styled.div`
 
     & .${CLASS_NAMES.HERO} {
       max-width: 1200px;
-      height: 60vmax;
+      height: 60vh;
 
       margin-left: auto;
       margin-right: auto;

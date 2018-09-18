@@ -6,10 +6,6 @@ import classnames from 'classnames';
 import { path, pathOr } from 'ramda';
 
 const HeaderImage = styled.div`
-  left: 0;
-  top: 0;
-  right: 0;
-  z-index: 0;
   background-color: var(--color-gray-light);
   background-image: url(${props => props.src});
   background-size: cover;
