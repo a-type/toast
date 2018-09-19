@@ -8,6 +8,7 @@ class TokenProvider extends React.Component {
   state = {
     user: auth.user,
     isLoggedIn: auth.isLoggedIn,
+    scopes: auth.scopes,
   };
 
   componentDidMount() {
