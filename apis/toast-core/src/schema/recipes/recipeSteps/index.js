@@ -29,14 +29,12 @@ export const typeDefs = gql`
 
   extend type Mutation {
     updateRecipeStep(id: ID!, input: RecipeStepUpdateInput!): RecipeStep!
-      @authenticated
+      @hasScope(scope: "update:fullRecipe")
     createRecipeStep(recipeId: ID!, input: RecipeStepCreateInput!): Recipe!
-      @authenticated
-      @relatedToUser(idArg: "recipeId")
+      @hasScope(scope: "update:fullRecipe")
     moveRecipeStep(recipeId: ID!, input: ListMoveInput!): Recipe!
-      @authenticated
-      @relatedToUser(idArg: "recipeId")
-    deleteRecipeStep(id: ID!): Recipe! @authenticated
+      @hasScope(scope: "update:fullRecipe")
+    deleteRecipeStep(id: ID!): Recipe! @hasScope(scope: "update:fullRecipe")
   }
 `;
 

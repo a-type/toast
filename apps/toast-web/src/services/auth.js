@@ -73,7 +73,6 @@ export class Auth extends EventEmitter {
   };
 
   setSession = authResult => {
-    console.log(authResult);
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime(),
     );
@@ -108,6 +107,14 @@ export class Auth extends EventEmitter {
 
   get user() {
     return this.idToken ? jwt(this.idToken) : null;
+  }
+
+  get scopes() {
+    const scopeString = localStorage.getItem(SCOPES_KEY);
+    if (scopeString) {
+      return scopeString.split(' ');
+    }
+    return [];
   }
 }
 

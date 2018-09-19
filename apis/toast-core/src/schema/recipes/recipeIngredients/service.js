@@ -22,7 +22,7 @@ const defaulted = recipeIngredient =>
     recipeIngredient,
   );
 
-const hasAccess = async (tx, recipeIngredientId, ctx) => {
+const checkAccess = async (tx, recipeIngredientId, ctx) => {
   if (ctx.roles.includes('admin')) {
     return true;
   }
@@ -38,7 +38,9 @@ const hasAccess = async (tx, recipeIngredientId, ctx) => {
     },
   );
 
-  return !!result.records.length;
+  if (!result.records.length) {
+    throw new ForbiddenError("You can't update this");
+  }
 };
 
 export const getForRecipe = (id, ctx) => {
@@ -152,6 +154,8 @@ export const parseRecipeIngredient_withTransaction = async (
 
 export const reparseRecipeIngredient = async (id, input, ctx) => {
   return ctx.transaction(async tx => {
+    await checkAccess(tx, id, ctx);
+
     const parsed = await parseRecipeIngredientText(input.text, tx);
 
     return updateRecipeIngredient_withTransaction(id, parsed, tx, ctx);
@@ -176,6 +180,8 @@ const changeIngredientRelationship = (id, userId, ingredientId, tx) => {
 
 export const updateRecipeIngredient = (id, args, ctx) => {
   return ctx.transaction(async tx => {
+    await checkAccess(tx, id, ctx);
+
     return updateRecipeIngredient_withTransaction(id, args, tx, ctx);
   });
 };
@@ -186,12 +192,6 @@ export const updateRecipeIngredient_withTransaction = async (
   tx,
   ctx,
 ) => {
-  const canAccess = await hasAccess(tx, id, ctx);
-
-  if (!canAccess) {
-    throw new ForbiddenError("Sorry, you can't do that");
-  }
-
   if (args.ingredientId) {
     await changeIngredientRelationship(id, ctx.user.id, args.ingredientId, tx);
   }
@@ -221,11 +221,7 @@ export const updateRecipeIngredient_withTransaction = async (
 
 export const moveRecipeIngredient = (recipeId, args, ctx) => {
   return ctx.transaction(async tx => {
-    const canAccess = await hasAccess(tx, id, ctx);
-
-    if (!canAccess) {
-      throw new ForbiddenError("Sorry, you can't do that");
-    }
+    await checkAccess(tx, id, ctx);
 
     const ingredientsResult = await tx.run(
       `
@@ -272,11 +268,7 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
 
 export const deleteRecipeIngredient = (id, ctx) => {
   return ctx.transaction(async tx => {
-    const canAccess = await hasAccess(tx, id, ctx);
-
-    if (!canAccess) {
-      throw new ForbiddenError("Sorry, you can't do that");
-    }
+    await checkAccess(tx, id, ctx);
 
     const result = await tx.run(
       `

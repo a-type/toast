@@ -124,7 +124,7 @@ export const updateRecipeDetails = async (id, input, ctx) => {
   return ctx.transaction(async tx => {
     const details = await tx.run(
       `
-      MATCH (recipe:Recipe {id: $id})
+      MATCH (recipe:Recipe {id: $id})<-[:AUTHOR_OF]-(:User {id: $userId})
       SET recipe += $input
       RETURN recipe { ${RECIPE_FIELDS} };
     `,
@@ -147,6 +147,7 @@ export const updateRecipeDetails = async (id, input, ctx) => {
           ),
           updatedAt: timestamp(),
         },
+        userId: ctx.user.id,
       },
     );
 
@@ -223,11 +224,11 @@ export const publishRecipe = async (id, ctx) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-        MATCH (recipe:Recipe { id: $id })
+        MATCH (recipe:Recipe { id: $id })<-[:AUTHOR_OF]-(:User {id: $userId})
         SET recipe.published = true, recipe.updatedAt = $time
         RETURN recipe {${RECIPE_FIELDS}}
       `,
-      { id, time: timestamp() },
+      { id, time: timestamp(), userId: ctx.user.id },
     );
 
     if (!result.records[0]) {

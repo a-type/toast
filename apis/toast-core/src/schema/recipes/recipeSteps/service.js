@@ -26,13 +26,19 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-      MATCH (recipe:Recipe {id: $id})
+      MATCH (recipe:Recipe {id: $id})<-[:AUTHOR_OF]-(:User {id: $userId})
       OPTIONAL MATCH (recipe)<-[allSteps:STEP_OF]-()
       WITH recipe, count(allSteps) as index
       CREATE (recipe)<-[rel:STEP_OF {id: $relId, index: index}]-(step:Step {id: $stepId, text: $text})
       RETURN recipe {${RECIPE_FIELDS}}
       `,
-      { id: recipeId, relId: uuid(), stepId: uuid(), text: args.text },
+      {
+        id: recipeId,
+        relId: uuid(),
+        stepId: uuid(),
+        text: args.text,
+        userId: ctx.user.id,
+      },
     );
 
     if (result.records.length) {

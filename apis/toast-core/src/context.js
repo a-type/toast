@@ -17,6 +17,8 @@ process.on('exit', () => {
 export const createContext = async req => {
   const isMutation = req.body.query.startsWith('mutation');
 
+  const user = req.user ? { ...req.user, id: req.user.sub } : null;
+
   const context = {
     driver,
     // interop / legacy
@@ -36,7 +38,7 @@ export const createContext = async req => {
       const sess = driver.session();
       return sess.readTransaction(txFunction);
     },
-    user: req.user,
+    user,
     scopes: pathOr('', ['user', 'scope'], req).split(' '),
   };
 

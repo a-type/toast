@@ -10,7 +10,7 @@ import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
 import { Content, Hero } from 'components/layouts';
 import { Loader } from 'components/generic';
-import { H2, H1 } from 'components/typeset';
+import { H2, H1, Span } from 'components/typeset';
 import JumpControls from './JumpControls';
 import LinkFrame from './LinkFrame';
 import ViewSpy from './ViewSpy';
@@ -105,16 +105,22 @@ export default class RecipeView extends React.Component<Props> {
                 image={pathOr(null, ['data', 'recipe', 'coverImage'], response)}
                 loading={response.loading}
               >
-                <H1 name="Title">
-                  {pathOr('', ['data', 'recipe', 'title'], response)}
-                  <EditButton
-                    recipeId={recipeId}
-                    authorId={path(
-                      ['data', 'recipe', 'author', 'id'],
-                      response,
-                    )}
-                  />
-                </H1>
+                {response.loading ? (
+                  <H1>
+                    <Span.Skeleton />
+                  </H1>
+                ) : (
+                  <H1 name="Title">
+                    {pathOr('', ['data', 'recipe', 'title'], response)}
+                    <EditButton
+                      recipeId={recipeId}
+                      authorId={path(
+                        ['data', 'recipe', 'author', 'id'],
+                        response,
+                      )}
+                    />
+                  </H1>
+                )}
               </Hero>
               <Content>
                 <Details recipe={pathOr(null, ['data', 'recipe'], response)} />
