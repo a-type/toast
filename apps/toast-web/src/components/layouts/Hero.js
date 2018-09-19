@@ -35,6 +35,8 @@ const Content = styled.div`
   background: var(--color-white);
   color: var(--color-dark);
   padding: var(--spacing-lg);
+  box-shadow: ${props => (props.hasImage ? '0 4px 8px 0 #00000080' : 'none')};
+  margin-top: ${props => (props.hasImage ? '20vh' : '5vh')};
 `;
 
 const ImageAttribution = ({ attribution }) => (
@@ -67,6 +69,7 @@ export default ({
       )}
       {children && (
         <Content
+          hasImage={!!image}
           className={classnames(CLASS_NAMES.HERO_CONTENT, contentClassName)}
         >
           {children}

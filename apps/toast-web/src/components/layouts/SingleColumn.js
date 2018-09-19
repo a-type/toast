@@ -5,7 +5,7 @@ import { pathOr, path } from 'ramda';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
-const TOP_SPACE = '7vmax';
+const TOP_SPACE = '200px';
 
 const Layout = styled.div`
   width: 100%;
@@ -31,8 +31,6 @@ const Layout = styled.div`
   }
 
   & .${CLASS_NAMES.HERO_CONTENT} {
-    margin-bottom: var(--spacing-lg);
-    margin-left: var(--spacing-md);
     margin-right: auto;
   }
 
@@ -42,10 +40,12 @@ const Layout = styled.div`
 
   & .${CLASS_NAMES.HERO} {
     width: 100%;
-    height: 50vmax;
     margin-top: -${TOP_SPACE};
     justify-content: flex-end;
     padding-top: ${TOP_SPACE};
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
   }
 
   @media (min-width: 900px) {
@@ -55,30 +55,34 @@ const Layout = styled.div`
       margin-bottom: var(--spacing-lg);
     }
 
-    & .${CLASS_NAMES.HERO_CONTENT} {
-      margin-left: var(--spacing-xl);
+    & .${CLASS_NAMES.HERO} {
+      padding-left: var(--spacing-xl);
+      padding-right: var(--spacing-xl);
     }
   }
 
   @media (min-width: 1600px) {
     & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
-      margin-left: auto;
       margin-right: auto;
-      width: 100%;
       max-width: ${props => (props.wide ? 'auto' : '900px')};
+    }
+
+    & .${CLASS_NAMES.CONTENT} {
+      width: 100%;
+      margin-left: auto;
     }
 
     & .${CLASS_NAMES.HERO} {
       max-width: 1200px;
-      height: 60vh;
 
       margin-left: auto;
       margin-right: auto;
+      padding-left: 150px;
+      padding-right: 150px;
     }
 
     & .${CLASS_NAMES.HERO_CONTENT} {
       position: initial;
-      width: 900px;
     }
   }
 `;
