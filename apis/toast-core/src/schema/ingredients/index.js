@@ -4,6 +4,7 @@ import {
   createIngredient,
   updateIngredient,
   deleteIngredient,
+  mergeIngredients,
 } from './service';
 import { gql } from 'apollo-server-express';
 
@@ -13,6 +14,7 @@ export const typeDefs = gql`
     name: String!
     description: String
     attribution: String
+    alternateNames: [String!]!
   }
 
   input IngredientCreateInput {
@@ -34,8 +36,12 @@ export const typeDefs = gql`
 
   extend type Mutation {
     createIngredient(input: IngredientCreateInput!): Ingredient!
+      @hasScope(scope: "create:ingredient")
     updateIngredient(id: ID!, input: IngredientUpdateInput!): Ingredient!
-    deleteIngredient(id: ID!): Ingredient @hasRole(role: "admin")
+      @hasScope(scope: "update:ingredient")
+    deleteIngredient(id: ID!): Ingredient @hasScope(scope: "delete:ingredient")
+    mergeIngredients(primary: ID!, secondary: ID!): Ingredient
+      @hasScope(scope: "update:mergeIngredients")
   }
 `;
 
@@ -52,5 +58,6 @@ export const resolvers = {
       updateIngredient(args.id, args.input, ctx),
     deleteIngredient: (_parent, args, ctx, info) =>
       deleteIngredient(args.id, ctx),
+    mergeIngredients: (_parent, args, ctx, info) => mergeIngredients(args, ctx),
   },
 };

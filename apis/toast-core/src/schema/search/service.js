@@ -1,3 +1,12 @@
+import {
+  defaulted as recipeDefaulted,
+  RECIPE_FIELDS,
+} from '../recipes/service';
+import {
+  defaulted as ingredientDefaulted,
+  INGREDIENT_FIELDS,
+} from '../ingredients/service';
+
 export const searchRecipes = async ({ term, ingredients }, ctx) => {
   if (!term && !ingredients) {
     return {
@@ -13,7 +22,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
     }
 
     return {
-      items: result.records.map(record => record.get('r')),
+      items: result.records.map(record => recipeDefaulted(record.get('r'))),
     };
   };
 
@@ -26,7 +35,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
         CALL apoc.index.search("recipes", $term) YIELD node, weight
         WHERE node.published = true
         WITH collect(node) as recipes, weight
-        RETURN recipes {.id, .title, .description} ORDER BY weight DESC SKIP $offset LIMIT $count
+        RETURN recipes {${RECIPE_FIELDS}} ORDER BY weight DESC SKIP $offset LIMIT $count
       `,
         {
           term: `${term}~`,
@@ -47,7 +56,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       AND all(c in $include WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
       AND r.published = true
       WITH r
-      RETURN r {.id, .title, .description} SKIP $offset LIMIT $count;
+      RETURN r {${RECIPE_FIELDS}} SKIP $offset LIMIT $count;
       `,
         { include, exclude, offset: 0, count: 100 },
       );
@@ -64,7 +73,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       AND all(c in $include WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
       AND r.published = true
       WITH r, weight
-      RETURN r {.id, .title, .description} ORDER BY weight DESC SKIP $offset LIMIT $count;
+      RETURN r {${RECIPE_FIELDS}} ORDER BY weight DESC SKIP $offset LIMIT $count;
       `,
         { term: `${term}~`, include, exclude, offset: 0, count: 100 },
       );
@@ -97,7 +106,7 @@ export const searchIngredients_withTransaction = async (term, tx) => {
     `
     CALL apoc.index.search("ingredients", $term) YIELD node, weight
     WITH node, weight
-    RETURN node {.id, .name, .description} ORDER BY weight DESC LIMIT 10
+    RETURN node {${INGREDIENT_FIELDS}} ORDER BY weight DESC LIMIT 10
     `,
     { term: `${normalizeTerm(term)}~` },
   );
@@ -109,6 +118,8 @@ export const searchIngredients_withTransaction = async (term, tx) => {
   }
 
   return {
-    items: result.records.map(record => record.get('node')),
+    items: result.records.map(record =>
+      ingredientDefaulted(record.get('node')),
+    ),
   };
 };

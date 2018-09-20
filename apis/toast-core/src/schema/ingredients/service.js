@@ -1,19 +1,30 @@
 import { id } from 'tools';
 import { ApolloError } from 'apollo-server-express';
-const FIELDS = `.id, .name, .description, .attribution`;
+export const INGREDIENT_FIELDS = `.id, .name, .description, .attribution, .alternateNames`;
+
+const DEFAULTS = {
+  alternateNames: [],
+};
+
+export const defaulted = ingredient =>
+  Object.keys(DEFAULTS).reduce(
+    (acc, key) =>
+      ingredient[key] !== null ? acc : { ...acc, [key]: DEFAULTS[key] },
+    ingredient,
+  );
 
 export const listIngredients = ({ offset = 0, count = 10 }, ctx) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient)
-        RETURN ingredient { ${FIELDS} }
+        RETURN ingredient { ${INGREDIENT_FIELDS} }
         SKIP $offset LIMIT $count
       `,
       { offset, count },
     );
 
-    return result.records.map(rec => rec.get('ingredient'));
+    return result.records.map(rec => defaulted(rec.get('ingredient')));
   });
 };
 
@@ -22,7 +33,7 @@ export const getIngredient = (id, ctx) => {
     const result = await tx.run(
       `
         MATCH (ingredient:Ingredient { id: $id })
-        RETURN ingredient { ${FIELDS} }
+        RETURN ingredient { ${INGREDIENT_FIELDS} }
       `,
       { id },
     );
@@ -31,7 +42,7 @@ export const getIngredient = (id, ctx) => {
       return null;
     }
 
-    return result.records[0].get('ingredient');
+    return defaulted(result.records[0].get('ingredient'));
   });
 };
 
@@ -41,7 +52,10 @@ export const createIngredient = (
 ) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
-      'CREATE (i:Ingredient {name: $name, description: $description, attribution: $attribution, id: $id}) RETURN i {.id, .name, .description}',
+      `
+        CREATE (i:Ingredient {name: $name, description: $description, attribution: $attribution, id: $id})
+        RETURN i {${INGREDIENT_FIELDS}}
+      `,
       {
         name: name.toLowerCase(),
         description: description || null,
@@ -50,7 +64,7 @@ export const createIngredient = (
       },
     );
 
-    return result.records[0].get('i');
+    return defaulted(result.records[0].get('i'));
   });
 };
 
@@ -60,16 +74,22 @@ export const updateIngredient = (id, input, ctx) => {
       `
         MATCH (ingredient:Ingredient { id: $id })
         SET ingredient += $input
-        RETURN ingredient { ${FIELDS} }
+        RETURN ingredient { ${INGREDIENT_FIELDS} }
       `,
-      { id, input: pick(['name', 'description', 'attribution'], input) },
+      {
+        id,
+        input: pick(
+          ['name', 'description', 'attribution', 'alternateNames'],
+          input,
+        ),
+      },
     );
 
     if (result.records.length === 0) {
       throw new ApolloError("That ingredient doesn't exist", 'NOT_FOUND');
     }
 
-    return result.records[0].get('ingredient');
+    return defaulted(result.records[0].get('ingredient'));
   });
 };
 
@@ -84,5 +104,29 @@ export const deleteIngredient = (id, ctx) => {
     );
 
     return null;
+  });
+};
+
+export const mergeIngredients = ({ primary, secondary }, ctx) => {
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (secondary:Ingredient {id: $secondaryId}), (primary:Ingredient {id: $primaryId})
+        WITH head(collect([primary, secondary])) as nodes, coalesce(primary.alternateNames, []) + coalesce(secondary.alternateNames, []) + secondary.name as newAlternateNames
+        CALL apoc.refactor.mergeNodes(nodes, {properties: "discard"}) YIELD node
+        SET node.alternateNames = newAlternateNames
+        RETURN node {${INGREDIENT_FIELDS}}
+      `,
+      {
+        primaryId: primary,
+        secondaryId: secondary,
+      },
+    );
+
+    if (!result.records.length) {
+      throw new Error('Failed to merge ingredients');
+    }
+
+    return defaulted(result.records[0].get('node'));
   });
 };

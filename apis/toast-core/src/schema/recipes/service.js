@@ -17,7 +17,7 @@ export const DEFAULTS = {
   views: 0,
 };
 
-const defaulted = recipe =>
+export const defaulted = recipe =>
   Object.keys(DEFAULTS).reduce(
     (acc, key) =>
       recipe[key] !== null ? acc : { ...acc, [key]: DEFAULTS[key] },

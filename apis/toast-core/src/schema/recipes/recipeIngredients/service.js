@@ -1,5 +1,7 @@
 import uuid from 'uuid';
+import { id } from 'tools';
 import { RECIPE_FIELDS } from '../service';
+import { INGREDIENT_FIELDS } from '../../ingredients/service';
 import { pick } from 'ramda';
 import parse from './parseIngredient';
 import { searchIngredients_withTransaction } from '../../search/service';
@@ -7,7 +9,6 @@ import { ForbiddenError, ApolloError } from 'apollo-server-express';
 
 export const RECIPE_INGREDIENT_FIELDS =
   '.id, .index, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
-export const INGREDIENT_FIELDS = '.id, .name, .description';
 const UNKNOWN_INGREDIENT = 'unknown-0000';
 
 const DEFAULTS = {
@@ -95,14 +96,30 @@ export const parseRecipeIngredientText = async (text, tx) => {
   const { value, unit, ingredient } = parse(text);
 
   const ingredientResults = await searchIngredients_withTransaction(
-    ingredient.raw,
+    ingredient.normalized,
     tx,
   );
 
-  const foundIngredient = ingredientResults.items[0] || {
-    id: UNKNOWN_INGREDIENT,
-    name: 'unknown',
-  };
+  let foundIngredient = ingredientResults.items[0];
+
+  if (!foundIngredient) {
+    const createResult = await tx.run(
+      `
+        CREATE (i:Ingredient {id: $id, name: $name})
+        RETURN i {${INGREDIENT_FIELDS}}
+      `,
+      {
+        id: id(ingredient.normalized),
+        name: ingredient.normalized,
+      },
+    );
+
+    if (!createResult.records.length) {
+      throw new Error('Failed to create ingredient for recipe');
+    }
+
+    foundIngredient = createResult.records[0].get('i');
+  }
 
   return {
     unit: unit.normalized,

@@ -33,7 +33,7 @@ const index = async () => {
     CALL apoc.index.addAllNodes('recipes', {Recipe:["title", "description"]}, {autoUpdate:true});
   `);
   await session.run(`
-    CALL apoc.index.addAllNodes('ingredients', {Ingredient:["name"]}, {autoUpdate:true});
+    CALL apoc.index.addAllNodes('ingredients', {Ingredient:["name", "alternateNames"]}, {autoUpdate:true});
   `);
 };
 
