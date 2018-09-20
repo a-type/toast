@@ -9,6 +9,8 @@ import LinkRecipePage from './pages/LinkRecipe';
 import SearchPage from './pages/Search';
 import ScannerPage from './pages/Scanner';
 import LoggedInPage from './pages/LoggedIn';
+import ManagePage from './pages/Manage';
+import NotFoundPage from './pages/NotFound';
 
 export default () => (
   <Switch>
@@ -22,5 +24,7 @@ export default () => (
     <Route path="/ingredients/:ingredientId" component={IngredientPage} />
     <Route path="/search" component={SearchPage} />
     <Route path="/scanner" component={ScannerPage} />
+    <Route path="/manage" component={ManagePage} />
+    <Route component={NotFoundPage} />
   </Switch>
 );

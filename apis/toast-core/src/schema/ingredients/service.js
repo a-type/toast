@@ -13,7 +13,10 @@ export const defaulted = ingredient =>
     ingredient,
   );
 
-export const listIngredients = ({ offset = 0, count = 10 }, ctx) => {
+export const listIngredients = (
+  { offset = 0, count = 10 } = { offset: 0, count: 10 },
+  ctx,
+) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
