@@ -1,5 +1,5 @@
 import uuid from 'uuid';
-import { id } from 'tools';
+import { id, timestamp } from 'tools';
 import { RECIPE_FIELDS } from '../service';
 import { INGREDIENT_FIELDS } from '../../ingredients/service';
 import { pick } from 'ramda';
@@ -109,8 +109,11 @@ export const parseRecipeIngredientText = async (text, tx) => {
         RETURN i {${INGREDIENT_FIELDS}}
       `,
       {
-        id: id(ingredient.normalized),
-        name: ingredient.normalized,
+        props: {
+          id: id(ingredient.normalized),
+          name: ingredient.normalized,
+          createdAt: timestamp(),
+        },
       },
     );
 

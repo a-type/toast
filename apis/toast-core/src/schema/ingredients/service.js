@@ -1,4 +1,4 @@
-import { id } from 'tools';
+import { id, timestamp } from 'tools';
 import { ApolloError } from 'apollo-server-express';
 export const INGREDIENT_FIELDS = `.id, .name, .description, .attribution, .alternateNames`;
 
@@ -15,6 +15,7 @@ export const defaulted = ingredient =>
 
 export const listIngredients = (
   { offset = 0, count = 10 } = { offset: 0, count: 10 },
+  { by = 'createdAt', order = 'DESC' } = { by: 'createdAt', order: 'DESC' },
   ctx,
 ) => {
   return ctx.transaction(async tx => {
@@ -22,6 +23,7 @@ export const listIngredients = (
       `
         MATCH (ingredient:Ingredient)
         RETURN ingredient { ${INGREDIENT_FIELDS} }
+        ORDER BY ingredient.${by} ${order}
         SKIP $offset LIMIT $count
       `,
       { offset, count },
@@ -56,14 +58,17 @@ export const createIngredient = (
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-        CREATE (i:Ingredient {name: $name, description: $description, attribution: $attribution, id: $id})
+        CREATE (i:Ingredient {$props})
         RETURN i {${INGREDIENT_FIELDS}}
       `,
       {
-        name: name.toLowerCase(),
-        description: description || null,
-        attribution,
-        id: id(name),
+        props: {
+          name: name.toLowerCase(),
+          description: description || null,
+          attribution,
+          id: id(name),
+          createdAt: timestamp(),
+        },
       },
     );
 

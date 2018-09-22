@@ -56,7 +56,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     ingredients: (_parent, args, ctx, info) =>
-      listIngredients(args.pagination, ctx),
+      listIngredients(args.pagination, args.sort, ctx),
     ingredient: (_parent, args, ctx, info) => getIngredient(args.id, ctx),
   },
   Mutation: {
