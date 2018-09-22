@@ -1,12 +1,10 @@
 // @flow
 
 import React from 'react';
-import { Box, Title } from './components';
-import { Link } from 'components/typeset';
+import { Card } from 'components/generic';
 import { type Recipe } from 'types';
 import gql from 'graphql-tag';
-import Grid from './Grid';
-import Skeleton from './Skeleton';
+import { path } from 'ramda';
 
 const getClassName = recipe => {
   if (recipe.coverImage) {
@@ -21,11 +19,13 @@ const getClassName = recipe => {
 };
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
-  <Link.Clear to={`/recipes/${recipe.id}`} className={getClassName(recipe)}>
-    <Box imageSrc={recipe.coverImage ? recipe.coverImage.url : null}>
-      <Title hasImage={!!recipe.coverImage}>{recipe.title}</Title>
-    </Box>
-  </Link.Clear>
+  <Card
+    link={`/recipes/${recipe.id}`}
+    imageSrc={path(['coverImage', 'url'], recipe)}
+    shape={getClassName(recipe)}
+  >
+    {recipe.title}
+  </Card>
 );
 
 RecipeCard.fragments = {
@@ -41,7 +41,7 @@ RecipeCard.fragments = {
   `,
 };
 
-RecipeCard.Grid = Grid;
-RecipeCard.Skeleton = Skeleton;
+RecipeCard.Grid = Card.Grid;
+RecipeCard.Skeleton = Card.Skeleton;
 
 export default RecipeCard;

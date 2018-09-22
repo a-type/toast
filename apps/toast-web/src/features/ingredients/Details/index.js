@@ -25,8 +25,8 @@ export const Basic = gql`
 `;
 
 const renderView = ({ data, loading, error }) => {
-  if (loading) return <div>Loading</div>;
-  if (error) return <div>Error</div>;
+  if (loading) return <Content>Loading</Content>;
+  if (error) return <Content>Error</Content>;
 
   const { name, description, attribution, recipes } = data.ingredient;
 

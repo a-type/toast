@@ -29,8 +29,16 @@ export const typeDefs = gql`
     attribution: String
   }
 
+  input IngredientListSortInput {
+    by: String!
+    order: SortOrder
+  }
+
   extend type Query {
-    ingredients(pagination: ListPaginationInput): [Ingredient!]!
+    ingredients(
+      pagination: ListPaginationInput
+      sort: IngredientListSortInput
+    ): [Ingredient!]!
     ingredient(id: ID!): Ingredient
   }
 

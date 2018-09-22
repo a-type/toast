@@ -16,7 +16,10 @@ export { default as mocks } from './__mocks__';
 export const directives = _directives;
 
 const globalTypeDefs = gql`
-  # scalar Upload
+  enum SortOrder {
+    ASCENDING
+    DESCENDING
+  }
 
   input ListMoveInput {
     fromIndex: Int!
