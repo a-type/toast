@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { ApolloServer, ApolloError } from 'apollo-server-express';
 import playground from 'graphql-playground-middleware-express';
-import { apolloUploadExpress } from 'apollo-upload-server';
 import config from 'config';
 import { typeDefs, resolvers, mocks, directives } from './schema';
 import { createContext } from './context';
@@ -35,7 +34,7 @@ const auth = jwt({
   credentialsRequired: false,
 });
 
-app.use('/api', auth, apolloUploadExpress());
+app.use('/api', auth);
 
 const apollo = new ApolloServer({
   typeDefs,

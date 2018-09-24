@@ -1,6 +1,5 @@
 import minimist from 'minimist';
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
-import { GraphQLUpload } from 'apollo-upload-server';
 import { mergeDeepRight } from 'ramda';
 import * as images from './images';
 import * as ingredients from './ingredients';
@@ -65,5 +64,4 @@ export const resolvers = [
   search.resolvers,
   steps.resolvers,
   users.resolvers,
-  { Upload: GraphQLUpload },
 ].reduce(mergeDeepRight, globalResolvers);
