@@ -12,7 +12,6 @@ import { gql } from 'apollo-boost';
 const SearchIngredients = gql`
   query SearchIngredients($input: IngredientSearchInput!) {
     searchIngredients(input: $input) {
-      total
       items {
         id
         name

@@ -1,6 +1,6 @@
 import React from 'react';
 import { HasScope } from 'features/auth/gates';
-import { Recent, BulkCreate } from 'features/ingredients/manage';
+import { Recent, BulkCreate, Create } from 'features/ingredients/manage';
 import { Content, SingleColumn } from 'components/layouts';
 import { H2 } from 'components/typeset';
 
@@ -14,6 +14,8 @@ export default class ManagePage extends React.Component {
             <Recent />
             <H2>Bulk Upload Ingredients</H2>
             <BulkCreate />
+            <H2>Create Ingredient</H2>
+            <Create />
           </HasScope>
         </Content>
       </SingleColumn>

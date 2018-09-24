@@ -7,4 +7,5 @@ export default styled.div`
   top: 0;
   bottom: 0;
   display: flex;
+  pointer-events: initial;
 `;
