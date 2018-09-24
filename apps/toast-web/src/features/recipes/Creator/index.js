@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
 import { Redirect } from 'react-router-dom';
+import { path } from 'ramda';
 
 const GetRecipeForEditing = gql`
   query GetRecipeForEditing($id: ID!) {
@@ -33,19 +34,19 @@ export default props => (
         return <div>{result.error.message}</div>;
       }
 
-      if (!result.data.recipe) {
-        return <View loading={result.loading} {...props} />;
-      }
+      const authorId = path(['data', 'recipe', 'author', 'id'], result);
+      const myId = path(['data', 'me', 'id'], result);
 
-      if (
-        result.data.recipe.author &&
-        result.data.recipe.author.id !== result.data.me.id
-      ) {
+      if (authorId !== myId) {
         return <Redirect to={`/recipes/${props.recipeId}`} />;
       }
 
       return (
-        <View loading={result.loading} {...props} recipe={result.data.recipe} />
+        <View
+          loading={result.loading && props.recipeId}
+          {...props}
+          recipe={path(['data', 'recipe'], result)}
+        />
       );
     }}
   </Query>

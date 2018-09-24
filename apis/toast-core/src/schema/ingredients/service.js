@@ -58,7 +58,7 @@ export const createIngredient = (
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-        CREATE (i:Ingredient {$props})
+        CREATE (i:Ingredient $props)
         RETURN i {${INGREDIENT_FIELDS}}
       `,
       {
@@ -136,5 +136,21 @@ export const mergeIngredients = ({ primary, secondary }, ctx) => {
     }
 
     return defaulted(result.records[0].get('node'));
+  });
+};
+
+export const getIngredientForRecipeIngredient = (recipeIngredientId, ctx) => {
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (:RecipeIngredient {id: $recipeIngredientId})<-[:USED_IN]-(ingredient:Ingredient)
+        RETURN ingredient {${INGREDIENT_FIELDS}}
+      `,
+      {
+        recipeIngredientId,
+      },
+    );
+
+    return defaulted(result.records[0].get('ingredient'));
   });
 };

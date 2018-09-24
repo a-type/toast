@@ -8,23 +8,48 @@ const driver = neo4j.driver(
 
 const session = driver.session();
 
-const indexes = [
-  ['Recipe', 'title'],
-  ['Ingredient', 'name'],
-  ['Credential', 'email'],
+const indexes = [];
+
+const uniqueConstraints = [
+  ['Recipe', 'sourceUrl'],
   ['Recipe', 'id'],
   ['Ingredient', 'id'],
-  ['User', 'id'],
+  ['RecipeIngredient', 'id'],
   ['Step', 'id'],
-  ['INGREDIENT_OF', 'id'],
-  ['STEP_OF', 'id'],
-  ['Recipe', 'sourceUrl'],
+  ['User', 'id'],
+  ['Ingredient', 'name'],
+];
+
+const existsConstraints = [
+  ['Recipe', 'id'],
+  ['Recipe', 'displayType'],
+  ['Ingredient', 'id'],
+  ['RecipeIngredient', 'id'],
+  ['RecipeIngredient', 'text'],
+  ['Step', 'id'],
+  ['User', 'id'],
+  ['Recipe', 'title'],
+  ['Ingredient', 'name'],
 ];
 
 const index = async () => {
   console.info(`indexing properties...`);
   await Promise.all(
     indexes.map(pair => session.run(`CREATE INDEX ON :${pair[0]}(${pair[1]})`)),
+  );
+  await Promise.all(
+    uniqueConstraints.map(pair =>
+      session.run(
+        `CREATE CONSTRAINT ON (n:${pair[0]}) ASSERT n.${pair[1]} IS UNIQUE`,
+      ),
+    ),
+  );
+  await Promise.all(
+    existsConstraints.map(pair =>
+      session.run(
+        `CREATE CONSTRAINT ON (n:${pair[0]}) ASSERT exists(n.${pair[1]})`,
+      ),
+    ),
   );
 
   // APOC full-text indexing

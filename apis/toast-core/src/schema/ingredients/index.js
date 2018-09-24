@@ -5,6 +5,7 @@ import {
   updateIngredient,
   deleteIngredient,
   mergeIngredients,
+  getIngredientForRecipeIngredient,
 } from './service';
 import { gql } from 'apollo-server-express';
 
@@ -51,6 +52,10 @@ export const typeDefs = gql`
     mergeIngredients(primary: ID!, secondary: ID!): Ingredient
       @hasScope(scope: "update:mergeIngredients")
   }
+
+  extend type RecipeIngredient {
+    ingredient: Ingredient!
+  }
 `;
 
 export const resolvers = {
@@ -67,5 +72,9 @@ export const resolvers = {
     deleteIngredient: (_parent, args, ctx, info) =>
       deleteIngredient(args.id, ctx),
     mergeIngredients: (_parent, args, ctx, info) => mergeIngredients(args, ctx),
+  },
+  RecipeIngredient: {
+    ingredient: ({ id }, _args, ctx, _info) =>
+      getIngredientForRecipeIngredient(id, ctx),
   },
 };

@@ -22,30 +22,24 @@ export default class RecentIngredients extends React.Component {
         {({ loading, error, data }) => {
           if (loading) {
             return (
-              <Content>
-                <Card.Grid>
-                  {new Array(10)
-                    .fill(null)
-                    .map((_, idx) => (
-                      <Card.Skeleton shape="normal" key={idx} />
-                    ))}
-                </Card.Grid>
-              </Content>
+              <Card.Grid>
+                {new Array(10)
+                  .fill(null)
+                  .map((_, idx) => <Card.Skeleton shape="normal" key={idx} />)}
+              </Card.Grid>
             );
           }
 
           if (error) {
-            return <Content>{error.message}</Content>;
+            return error.message;
           }
 
           return (
-            <Content>
-              <Card.Grid>
-                {data.ingredients.map(ingredient => (
-                  <Card ingredient={ingredient} />
-                ))}
-              </Card.Grid>
-            </Content>
+            <Card.Grid>
+              {data.ingredients.map(ingredient => (
+                <Card ingredient={ingredient} />
+              ))}
+            </Card.Grid>
           );
         }}
       </Query>

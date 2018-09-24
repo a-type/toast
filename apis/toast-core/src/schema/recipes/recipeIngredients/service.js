@@ -8,7 +8,8 @@ import { searchIngredients_withTransaction } from '../../search/service';
 import { ForbiddenError, ApolloError } from 'apollo-server-express';
 
 export const RECIPE_INGREDIENT_FIELDS =
-  '.id, .index, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
+  '.id, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
+export const RELATIONSHIP_FIELDS = '.index';
 const UNKNOWN_INGREDIENT = 'unknown-0000';
 
 const DEFAULTS = {
@@ -30,7 +31,7 @@ const checkAccess = async (tx, recipeIngredientId, ctx) => {
 
   const result = await tx.run(
     `
-    MATCH (:Ingredient)-[:INGREDIENT_OF {id: $id}]-(:Recipe)<-[:AUTHOR_OF]-(u:User {id: $userId})
+    MATCH (:RecipeIngredient {id: $id})-[:INGREDIENT_OF]-(:Recipe)<-[:AUTHOR_OF]-(u:User {id: $userId})
     RETURN u;
     `,
     {
@@ -48,8 +49,9 @@ export const getForRecipe = (id, ctx) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-      MATCH (ingredient:Ingredient)-[rel:INGREDIENT_OF]->(:Recipe {id: $id})
-      RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ingredient {${INGREDIENT_FIELDS}} ORDER BY rel.index
+      MATCH (recipeIngredient:RecipeIngredient)-[rel:INGREDIENT_OF]->(:Recipe {id: $id})
+      RETURN recipeIngredient {${RECIPE_INGREDIENT_FIELDS}}, rel {${RELATIONSHIP_FIELDS}}
+      ORDER BY rel.index
     `,
       { id },
     );
@@ -57,7 +59,7 @@ export const getForRecipe = (id, ctx) => {
     return result.records.map(record =>
       defaulted({
         ...record.get('rel'),
-        ingredient: record.get('ingredient'),
+        ...record.get('recipeIngredient'),
       }),
     );
   });
@@ -72,8 +74,8 @@ export const getRecipeIngredient = (id, ctx) => {
 export const getRecipeIngredient_withTransaction = async (id, tx) => {
   const result = await tx.run(
     `
-    MATCH ()<-[rel:INGREDIENT_OF {id: $id}]-(i:Ingredient)
-    RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, i {${INGREDIENT_FIELDS}}
+    MATCH (recipeIngredient:RecipeIngredient {id: $id})<-[rel:INGREDIENT_OF]-(i:Ingredient)
+    RETURN recipeIngredient {${RECIPE_INGREDIENT_FIELDS}}, rel {${RELATIONSHIP_FIELDS}}
     `,
     { id },
   );
@@ -81,7 +83,7 @@ export const getRecipeIngredient_withTransaction = async (id, tx) => {
   return result.records.length
     ? defaulted({
         ...result.records[0].get('rel'),
-        ingredient: result.records[0].get('i'),
+        ...result.records[0].get('recipeIngredient'),
       })
     : null;
 };
@@ -105,7 +107,7 @@ export const parseRecipeIngredientText = async (text, tx) => {
   if (!foundIngredient) {
     const createResult = await tx.run(
       `
-        CREATE (i:Ingredient {id: $id, name: $name})
+        CREATE (i:Ingredient $props)
         RETURN i {${INGREDIENT_FIELDS}}
       `,
       {
@@ -145,18 +147,17 @@ export const parseRecipeIngredient_withTransaction = async (
   const result = await tx.run(
     `
       MATCH (recipe:Recipe {id: $id}), (ingredient:Ingredient {id: $ingredientId})
-      OPTIONAL MATCH (recipe)<-[allIngredients:INGREDIENT_OF]-()
-      WITH recipe, count(allIngredients) as index, ingredient
-      CREATE (recipe)<-[rel:INGREDIENT_OF {
+      OPTIONAL MATCH (recipe)<-[allRels:INGREDIENT_OF]-()
+      WITH recipe, count(allRels) as index, ingredient
+      CREATE (recipe)<-[rel:INGREDIENT_OF {index: index}]-(:RecipeIngredient {
         id: $relId,
-        index: index,
         unit: $unit,
         unitTextMatch: $unitTextMatch,
         value: $value,
         valueTextMatch: $valueTextMatch,
         ingredientTextMatch: $ingredientTextMatch,
         text: $text
-      }]-(ingredient)
+      })<-[:USED_IN]-(ingredient)
       RETURN recipe {${RECIPE_FIELDS}}
       `,
     {
@@ -182,17 +183,16 @@ export const reparseRecipeIngredient = async (id, input, ctx) => {
   });
 };
 
-const changeIngredientRelationship = (id, userId, ingredientId, tx) => {
+const changeIngredientRelationship_withTransaction = (id, ingredientId, tx) => {
   return tx.run(
     `
-    MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(),
+    MATCH (:RecipeIngredient {id: $relId})<-[rel:USED_IN]-(),
       (ingredient:Ingredient {id: $ingredientId})
     CALL apoc.refactor.from(rel, ingredient) YIELD input, output, error
     RETURN error
     `,
     {
       relId: id,
-      userId,
       ingredientId,
     },
   );
@@ -213,13 +213,17 @@ export const updateRecipeIngredient_withTransaction = async (
   ctx,
 ) => {
   if (args.ingredientId) {
-    await changeIngredientRelationship(id, ctx.user.id, args.ingredientId, tx);
+    await changeIngredientRelationship_withTransaction(
+      id,
+      args.ingredientId,
+      tx,
+    );
   }
   const result = await tx.run(
     `
-    MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF {id: $relId}]-(ing:Ingredient)
-    SET rel += $ingredientProps
-    RETURN rel {${RECIPE_INGREDIENT_FIELDS}}, ing {${INGREDIENT_FIELDS}}
+    MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient {id: $relId})
+    SET recipeIngredient += $ingredientProps
+    RETURN recipeIngredient {${RECIPE_INGREDIENT_FIELDS}}, rel {${RELATIONSHIP_FIELDS}}
   `,
     {
       relId: id,
@@ -230,9 +234,10 @@ export const updateRecipeIngredient_withTransaction = async (
 
   if (result.records.length) {
     const rel = result.records[0].get('rel');
+    const recipeIngredient = result.records[0].get('recipeIngredient');
     return defaulted({
       ...rel,
-      ingredient: result.records[0].get('ing'),
+      ...recipeIngredient,
     });
   } else {
     throw new ApolloError('No such recipe ingredient exists', 'NOT_FOUND');
@@ -245,8 +250,8 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
 
     const ingredientsResult = await tx.run(
       `
-      MATCH (recipe:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(ingredient:Ingredient)
-      RETURN rel {.index}, ingredient {.id} ORDER BY rel.index
+      MATCH (recipe:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient)
+      RETURN rel {.index}, recipeIngredient {.id} ORDER BY rel.index
       `,
       {
         id: recipeId,
@@ -257,7 +262,7 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
       ingredientsResult.records.length > Math.max(args.fromIndex, args.toIndex)
     ) {
       const ingredientIds = ingredientsResult.records.map(
-        rec => rec.get('ingredient').id,
+        rec => rec.get('recipeIngredient').id,
       );
       ingredientIds.splice(
         args.toIndex,
@@ -271,7 +276,7 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
       await tx.run(
         `
         UNWIND $indexAndIds as indexAndUuid
-        MATCH (:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(:Ingredient {id: indexAndUuid.id})
+        MATCH (:Recipe {id: $id})<-[rel:INGREDIENT_OF]-(:RecipeIngredient {id: indexAndUuid.id})
         SET rel.index = indexAndUuid.index
         `,
         { indexAndIds, id: recipeId },
@@ -292,8 +297,8 @@ export const deleteRecipeIngredient = (id, ctx) => {
 
     const result = await tx.run(
       `
-      MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF {id: $id}]-()
-      DELETE rel
+      MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient {id: $id})
+      DETACH DELETE recipIngredient
       RETURN recipe {${RECIPE_FIELDS}}
       `,
       {

@@ -31,20 +31,21 @@ export const createRecipe = async (input, ctx) => {
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
+      MATCH (u:User {id: $userId})
       CREATE (r:Recipe $input),
-        (r)<-[:AUTHOR_OF]-(u:User {id: $userId})
+        (r)<-[:AUTHOR_OF]-(u)
       RETURN r {${RECIPE_FIELDS}}
     `,
       {
         input: {
           ...input,
+          id: id(input.title),
           displayType: 'FULL',
           published: false,
           createdAt: time,
           updatedAt: time,
           viewedAt: time,
         },
-        id: id(input.title),
         userId: user.id,
       },
     );
@@ -204,7 +205,7 @@ export const listRecipesForIngredient = async (
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-        MATCH (ingredient:Ingredient { id: $ingredientId })-[:INGREDIENT_OF]->(recipe:Recipe)
+        MATCH (ingredient:Ingredient { id: $ingredientId })-[:USED_IN]->()-[:INGREDIENT_OF]->(recipe:Recipe)
         WHERE recipe.published = true
         RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count

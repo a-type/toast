@@ -12,7 +12,6 @@ export const typeDefs = gql`
   type RecipeIngredient {
     id: ID!
     text: String!
-    ingredient: Ingredient!
     ingredientTextMatch: String
     recipe: Recipe!
     unit: String

@@ -49,6 +49,11 @@ export const typeDefs = () => [
       description: String
       attribution: String
       sourceUrl: String
+      servings: Int
+      cookTime: Int
+      prepTime: Int
+      unattendedTime: Int
+      displayType: RecipeDisplayType
     }
 
     input RecipeLinkInput {

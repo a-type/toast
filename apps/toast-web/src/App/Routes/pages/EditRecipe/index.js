@@ -7,7 +7,7 @@ export default class EditRecipePage extends React.PureComponent {
   redirectOnCreate = recipeId => {
     const { location } = this.props;
     const query = location.search;
-    this.props.history.push(`/recipes/edit/${recipeId}${query}`);
+    this.props.history.push(`/recipes/${recipeId}/edit${query}`);
   };
 
   render() {
