@@ -25,10 +25,6 @@ const defaulted = recipeIngredient =>
   );
 
 const checkAccess = async (tx, recipeIngredientId, ctx) => {
-  if (ctx.roles.includes('admin')) {
-    return true;
-  }
-
   const result = await tx.run(
     `
     MATCH (:RecipeIngredient {id: $id})-[:INGREDIENT_OF]-(:Recipe)<-[:AUTHOR_OF]-(u:User {id: $userId})
