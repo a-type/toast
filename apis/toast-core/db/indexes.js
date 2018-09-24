@@ -1,5 +1,7 @@
-import { v1 as neo4j } from 'neo4j-driver';
-import config from 'config';
+const neo4jdriver = require('neo4j-driver');
+const config = require('config');
+
+const neo4j = neo4jdriver.v1;
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,

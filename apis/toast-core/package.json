@@ -7,7 +7,7 @@
     "dev":
       "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
     "test": "cross-env NODE_PATH=src jest",
-    "db:index": "babel-node ./db/indexes.js",
+    "db:index": "node ./db/indexes.js",
     "db-init": "run-s db:*",
     "build:clean": "rimraf build",
     "build:transpile": "babel src --out-dir build",
