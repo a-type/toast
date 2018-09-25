@@ -34,9 +34,12 @@ export class Auth extends EventEmitter {
     tokenStored: 'AUTH_TOKEN_STORED',
   };
 
+  renewalTimeout = null;
+
   constructor() {
     super();
     this.setMaxListeners(100);
+    this.scheduleRenewal();
   }
 
   login = () => {
@@ -48,6 +51,7 @@ export class Auth extends EventEmitter {
     localStorage.removeItem(ID_TOKEN_KEY);
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(EXPIRES_AT_KEY);
+    clearTimeout(this.renewalTimeout);
     this.emit(this.eventTypes.tokenStored);
     mixpanel.track('logout');
     history.replace('/');
@@ -83,7 +87,31 @@ export class Auth extends EventEmitter {
       SCOPES_KEY,
       authResult.scope || CONFIG.auth0.requestedScopes.join(' '),
     );
+
+    this.scheduleRenewal();
+
     this.emit(this.eventTypes.tokenStored);
+  };
+
+  renewToken = () => {
+    this.auth0.checkSession({}, (err, result) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.info('Session renewed');
+        this.setSession(result);
+      }
+    });
+  };
+
+  scheduleRenewal = () => {
+    const expiresAt = JSON.parse(localStorage.getItem(EXPIRES_AT_KEY));
+    const delay = expiresAt - Date.now();
+    if (delay > 0) {
+      this.renewalTimeout = setTimeout(() => {
+        this.renewToken();
+      }, delay);
+    }
   };
 
   get isLoggedIn() {
