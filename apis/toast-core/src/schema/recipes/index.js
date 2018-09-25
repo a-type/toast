@@ -13,6 +13,7 @@ import {
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
+import * as likeInfo from './likeInfo';
 import { mergeDeepRight } from 'ramda';
 import { gql } from 'apollo-server-express';
 
@@ -42,6 +43,8 @@ export const typeDefs = () => [
       updatedAt: String!
       viewedAt: String!
       views: Int!
+      likes: Int!
+      liked: Boolean
     }
 
     input RecipeCreateInput {
@@ -94,6 +97,9 @@ export const typeDefs = () => [
         @hasScope(scope: "update:fullRecipe")
       publishRecipe(id: ID!): Recipe @hasScope(scope: "update:fullRecipe")
       recordRecipeView(id: ID!): Recipe
+      likeRecipe(id: ID!): Recipe
+      unlikeRecipe(id: ID!): Recipe
+      addRecipeToCollection(id: ID!, collectionName: String!): Recipe
     }
 
     extend type Ingredient {
@@ -108,6 +114,7 @@ export const typeDefs = () => [
   `,
   recipeIngredients.typeDefs,
   recipeSteps.typeDefs,
+  likeInfo.typeDefs,
 ];
 
 export const resolvers = [
@@ -163,4 +170,5 @@ export const resolvers = [
   },
   recipeIngredients.resolvers,
   recipeSteps.resolvers,
+  likeInfo.resolvers,
 ].reduce(mergeDeepRight, {});
