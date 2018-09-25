@@ -4,8 +4,12 @@ import { RECIPE_FIELDS } from '../service';
 import { INGREDIENT_FIELDS } from '../../ingredients/service';
 import { pick } from 'ramda';
 import parse from './parseIngredient';
-import { searchIngredients_withTransaction } from '../../search/service';
+import {
+  searchIngredients_withTransaction,
+  normalizeTerm,
+} from '../../search/service';
 import { ForbiddenError, ApolloError } from 'apollo-server-express';
+import stringSimilarity from 'string-similarity';
 
 export const RECIPE_INGREDIENT_FIELDS =
   '.id, .unit, .unitTextMatch, .value, .valueTextMatch, .ingredientTextMatch, .text';
@@ -90,15 +94,53 @@ export const parseRecipeIngredient = (recipeId, input, ctx) => {
   });
 };
 
+const findClearIngredientWinner = ingredientSearchResult => {
+  if (ingredientSearchResult.records.length === 0) {
+    return null;
+  }
+  if (ingredientSearchResult.records.length === 1) {
+    return ingredientSearchResult.records[0].get('node');
+  }
+
+  const weightOfFirstResult = ingredientSearchResult.records[0].get('weight');
+  const weightOfSecondResult = ingredientSearchResult.records[1].get('weight');
+
+  if (weightOfSecondResult / weightOfFirstResult < 0.85) {
+    return ingredientSearchResult.records[0].get('node');
+  }
+};
+
+const ensureIngredientCloseEnough = (searchTerm, ingredient) => {
+  if (!ingredient) {
+    return null;
+  }
+  const allComparisons = [ingredient.name, ...ingredient.alternateNames];
+  const passed =
+    allComparisons.reduce(
+      (highest, name) =>
+        Math.max(stringSimilarity.compareTwoStrings(searchTerm, name), highest),
+      0,
+    ) > 0.75;
+
+  return passed ? ingredient : null;
+};
+
 export const parseRecipeIngredientText = async (text, tx) => {
   const { value, unit, ingredient } = parse(text);
 
-  const ingredientResults = await searchIngredients_withTransaction(
-    ingredient.normalized,
-    tx,
+  const ingredientResults = await tx.run(
+    `
+    CALL apoc.index.search("ingredients", $term) YIELD node, weight
+    WITH node, weight
+    RETURN node {${INGREDIENT_FIELDS}}, weight ORDER BY weight DESC LIMIT 10
+    `,
+    { term: `${normalizeTerm(ingredient.normalized)}~` },
   );
 
-  let foundIngredient = ingredientResults.items[0];
+  let foundIngredient = ensureIngredientCloseEnough(
+    ingredient.normalized,
+    findClearIngredientWinner(ingredientResults),
+  );
 
   if (!foundIngredient) {
     const createResult = await tx.run(

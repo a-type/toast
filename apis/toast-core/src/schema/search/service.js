@@ -7,6 +7,8 @@ import {
   INGREDIENT_FIELDS,
 } from '../ingredients/service';
 
+export const normalizeTerm = term => term.replace(/[^a-zA-Z0-9 -]/, '');
+
 export const searchRecipes = async ({ term, ingredients }, ctx) => {
   if (!term && !ingredients) {
     return {
@@ -38,7 +40,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
         RETURN recipes {${RECIPE_FIELDS}} ORDER BY weight DESC SKIP $offset LIMIT $count
       `,
         {
-          term: `${term}~`,
+          term: `${normalizeTerm(term)}~`,
           offset: 0,
           count: 100,
         },
@@ -75,7 +77,13 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       WITH r, weight
       RETURN r {${RECIPE_FIELDS}} ORDER BY weight DESC SKIP $offset LIMIT $count;
       `,
-        { term: `${term}~`, include, exclude, offset: 0, count: 100 },
+        {
+          term: `${normalizeTerm(term)}~`,
+          include,
+          exclude,
+          offset: 0,
+          count: 100,
+        },
       );
       return processResult(result);
     });
@@ -93,8 +101,6 @@ export const searchIngredients = async (term, ctx) => {
     return searchIngredients_withTransaction(term, tx);
   });
 };
-
-const normalizeTerm = term => term.replace(/[^a-zA-Z0-9 -]/, '');
 
 export const searchIngredients_withTransaction = async (term, tx) => {
   if (!term || term.length === 0) {
