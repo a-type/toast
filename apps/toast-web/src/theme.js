@@ -47,9 +47,9 @@ injectGlobal`
   --color-white: #fefeff;
   --color-black: #161616;
 
-  --color-gray-lightest: #ededff;
-  --color-gray-light: #d8d8f8;
-  --color-gray: #7272a2;
+  --color-gray-lightest: #eaeaff;
+  --color-gray-light: #d8d8fa;
+  --color-gray: #7272af;
   --color-gray-dark: #323262;
 
   --color-disabled-background: #eeeefe80;
@@ -72,6 +72,10 @@ injectGlobal`
   --color-negative-highlighter: #ff95b832;
 
   --color-dark: #280f34;
+
+  --color-shadow: #280f3420;
+
+  --shadow-md: 0 4px 8px 0 #280f3420;
 
   --spacing-md: ${spaceSizes.md}px;
   --spacing-sm: ${spaceSizes.sm}px;

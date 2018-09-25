@@ -17,6 +17,9 @@ const HeaderImage = styled.div`
     !props.src && !props.loading ? 'auto !important' : 'auto'};
 
   transition: 0.2s ease all;
+
+  box-shadow: ${props =>
+    !!props.src ? 'inset 0 -4px 8px 0 var(--color-shadow)' : 'none'};
 `;
 
 const ImageAttributionIcon = styled.div`
@@ -35,7 +38,7 @@ const Content = styled.div`
   background: var(--color-white);
   color: var(--color-dark);
   padding: var(--spacing-lg);
-  box-shadow: ${props => (props.hasImage ? '0 4px 8px 0 #00000080' : 'none')};
+  box-shadow: ${props => (props.hasImage ? 'var(--shadow-md)' : 'none')};
   margin-top: ${props => (props.hasImage ? '20vh' : '5vh')};
 `;
 
