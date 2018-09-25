@@ -7,6 +7,7 @@ import RecipeCard from 'features/recipes/Card';
 import { H1, P, H2 } from 'components/typeset';
 import { Content } from 'components/layouts';
 import { sentence } from 'change-case';
+import ManageSection from './ManageSection';
 
 export const Basic = gql`
   query IngredientBasic($id: ID!) {
@@ -15,6 +16,7 @@ export const Basic = gql`
       name
       description
       attribution
+      alternateNames
       recipes {
         ...RecipeCard
       }
@@ -28,17 +30,30 @@ const renderView = ({ data, loading, error }) => {
   if (loading) return <Content>Loading</Content>;
   if (error) return <Content>Error</Content>;
 
-  const { name, description, attribution, recipes } = data.ingredient;
+  const {
+    name,
+    description,
+    attribution,
+    recipes,
+    id,
+    alternateNames,
+  } = data.ingredient;
 
   return (
     <Content>
       <H1>{sentence(name)}</H1>
+      {alternateNames.length > 0 && (
+        <P>
+          <i>Alternate names: {alternateNames.map(sentence).join(', ')}</i>
+        </P>
+      )}
       <P>{description || 'No details'}</P>
       {attribution && (
         <P>
           <i>{attribution}</i>
         </P>
       )}
+      <ManageSection ingredientId={id} />
       <H2>Recipes</H2>
       <RecipeCard.Grid>
         {recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
