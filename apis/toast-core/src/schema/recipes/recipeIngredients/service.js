@@ -114,7 +114,10 @@ const ensureIngredientCloseEnough = (searchTerm, ingredient) => {
   if (!ingredient) {
     return null;
   }
-  const allComparisons = [ingredient.name, ...ingredient.alternateNames];
+  const allComparisons = [
+    ingredient.name,
+    ...(ingredient.alternateNames || []),
+  ];
   const passed =
     allComparisons.reduce(
       (highest, name) =>

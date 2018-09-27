@@ -169,7 +169,7 @@ class RecipeLinker extends React.PureComponent {
               <div>Scanned!</div>
               <div>Click below to view this recipe in Toast</div>
               <Link.Clear newTab to={`/recipes/${created.id}`}>
-                <Icon name="next-step" size="72px" />
+                <Icon name="next-page" size="72px" />
               </Link.Clear>
             </React.Fragment>
           ) : (

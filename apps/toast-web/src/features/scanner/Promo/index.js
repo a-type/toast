@@ -16,7 +16,7 @@ export default () => (
           to={linkContent}
           forceRemote
         >
-          <Button>Scan</Button>
+          <Button>🍽️ Toast Scanner</Button>
         </Link.Clear>
       </P>
       <P>

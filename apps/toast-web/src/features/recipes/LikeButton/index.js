@@ -88,7 +88,14 @@ const LikeButton = ({ recipe }) => (
       variables={{ id: recipe.id }}
     >
       {mutate => (
-        <Button onClick={mutate} liked={!!recipe.yourLike}>
+        <Button
+          onClick={ev => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            mutate();
+          }}
+          liked={!!recipe.yourLike}
+        >
           <span className={classNames('icons8-heart', 'echo')} />
           <span
             className={

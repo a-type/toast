@@ -14,16 +14,19 @@ const Banner = styled.div`
 
   @media (min-width: 720px) {
     padding: var(--spacing-md) var(--spacing-lg);
+    padding-right: var(--spacing-md);
   }
 
   @media (min-width: 900px) {
     padding: var(--spacing-lg) var(--spacing-xl);
+    padding-right: var(--spacing-lg);
   }
 
   & > .banner-dismiss {
     margin-left: auto;
     cursor: pointer;
     transition: 0.2s ease all;
+    color: var(--color-brand-dark);
 
     &:hover {
       color: var(--color-white);
@@ -43,7 +46,7 @@ export default ({ className, children, onDismiss, ...rest }) => (
     {children}
     <Icon
       size="24px"
-      name="delete"
+      name="delete-button"
       onClick={onDismiss}
       className="banner-dismiss"
     />
