@@ -20,12 +20,21 @@
 }
 .icons8,
 .icons8-add:before,
+.icons8-copybook:before,
 .icons8-delete-button:before,
+.icons8-draft:before,
 .icons8-edit:before,
 .icons8-heart-outline:before,
 .icons8-heart:before,
 .icons8-image:before,
+.icons8-index:before,
+.icons8-link:before,
+.icons8-list-view:before,
+.icons8-login:before,
+.icons8-next-page:before,
 .icons8-plus-math:before,
+.icons8-unavailable-cloud:before,
+.icons8-view-more:before,
 .icons8-warn:before,
 .icons8-x-button:before,
 [data-icons8]:before {
@@ -45,8 +54,14 @@
 .icons8-add:before {
   content: '\f100';
 }
+.icons8-copybook:before {
+  content: '\f10d';
+}
 .icons8-delete-button:before {
   content: '\f101';
+}
+.icons8-draft:before {
+  content: '\f10b';
 }
 .icons8-edit:before {
   content: '\f102';
@@ -60,8 +75,29 @@
 .icons8-image:before {
   content: '\f105';
 }
+.icons8-index:before {
+  content: '\f10f';
+}
+.icons8-link:before {
+  content: '\f111';
+}
+.icons8-list-view:before {
+  content: '\f10e';
+}
+.icons8-login:before {
+  content: '\f10c';
+}
+.icons8-next-page:before {
+  content: '\f109';
+}
 .icons8-plus-math:before {
   content: '\f103';
+}
+.icons8-unavailable-cloud:before {
+  content: '\f110';
+}
+.icons8-view-more:before {
+  content: '\f10a';
 }
 .icons8-warn:before {
   content: '\f106';

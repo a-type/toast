@@ -2,10 +2,11 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Content, Hero } from 'components/layouts';
+import { Centered, Icon } from 'components/generic';
 import Card from '../Card';
 import Spotlight from './Spotlight';
 import { path, pathOr } from 'ramda';
-import { H2 } from 'components/typeset';
+import { H2, P } from 'components/typeset';
 import { PrioritizedPromotion } from '../../promotions';
 
 const FeaturedRecipes = gql`
@@ -47,7 +48,19 @@ export default () => (
       }
 
       if (error) {
-        return <div>{error.message}</div>;
+        return (
+          <React.Fragment>
+            <Hero loading>
+              <Spotlight.Skeleton />
+            </Hero>
+            <Content>
+              <Centered style={{ opacity: 0.75, color: 'var(--color-gray)' }}>
+                <Icon name="unavailable-cloud" size="90px" />
+                <P>Couldn't reach the server. Refreshing might work.</P>
+              </Centered>
+            </Content>
+          </React.Fragment>
+        );
       }
 
       const { recipes } = data;
