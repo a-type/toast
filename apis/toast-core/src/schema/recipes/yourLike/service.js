@@ -1,5 +1,5 @@
-import { id } from 'tools';
-import { RECIPE_FIELDS } from '../service';
+import { id, timestamp } from 'tools';
+import { RECIPE_FIELDS, defaulted } from '../service';
 
 const LIKE_INFO_FIELDS = `.id, .likedAt`;
 
@@ -20,22 +20,22 @@ export const getForRecipe = (id, ctx) =>
     return result.records[0].get('l');
   });
 
-export const likeRecipe = (id, ctx) =>
+export const likeRecipe = (recipeId, ctx) =>
   ctx.transaction(async tx => {
     const result = await tx.run(
       `
     MATCH (r:Recipe { id: $id }), (u:User { id: $userId })
     MERGE (r)<-[l:LIKES]-(u)
     SET l.id = $likeId, l.likedAt = $likedAt
-    RETURN l { ${LIKE_INFO_FIELDS} }
+    RETURN r { ${RECIPE_FIELDS} }
     `,
-      { id, userId: ctx.user.id, likedAt: timestamp(), likeId: id() },
+      { id: recipeId, userId: ctx.user.id, likedAt: timestamp(), likeId: id() },
     );
 
     return defaulted(result.records[0].get('r'));
   });
 
-export const unlikeRecipe = (id, ctx) =>
+export const unlikeRecipe = (recipeId, ctx) =>
   ctx.transaction(async tx => {
     const result = await tx.run(
       `
@@ -44,7 +44,7 @@ export const unlikeRecipe = (id, ctx) =>
       RETURN r { ${RECIPE_FIELDS} }
       `,
       {
-        id: id,
+        id: recipeId,
         userId: ctx.user.id,
       },
     );
@@ -53,5 +53,5 @@ export const unlikeRecipe = (id, ctx) =>
       return null;
     }
 
-    return result.records[0].get('r');
+    return defaulted(result.records[0].get('r'));
   });

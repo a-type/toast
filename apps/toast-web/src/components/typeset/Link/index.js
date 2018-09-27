@@ -14,6 +14,11 @@ const Link = styled(LibLink)`
     color: var(--color-brand-dark);
   }
 
+  &:focus {
+    outline: none;
+    color: var(--color-brand-dark);
+  }
+
   margin-top: ${props => (props.inline ? 'auto' : '-0.16em')};
   margin-bottom: ${props =>
     props.inline ? 'auto' : `calc(${getSize(props.spaceBelow)} - 0.36em)`};

@@ -21,6 +21,9 @@ const Basic = gql`
       draftRecipes {
         ...RecipeCard
       }
+      likedRecipes {
+        ...RecipeCard
+      }
     }
   }
 
@@ -66,6 +69,7 @@ export default class extends React.Component {
             recipes,
             discoveredRecipes,
             draftRecipes,
+            likedRecipes,
           } = data.user;
 
           return (
@@ -73,6 +77,7 @@ export default class extends React.Component {
               <Content>
                 <H1>{nickname || 'Anonymous'}</H1>
               </Content>
+              {this.renderRecipes('Your Likes', likedRecipes)}
               {this.renderRecipes('Your Drafts', draftRecipes)}
               {this.renderRecipes('Your Recipes', recipes)}
               {this.renderRecipes('Your Finds', discoveredRecipes)}

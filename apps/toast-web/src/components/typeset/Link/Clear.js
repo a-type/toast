@@ -4,4 +4,8 @@ import Link from './BaseLink';
 export default styled(Link)`
   color: inherit !important;
   text-decoration: none;
+
+  &:focus {
+    outline: none;
+  }
 `;

@@ -292,8 +292,31 @@ export const listDraftRecipesForUser = async (
   return ctx.transaction(async tx => {
     const result = await tx.run(
       `
-        MATCH (user:User { id: $userId })-[]->(recipe:Recipe)
+        MATCH (user:User { id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)
         WHERE coalesce(recipe.published, false) = false
+        RETURN recipe { ${RECIPE_FIELDS} }
+        SKIP $offset LIMIT $count
+      `,
+      {
+        userId,
+        offset,
+        count,
+      },
+    );
+
+    return result.records.map(rec => defaulted(rec.get('recipe')));
+  });
+};
+
+export const listLikedRecipesForUser = async (
+  userId,
+  { offset, count },
+  ctx,
+) => {
+  return ctx.transaction(async tx => {
+    const result = await tx.run(
+      `
+        MATCH (user:User { id: $userId })-[:LIKES]->(recipe:Recipe)
         RETURN recipe { ${RECIPE_FIELDS} }
         SKIP $offset LIMIT $count
       `,

@@ -8,18 +8,19 @@ export const typeDefs = gql`
   }
 
   extend type Recipe {
-    likeInfo: LikeInfo
+    yourLike: LikeInfo
   }
 
   extend type Mutation {
-    likeRecipe(id: ID!): LikeInfo!
-    unlikeRecipe(id: ID!): Recipe
+    likeRecipe(id: ID!): Recipe! @authenticated
+    unlikeRecipe(id: ID!): Recipe! @authenticated
   }
 `;
 
 export const resolvers = {
   Recipe: {
-    likeInfo: (parent, _args, ctx, _info) => getForRecipe(parent.id, ctx),
+    yourLike: async (parent, _args, ctx, _info) =>
+      ctx.user ? getForRecipe(parent.id, ctx) : null,
   },
   Mutation: {
     likeRecipe: (_parent, { id }, ctx, _info) => likeRecipe(id, ctx),

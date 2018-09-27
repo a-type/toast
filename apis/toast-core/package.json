@@ -51,6 +51,7 @@
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "graphql": "^0.13.2",
+    "graphql-parse-resolve-info": "^4.0.0-rc.12",
     "graphql-playground-middleware-express": "^1.6.1",
     "graphql-tools": "^2.24.0",
     "imaginary": "^0.1.16",

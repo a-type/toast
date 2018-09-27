@@ -6,4 +6,5 @@ export default styled.span`
   text-shadow: ${({ hasImage }) =>
     hasImage ? '0px 0px 2px rgba(0, 0, 0, 1)' : '0'};
   margin-bottom: -0.25em;
+  width: 100%;
 `;

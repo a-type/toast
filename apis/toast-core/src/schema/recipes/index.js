@@ -10,10 +10,12 @@ import {
   listDiscoveredRecipesForUser,
   recordRecipeView,
   listDraftRecipesForUser,
+  listLikedRecipesForUser,
 } from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
-import * as likeInfo from './likeInfo';
+import * as yourLike from './yourLike';
+import * as likes from './likes';
 import { mergeDeepRight } from 'ramda';
 import { gql } from 'apollo-server-express';
 
@@ -43,8 +45,6 @@ export const typeDefs = () => [
       updatedAt: String!
       viewedAt: String!
       views: Int!
-      likes: Int!
-      liked: Boolean
     }
 
     input RecipeCreateInput {
@@ -97,9 +97,6 @@ export const typeDefs = () => [
         @hasScope(scope: "update:fullRecipe")
       publishRecipe(id: ID!): Recipe @hasScope(scope: "update:fullRecipe")
       recordRecipeView(id: ID!): Recipe
-      likeRecipe(id: ID!): Recipe
-      unlikeRecipe(id: ID!): Recipe
-      addRecipeToCollection(id: ID!, collectionName: String!): Recipe
     }
 
     extend type Ingredient {
@@ -110,11 +107,13 @@ export const typeDefs = () => [
       recipes(pagination: ListPaginationInput): [Recipe!]!
       discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
       draftRecipes(pagination: ListPaginationInput): [Recipe!]!
+      likedRecipes(pagination: ListPaginationInput): [Recipe!]!
     }
   `,
   recipeIngredients.typeDefs,
   recipeSteps.typeDefs,
-  likeInfo.typeDefs,
+  yourLike.typeDefs,
+  likes.typeDefs,
 ];
 
 export const resolvers = [
@@ -166,9 +165,16 @@ export const resolvers = [
           args.pagination || { offset: 0, count: 25 },
           ctx,
         ),
+      likedRecipes: (parent, args, ctx, info) =>
+        listLikedRecipesForUser(
+          parent.id,
+          args.pagination || { offset: 0, count: 25 },
+          ctx,
+        ),
     },
   },
   recipeIngredients.resolvers,
   recipeSteps.resolvers,
-  likeInfo.resolvers,
+  yourLike.resolvers,
+  likes.resolvers,
 ].reduce(mergeDeepRight, {});

@@ -2,6 +2,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Link } from 'components/typeset';
 import { H1, P, Span, H2, Aside } from 'components/typeset';
+import { LikeButton } from 'features/recipes';
 
 const Spotlight = ({ recipe }) =>
   recipe ? (
@@ -12,6 +13,7 @@ const Spotlight = ({ recipe }) =>
       </Link>
       {recipe.description && <P>{recipe.description}</P>}
       {recipe.attribution && <Aside>from {recipe.attribution}</Aside>}
+      <LikeButton recipe={recipe} />
     </div>
   ) : null;
 
@@ -34,7 +36,9 @@ Spotlight.fragments = {
         id
         name
       }
+      ...LikeButton
     }
+    ${LikeButton.fragments.Recipe}
   `,
 };
 
