@@ -19,6 +19,7 @@ const Overlay = styled.div`
   top: 0;
   bottom: 0;
   z-index: 100000;
+  padding: var(--spacing-md);
 
   display: flex;
   flex-direction: column;
@@ -150,7 +151,7 @@ class RecipeLinker extends React.PureComponent {
       return (
         <Foreground>
           <Overlay>
-            <Icon name="explanation-mark" size="72px" />
+            <Icon name="warn" size="72px" />
             <div>
               Sorry, we couldn't scan this recipe. You can still add it
               manually, though.

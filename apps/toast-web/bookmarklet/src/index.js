@@ -20,9 +20,11 @@ const extractNumber = numberOrString => {
   return undefined;
 };
 
+const filterIngredients = ingredient => !/^\w+:$/.test(ingredient);
+
 const run = async () => {
   const data = microdata('http://schema.org/Recipe')[0];
-  console.info(data);
+
   const sitenameMeta = document.head.querySelector(
     'meta[property="og:site_name"]',
   );
@@ -45,6 +47,10 @@ const run = async () => {
 
   const servings = extractNumber(data.recipeYield);
 
+  const ingredients = data.recipeIngredient
+    .map(line => line.trim().replace(/(\t|\n)/g, ' '))
+    .filter(filterIngredients);
+
   const query = {
     ttl: data.name.trim(),
     dsc: data.description.trim(),
@@ -54,7 +60,7 @@ const run = async () => {
     cph: data.copyrightHolder,
     cpy: data.copyrightYear,
     src: data.url || window.location.href,
-    ing: data.recipeIngredient.map(line => line.trim().replace(/(\t|\n)/g, ' ')),
+    ing: ingredients,
     srv: servings,
     ctm: cookMinutes || totalMinutes,
     ptm:
