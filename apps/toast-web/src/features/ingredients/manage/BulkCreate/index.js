@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { FileChooser } from 'components/generic';
 
 const CreateIngredient = gql`

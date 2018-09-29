@@ -5,7 +5,7 @@ import Note from './Note';
 import { toDisplay } from 'formatters/unitValue';
 import IngredientLink from 'features/ingredients/Link';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import pluralize from 'pluralize';
 
 const GetPreferredServings = gql`

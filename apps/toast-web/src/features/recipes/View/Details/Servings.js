@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { P } from 'components/typeset';
 import { Input, Icon } from 'components/generic';
 

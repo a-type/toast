@@ -1,5 +1,5 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Link } from 'components/typeset';
 import { H1, P, Span, H2, Aside } from 'components/typeset';
 import { LikeButton } from 'features/recipes';
@@ -28,7 +28,7 @@ Spotlight.Skeleton = () => (
 );
 
 Spotlight.fragments = {
-  Recipe: gql`
+  recipe: gql`
     fragment RecipeSpotlight on Recipe {
       description
       attribution
@@ -36,9 +36,8 @@ Spotlight.fragments = {
         id
         name
       }
-      ...LikeButton
+      ${LikeButton.fragments.recipe}
     }
-    ${LikeButton.fragments.Recipe}
   `,
 };
 

@@ -6,7 +6,7 @@ import { InMemoryCache, HttpLink } from 'apollo-boost';
 import { withClientState } from 'apollo-link-state';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import customFetch from './fetch';
 
 const cache = new InMemoryCache();

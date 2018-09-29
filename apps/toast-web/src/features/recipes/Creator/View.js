@@ -9,22 +9,16 @@ import { H1, Link } from 'components/typeset';
 import { PublishedTag } from './components';
 import { Content, Hero } from 'components/layouts';
 import { pick, path, mergeDeepLeft } from 'ramda';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 
 export const RecipeCreateViewFragment = gql`
   fragment RecipeCreateView on Recipe {
-    ...RecipeCreateDetails
-    ...RecipeCreateIngredients
-    ...RecipeCreateSteps
-    ...RecipeCreatePublish
-    ...RecipeCreateImage
+    ${RecipeCreateDetailsFragment}
+    ${RecipeCreateIngredientsFragment}
+    ${RecipeCreateStepsFragment}
+    ${RecipeCreatePublishFragment}
+    ${RecipeCreateImageFragment}
   }
-
-  ${RecipeCreateDetailsFragment}
-  ${RecipeCreateIngredientsFragment}
-  ${RecipeCreateStepsFragment}
-  ${RecipeCreatePublishFragment}
-  ${RecipeCreateImageFragment}
 `;
 
 export default class RecipeCreator extends React.PureComponent {

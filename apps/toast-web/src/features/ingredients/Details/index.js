@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { Query } from 'react-apollo';
-import { gql } from 'apollo-boost';
+import gql from 'fraql';
 import RecipeCard from 'features/recipes/Card';
-import { H1, P, H2 } from 'components/typeset';
+import { H1, P, H2, Span } from 'components/typeset';
 import { Content } from 'components/layouts';
 import { sentence } from 'change-case';
 import ManageSection from './ManageSection';
+import { Disconnected } from 'components/generic';
 
 export const Basic = gql`
   query IngredientBasic($id: ID!) {
@@ -18,17 +19,31 @@ export const Basic = gql`
       attribution
       alternateNames
       recipes {
-        ...RecipeCard
+        ${RecipeCard.fragments.recipe}
       }
     }
   }
-
-  ${RecipeCard.fragments.Recipe}
 `;
 
 const renderView = ({ data, loading, error }) => {
-  if (loading) return <Content>Loading</Content>;
-  if (error) return <Content>Error</Content>;
+  if (loading) {
+    return (
+      <Content>
+        <H1>
+          <Span.Skeleton />
+        </H1>
+        <P.Skeleton />
+      </Content>
+    );
+  }
+
+  if (error) {
+    return (
+      <Content>
+        <Disconnected />
+      </Content>
+    );
+  }
 
   const {
     name,
@@ -53,7 +68,7 @@ const renderView = ({ data, loading, error }) => {
           <i>{attribution}</i>
         </P>
       )}
-      <ManageSection ingredientId={id} />
+      <ManageSection ingredient={data.ingredient} />
       <H2>Recipes</H2>
       <RecipeCard.Grid>
         {recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}

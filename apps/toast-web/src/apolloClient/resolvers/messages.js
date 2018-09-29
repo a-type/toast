@@ -1,5 +1,5 @@
 import uuid from 'uuid';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 
 export const defaults = {
   messages: [],

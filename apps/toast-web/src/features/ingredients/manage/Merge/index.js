@@ -1,9 +1,10 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Button, Modal } from 'components/generic';
 import { Picker } from 'features/ingredients';
 import { H3 } from 'components/typeset';
+import { withRouter } from 'react-router-dom';
 
 const MergeIngredients = gql`
   mutation MergeIngredients($primary: ID!, $secondary: ID!) {
@@ -15,7 +16,7 @@ const MergeIngredients = gql`
   }
 `;
 
-export default class IngredientMerger extends React.Component {
+class IngredientMerger extends React.Component {
   state = {
     showModal: false,
     value: null,
@@ -40,11 +41,13 @@ export default class IngredientMerger extends React.Component {
                   try {
                     await merge({
                       variables: {
-                        primary: this.props.ingredientId,
-                        secondary: this.state.value.id,
+                        secondary: this.props.ingredientId,
+                        primary: this.state.value.id,
                       },
                     });
-                    this.setState({ showModal: false, value: null });
+                    this.props.history.replace(
+                      `/ingredients/${this.state.value.id}`,
+                    );
                   } catch (err) {
                     this.setState({ error: err });
                   }
@@ -52,7 +55,7 @@ export default class IngredientMerger extends React.Component {
               >
                 Merge
               </Button>
-              {this.state.error && <div>Error: {error.message}</div>}
+              {this.state.error && <div>Error: {this.state.error.message}</div>}
             </Modal>
           )}
         </Mutation>
@@ -60,3 +63,5 @@ export default class IngredientMerger extends React.Component {
     );
   }
 }
+
+export default withRouter(IngredientMerger);

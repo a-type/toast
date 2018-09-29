@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from 'components/generic';
 import { type Recipe } from 'types';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { path } from 'ramda';
 import styled from 'styled-components';
 import { LikeButton } from 'features/recipes';
@@ -44,7 +44,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
 );
 
 RecipeCard.fragments = {
-  Recipe: gql`
+  recipe: gql`
     fragment RecipeCard on Recipe {
       id
       title
@@ -52,9 +52,8 @@ RecipeCard.fragments = {
         id
         url
       }
-      ...LikeButton
+      ${LikeButton.fragments.recipe}
     }
-    ${LikeButton.fragments.Recipe}
   `,
 };
 

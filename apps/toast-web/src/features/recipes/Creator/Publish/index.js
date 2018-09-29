@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Mutation } from 'react-apollo';
 import { Form, Button, Field } from 'components/generic';
 
@@ -20,11 +20,9 @@ export const RecipeCreatePublishFragment = gql`
 const PublishRecipe = gql`
   mutation PublishRecipe($id: ID!) {
     publishRecipe(id: $id) {
-      ...RecipeCreatePublish
+      ${RecipeCreatePublishFragment}
     }
   }
-
-  ${RecipeCreatePublishFragment}
 `;
 
 export default class RecipeCreatorPublish extends React.PureComponent {

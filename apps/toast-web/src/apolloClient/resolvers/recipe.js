@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'fraql';
 
 export const defaults = {
   preferredServings: null,

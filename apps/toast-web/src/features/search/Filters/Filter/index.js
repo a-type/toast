@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Pill, Type, Display, Controls } from './components';
 import { Button } from 'components/generic';
 

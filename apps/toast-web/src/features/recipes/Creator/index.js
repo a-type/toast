@@ -1,6 +1,6 @@
 import React from 'react';
 import View, { RecipeCreateViewFragment } from './View';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
 import { Redirect } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { path } from 'ramda';
 const GetRecipeForEditing = gql`
   query GetRecipeForEditing($id: ID!) {
     recipe(id: $id) {
-      ...RecipeCreateView
+      ${RecipeCreateViewFragment}
       author {
         id
       }
@@ -19,8 +19,6 @@ const GetRecipeForEditing = gql`
       id
     }
   }
-
-  ${RecipeCreateViewFragment}
 `;
 
 export default props => (

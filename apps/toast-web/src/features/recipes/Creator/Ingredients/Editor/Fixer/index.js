@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'components/generic';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import SelectionEditor from './SelectionEditor';
 import * as Editors from './editors';
 import { compose } from 'recompose';
@@ -28,11 +28,9 @@ export const FixIngredientFragment = gql`
 const FixIngredient = gql`
   mutation FixIngredient($id: ID!, $input: RecipeIngredientUpdateInput!) {
     updateRecipeIngredient(id: $id, input: $input) {
-      ...FixIngredient
+      ${FixIngredientFragment}
     }
   }
-
-  ${FixIngredientFragment}
 `;
 
 class IngredientEditorFixer extends React.PureComponent {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation, graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { path, pick } from 'ramda';
 import { binaryStringToBlob } from 'blob-util';
 import { Content } from 'components/layouts';

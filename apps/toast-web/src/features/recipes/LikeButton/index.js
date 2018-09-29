@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import styled from 'styled-components';
 import { IsLoggedIn } from 'features/auth/gates';
 import { focusShadow } from 'components/effects';
@@ -52,7 +52,7 @@ const Button = styled.button`
 `;
 
 const fragments = {
-  Recipe: gql`
+  recipe: gql`
     fragment LikeButton on Recipe {
       id
       yourLike {
@@ -66,19 +66,17 @@ const fragments = {
 const LikeRecipe = gql`
   mutation LikeRecipe($id: ID!) {
     likeRecipe(id: $id) {
-      ...LikeButton
+      ${fragments.recipe}
     }
   }
-  ${fragments.Recipe}
 `;
 
 const UnlikeRecipe = gql`
   mutation UnlikeRecipe($id: ID!) {
     unlikeRecipe(id: $id) {
-      ...LikeButton
+      ${fragments.recipe}
     }
   }
-  ${fragments.Recipe}
 `;
 
 const LikeButton = ({ recipe }) => (

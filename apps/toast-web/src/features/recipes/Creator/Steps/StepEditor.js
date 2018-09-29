@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Formik } from 'formik';
 import { Form, Input, Button, Field } from 'components/generic';
 import { merge, pick } from 'ramda';
@@ -24,11 +24,9 @@ export const RecipeCreateStepFragment = gql`
 const UpdateStep = gql`
   mutation UpdateStep($id: ID!, $input: RecipeStepUpdateInput!) {
     updateRecipeStep(id: $id, input: $input) {
-      ...RecipeCreateStep
+      ${RecipeCreateStepFragment}
     }
   }
-
-  ${RecipeCreateStepFragment}
 `;
 
 export default ({ step }) => {

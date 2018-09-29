@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import history from '../browserHistory';
 import jwt from 'jwt-decode';
 import apolloClient from 'apolloClient';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 
 export const ACCESS_TOKEN_KEY = 'toast_access_token';
 export const ID_TOKEN_KEY = 'toast_id_token';

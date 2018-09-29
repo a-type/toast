@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
 import { Content } from 'components/layouts';
 import { H1, H2, P } from 'components/typeset';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import RecipeCard from 'features/recipes/Card';
 
 const Basic = gql`
@@ -13,21 +13,20 @@ const Basic = gql`
       name
       nickname
       recipes {
-        ...RecipeCard
+        ${RecipeCard.fragments.recipe}
       }
       discoveredRecipes {
-        ...RecipeCard
+        ${RecipeCard.fragments.recipe}
       }
       draftRecipes {
-        ...RecipeCard
+        ${RecipeCard.fragments.recipe}
       }
       likedRecipes {
-        ...RecipeCard
+        ${RecipeCard.fragments.recipe}
       }
     }
   }
 
-  ${RecipeCard.fragments.Recipe}
 `;
 
 export default class extends React.Component {

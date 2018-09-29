@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Card } from 'components/generic';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { type Ingredient } from 'types';
 
 const IngredientCard = ({ ingredient }: { ingredient: Ingredient }) => (

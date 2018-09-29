@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Layout } from './components';
 import { H1, HelpText } from 'components/typeset';
 import Card from 'features/recipes/Card';

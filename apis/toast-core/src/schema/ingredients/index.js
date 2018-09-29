@@ -28,6 +28,7 @@ export const typeDefs = gql`
     name: String
     description: String
     attribution: String
+    alternateNames: [String!]
   }
 
   input IngredientListSortInput {

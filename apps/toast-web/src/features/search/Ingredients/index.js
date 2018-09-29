@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { H1 } from 'components/typeset';
 import { Card, Layout, Skeleton } from './components';
 
@@ -43,9 +43,7 @@ export default class SearchRecipeResults extends React.Component {
         <div>
           <H1>Ingredients</H1>
           <Layout>
-            {new Array(10).fill(null).map((_, idx) => (
-              <Skeleton key={idx} />
-            ))}
+            {new Array(10).fill(null).map((_, idx) => <Skeleton key={idx} />)}
           </Layout>
         </div>
       );

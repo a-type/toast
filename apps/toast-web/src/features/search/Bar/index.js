@@ -3,7 +3,7 @@ import { Input } from 'components/generic';
 import { withRouter } from 'react-router-dom';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { parse } from 'query-string';
 import debounce from 'lodash.debounce';
 

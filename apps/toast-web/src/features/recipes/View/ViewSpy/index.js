@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 
 const RecordView = gql`
   mutation RecordView($recipeId: ID!) {

@@ -1,8 +1,8 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { Query } from 'react-apollo';
 import { Content, Hero } from 'components/layouts';
-import { Centered, Icon } from 'components/generic';
+import { Disconnected } from 'components/generic';
 import Card from '../Card';
 import Spotlight from './Spotlight';
 import { path, pathOr } from 'ramda';
@@ -17,13 +17,10 @@ const FeaturedRecipes = gql`
         url
         attribution
       }
-      ...RecipeCard
-      ...RecipeSpotlight
+      ${Card.fragments.recipe}
+      ${Spotlight.fragments.recipe}
     }
   }
-
-  ${Card.fragments.Recipe}
-  ${Spotlight.fragments.Recipe}
 `;
 
 export default () => (
@@ -54,10 +51,7 @@ export default () => (
               <Spotlight.Skeleton />
             </Hero>
             <Content>
-              <Centered style={{ opacity: 0.75, color: 'var(--color-gray)' }}>
-                <Icon name="unavailable-cloud" size="90px" />
-                <P>Couldn't reach the server. Refreshing might work.</P>
-              </Centered>
+              <Disconnected />
             </Content>
           </React.Fragment>
         );

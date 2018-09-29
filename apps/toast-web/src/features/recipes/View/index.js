@@ -4,7 +4,7 @@ import Ingredients from './Ingredients';
 import Steps from './Steps';
 import Details from './Details';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import gql from 'fraql';
 import { pathOr, path } from 'ramda';
 import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
@@ -22,7 +22,7 @@ const FullRecipeQuery = gql`
       id
       published
       displayType
-      ...RecipeDetails
+      ${Details.fragments.Recipe}
       ingredients {
         id
         unit
@@ -56,8 +56,6 @@ const FullRecipeQuery = gql`
       id
     }
   }
-
-  ${Details.fragments.Recipe}
 `;
 
 export type QueryResponse = {
