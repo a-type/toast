@@ -116,6 +116,7 @@ Button.Ghost = styled(Button)`
 
   &:active {
     border-color: var(--color-brand);
+    border-style: solid;
     background: transparent;
   }
 
@@ -124,6 +125,7 @@ Button.Ghost = styled(Button)`
     background: var(--color-white);
     border-color: var(--color-brand-light);
     color: var(--color-dark);
+    border-style: solid;
   }
 `;
 

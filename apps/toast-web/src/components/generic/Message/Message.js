@@ -1,5 +1,6 @@
 import React from 'react';
-import { Bubble, DismissButton } from './components';
+import { DismissButton } from './components';
+import { Bubble } from 'components/generic';
 import { P } from 'components/typeset';
 import { DISMISS_ANIMATION_MS } from './constants';
 

@@ -21,3 +21,4 @@ export { default as Card } from './Card';
 export { default as FileChooser } from './FileChooser';
 export { default as Centered } from './Centered';
 export { default as Disconnected } from './Disconnected';
+export { default as Bubble } from './Bubble';

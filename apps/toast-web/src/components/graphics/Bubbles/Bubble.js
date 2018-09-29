@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ show, colorOptions, size }) => {
+export default ({ show, colorOptions, size, animated }) => {
   const colorIdx = Math.floor(Math.random() * colorOptions.length);
 
   if (!show) {
@@ -11,7 +11,7 @@ export default ({ show, colorOptions, size }) => {
           backgroundColor: `var(--color-${colorOptions[colorIdx]})`,
           borderRadius: '100%',
           position: 'absolute',
-          transition: '0.2s ease-in-out all',
+          transition: animated ? '0.2s ease-in-out all' : '0',
           top: '50%',
           left: '50%',
           width: 0,
@@ -31,7 +31,7 @@ export default ({ show, colorOptions, size }) => {
         backgroundColor: `var(--color-${colorOptions[colorIdx]})`,
         borderRadius: '100%',
         position: 'absolute',
-        transition: '0.2s ease-in-out all',
+        transition: animated ? '0.2s ease-in-out all' : '0',
         top: `${y}%`,
         left: `${x}%`,
         width: `${randomSize}px`,

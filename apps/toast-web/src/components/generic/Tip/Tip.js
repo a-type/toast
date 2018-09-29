@@ -1,6 +1,7 @@
 import React from 'react';
 import { Manager, Reference, Popper } from 'react-popper';
-import { Arrow, Bubble } from './components';
+import { Arrow, Wrapper } from './components';
+import { Bubble } from 'components/generic';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Foreground from '../Foreground';
 
@@ -29,14 +30,14 @@ export default class Tip extends React.Component {
                   useCapture={false}
                   display="inline-block"
                 >
-                  <Bubble
+                  <Wrapper
                     innerRef={ref}
                     style={style}
                     data-placement={placement}
                   >
-                    {tipContent}
+                    <Bubble>{tipContent}</Bubble>
                     <Arrow innerRef={arrowProps.ref} style={arrowProps.style} />
-                  </Bubble>
+                  </Wrapper>
                 </OutsideClickHandler>
               </Foreground>
             )}

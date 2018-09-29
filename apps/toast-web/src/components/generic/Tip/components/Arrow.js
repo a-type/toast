@@ -23,7 +23,7 @@ export default styled.div`
     height: 8px;
     &::after {
       border-width: 0 6px 4px 6px;
-      border-color: transparent transparent var(--color-white) transparent;
+      border-color: transparent transparent var(--color-brand) transparent;
     }
   }
 
@@ -35,7 +35,7 @@ export default styled.div`
     height: 8px;
     &::after {
       border-width: 4px 6px 0px 6px;
-      border-color: var(--color-white) transparent transparent;
+      border-color: var(--color-brand) transparent transparent;
     }
   }
 
@@ -46,7 +46,7 @@ export default styled.div`
     height: 12px;
     &::after {
       border-width: 6px 4px 6px 0;
-      border-color: transparent var(--color-white) transparent transparent;
+      border-color: transparent var(--color-brand) transparent transparent;
     }
   }
 
@@ -57,7 +57,7 @@ export default styled.div`
     width: 8px;
     &::after {
       border-width: 6px 0 6px 4px;
-      border-color: transparent transparent transparent var(--color-white);
+      border-color: transparent transparent transparent var(--color-brand);
     }
   }
 `;

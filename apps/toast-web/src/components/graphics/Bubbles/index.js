@@ -69,6 +69,8 @@ export default class Bubbles extends React.PureComponent<Props, State> {
       children,
       bubbleCount,
       style,
+      animated,
+      ...rest
     } = this.props;
     const { bubbleSize } = this.state;
 
@@ -81,6 +83,7 @@ export default class Bubbles extends React.PureComponent<Props, State> {
         backgroundColor={backgroundColor}
         style={style}
         innerRef={this.wrapperRef}
+        {...rest}
       >
         {new Array(bubbleCount)
           .fill(null)
@@ -90,6 +93,7 @@ export default class Bubbles extends React.PureComponent<Props, State> {
               show={this.state.showBubbles}
               key={key}
               size={bubbleSize}
+              animated={animated}
             />
           ))}
         {children}

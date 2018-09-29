@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: 18px;
-  background: var(--color-white);
-  position: relative;
   pointer-events: initial;
 
   box-shadow: 0 4px 8px 0 #00000080;
+  border-radius: var(--border-radius-md);
 
   &[data-placement*='bottom'] {
     margin-top: var(--spacing-sm);

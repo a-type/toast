@@ -21,9 +21,9 @@ class InnerSelfLink extends React.Component {
     return (
       <LinkStack>
         <Link.Clear to={`/users/${user.sub}`}>
-          <Button>Profile</Button>
+          <Button.Ghost>Profile</Button.Ghost>
         </Link.Clear>
-        <Button onClick={this.logout}>Log out</Button>
+        <Button.Ghost onClick={this.logout}>Log out</Button.Ghost>
       </LinkStack>
     );
   };
