@@ -34,6 +34,7 @@
   },
   "homepage": "https://gitlab.com/a-type/toast-backend#README",
   "dependencies": {
+    "@google-cloud/firestore": "^0.17.0",
     "@google-cloud/storage": "^1.7.0",
     "apollo-server-express": "^2.0.6",
     "auth0": "^2.12.0",

@@ -7,6 +7,8 @@ import * as recipes from './recipes';
 import * as search from './search';
 import * as steps from './steps';
 import * as users from './users';
+import * as groups from './groups';
+import * as plans from './plans';
 import * as _directives from './directives';
 import logger from 'logger';
 import { gql } from 'apollo-server-express';
@@ -56,6 +58,8 @@ export const typeDefs = [
   search.typeDefs,
   steps.typeDefs,
   users.typeDefs,
+  groups.typeDefs,
+  plans.typeDefs,
 ];
 export const resolvers = [
   images.resolvers,
@@ -64,4 +68,6 @@ export const resolvers = [
   search.resolvers,
   steps.resolvers,
   users.resolvers,
+  groups.resolvers,
+  plans.resolvers,
 ].reduce(mergeDeepRight, globalResolvers);

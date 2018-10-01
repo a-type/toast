@@ -1,29 +1,24 @@
 import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
-import logger from './logger';
-import { pathOr } from 'ramda';
-import firestore from 'services/firestore';
-import graph from 'services/graph';
+import { camel } from 'change-case';
 
-console.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
+import { Users, Groups } from './sources';
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,
   neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password),
 );
 
-process.on('exit', () => {
-  return driver.close();
-});
-
-export const createContext = async req => {
-  const isMutation = req.body.query.startsWith('mutation');
-
-  const user = req.user ? { ...req.user, id: req.user.sub } : null;
-
-  const context = {
-    driver,
-    // interop / legacy
+export default (
+  { writeMode = false, user = null, scopes = [] } = {
+    writeMode: false,
+    user: null,
+    scopes: [],
+  },
+) => {
+  const ctx = {
+    user,
+    scopes,
     transaction: txFunction => {
       const sess = driver.session();
       if (isMutation) {
@@ -40,13 +35,11 @@ export const createContext = async req => {
       const sess = driver.session();
       return sess.readTransaction(txFunction);
     },
-
-    firestore,
-    graph,
-
-    user,
-    scopes: pathOr('', ['user', 'scope'], req).split(' '),
   };
 
-  return context;
+  const graph = {};
+  graph.users = new Users(ctx, graph);
+  graph.groups = new Groups(ctx, graph);
+
+  return graph;
 };
