@@ -1,59 +1,55 @@
-import { id } from 'tools';
-
 export default plan => {
-  const simpleActionAssignment = meal => {
-    const mealId = id();
+  const simpleActionAssignment = (meal, mealType, dayIdx) => {
+    const mealId = `${dayIdx}.${mealType}`;
     switch (meal.availability) {
       case 'LONG':
         return [
           {
-            id: mealId,
             type: 'COOK',
             servings: plan.servingsPerMeal,
             mealType: 'FANCY',
           },
-          { id: id(), type: 'EAT', prepActionId: mealId },
+          { type: 'EAT', mealId },
         ];
       case 'MEDIUM':
         return [
           {
-            id: mealId,
             type: 'COOK',
             servings: plan.servingsPerMeal,
             mealType: 'NORMAL',
           },
-          { id: id(), type: 'EAT', prepActionId: mealId },
+          { type: 'EAT', mealId },
         ];
       case 'SHORT':
         return [
           {
-            id: mealId,
             type: 'COOK',
             servings: plan.servingsPerMeal,
             mealType: 'QUICK',
           },
-          { id: id(), type: 'EAT', prepActionId: mealId },
+          { type: 'EAT', mealId },
         ];
       case 'NONE':
+      case 'EAT_OUT':
         return [{ type: 'EAT_OUT' }];
     }
   };
 
   return {
     ...plan,
-    days: plan.days.map(day => ({
+    days: plan.days.map((day, idx) => ({
       ...day,
       breakfast: {
         ...day.breakfast,
-        actions: simpleActionAssignment(day.breakfast),
+        actions: simpleActionAssignment(day.breakfast, 'breakfast', idx),
       },
       lunch: {
         ...day.lunch,
-        actions: simpleActionAssignment(day.lunch),
+        actions: simpleActionAssignment(day.lunch, 'lunch', idx),
       },
       dinner: {
         ...day.dinner,
-        actions: simpleActionAssignment(day.dinner),
+        actions: simpleActionAssignment(day.dinner, 'dinner', idx),
       },
     })),
   };

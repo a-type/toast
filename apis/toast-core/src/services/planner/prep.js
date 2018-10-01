@@ -98,7 +98,7 @@ export default plan => {
       plannedMeals += 1;
     }
 
-    pointer = pointer + 1 % mealList.length;
+    pointer = (pointer + 1) % mealList.length;
   }
 
   const breakfasts = toMealList(plan).filter(meal => meal.meal === 'breakfast');

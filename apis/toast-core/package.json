@@ -4,8 +4,7 @@
   "description": "Toast API",
   "main": "src/server.js",
   "scripts": {
-    "dev":
-      "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
+    "dev": "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "node ./db/indexes.js",
     "db-init": "run-s db:*",
@@ -26,7 +25,9 @@
     "type": "git",
     "url": "git+https://gitlab.com/a-type/toast-backend.git"
   },
-  "keywords": ["Toast"],
+  "keywords": [
+    "Toast"
+  ],
   "author": "Grant Forrest <gaforres@gmail.com>",
   "license": "ISC",
   "bugs": {
@@ -82,6 +83,7 @@
     "jest": "^23.5.0",
     "nodemon": "^1.17.3",
     "npm-run-all": "^4.1.2",
+    "prettier": "^1.14.3",
     "rimraf": "^2.6.2"
   }
 }
