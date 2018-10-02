@@ -14,6 +14,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -28,6 +29,7 @@ Object {
           },
         ],
         "availability": "LONG",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -42,6 +44,7 @@ Object {
           },
         ],
         "availability": "SHORT",
+        "meal": "lunch",
       },
     },
     Object {
@@ -52,6 +55,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -66,6 +70,7 @@ Object {
           },
         ],
         "availability": "MEDIUM",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -74,6 +79,7 @@ Object {
           },
         ],
         "availability": "EAT_OUT",
+        "meal": "lunch",
       },
     },
     Object {
@@ -90,6 +96,7 @@ Object {
           },
         ],
         "availability": "SHORT",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -104,6 +111,7 @@ Object {
           },
         ],
         "availability": "SHORT",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -118,6 +126,7 @@ Object {
           },
         ],
         "availability": "SHORT",
+        "meal": "lunch",
       },
     },
     Object {
@@ -128,6 +137,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -136,6 +146,7 @@ Object {
           },
         ],
         "availability": "EAT_OUT",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -144,6 +155,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "lunch",
       },
     },
     Object {
@@ -154,6 +166,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -168,6 +181,7 @@ Object {
           },
         ],
         "availability": "MEDIUM",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -176,6 +190,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "lunch",
       },
     },
     Object {
@@ -192,6 +207,7 @@ Object {
           },
         ],
         "availability": "LONG",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -206,6 +222,7 @@ Object {
           },
         ],
         "availability": "LONG",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -220,6 +237,7 @@ Object {
           },
         ],
         "availability": "SHORT",
+        "meal": "lunch",
       },
     },
     Object {
@@ -230,6 +248,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "breakfast",
       },
       "dinner": Object {
         "actions": Array [
@@ -244,6 +263,7 @@ Object {
           },
         ],
         "availability": "LONG",
+        "meal": "dinner",
       },
       "lunch": Object {
         "actions": Array [
@@ -252,6 +272,7 @@ Object {
           },
         ],
         "availability": "NONE",
+        "meal": "lunch",
       },
     },
   ],

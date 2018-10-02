@@ -39,12 +39,7 @@ export const getMealsByType = mealList => {
 
 export const toMealList = plan =>
   plan.days.reduce(
-    (allMeals, day) => [
-      ...allMeals,
-      { meal: 'breakfast', ...day.breakfast },
-      { meal: 'lunch', ...day.lunch },
-      { meal: 'dinner', ...day.dinner },
-    ],
+    (allMeals, day) => [...allMeals, day.breakfast, day.lunch, day.dinner],
     [],
   );
 
@@ -84,4 +79,10 @@ export const getPlanStrategy = plan => {
   }
 
   return 'bigPrepAndEatOut';
+};
+
+export const getMealById = (id, plan) => {
+  const [day, meal] = id.split('.');
+  const dayIdx = parseInt(day);
+  return plan.days[dayIdx][meal];
 };
