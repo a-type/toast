@@ -1,19 +1,18 @@
 import { toMealList, getMealById } from './utils';
 
-const prepMealType = (prepMeal, needPrepMealCount, servingsPerMeal) => {
-  if ((needPrepMealCount + 1) * servingsPerMeal > 8) {
+const prepMealType = (availability, totalServings) => {
+  if (totalServings > 8) {
+    // doesn't matter, that many servings is BIG
     return 'BIG';
   }
 
-  if (needPrepMealCount === 0) {
-    return prepMeal.availability === 'LONG' ? 'FANCY' : 'NORMAL';
+  if (totalServings <= 6) {
+    // another arbitrary boundary: total number of 'fancy'
+    // servings you could ever expect to make, period.
+    return availability === 'LONG' ? 'FANCY' : 'NORMAL';
   }
 
-  if (prepMeal.availability === 'LONG') {
-    return 'NORMAL';
-  }
-
-  return 'QUICK';
+  return availability === 'LONG' ? 'NORMAL' : 'QUICK';
 };
 
 const alreadyPlanned = meal =>
@@ -26,9 +25,18 @@ export default plan => {
   // skip breakfast for main planning
   const mealList = toMealList(plan).filter(meal => meal.meal !== 'breakfast');
 
+  // TODO: make this a better scale!
+  if (
+    mealList.filter(meal => ['MEDIUM', 'LARGE'].includes(meal.availability))
+      .length === 0
+  ) {
+    throw new Error(
+      "Sorry, but you don't seem to have enough free time to prepare meals! You need at least one day with an hour or so",
+    );
+  }
+
   let pointer = 0;
   let prepMealIds = [];
-
   let needPrepMeals = [];
 
   while (getPlannedMeals(mealList) < mealList.length) {
@@ -48,12 +56,9 @@ export default plan => {
       ) {
         // keep track of how many meals we still need to plan
         let mealCountLeft = needPrepMeals.length;
-        console.info('FLUSH');
-        console.info('mealCountLeft ', mealCountLeft);
 
         // iterate through 'prep-ready' meals we have collected so far
         prepMealIds.forEach(prepMealId => {
-          console.info(prepMealId);
           const prepMeal = getMealById(prepMealId, plan);
           // grab a portion of the needy meals and assign them to this prep. Minimum 1 meal.
           // if there's only 1 meal but many prep-ready meals, the latter prep-ready meals
@@ -62,7 +67,6 @@ export default plan => {
             mealCountLeft / prepMealIds.length,
           );
           mealCountLeft -= countOfMealsToPrepFor;
-          console.info('countOfMealsToPrepFor ', countOfMealsToPrepFor);
 
           // add a cook action to cover all needed meals, plus eat for this meal.
           prepMeal.actions = [
@@ -70,9 +74,8 @@ export default plan => {
               type: 'COOK',
               servings: plan.servingsPerMeal * (1 + countOfMealsToPrepFor),
               mealType: prepMealType(
-                prepMeal,
-                countOfMealsToPrepFor,
-                plan.servingsPerMeal,
+                prepMeal.availability,
+                (1 + countOfMealsToPrepFor) * plan.servingsPerMeal,
               ),
             },
             {
@@ -85,7 +88,6 @@ export default plan => {
           // grab the prepped meals from the list and apply them
           for (let i = 0; i < countOfMealsToPrepFor; i++) {
             const preppedMeal = needPrepMeals.shift();
-            console.info('prepping: ', preppedMeal);
             preppedMeal.actions = [
               {
                 type: 'EAT',
@@ -132,9 +134,6 @@ export default plan => {
     }
 
     pointer = (pointer + 1) % mealList.length;
-    console.info(`Iteration done: pointer ${pointer}`);
-    console.info('prepMealIds ', prepMealIds);
-    console.info('needPrep ', needPrepMeals);
   }
 
   const breakfasts = toMealList(plan).filter(meal => meal.meal === 'breakfast');
