@@ -1,5 +1,5 @@
 import prep from '../prep';
-import { variety, largeFamily, nefarious } from './plans';
+import { variety, largeFamily, busy, nefarious } from './plans';
 
 describe('prep meal plan', () => {
   test('for a variety plan', () => {
@@ -280,6 +280,7 @@ Object {
     },
   ],
   "servingsPerMeal": 2,
+  "warnings": Array [],
 }
 `);
   });
@@ -562,6 +563,272 @@ Object {
     },
   ],
   "servingsPerMeal": 6,
+  "warnings": Array [],
+}
+`);
+  });
+
+  test('for a really busy person', () => {
+    expect(prep(busy)).toMatchInlineSnapshot(`
+Object {
+  "days": Array [
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "mealType": "QUICK",
+            "servings": 2,
+            "type": "COOK",
+          },
+          Object {
+            "leftovers": false,
+            "mealId": "0.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "SHORT",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "mealType": "QUICK",
+            "servings": 2,
+            "type": "COOK",
+          },
+          Object {
+            "leftovers": false,
+            "mealId": "0.lunch",
+            "type": "EAT",
+          },
+        ],
+        "availability": "SHORT",
+        "meal": "lunch",
+      },
+    },
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "EAT_OUT",
+        "meal": "lunch",
+      },
+    },
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "SHORT",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "mealType": "QUICK",
+            "servings": 2,
+            "type": "COOK",
+          },
+          Object {
+            "leftovers": false,
+            "mealId": "2.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "SHORT",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "lunch",
+      },
+    },
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "EAT_OUT",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "lunch",
+      },
+    },
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "mealType": "BIG",
+            "servings": 16,
+            "type": "COOK",
+          },
+          Object {
+            "leftovers": false,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "MEDIUM",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "lunch",
+      },
+    },
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "LONG",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "mealType": "QUICK",
+            "servings": 2,
+            "type": "COOK",
+          },
+          Object {
+            "leftovers": false,
+            "mealId": "5.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "SHORT",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "lunch",
+      },
+    },
+    Object {
+      "breakfast": Object {
+        "actions": Array [
+          Object {
+            "type": "EAT_OUT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "breakfast",
+      },
+      "dinner": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "dinner",
+      },
+      "lunch": Object {
+        "actions": Array [
+          Object {
+            "leftovers": true,
+            "mealId": "4.dinner",
+            "type": "EAT",
+          },
+        ],
+        "availability": "NONE",
+        "meal": "lunch",
+      },
+    },
+  ],
+  "servingsPerMeal": 2,
+  "warnings": Array [
+    "You don't seem to have a lot of time to prep meals! You'll need to prep 7 meals in only 1 day. You can make your schedule more realistic by switching some meals to eating out.",
+  ],
 }
 `);
   });

@@ -1,5 +1,7 @@
 import { toMealList, getMealById } from './utils';
 
+const ALLOWED_NONE_RATIO = 6;
+
 const prepMealType = (availability, totalServings) => {
   if (totalServings > 8) {
     // doesn't matter, that many servings is BIG
@@ -22,16 +24,27 @@ const alreadyPlanned = meal =>
 const getPlannedMeals = mealList => mealList.filter(alreadyPlanned).length;
 
 export default plan => {
+  plan.warnings = [];
   // skip breakfast for main planning
   const mealList = toMealList(plan).filter(meal => meal.meal !== 'breakfast');
 
-  // TODO: make this a better scale!
-  if (
-    mealList.filter(meal => ['MEDIUM', 'LARGE'].includes(meal.availability))
-      .length === 0
-  ) {
+  // TODO: make this servings based?
+  const totalNones = mealList.filter(meal => meal.availability === 'NONE')
+    .length;
+  const totalPrepCandidates = mealList.filter(meal =>
+    ['MEDIUM', 'LARGE'].includes(meal.availability),
+  ).length;
+  if (totalPrepCandidates === 0) {
     throw new Error(
       "Sorry, but you don't seem to have enough free time to prepare meals! You need at least one day with an hour or so",
+    );
+  }
+
+  if (totalNones / totalPrepCandidates > ALLOWED_NONE_RATIO) {
+    plan.warnings.push(
+      `You don't seem to have a lot of time to prep meals! You'll need to prep ${totalNones} meals in only ${totalPrepCandidates} day${
+        totalPrepCandidates > 1 ? 's' : ''
+      }. You can make your schedule more realistic by switching some meals to eating out.`,
     );
   }
 
