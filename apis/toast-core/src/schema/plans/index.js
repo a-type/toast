@@ -1,13 +1,14 @@
 import { gql } from 'apollo-server-express';
 import { id } from 'tools';
-import { path } from 'ramda';
+import { path, pathOr, assocPath } from 'ramda';
 import { UserInputError } from 'errors';
 
 export const typeDefs = gql`
-  enum PrepAvailablility {
+  enum PrepAvailability {
     EAT_OUT
     NONE
     SHORT
+    MEDIUM
     LONG
   }
 
@@ -15,6 +16,8 @@ export const typeDefs = gql`
     EAT_OUT
     COOK
     EAT
+    READY_MADE
+    SKIP
   }
 
   enum PlanMealType {
@@ -22,6 +25,12 @@ export const typeDefs = gql`
     BIG
     FANCY
     NORMAL
+  }
+
+  enum PlanStrategy {
+    BASIC
+    PREP
+    BIG_PREP
   }
 
   interface PlanAction {
@@ -39,24 +48,28 @@ export const typeDefs = gql`
     mealType: PlanMealType!
   }
 
-  type PlanActionPrepared {
+  type PlanActionEat {
     type: PlanActionType!
     meal: PlanMeal!
     leftovers: Boolean!
   }
 
+  type PlanActionReadyMade {
+    type: PlanActionType!
+    note: String
+  }
+
+  type PlanActionSkip {
+    type: PlanActionType!
+  }
+
   type PlanMeal {
-    id: ID!
-    availability: PrepAvailablility!
-    action: PlanAction!
+    availability: PrepAvailability!
+    actions: [PlanAction!]!
   }
 
   type PlanDay {
-    id: ID!
-    breakfast: PlanMeal!
-    lunch: PlanMeal!
-    dinner: PlanMeal!
-    canPrepExtraMeal: Boolean!
+    meals: [PlanMeal!]!
   }
 
   type Plan {
@@ -64,6 +77,7 @@ export const typeDefs = gql`
     servingsPerMeal: Int!
     days: [PlanDay!]!
     groceryDay: Int!
+    warnings: [String!]!
   }
 
   input PlanSetDetailsInput {
@@ -71,20 +85,19 @@ export const typeDefs = gql`
     groceryDay: Int
   }
 
-  input PlanSetDayAvailabilityInput {
-    breakfast: PrepTimeType
-    lunch: PrepTimeType
-    dinner: PrepTimeType
-    canPrepExtraMeal: Boolean
+  input PlanSetMealDetailsInput {
+    availability: PrepAvailability
   }
 
   extend type Mutation {
     setPlanDetails(details: PlanSetDetailsInput!): Plan!
       @hasScope(scope: "update:plan")
-    setPlanDayAvailability(
-      day: Int!
-      dayPlan: PlanSetDayAvailabilityInput!
+    setPlanMealDetails(
+      dayIndex: Int!
+      mealIndex: Int!
+      details: PlanSetMealDetailsInput!
     ): Plan! @hasScope(scope: "update:plan")
+    processPlan(strategy: PlanStrategy): Plan!
   }
 
   extend type Group {
@@ -103,11 +116,24 @@ export const resolvers = {
         await ctx.graph.groups.mergeMine({ planId });
       }
 
-      const plan = (await ctx.firestore.plans.get(planId)) || { id: planId };
+      const emptyPlan = {
+        id: planId,
+        days: new Array(7).fill(null).map(() => ({
+          meals: new Array(3).fill(null).map(() => ({
+            availability: 'NONE',
+            actions: [],
+          })),
+        })),
+      };
+      const plan = (await ctx.firestore.plans.get(planId)) || emptyPlan;
       return ctx.firestore.plans.set(planId, { ...plan, ...args.details });
     },
 
-    setPlanDayAvailability: async (_parent, { day, dayPlan }, ctx) => {
+    setPlanMealDetails: async (
+      _parent,
+      { dayIndex, mealIndex, details },
+      ctx,
+    ) => {
       const group = await ctx.graph.groups.getMine();
 
       if (!group || !group.planId) {
@@ -115,9 +141,33 @@ export const resolvers = {
       }
 
       const plan = await ctx.firestore.plans.get(group.planId);
-      plan.days[day] = dayPlan;
-      await ctx.firestore.plans.set(group.planId, plan);
+
+      // mutation... yeah, bad. but... serviceable.
+      const meal = pathOr({}, ['days', dayIndex, 'meals', mealIndex], plan);
+      const updatedPlan = assocPath(
+        ['days', dayIndex, 'meals', mealIndex],
+        {
+          ...meal,
+          ...details,
+        },
+        plan,
+      );
+
+      await ctx.firestore.plans.set(group.planId, updatedPlan);
       return plan;
+    },
+
+    processPlan: async (_parent, { strategy }, ctx) => {
+      const group = await ctx.graph.groups.getMine();
+
+      if (!group || !group.planId) {
+        throw new UserInputError("You haven't created a plan yet");
+      }
+
+      const plan = await ctx.firestore.plans.get(group.planId);
+      const processed = ctx.planner.run(plan, strategy);
+      await ctx.firestore.plans.set(group.planId, processed);
+      return processed;
     },
   },
 
@@ -125,6 +175,23 @@ export const resolvers = {
     plan: (parent, args, ctx) => {
       const { planId } = parent;
       return ctx.firestore.plans.get(planId);
+    },
+  },
+
+  PlanAction: {
+    __resolveType: obj => {
+      switch (obj.type) {
+        case 'COOK':
+          return 'PlanActionCook';
+        case 'EAT':
+          return 'PlanActionEat';
+        case 'EAT_OUT':
+          return 'PlanActionEatOut';
+        case 'READY_MADE':
+          return 'PlanActionReadyMade';
+        case 'SKIP':
+          return 'PlanActionSkip';
+      }
     },
   },
 };

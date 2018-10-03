@@ -11,6 +11,7 @@ import ScannerPage from './pages/Scanner';
 import LoggedInPage from './pages/LoggedIn';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
+import PlanPage from './pages/Plan';
 
 export default () => (
   <Switch>
@@ -25,6 +26,7 @@ export default () => (
     <Route path="/search" component={SearchPage} />
     <Route path="/scanner" component={ScannerPage} />
     <Route path="/manage" component={ManagePage} />
+    <Route path="/plan" component={PlanPage} />
     <Route component={NotFoundPage} />
   </Switch>
 );

@@ -12,7 +12,7 @@ export default class Source {
 
   filterInputFields = data => omit(['id'], pick(this.fields, data));
 
-  hydateOne = (
+  hydrateOne = (
     result,
     { key = this.resourceName.toLowerCase(), throwIfNone = false } = {},
   ) => {

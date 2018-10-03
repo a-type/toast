@@ -21,7 +21,7 @@ export default (
     scopes,
     transaction: txFunction => {
       const sess = driver.session();
-      if (isMutation) {
+      if (writeMode) {
         return sess.writeTransaction(txFunction);
       } else {
         return sess.readTransaction(txFunction);
@@ -37,7 +37,9 @@ export default (
     },
   };
 
-  const graph = {};
+  const graph = {
+    transaction: ctx.transaction,
+  };
   graph.users = new Users(ctx, graph);
   graph.groups = new Groups(ctx, graph);
 

@@ -1,6 +1,10 @@
-import { NotFoundError } from 'errors';
-
 const COLLECTION = 'plans';
+
+const defaulted = plan => ({
+  servingsPerMeal: 0,
+  days: [],
+  ...plan,
+});
 
 export default firestore => ({
   /**
@@ -10,22 +14,22 @@ export default firestore => ({
     const document = firestore.doc(`${COLLECTION}/${planId}`);
     const docRef = await document.get();
     if (!docRef.exists) {
-      throw new NotFoundError('Plan', planId);
+      return null;
     }
 
-    return docRef.data();
+    return defaulted(docRef.data());
   },
 
   merge: async (planId, planData) => {
     const document = firestore.doc(`${COLLECTION}/${planId}`);
     await document.set(planData, { merge: true });
     const docRef = await document.get();
-    return docRef.data();
+    return defaulted(docRef.data());
   },
 
   set: async (planId, plan) => {
     const document = firestore.doc(`${COLLECTION}/${planId}`);
     await document.set(plan);
-    return plan;
+    return defaulted(plan);
   },
 });

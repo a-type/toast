@@ -1,4 +1,4 @@
-import { toMealList, getMealById } from './utils';
+import { toMealList } from './utils';
 
 const ALLOWED_NONE_RATIO = 6;
 
@@ -26,7 +26,9 @@ const getPlannedMeals = mealList => mealList.filter(alreadyPlanned).length;
 export default plan => {
   plan.warnings = [];
   // skip breakfast for main planning
-  const mealList = toMealList(plan).filter(meal => meal.meal !== 'breakfast');
+  const mealList = toMealList(plan).filter(
+    meal => meal.mealName !== 'breakfast',
+  );
 
   // TODO: make this servings based?
   const totalNones = mealList.filter(meal => meal.availability === 'NONE')
@@ -49,12 +51,13 @@ export default plan => {
   }
 
   let pointer = 0;
-  let prepMealIds = [];
+  let prepMealTuples = [];
   let needPrepMeals = [];
 
   while (getPlannedMeals(mealList) < mealList.length) {
     // WARNING: pretty brittle. based on the number of meals per day represented in list
     const dayPointer = Math.floor(pointer / 2);
+    const mealIndex = pointer % 2;
 
     // L / M meals count as 'prep-ready'; i.e. we can increase their portions by decreasing
     // the complexity of the recipe so we can distribute portions to later "N" meals
@@ -63,7 +66,7 @@ export default plan => {
       // need prepping, trigger the 'flush' behavior that goes ahead and correlates
       // prep meals to prepped meals
       if (
-        (prepMealIds.length > 0 && needPrepMeals.length > 0) ||
+        (prepMealTuples.length > 0 && needPrepMeals.length > 0) ||
         // edge case: this is the last meal left
         getPlannedMeals(mealList) === mealList.length - 1
       ) {
@@ -71,13 +74,14 @@ export default plan => {
         let mealCountLeft = needPrepMeals.length;
 
         // iterate through 'prep-ready' meals we have collected so far
-        prepMealIds.forEach(prepMealId => {
-          const prepMeal = getMealById(prepMealId, plan);
+        prepMealTuples.forEach(prepMealTuple => {
+          const [prepMealDay, prepMealIndex] = prepMealTuple;
+          const prepMeal = plan.days[prepMealDay].meals[prepMealIndex];
           // grab a portion of the needy meals and assign them to this prep. Minimum 1 meal.
           // if there's only 1 meal but many prep-ready meals, the latter prep-ready meals
           // just become regular meals.
           const countOfMealsToPrepFor = Math.ceil(
-            mealCountLeft / prepMealIds.length,
+            mealCountLeft / prepMealTuples.length,
           );
           mealCountLeft -= countOfMealsToPrepFor;
 
@@ -93,7 +97,8 @@ export default plan => {
             },
             {
               type: 'EAT',
-              mealId: prepMealId,
+              mealDay: prepMealDay,
+              mealIndex: prepMealIndex,
               leftovers: false,
             },
           ];
@@ -104,7 +109,8 @@ export default plan => {
             preppedMeal.actions = [
               {
                 type: 'EAT',
-                mealId: prepMealId,
+                mealDay: prepMealDay,
+                mealIndex: prepMealIndex,
                 leftovers: true,
               },
             ];
@@ -112,15 +118,15 @@ export default plan => {
         });
 
         needPrepMeals = [];
-        prepMealIds = [];
+        prepMealTuples = [];
       }
 
       if (!alreadyPlanned(mealList[pointer])) {
-        prepMealIds.push(`${dayPointer}.${mealList[pointer].meal}`);
+        prepMealTuples.push([dayPointer, mealIndex]);
       }
     } else if (mealList[pointer].availability === 'NONE') {
       // note: if we don't have any prep meals ready, we can catch this on the next round
-      if (prepMealIds.length > 0 && !alreadyPlanned(mealList[pointer])) {
+      if (prepMealTuples.length > 0 && !alreadyPlanned(mealList[pointer])) {
         needPrepMeals.push(mealList[pointer]);
       }
     } else if (mealList[pointer].availability === 'SHORT') {
@@ -133,7 +139,8 @@ export default plan => {
         },
         {
           type: 'EAT',
-          mealId: `${dayPointer}.${mealList[pointer].meal}`,
+          mealDay: dayPointer,
+          mealIndex,
           leftovers: false,
         },
       ];
@@ -149,7 +156,9 @@ export default plan => {
     pointer = (pointer + 1) % mealList.length;
   }
 
-  const breakfasts = toMealList(plan).filter(meal => meal.meal === 'breakfast');
+  const breakfasts = toMealList(plan).filter(
+    meal => meal.mealName === 'breakfast',
+  );
   // TODO...
   breakfasts.forEach(meal => {
     meal.actions = [

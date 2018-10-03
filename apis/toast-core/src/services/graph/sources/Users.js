@@ -3,7 +3,7 @@ import logger from 'logger';
 import Source from './Source';
 import { AuthenticationError } from 'errors';
 
-export default class Users {
+export default class Users extends Source {
   constructor(ctx, graph) {
     super(ctx, graph, 'User', ['id']);
   }
@@ -106,7 +106,7 @@ export default class Users {
       const result = await tx.run(
         `
         MERGE (user:User {id: $userId})
-        RETURN u{${this.dbFields}}
+        RETURN user {${this.dbFields}}
         `,
         {
           userId: this.ctx.user.id,

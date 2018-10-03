@@ -44,8 +44,8 @@ export default class Groups extends Source {
         `
       MATCH (user:User {id: $userId})
       MERGE (group:Group)<-[:MEMBER_OF]-(user)
-        ON CREATE SET group.id = $id, group += data
-        ON UPDATE SET group += data
+        ON CREATE SET group.id = $id, group += $data
+        ON MATCH SET group += $data
       RETURN group {${this.dbFields}}
       `,
         {
