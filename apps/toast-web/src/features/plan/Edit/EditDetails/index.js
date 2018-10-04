@@ -2,7 +2,7 @@ import React from 'react';
 import gql from 'fraql';
 import { Mutation } from 'react-apollo';
 import { Formik } from 'formik';
-import { Field, Input, Button } from 'components/generic';
+import { Field, Input, Button, Form } from 'components/generic';
 
 const fragments = {
   plan: gql`
@@ -32,7 +32,7 @@ const EditDetails = ({ plan, onSave }) => (
         }}
       >
         {({ values, handleSubmit, handleChange }) => (
-          <form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             <Field label="Servings per meal" required>
               <Input
                 value={values.servingsPerMeal}
@@ -40,8 +40,10 @@ const EditDetails = ({ plan, onSave }) => (
                 onChange={handleChange}
               />
             </Field>
-            <Button type="submit">{!!plan ? 'Save' : 'Create'}</Button>
-          </form>
+            <Field>
+              <Button type="submit">{!!plan ? 'Save' : 'Create'}</Button>
+            </Field>
+          </Form>
         )}
       </Formik>
     )}

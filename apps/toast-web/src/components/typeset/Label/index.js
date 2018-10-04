@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 import { getSize } from 'theme';
 
-const HelpText = styled.i`
-  font-size: var(--font-size-sm);
+const Label = styled.label`
+  font-style: italic;
   color: var(--color-gray);
+  font-size: var(--font-size-sm);
   margin-top: -0.16em;
   margin-bottom: calc(${props => getSize(props.spaceBelow)} - 0.36em);
-  display: inline-block;
 `;
 
-HelpText.defaultProps = {
+Label.defaultProps = {
   spaceBelow: 'sm',
 };
 
-export default HelpText;
+export default Label;

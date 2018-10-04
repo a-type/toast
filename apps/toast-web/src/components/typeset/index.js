@@ -7,3 +7,4 @@ export { default as Article } from './Article';
 export { default as H3 } from './H3';
 export { default as Aside } from './Aside';
 export { default as HelpText } from './HelpText';
+export { default as Label } from './Label';

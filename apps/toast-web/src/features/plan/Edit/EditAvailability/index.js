@@ -3,11 +3,23 @@ import gql from 'fraql';
 import { pathOr } from 'ramda';
 import DayRow from './DayRow';
 import styled from 'styled-components';
+import { HelpText } from 'components/typeset';
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: auto 1fr 1fr 1fr;
   gap: var(--spacing-md);
+`;
+
+const TopLabel = styled.span`
+  text-align: center;
+  margin: auto;
+`;
+
+const SideLabel = styled.span`
+  text-align: right;
+  margin: auto;
+  margin-right: var(--spacing-sm);
 `;
 
 const dayNames = [
@@ -21,17 +33,28 @@ const dayNames = [
 ];
 
 const EditAvailability = ({ plan }) => (
-  <Grid>
-    {new Array(7).fill(null).map((_, dayIndex) => (
-      <React.Fragment>
-        <span>{dayNames[dayIndex]}</span>
-        <DayRow
-          dayIndex={dayIndex}
-          day={pathOr({}, ['days', dayIndex], plan)}
-        />
-      </React.Fragment>
-    ))}
-  </Grid>
+  <div>
+    <HelpText spaceBelow="lg">
+      What's your average week look like? How much time would you like to spend
+      on each meal? How you answer is up to you; anywhere from 'realistic' to
+      'aspirational'.
+    </HelpText>
+    <Grid>
+      <div />
+      {['Breakfast', 'Lunch', 'Dinner'].map(meal => (
+        <TopLabel>{meal}</TopLabel>
+      ))}
+      {new Array(7).fill(null).map((_, dayIndex) => (
+        <React.Fragment>
+          <SideLabel>{dayNames[dayIndex]}</SideLabel>
+          <DayRow
+            dayIndex={dayIndex}
+            day={pathOr({}, ['days', dayIndex], plan)}
+          />
+        </React.Fragment>
+      ))}
+    </Grid>
+  </div>
 );
 
 EditAvailability.fragments = {
