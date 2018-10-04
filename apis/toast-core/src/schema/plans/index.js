@@ -1,10 +1,20 @@
 import { gql } from 'apollo-server-express';
 import { id } from 'tools';
-import { path, pathOr, assocPath } from 'ramda';
+import { path, pathOr, assocPath, compose, mergeDeepLeft } from 'ramda';
 import { UserInputError } from 'errors';
+
+const emptyPlan = {
+  days: new Array(7).fill(null).map(() => ({
+    meals: new Array(3).fill(null).map(() => ({
+      availability: 'SKIP',
+      actions: [],
+    })),
+  })),
+};
 
 export const typeDefs = gql`
   enum PrepAvailability {
+    SKIP
     EAT_OUT
     NONE
     SHORT
@@ -101,7 +111,7 @@ export const typeDefs = gql`
   }
 
   extend type Group {
-    plan: Plan! @authenticated
+    plan: Plan @authenticated
   }
 `;
 
@@ -116,16 +126,11 @@ export const resolvers = {
         await ctx.graph.groups.mergeMine({ planId });
       }
 
-      const emptyPlan = {
+      const defaultPlan = {
+        ...emptyPlan,
         id: planId,
-        days: new Array(7).fill(null).map(() => ({
-          meals: new Array(3).fill(null).map(() => ({
-            availability: 'NONE',
-            actions: [],
-          })),
-        })),
       };
-      const plan = (await ctx.firestore.plans.get(planId)) || emptyPlan;
+      const plan = (await ctx.firestore.plans.get(planId)) || defaultPlan;
       return ctx.firestore.plans.set(planId, { ...plan, ...args.details });
     },
 
@@ -142,7 +147,6 @@ export const resolvers = {
 
       const plan = await ctx.firestore.plans.get(group.planId);
 
-      // mutation... yeah, bad. but... serviceable.
       const meal = pathOr({}, ['days', dayIndex, 'meals', mealIndex], plan);
       const updatedPlan = assocPath(
         ['days', dayIndex, 'meals', mealIndex],
@@ -154,7 +158,7 @@ export const resolvers = {
       );
 
       await ctx.firestore.plans.set(group.planId, updatedPlan);
-      return plan;
+      return updatedPlan;
     },
 
     processPlan: async (_parent, { strategy }, ctx) => {

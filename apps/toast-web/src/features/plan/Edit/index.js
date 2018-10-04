@@ -20,27 +20,41 @@ const PlanQuery = gql`
   }
 `;
 
-export default () => (
-  <Query query={PlanQuery}>
-    {({ data, loading, error }) => {
-      if (loading || error) {
-        return null;
-      }
+export default class extends React.Component {
+  state = {
+    stage: 0,
+  };
 
-      const plan = pathOr(null, ['me', 'group', 'plan'], data);
+  setStage = stage => this.setState({ stage });
 
-      return (
-        <Stages completedStage={1} stage={1}>
-          <Stages.Stage stageIndex={0} title="Plan Basics">
-            <EditDetails plan={plan} />
-          </Stages.Stage>
-          {plan && (
-            <Stages.Stage stageIndex={1} title="Your Schedule">
-              <EditAvailability plan={plan} />
-            </Stages.Stage>
-          )}
-        </Stages>
-      );
-    }}
-  </Query>
-);
+  render() {
+    return (
+      <Query query={PlanQuery}>
+        {({ data, loading, error, refetch }) => {
+          if (loading || error) {
+            return null;
+          }
+
+          const plan = pathOr(null, ['me', 'group', 'plan'], data);
+
+          return (
+            <Stages
+              completedStage={!!plan ? 1 : 0}
+              onStageChanged={this.setStage}
+              stage={this.state.stage}
+            >
+              <Stages.Stage stageIndex={0} title="Plan Basics">
+                <EditDetails plan={plan} onSave={refetch} />
+              </Stages.Stage>
+              {plan && (
+                <Stages.Stage stageIndex={1} title="Your Schedule">
+                  <EditAvailability plan={plan} />
+                </Stages.Stage>
+              )}
+            </Stages>
+          );
+        }}
+      </Query>
+    );
+  }
+}

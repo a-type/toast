@@ -21,12 +21,15 @@ const SetPlanDetails = gql`
   }
 `;
 
-const EditDetails = ({ plan }) => (
+const EditDetails = ({ plan, onSave }) => (
   <Mutation mutation={SetPlanDetails}>
     {mutate => (
       <Formik
         initialValues={plan}
-        onSubmit={values => mutate({ variables: { details: values } })}
+        onSubmit={async values => {
+          await mutate({ variables: { details: values } });
+          onSave();
+        }}
       >
         {({ values, handleSubmit, handleChange }) => (
           <form onSubmit={handleSubmit}>

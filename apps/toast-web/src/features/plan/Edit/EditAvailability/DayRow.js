@@ -2,6 +2,7 @@ import React from 'react';
 import gql from 'fraql';
 import { pathOr } from 'ramda';
 import { Mutation } from 'react-apollo';
+import AvailabilityPicker from './AvailabilityPicker';
 
 const mealFragments = {
   meal: gql`
@@ -14,6 +15,7 @@ const mealFragments = {
 const SetMealDetails = gql`
   mutation SetMealDetails($dayIndex: Int!, $mealIndex: Int!, $details: PlanSetMealDetailsInput!) {
     setPlanMealDetails(dayIndex: $dayIndex, mealIndex: $mealIndex, details: $details) {
+      id
       days {
         meals {
           ${mealFragments.meal}
@@ -26,24 +28,14 @@ const SetMealDetails = gql`
 const Meal = ({ mealName, mealIndex, dayIndex, meal }) => (
   <Mutation mutation={SetMealDetails} variables={{ mealIndex, dayIndex }}>
     {mutate => (
-      <div>
-        <b>{mealName}</b>
-        <br />
-        <select
-          value={meal.availability}
-          onChange={ev =>
-            mutate({
-              variables: { details: { availability: ev.target.value } },
-            })
-          }
-        >
-          <option>NONE</option>
-          <option>EAT_OUT</option>
-          <option>SHORT</option>
-          <option>MEDIUM</option>
-          <option>LONG</option>
-        </select>
-      </div>
+      <AvailabilityPicker
+        value={meal.availability || 'SKIP'}
+        onChange={availability =>
+          mutate({
+            variables: { details: { availability } },
+          })
+        }
+      />
     )}
   </Mutation>
 );
@@ -51,7 +43,7 @@ const Meal = ({ mealName, mealIndex, dayIndex, meal }) => (
 Meal.fragments = mealFragments;
 
 const DayRow = ({ dayIndex, day }) => (
-  <div style={{ display: 'flex', flexDirection: 'row' }}>
+  <React.Fragment>
     {['breakfast', 'lunch', 'dinner'].map((mealName, mealIndex) => (
       <Meal
         mealName={mealName}
@@ -60,7 +52,7 @@ const DayRow = ({ dayIndex, day }) => (
         meal={pathOr({}, ['meals', mealIndex], day)}
       />
     ))}
-  </div>
+  </React.Fragment>
 );
 
 DayRow.fragments = {

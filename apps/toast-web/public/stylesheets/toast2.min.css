@@ -20,6 +20,10 @@
 }
 .icons8,
 .icons8-add:before,
+.icons8-beach:before,
+.icons8-calendar-delete:before,
+.icons8-calendar-plus:before,
+.icons8-calendar:before,
 .icons8-copybook:before,
 .icons8-delete-button:before,
 .icons8-draft:before,
@@ -31,10 +35,16 @@
 .icons8-link:before,
 .icons8-list-view:before,
 .icons8-login:before,
+.icons8-microwave:before,
 .icons8-next-page:before,
 .icons8-plus-math:before,
+.icons8-run:before,
+.icons8-sand-timer:before,
+.icons8-skip-this-track:before,
 .icons8-unavailable-cloud:before,
 .icons8-view-more:before,
+.icons8-waiter:before,
+.icons8-walk:before,
 .icons8-warn:before,
 .icons8-x-button:before,
 [data-icons8]:before {
@@ -53,6 +63,18 @@
 }
 .icons8-add:before {
   content: '\f100';
+}
+.icons8-beach:before {
+  content: '\f11a';
+}
+.icons8-calendar:before {
+  content: '\f112';
+}
+.icons8-calendar-delete:before {
+  content: '\f114';
+}
+.icons8-calendar-plus:before {
+  content: '\f113';
 }
 .icons8-copybook:before {
   content: '\f10d';
@@ -87,17 +109,35 @@
 .icons8-login:before {
   content: '\f10c';
 }
+.icons8-microwave:before {
+  content: '\f116';
+}
 .icons8-next-page:before {
   content: '\f109';
 }
 .icons8-plus-math:before {
   content: '\f103';
 }
+.icons8-run:before {
+  content: '\f118';
+}
+.icons8-sand-timer:before {
+  content: '\f117';
+}
+.icons8-skip-this-track:before {
+  content: '\f11b';
+}
 .icons8-unavailable-cloud:before {
   content: '\f110';
 }
 .icons8-view-more:before {
   content: '\f10a';
+}
+.icons8-waiter:before {
+  content: '\f115';
+}
+.icons8-walk:before {
+  content: '\f119';
 }
 .icons8-warn:before {
   content: '\f106';
