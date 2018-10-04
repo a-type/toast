@@ -1,6 +1,6 @@
 import React from 'react';
 import { Loader, Tip, Button } from 'components/generic';
-import { Icon, LinkStack } from './components';
+import { Avatar, LinkStack } from './components';
 import { Link } from 'components/typeset';
 import auth from 'services/auth';
 import { Consumer } from 'features/auth/TokenContext';
@@ -16,10 +16,11 @@ class InnerSelfLink extends React.Component {
   };
 
   renderTipContent = () => {
-    const { user, isLoggedIn } = this.props;
+    const { user } = this.props;
 
     return (
       <LinkStack>
+        <Avatar avatarUrl={path(['picture'], user)} />
         <Link.Clear to={`/users/${user.sub}`}>
           <Button.Ghost>Profile</Button.Ghost>
         </Link.Clear>
@@ -29,20 +30,12 @@ class InnerSelfLink extends React.Component {
   };
 
   render() {
-    const { isLoggedIn, user } = this.props;
-
-    if (!isLoggedIn) {
-      return <Link onClick={this.login}>Log in / Sign up</Link>;
-    }
+    const { user } = this.props;
 
     return (
       <Tip.Toggle tipContent={this.renderTipContent()}>
         {({ ref, onClick }) => (
-          <Icon
-            avatarUrl={path(['picture'], user)}
-            onClick={onClick}
-            innerRef={ref}
-          />
+          <Button.Icon name="view-more" innerRef={ref} onClick={onClick} />
         )}
       </Tip.Toggle>
     );
@@ -50,9 +43,5 @@ class InnerSelfLink extends React.Component {
 }
 
 export default () => (
-  <Consumer>
-    {({ user, isLoggedIn }) => (
-      <InnerSelfLink user={user} isLoggedIn={isLoggedIn} />
-    )}
-  </Consumer>
+  <Consumer>{({ user }) => <InnerSelfLink user={user} />}</Consumer>
 );

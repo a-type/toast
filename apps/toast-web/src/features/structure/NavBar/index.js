@@ -3,15 +3,18 @@ import Layout from './Layout';
 import Logo from 'components/brand/Logo';
 import { Link } from 'components/typeset';
 import { Bar as SearchBar } from 'features/search';
-import { withRouter } from 'react-router-dom';
-import { SelfLink } from 'features/users';
+import { IsLoggedIn } from 'features/auth/gates';
+import LoginButton from './LoginButton';
+import UserControls from './UserControls';
 
-export default withRouter(({ location }) => (
+export default () => (
   <Layout>
     <Link.Clear to="/">
       <Logo />
     </Link.Clear>
     <SearchBar />
-    <SelfLink />
+    <IsLoggedIn fallback={<LoginButton />}>
+      <UserControls />
+    </IsLoggedIn>
   </Layout>
-));
+);

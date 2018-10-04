@@ -129,19 +129,13 @@ Button.Ghost = styled(Button)`
   }
 `;
 
-const InternalIconButton = styled.button`
-  border: 0;
-  background: transparent;
-  outline: none;
-  cursor: pointer;
+const InternalIconButton = styled(Button)`
   padding: 0;
-  margin: auto;
-  color: inherit;
-
-  &:focus > i,
-  &:hover > i {
-    color: var(--color-brand);
-  }
+  width: 38px;
+  height: 38px;
+  border-radius: 100%;
+  font-size: 24px;
+  color: var(--color-white);
 `;
 
 Button.Icon = ({ name, iconProps, ...others }) => (

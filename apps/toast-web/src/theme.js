@@ -31,7 +31,7 @@ injectGlobal`
 :root {
   --rhythm: ${rhythmHeight}px;
 
-  --font-fancy: "Prata", serif;
+  --font-fancy: "Merriweather", serif;
   --font-default: "Noto Serif", serif;
   --font-logo: "Pacifico", serif;
 
