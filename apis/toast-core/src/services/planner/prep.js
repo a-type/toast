@@ -1,4 +1,5 @@
 import { toMealList } from './utils';
+import { clone } from 'ramda';
 
 const ALLOWED_NONE_RATIO = 6;
 
@@ -23,12 +24,27 @@ const alreadyPlanned = meal =>
 
 const getPlannedMeals = mealList => mealList.filter(alreadyPlanned).length;
 
-export default plan => {
+export default _plan => {
+  const plan = clone(_plan);
+
+  // reset actions for a new plan
+  if (plan.days) {
+    plan.days.forEach(day => {
+      if (day.meals) {
+        day.meals.forEach(meal => {
+          meal.actions = [];
+        });
+      } else {
+        day.meals = [];
+      }
+    });
+  } else {
+    plan.days = [];
+  }
+
   plan.warnings = [];
   // skip breakfast for main planning
-  const mealList = toMealList(plan).filter(
-    meal => meal.mealName !== 'breakfast',
-  );
+  const mealList = toMealList(plan).filter((meal, index) => index % 3 !== 0);
 
   // TODO: make this servings based?
   const totalNones = mealList.filter(meal => meal.availability === 'NONE')
@@ -53,11 +69,12 @@ export default plan => {
   let pointer = 0;
   let prepMealTuples = [];
   let needPrepMeals = [];
+  let totalIterations = 0;
 
-  while (getPlannedMeals(mealList) < mealList.length) {
+  while (getPlannedMeals(mealList) < mealList.length && totalIterations < 24) {
     // WARNING: pretty brittle. based on the number of meals per day represented in list
     const dayPointer = Math.floor(pointer / 2);
-    const mealIndex = pointer % 2;
+    const mealIndex = 1 + pointer % 2;
 
     // L / M meals count as 'prep-ready'; i.e. we can increase their portions by decreasing
     // the complexity of the recipe so we can distribute portions to later "N" meals
@@ -154,11 +171,16 @@ export default plan => {
     }
 
     pointer = (pointer + 1) % mealList.length;
+    totalIterations++;
   }
 
-  const breakfasts = toMealList(plan).filter(
-    meal => meal.mealName === 'breakfast',
-  );
+  if (totalIterations === 24 && getPlannedMeals(mealList) < mealList.length) {
+    throw new Error(
+      'Something went wrong while planning. You might want to check with support.',
+    );
+  }
+
+  const breakfasts = toMealList(plan).filter((meal, index) => index % 3 === 0);
   // TODO...
   breakfasts.forEach(meal => {
     meal.actions = [

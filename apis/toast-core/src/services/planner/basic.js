@@ -38,7 +38,7 @@ export default plan => {
     ...plan,
     days: plan.days.map((day, idx) => ({
       ...day,
-      meals: day.mealsmap((meal, mealIndex) => ({
+      meals: day.meals.map((meal, mealIndex) => ({
         ...meal,
         actions: simpleActionAssignment(meal, idx, mealIndex),
       })),

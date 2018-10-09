@@ -47,29 +47,30 @@ export const typeDefs = gql`
     type: PlanActionType!
   }
 
-  type PlanActionEatOut {
+  type PlanActionEatOut implements PlanAction {
     type: PlanActionType!
     note: String
   }
 
-  type PlanActionCook {
+  type PlanActionCook implements PlanAction {
     type: PlanActionType!
     servings: Int!
     mealType: PlanMealType!
   }
 
-  type PlanActionEat {
+  type PlanActionEat implements PlanAction {
     type: PlanActionType!
-    meal: PlanMeal!
+    mealDay: Int!
+    mealIndex: Int!
     leftovers: Boolean!
   }
 
-  type PlanActionReadyMade {
+  type PlanActionReadyMade implements PlanAction {
     type: PlanActionType!
     note: String
   }
 
-  type PlanActionSkip {
+  type PlanActionSkip implements PlanAction {
     type: PlanActionType!
   }
 

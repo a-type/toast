@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from './Select';
+import Image from './Image';
 
 export default class AvailabilityPicker extends React.Component {
   state = {
@@ -17,11 +18,13 @@ export default class AvailabilityPicker extends React.Component {
     const { loading } = this.state;
 
     return (
-      <Select
-        value={{ value }}
-        onChange={this.handleChange}
-        isLoading={loading}
-      />
+      <Image value={value}>
+        <Select
+          value={{ value }}
+          onChange={this.handleChange}
+          isLoading={loading}
+        />
+      </Image>
     );
   }
 }

@@ -4,9 +4,9 @@ import prep from './prep';
 export default {
   run: (plan, strategy) => {
     switch (strategy) {
-      case 'basic':
+      case 'BASIC':
         return basic(plan);
-      case 'prep':
+      case 'PREP':
         return prep(plan);
       default:
         return plan;

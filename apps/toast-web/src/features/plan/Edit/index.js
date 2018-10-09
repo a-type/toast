@@ -3,6 +3,7 @@ import gql from 'fraql';
 import { Query } from 'react-apollo';
 import EditDetails from './EditDetails';
 import EditAvailability from './EditAvailability';
+import Save from './Save';
 import { pathOr } from 'ramda';
 import { Stages } from 'components/generic';
 
@@ -47,9 +48,14 @@ export default class extends React.Component {
                 <EditDetails plan={plan} onSave={refetch} />
               </Stages.Stage>
               {plan && (
-                <Stages.Stage stageIndex={1} title="Your Schedule">
-                  <EditAvailability plan={plan} />
-                </Stages.Stage>
+                <React.Fragment>
+                  <Stages.Stage stageIndex={1} title="Your Schedule">
+                    <EditAvailability plan={plan} />
+                  </Stages.Stage>
+                  <Stages.Stage stageIndex={2} title="Create my plan">
+                    <Save />
+                  </Stages.Stage>
+                </React.Fragment>
               )}
             </Stages>
           );

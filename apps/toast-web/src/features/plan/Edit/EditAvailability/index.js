@@ -46,7 +46,7 @@ const EditAvailability = ({ plan }) => (
       ))}
       {new Array(7).fill(null).map((_, dayIndex) => (
         <React.Fragment>
-          <SideLabel>{dayNames[dayIndex]}</SideLabel>
+          <SideLabel>{dayNames[dayIndex].slice(0, 3)}</SideLabel>
           <DayRow
             dayIndex={dayIndex}
             day={pathOr({}, ['days', dayIndex], plan)}

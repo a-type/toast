@@ -7,273 +7,277 @@ describe('basic meal plan', () => {
 Object {
   "days": Array [
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "mealType": "FANCY",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "0.dinner",
-            "type": "EAT",
-          },
-        ],
-        "availability": "LONG",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "mealType": "QUICK",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "0.lunch",
-            "type": "EAT",
-          },
-        ],
-        "availability": "SHORT",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "QUICK",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 0,
+              "mealIndex": 1,
+              "type": "EAT",
+            },
+          ],
+          "availability": "SHORT",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "FANCY",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 0,
+              "mealIndex": 2,
+              "type": "EAT",
+            },
+          ],
+          "availability": "LONG",
+        },
+      ],
     },
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "mealType": "NORMAL",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "1.dinner",
-            "type": "EAT",
-          },
-        ],
-        "availability": "MEDIUM",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "EAT_OUT",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "EAT_OUT",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "NORMAL",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 1,
+              "mealIndex": 2,
+              "type": "EAT",
+            },
+          ],
+          "availability": "MEDIUM",
+        },
+      ],
     },
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "mealType": "QUICK",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "2.breakfast",
-            "type": "EAT",
-          },
-        ],
-        "availability": "SHORT",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "mealType": "QUICK",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "2.dinner",
-            "type": "EAT",
-          },
-        ],
-        "availability": "SHORT",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "mealType": "QUICK",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "2.lunch",
-            "type": "EAT",
-          },
-        ],
-        "availability": "SHORT",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "QUICK",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 2,
+              "mealIndex": 0,
+              "type": "EAT",
+            },
+          ],
+          "availability": "SHORT",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "QUICK",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 2,
+              "mealIndex": 1,
+              "type": "EAT",
+            },
+          ],
+          "availability": "SHORT",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "QUICK",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 2,
+              "mealIndex": 2,
+              "type": "EAT",
+            },
+          ],
+          "availability": "SHORT",
+        },
+      ],
     },
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "EAT_OUT",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "EAT_OUT",
+        },
+      ],
     },
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "mealType": "NORMAL",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "4.dinner",
-            "type": "EAT",
-          },
-        ],
-        "availability": "MEDIUM",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "NORMAL",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 4,
+              "mealIndex": 2,
+              "type": "EAT",
+            },
+          ],
+          "availability": "MEDIUM",
+        },
+      ],
     },
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "mealType": "FANCY",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "5.breakfast",
-            "type": "EAT",
-          },
-        ],
-        "availability": "LONG",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "mealType": "FANCY",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "5.dinner",
-            "type": "EAT",
-          },
-        ],
-        "availability": "LONG",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "mealType": "QUICK",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "5.lunch",
-            "type": "EAT",
-          },
-        ],
-        "availability": "SHORT",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "FANCY",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 5,
+              "mealIndex": 0,
+              "type": "EAT",
+            },
+          ],
+          "availability": "LONG",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "QUICK",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 5,
+              "mealIndex": 1,
+              "type": "EAT",
+            },
+          ],
+          "availability": "SHORT",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "FANCY",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 5,
+              "mealIndex": 2,
+              "type": "EAT",
+            },
+          ],
+          "availability": "LONG",
+        },
+      ],
     },
     Object {
-      "breakfast": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "breakfast",
-      },
-      "dinner": Object {
-        "actions": Array [
-          Object {
-            "mealType": "FANCY",
-            "servings": 2,
-            "type": "COOK",
-          },
-          Object {
-            "mealId": "6.dinner",
-            "type": "EAT",
-          },
-        ],
-        "availability": "LONG",
-        "meal": "dinner",
-      },
-      "lunch": Object {
-        "actions": Array [
-          Object {
-            "type": "EAT_OUT",
-          },
-        ],
-        "availability": "NONE",
-        "meal": "lunch",
-      },
+      "meals": Array [
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "type": "EAT_OUT",
+            },
+          ],
+          "availability": "NONE",
+        },
+        Object {
+          "actions": Array [
+            Object {
+              "mealType": "FANCY",
+              "servings": 2,
+              "type": "COOK",
+            },
+            Object {
+              "mealDay": 6,
+              "mealIndex": 2,
+              "type": "EAT",
+            },
+          ],
+          "availability": "LONG",
+        },
+      ],
     },
   ],
   "servingsPerMeal": 2,
