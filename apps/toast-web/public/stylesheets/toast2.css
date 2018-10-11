@@ -42,6 +42,7 @@
 .icons8-calendar:before,
 .icons8-calendar-delete:before,
 .icons8-calendar-plus:before,
+.icons8-chef-toque:before,
 .icons8-copybook:before,
 .icons8-delete-button:before,
 .icons8-draft:before,
@@ -93,6 +94,9 @@
 }
 .icons8-calendar-plus:before {
   content: '\f113';
+}
+.icons8-chef-toque:before {
+  content: '\f11c';
 }
 .icons8-copybook:before {
   content: '\f10d';

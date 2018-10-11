@@ -25,7 +25,7 @@ const SetMealDetails = gql`
   }
 `;
 
-const Meal = ({ mealName, mealIndex, dayIndex, meal }) => (
+const Meal = ({ mealName, mealIndex, dayIndex, meal, ...rest }) => (
   <Mutation mutation={SetMealDetails} variables={{ mealIndex, dayIndex }}>
     {mutate => (
       <AvailabilityPicker
@@ -35,6 +35,7 @@ const Meal = ({ mealName, mealIndex, dayIndex, meal }) => (
             variables: { details: { availability } },
           })
         }
+        {...rest}
       />
     )}
   </Mutation>
@@ -42,13 +43,14 @@ const Meal = ({ mealName, mealIndex, dayIndex, meal }) => (
 
 Meal.fragments = mealFragments;
 
-const DayRow = ({ dayIndex, day }) => (
+const DayRow = ({ dayIndex, day, getMealStyle }) => (
   <React.Fragment>
     {['breakfast', 'lunch', 'dinner'].map((mealName, mealIndex) => (
       <Meal
         mealName={mealName}
         mealIndex={mealIndex}
         dayIndex={dayIndex}
+        style={getMealStyle(dayIndex, mealIndex)}
         meal={pathOr({}, ['meals', mealIndex], day)}
       />
     ))}

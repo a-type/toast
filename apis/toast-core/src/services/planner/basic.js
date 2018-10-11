@@ -8,7 +8,7 @@ export default plan => {
             servings: plan.servingsPerMeal,
             mealType: 'FANCY',
           },
-          { type: 'EAT', mealIndex, mealDay },
+          { type: 'EAT', mealIndex, mealDay, leftovers: false },
         ];
       case 'MEDIUM':
         return [
@@ -17,7 +17,7 @@ export default plan => {
             servings: plan.servingsPerMeal,
             mealType: 'NORMAL',
           },
-          { type: 'EAT', mealIndex, mealDay },
+          { type: 'EAT', mealIndex, mealDay, leftovers: false },
         ];
       case 'SHORT':
         return [
@@ -26,7 +26,7 @@ export default plan => {
             servings: plan.servingsPerMeal,
             mealType: 'QUICK',
           },
-          { type: 'EAT', mealIndex, mealDay },
+          { type: 'EAT', mealIndex, mealDay, leftovers: false },
         ];
       case 'NONE':
       case 'EAT_OUT':

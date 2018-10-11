@@ -1,38 +1,26 @@
 import React from 'react';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import gql from 'fraql';
 import { Form, Select, Button, Field } from 'components/generic';
+import { Link } from 'components/typeset';
 import { Formik } from 'formik';
+import Preview from './Preview';
+import { path } from 'ramda';
 
 const ProcessPlan = gql`
   mutation ProcessPlan($strategy: PlanStrategy!) {
     processPlan(strategy: $strategy) {
-      id
-      days {
-        meals {
-          availability
-          actions {
-            type
+      ${Preview.fragments.plan}
+    }
+  }
+`;
 
-            ... on PlanActionEatOut {
-              note
-            }
-
-            ... on PlanActionCook {
-              servings
-              mealType
-            }
-
-            ... on PlanActionEat {
-              mealDay
-              mealindex
-              leftovers
-            }
-
-            ... on PlanActionReadyMade {
-              note
-            }
-          }
+const GetPlan = gql`
+  query GetPlan {
+    me {
+      group {
+        plan {
+          ${Preview.fragments.plan}
         }
       }
     }
@@ -44,31 +32,46 @@ const options = [
   { value: 'PREP', label: 'Prep' },
   { value: 'BIG_PREP', label: 'Big Prep' },
 ];
-export default () => (
-  <Mutation mutation={ProcessPlan}>
-    {mutate => (
-      <Formik
-        initialValues={{ strategy: options[0] }}
-        onSubmit={({ strategy }) =>
-          mutate({ variables: { strategy: strategy.value } })
-        }
-      >
-        {({ handleSubmit, setFieldValue, values }) => (
-          <Form onSubmit={handleSubmit}>
-            <Field label="Plan strategy" required>
-              <Select
-                onChange={val => setFieldValue('strategy', val)}
-                value={values.strategy}
-                name="strategy"
-                options={options}
-              />
-            </Field>
-            <Field>
-              <Button type="submit">Create</Button>
-            </Field>
-          </Form>
-        )}
-      </Formik>
-    )}
-  </Mutation>
-);
+export default class extends React.Component {
+  state = {
+    value: options[0],
+  };
+
+  render() {
+    return (
+      <Query query={GetPlan}>
+        {({ data, loading, error }) => {
+          const plan = path(['me', 'group', 'plan'], data);
+
+          return (
+            <React.Fragment>
+              <Mutation mutation={ProcessPlan}>
+                {mutate => (
+                  <Field label="Plan strategy" required>
+                    <Select
+                      onChange={val => {
+                        mutate({ variables: { strategy: val.value } });
+                        this.setState({ value: val });
+                      }}
+                      value={this.state.value}
+                      name="strategy"
+                      options={options}
+                    />
+                  </Field>
+                )}
+              </Mutation>
+              {plan && (
+                <React.Fragment>
+                  <Preview plan={plan} />
+                  <Link.Clear to="/plan">
+                    <Button>Start planning</Button>
+                  </Link.Clear>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          );
+        }}
+      </Query>
+    );
+  }
+}

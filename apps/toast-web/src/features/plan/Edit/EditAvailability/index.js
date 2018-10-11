@@ -4,12 +4,7 @@ import { pathOr } from 'ramda';
 import DayRow from './DayRow';
 import styled from 'styled-components';
 import { HelpText } from 'components/typeset';
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr 1fr 1fr;
-  gap: var(--spacing-md);
-`;
+import { MealGrid } from 'features/plan/Edit/components';
 
 const TopLabel = styled.span`
   text-align: center;
@@ -39,21 +34,19 @@ const EditAvailability = ({ plan }) => (
       on each meal? How you answer is up to you; anywhere from 'realistic' to
       'aspirational'.
     </HelpText>
-    <Grid>
-      <div />
-      {['Breakfast', 'Lunch', 'Dinner'].map(meal => (
-        <TopLabel>{meal}</TopLabel>
-      ))}
-      {new Array(7).fill(null).map((_, dayIndex) => (
-        <React.Fragment>
-          <SideLabel>{dayNames[dayIndex].slice(0, 3)}</SideLabel>
-          <DayRow
-            dayIndex={dayIndex}
-            day={pathOr({}, ['days', dayIndex], plan)}
-          />
-        </React.Fragment>
-      ))}
-    </Grid>
+    <MealGrid>
+      {({ getMealStyle }) =>
+        new Array(7)
+          .fill(null)
+          .map((_, dayIndex) => (
+            <DayRow
+              dayIndex={dayIndex}
+              day={pathOr({}, ['days', dayIndex], plan)}
+              getMealStyle={getMealStyle}
+            />
+          ))
+      }
+    </MealGrid>
   </div>
 );
 
