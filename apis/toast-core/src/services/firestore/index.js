@@ -1,7 +1,7 @@
 import Firestore from '@google-cloud/firestore';
 import config from 'config';
 
-import plans from './plans';
+import Plans from './Plans';
 
 const firestore = new Firestore({
   projectId: config.gcloud.projectId,
@@ -9,5 +9,5 @@ const firestore = new Firestore({
 firestore.settings = { timestampsInSnapshots: true };
 
 export default {
-  plans: plans(firestore),
+  plans: new Plans(firestore),
 };

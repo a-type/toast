@@ -8,8 +8,14 @@ import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
 import gql from 'fraql';
 import customFetch from './fetch';
+import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
+import introspectionQueryResultData from 'generated/fragmentTypes.json';
 
-const cache = new InMemoryCache();
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+});
+
+const cache = new InMemoryCache({ fragmentMatcher });
 const stateLink = withClientState({ resolvers, defaults, cache });
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {

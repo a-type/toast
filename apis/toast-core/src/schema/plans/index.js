@@ -63,6 +63,7 @@ export const typeDefs = gql`
     mealDay: Int!
     mealIndex: Int!
     leftovers: Boolean!
+    cookAction: PlanActionCook!
   }
 
   type PlanActionReadyMade implements PlanAction {
@@ -89,6 +90,8 @@ export const typeDefs = gql`
     days: [PlanDay!]!
     groceryDay: Int!
     warnings: [String!]!
+
+    week(weekIndex: Int!): Plan
   }
 
   input PlanSetDetailsInput {
@@ -114,9 +117,20 @@ export const typeDefs = gql`
   extend type Group {
     plan: Plan @authenticated
   }
+
+  extend type Query {
+    weekIndex(year: Int!, month: Int!, date: Int!): Int!
+  }
 `;
 
 export const resolvers = {
+  Query: {
+    weekIndex: (_parent, { year, month, date }, ctx) => {
+      const day = new Date(year, month, date);
+      const difference = day - ctx.firestore.plans.START_WEEK_DAY;
+    },
+  },
+
   Mutation: {
     setPlanDetails: async (_parent, args, ctx) => {
       const group = await ctx.graph.groups.getMine();
@@ -177,10 +191,17 @@ export const resolvers = {
   },
 
   Group: {
-    plan: (parent, args, ctx) => {
+    plan: async (parent, args, ctx) => {
       const { planId } = parent;
-      return ctx.firestore.plans.get(planId);
+      const plan = await ctx.firestore.plans.get(planId);
+      ctx.plan = plan;
+      return plan;
     },
+  },
+
+  Plan: {
+    week: (parent, args, ctx) =>
+      ctx.firestore.plans.getWeek(parent.id, args.weekIndex),
   },
 
   PlanAction: {
@@ -197,6 +218,27 @@ export const resolvers = {
         case 'SKIP':
           return 'PlanActionSkip';
       }
+    },
+  },
+
+  PlanActionEat: {
+    cookAction: async (parent, args, ctx) => {
+      let plan = ctx.plan;
+      if (!plan) {
+        const group = await ctx.graph.groups.getMine();
+
+        if (!group || !group.planId) {
+          throw new UserInputError("You haven't created a plan yet");
+        }
+
+        plan = await ctx.firestore.plans.get(group.planId);
+      }
+
+      return pathOr(
+        [],
+        ['days', parent.mealDay, 'meals', parent.mealIndex, 'actions'],
+        plan,
+      ).find(action => action.type === 'COOK');
     },
   },
 };

@@ -1,0 +1,17 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "INTERFACE",
+        "name": "PlanAction",
+        "possibleTypes": [
+          { "name": "PlanActionEatOut" },
+          { "name": "PlanActionCook" },
+          { "name": "PlanActionEat" },
+          { "name": "PlanActionReadyMade" },
+          { "name": "PlanActionSkip" }
+        ]
+      }
+    ]
+  }
+}
