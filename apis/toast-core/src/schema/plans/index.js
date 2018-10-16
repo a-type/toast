@@ -85,7 +85,7 @@ export const typeDefs = gql`
 
   type PlanDay {
     id: ID!
-    date: String
+    date: Date
     meals: [PlanMeal!]!
   }
 
@@ -96,7 +96,18 @@ export const typeDefs = gql`
     groceryDay: Int!
     warnings: [String!]!
 
+    """
+    Access weekly plans using the week index, which is based
+    on the fixed plan chronology system. To calculate a week index
+    for any particular day, use the root planWeekIndex query
+    """
     week(weekIndex: Int!): Plan
+
+    """
+    A date representing the first day (Sunday) of this Plan week,
+    if (and only if) this Plan is a weekly plan, and not the root "blueprint" plan
+    """
+    startDate: Date
   }
 
   input PlanSetDetailsInput {
@@ -124,7 +135,17 @@ export const typeDefs = gql`
   }
 
   extend type Query {
+    """
+    A shortcut function to determine the week index of any particular day
+    within the planning system
+    """
     planWeekIndex(year: Int!, month: Int!, date: Int!): Int!
+    """
+    The start date of the entire plan system. You can reference this
+    to determine the chronology of plan weeks in conjunction with
+    planWeekIndex and the weekIndex field on Plan itself
+    """
+    planStartWeekDate: Date!
   }
 `;
 
@@ -137,6 +158,9 @@ export const resolvers = {
         date,
         startDay: ctx.firestore.plans.START_WEEK_DAY,
       }),
+
+    planStartWeekDate: (_parent, _args, ctx) =>
+      ctx.firestore.plans.START_WEEK_DAY,
   },
 
   Mutation: {
@@ -209,9 +233,25 @@ export const resolvers = {
 
   Plan: {
     week: async (parent, args, ctx) => {
+      if (parent.id.includes('week_')) {
+        throw new UserInputError(
+          "You can't access the week field on a Plan which represents a week already",
+        );
+      }
       const week = await ctx.firestore.plans.getWeek(parent.id, args.weekIndex);
       ctx.week = week;
       return week;
+    },
+
+    startDate: (parent, _args, ctx) => {
+      if (!parent.id.includes('week_')) {
+        return null;
+      }
+
+      return getWeekDay({
+        weekIndex: parent.weekIndex,
+        startDay: ctx.firestore.plans.START_WEEK_DAY,
+      });
     },
   },
 
@@ -265,7 +305,7 @@ export const resolvers = {
             startDay: ctx.firestore.plans.START_WEEK_DAY,
             dayOffset: day,
           });
-          return date.toISOString();
+          return date;
         }
       }
       return null;

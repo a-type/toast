@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import MealView from './MealView';
 import gql from 'fraql';
 import { H1 } from 'components/typeset';
-import { format, isToday } from 'date-fns';
+import { format, isToday, isTomorrow } from 'date-fns';
 
 const Grid = styled.div`
   display: grid;
@@ -18,6 +18,8 @@ const formatDate = dateStr => {
   const date = new Date(dateStr);
   if (isToday(date)) {
     return 'Today';
+  } else if (isTomorrow(date)) {
+    return 'Tomorrow';
   }
   return format(date, 'dddd, MMM Do');
 };
@@ -42,6 +44,17 @@ const DayView = ({ day }) => (
         meal={day.meals[0]}
         title="Breakfast"
       />
+    </Grid>
+  </div>
+);
+
+DayView.Skeleton = props => (
+  <div {...props}>
+    <H1.Skeleton />
+    <Grid>
+      <MealView.Skeleton style={{ gridArea: 'mainMeal' }} />
+      <MealView.Skeleton style={{ gridArea: 'secondaryMeal' }} />
+      <MealView.Skeleton style={{ gridArea: 'tertiaryMeal' }} />
     </Grid>
   </div>
 );

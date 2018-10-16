@@ -28,6 +28,8 @@ const MealView = ({ meal, title, main, ...rest }) => {
   );
 };
 
+MealView.Skeleton = props => <Card.Skeleton {...props} />;
+
 MealView.fragments = {
   meal: gql`
     fragment MealView on PlanMeal {

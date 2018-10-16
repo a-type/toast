@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { getSize } from 'theme';
+import Span from '../Span';
 
 const H2 = styled.h2`
   font-family: var(--font-fancy);
@@ -14,5 +15,11 @@ const H2 = styled.h2`
 H2.defaultProps = {
   spaceBelow: 'md',
 };
+
+H2.Skeleton = ({ size, ...rest }) => (
+  <H2 {...rest}>
+    <Span.Skeleton size={size} />
+  </H2>
+);
 
 export default H2;
