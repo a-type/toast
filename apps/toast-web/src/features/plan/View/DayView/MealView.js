@@ -1,41 +1,37 @@
 import React from 'react';
 import gql from 'fraql';
-import styled from 'styled-components';
+import { Card } from 'components/generic';
 
 const getCookAction = actions => actions.find(action => action.type === 'COOK');
 const getEatAction = actions => actions.find(action => action.type === 'EAT');
 
-const Bubble = styled.div`
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-`;
+const ActionDetails = ({ action }) => {
+  if (!action) {
+    return null;
+  }
 
-const Title = styled.div`
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  background: var(--color-white);
-  color: var(--color-black);
-`;
+  return <span>{action.type}</span>;
+};
 
-const MainMeal = ({ meal }) => {
+const MealView = ({ meal, title, main, ...rest }) => {
   if (!meal) {
     return null;
   }
 
   const cookAction = getCookAction(meal.actions);
 
-  if (cookAction) {
-    return (
-      <Bubble>
-        <Title>Cook</Title>
-      </Bubble>
-    );
-  }
+  return (
+    <Card {...rest}>
+      <span>{title}</span>
+      <ActionDetails action={cookAction} />
+    </Card>
+  );
 };
 
-MainMeal.fragments = {
+MealView.fragments = {
   meal: gql`
-    fragment MainMeal on PlanMeal {
+    fragment MealView on PlanMeal {
+      id
       actions {
         type
 
@@ -66,4 +62,4 @@ MainMeal.fragments = {
   `,
 };
 
-export default MainMeal;
+export default MealView;

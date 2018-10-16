@@ -1,14 +1,17 @@
 import React from 'react';
 import Box from './Box';
-import Title from './Title';
 import { Link } from 'components/typeset';
 import Grid from './Grid';
 import Skeleton from './Skeleton';
+import Overlay from './Overlay';
 
-const Card = ({ link, imageSrc, children, shape }) => (
-  <Link.Clear to={link} className={shape}>
+const Card = ({ link, imageSrc, children, shape, ...rest }) => (
+  <Link.Clear to={link} className={shape} {...rest}>
     <Box imageSrc={imageSrc}>
-      <Title hasImage={!!imageSrc}>{children}</Title>
+      {React.Children.map(
+        children,
+        child => child && <Overlay>{child}</Overlay>,
+      )}
     </Box>
   </Link.Clear>
 );

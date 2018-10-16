@@ -8,7 +8,7 @@ const hoverShadow = ({ imageSrc }) =>
     : '0 0 0 8px var(--color-brand-light)';
 
 export default styled.div`
-  padding: 10px;
+  padding: var(--spacing-sm);
   background-color: var(--color-white);
   background-image: ${({ imageSrc }) =>
     imageSrc ? `url(${imageSrc})` : 'none'};
@@ -16,8 +16,9 @@ export default styled.div`
   background-position: center;
   height: 100%;
   display: flex;
-  align-items: flex-end;
-  border-radius: 5px;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: var(--border-radius-md);
   box-shadow: ${mainShadow};
   border: ${props => (props.imageSrc ? '0' : '2px')} solid
     var(--color-gray-light);

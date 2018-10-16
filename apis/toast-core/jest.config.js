@@ -137,9 +137,7 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.js'],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "\\\\node_modules\\\\"
-  // ],
+  testPathIgnorePatterns: ['\\\\node_modules\\\\', '\\\\build\\\\'],
 
   // The regexp pattern Jest uses to detect test files
   // testRegex: "",

@@ -8,7 +8,10 @@ export default () => (
     <Content>
       <Switch>
         <Route path="/plan/edit" component={Edit} />
-        <Route path="/plan" component={View} />
+        <Route
+          path="/plan/:weekIndex?"
+          render={({ match }) => <View weekIndex={match.weekIndex} />}
+        />
       </Switch>
     </Content>
   </SingleColumn>

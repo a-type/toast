@@ -5,9 +5,20 @@ describe('getWeekIndex helper', () => {
     expect(
       getWeekIndex({
         year: 2018,
-        month: 10,
-        day: 7,
-        startDay: new Date(2018, 10, 7),
+        month: 9,
+        date: 7,
+        startDay: new Date(2018, 9, 7),
+      }),
+    ).toEqual(0);
+  });
+
+  test('gets a week from a midweek day', () => {
+    expect(
+      getWeekIndex({
+        year: 2018,
+        month: 9,
+        date: 10,
+        startDay: new Date(2018, 9, 7),
       }),
     ).toEqual(0);
   });
@@ -16,32 +27,32 @@ describe('getWeekIndex helper', () => {
     expect(
       getWeekIndex({
         year: 2018,
-        month: 10,
-        day: 14,
-        startDay: new Date(2018, 10, 7),
+        month: 9,
+        date: 14,
+        startDay: new Date(2018, 9, 7),
       }),
-    ).toEqual(0);
+    ).toEqual(1);
   });
 
   test('gets -1 week', () => {
     expect(
       getWeekIndex({
         year: 2018,
-        month: 9,
-        day: 30,
-        startDay: new Date(2018, 10, 7),
+        month: 8,
+        date: 30,
+        startDay: new Date(2018, 9, 7),
       }),
-    ).toEqual(0);
+    ).toEqual(-1);
   });
 
   test('across months', () => {
     expect(
       getWeekIndex({
         year: 2018,
-        month: 11,
-        day: 5,
-        startDay: new Date(2018, 10, 7),
+        month: 10,
+        date: 5,
+        startDay: new Date(2018, 9, 7),
       }),
-    ).toEqual(5);
+    ).toEqual(4);
   });
 });

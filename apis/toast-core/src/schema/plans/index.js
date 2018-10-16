@@ -2,6 +2,8 @@ import { gql } from 'apollo-server-express';
 import { id } from 'tools';
 import { path, pathOr, assocPath, compose, mergeDeepLeft } from 'ramda';
 import { UserInputError } from 'errors';
+import getWeekIndex from './getWeekIndex';
+import getWeekDay from './getWeekDay';
 
 const emptyPlan = {
   days: new Array(7).fill(null).map(() => ({
@@ -76,11 +78,14 @@ export const typeDefs = gql`
   }
 
   type PlanMeal {
+    id: ID!
     availability: PrepAvailability!
     actions: [PlanAction!]!
   }
 
   type PlanDay {
+    id: ID!
+    date: String
     meals: [PlanMeal!]!
   }
 
@@ -119,16 +124,19 @@ export const typeDefs = gql`
   }
 
   extend type Query {
-    weekIndex(year: Int!, month: Int!, date: Int!): Int!
+    planWeekIndex(year: Int!, month: Int!, date: Int!): Int!
   }
 `;
 
 export const resolvers = {
   Query: {
-    weekIndex: (_parent, { year, month, date }, ctx) => {
-      const day = new Date(year, month, date);
-      const difference = day - ctx.firestore.plans.START_WEEK_DAY;
-    },
+    planWeekIndex: (_parent, { year, month, date }, ctx) =>
+      getWeekIndex({
+        year,
+        month,
+        date,
+        startDay: ctx.firestore.plans.START_WEEK_DAY,
+      }),
   },
 
   Mutation: {
@@ -200,8 +208,11 @@ export const resolvers = {
   },
 
   Plan: {
-    week: (parent, args, ctx) =>
-      ctx.firestore.plans.getWeek(parent.id, args.weekIndex),
+    week: async (parent, args, ctx) => {
+      const week = await ctx.firestore.plans.getWeek(parent.id, args.weekIndex);
+      ctx.week = week;
+      return week;
+    },
   },
 
   PlanAction: {
@@ -239,6 +250,25 @@ export const resolvers = {
         ['days', parent.mealDay, 'meals', parent.mealIndex, 'actions'],
         plan,
       ).find(action => action.type === 'COOK');
+    },
+  },
+
+  PlanDay: {
+    date: (parent, args, ctx) => {
+      if (parent.id.includes('week_')) {
+        // this information can be parsed from the id
+        const match = /week_(-?\d+)_day_(\d+)/.exec(parent.id);
+        if (match) {
+          const [_, week, day] = match;
+          const date = getWeekDay({
+            weekIndex: week,
+            startDay: ctx.firestore.plans.START_WEEK_DAY,
+            dayOffset: day,
+          });
+          return date.toISOString();
+        }
+      }
+      return null;
     },
   },
 };
