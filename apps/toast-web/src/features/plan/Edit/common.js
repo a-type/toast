@@ -3,13 +3,13 @@ export const getColor = value => {
     case 'EAT_OUT':
       return 'var(--color-gray-light)';
     case 'NONE':
-      return 'var(--color-negative-light)';
+      return 'var(--color-negative)';
     case 'SHORT':
-      return 'var(--color-brand-light)';
+      return 'var(--color-brand)';
     case 'MEDIUM':
-      return 'var(--color-brand-light)';
+      return 'var(--color-brand)';
     case 'LONG':
-      return 'var(--color-positive-light)';
+      return 'var(--color-positive)';
     case 'SKIP':
       return 'var(--color-gray-lightest)';
     default:
@@ -69,5 +69,24 @@ export const getIcon = value => {
       return 'beach';
     case 'SKIP':
       return 'skip-this-track';
+  }
+};
+
+export const getIconColor = value => {
+  switch (value) {
+    case 'EAT_OUT':
+      return 'var(--color-gray-lightest)';
+    case 'NONE':
+      return 'var(--color-negative-light)';
+    case 'SHORT':
+      return 'var(--color-brand-light)';
+    case 'MEDIUM':
+      return 'var(--color-brand-light)';
+    case 'LONG':
+      return 'var(--color-positive-light)';
+    case 'SKIP':
+      return 'var(--color-white)';
+    default:
+      return 'var(--color-white)';
   }
 };

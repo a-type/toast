@@ -62,18 +62,30 @@ injectGlobal`
 
 
   --color-positive: #1ecbb4;
-  --color-positive-light: #adffef;
+  --color-positive-light: #91fbff;
   --color-positive-dark: #007985;
   --color-positive-highlighter: #adffef32;
 
   --color-negative: #b30753;
-  --color-negative-light: #ff95b8;
+  --color-negative-light: #e9339a;
   --color-negative-dark: #6d0043;
   --color-negative-highlighter: #ff95b832;
 
   --color-dark: #280f34;
-
   --color-shadow: #280f3420;
+
+  --color-field-background: var(--color-gray-lightest);
+  --color-field-foreground: var(--color-dark);
+
+  --color-control-background: var(--color-brand);
+  --color-control-foreground: var(--color-dark);
+  --color-control-background-active: var(--color-brand-light);
+  --color-control-foreground-active: var(--color-dark);
+
+  --color-content-background: var(--color-white);
+  --color-content-foreground: var(--color-black);
+
+  --color-heading: var(--color-dark);
 
   --shadow-md: 0 4px 8px 0 #280f3420;
 
@@ -97,11 +109,12 @@ html, body {
 }
 
 html, body, #main {
-  height: 100%;
+  min-height: 100vh;
 }
 
 body {
   overflow-y: auto;
+  position: relative;
 }
 
 br {

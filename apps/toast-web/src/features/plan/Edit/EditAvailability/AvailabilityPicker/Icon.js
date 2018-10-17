@@ -1,16 +1,19 @@
 import styled from 'styled-components';
 import { Icon } from 'components/generic';
-import { getIcon, getColor, getForeground } from './common';
+import { getIcon, getIconColor, getForeground } from '../../common';
 import { withProps } from 'recompose';
 
+const SIZE = 48;
+
 const CircleIcon = styled(Icon)`
-  background: ${({ value }) => getColor(value)};
+  background: ${({ value }) => getIconColor(value)};
   color: ${({ value }) => getForeground(value)};
-  width: 32px;
-  height: 32px;
+  width: ${SIZE}px;
+  height: ${SIZE}px;
+  font-size: ${Math.floor(SIZE / 2)}px;
   border-radius: 100%;
   display: inline-block;
-  line-height: 32px;
+  line-height: ${SIZE}px;
   text-shadow: none !important;
 `;
 

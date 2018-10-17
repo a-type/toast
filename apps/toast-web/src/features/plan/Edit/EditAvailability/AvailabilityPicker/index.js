@@ -14,17 +14,18 @@ export default class AvailabilityPicker extends React.Component {
   };
 
   render() {
-    const { value, ...rest } = this.props;
+    const { value, style, ...rest } = this.props;
     const { loading } = this.state;
 
     return (
-      <Image value={value} {...rest}>
+      <div style={style}>
         <Select
           value={{ value }}
           onChange={this.handleChange}
           isLoading={loading}
+          {...rest}
         />
-      </Image>
+      </div>
     );
   }
 }

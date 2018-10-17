@@ -1,5 +1,5 @@
 import React from 'react';
-import { DayView, NextDayLink, PreviousDayLink, Links } from './components';
+import { DayView, Links } from './components';
 import { Query } from 'react-apollo';
 import { pathOr } from 'ramda';
 import gql from 'fraql';
@@ -42,20 +42,14 @@ const WeekView = ({ weekIndex, dayIndex }) => (
         );
       }}
     </Query>
-    <Links>
-      <PreviousDayLink weekIndex={weekIndex} dayIndex={dayIndex} />
-      <NextDayLink weekIndex={weekIndex} dayIndex={dayIndex} />
-    </Links>
+    <Links weekIndex={weekIndex} dayIndex={dayIndex} />
   </React.Fragment>
 );
 
 WeekView.Skeleton = ({ weekIndex, dayIndex }) => (
   <React.Fragment>
     <DayView.Skeleton />
-    <Links>
-      <PreviousDayLink weekIndex={weekIndex} dayIndex={dayIndex} />
-      <NextDayLink weekIndex={weekIndex} dayIndex={dayIndex} />
-    </Links>
+    <Links weekIndex={weekIndex} dayIndex={dayIndex} />
   </React.Fragment>
 );
 

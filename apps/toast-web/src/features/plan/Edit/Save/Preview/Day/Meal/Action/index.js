@@ -63,20 +63,19 @@ const getLabel = type => {
 const getColor = type => {
   switch (type) {
     case 'COOK':
-      return 'var(--color-positive-light)';
+      return 'var(--color-positive)';
     case 'EAT':
-      return 'var(--color-brand-light)';
+      return 'var(--color-brand)';
     default:
-      return 'var(--color-gray-lightest)';
+      return 'var(--color-gray-light)';
   }
 };
 
 const getForeground = type => {
   switch (type) {
     case 'COOK':
-      return 'var(--color-positive-dark)';
+      return 'var(--color-white)';
     case 'EAT':
-      return 'var(--color-brand-dark)';
     default:
       return 'var(--color-black)';
   }
@@ -87,11 +86,20 @@ const Border = styled.div`
   color: ${props => getForeground(props.type)};
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  height: 10vh;
+
+  & > * {
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 const ActionView = ({ action, ...rest }) => (
   <Border {...rest} type={action.type}>
-    <Icon name={getIcon(action.type)} /> <span>{getLabel(action.type)}</span>
+    <Icon name={getIcon(action.type)} />
+    <span>{getLabel(action.type)}</span>
   </Border>
 );
 

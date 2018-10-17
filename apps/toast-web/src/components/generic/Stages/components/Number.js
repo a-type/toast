@@ -17,8 +17,7 @@ const Outer = styled.div`
       }
       return 'var(--color-gray-light)';
     }};
-  color: ${props =>
-    props.active ? 'var(--color-white)' : 'var(--color-black)'};
+  color: ${props => (props.active ? 'var(--color-white)' : 'inherit')};
   background: ${props => {
     if (props.active) {
       return 'var(--color-brand)';

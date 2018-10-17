@@ -5,7 +5,8 @@ import Span from '../Span';
 const H2 = styled.h2`
   font-family: var(--font-fancy);
   font-weight: var(--normal);
-  color: var(--color-gray);
+  color: var(--color-heading);
+  opacity: 0.93;
   font-size: var(--font-size-lg);
   margin-top: -0.1em;
   margin-bottom: calc(${props => getSize(props.spaceBelow)} - 0.36em);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'fraql';
 import { Form, Select, Button, Field } from 'components/generic';
-import { Link } from 'components/typeset';
+import { Link, HelpText } from 'components/typeset';
 import { Formik } from 'formik';
 import Preview from './Preview';
 import { path } from 'ramda';
@@ -32,9 +32,18 @@ const options = [
   { value: 'PREP', label: 'Prep' },
   { value: 'BIG_PREP', label: 'Big Prep' },
 ];
+
+const strategyDescriptions = {
+  BASIC: 'Cook whenever you have time, otherwise skip the meal.',
+  PREP:
+    "When you've got some time to spare, cook a larger, simpler meal and save the leftovers.",
+  BIG_PREP:
+    "Like Prep, but instead of spreading out meal prep over the week, you'll just be cooking one or two big meals early and freezing the leftovers.",
+};
+
 export default class extends React.Component {
   state = {
-    value: options[0],
+    value: null,
   };
 
   render() {
@@ -60,6 +69,11 @@ export default class extends React.Component {
                   </Field>
                 )}
               </Mutation>
+              {this.state.value && (
+                <HelpText spaceBelow="lg">
+                  {strategyDescriptions[this.state.value.value]}
+                </HelpText>
+              )}
               {plan && (
                 <React.Fragment>
                   <Preview plan={plan} />

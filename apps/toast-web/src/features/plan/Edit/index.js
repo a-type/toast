@@ -6,6 +6,8 @@ import EditAvailability from './EditAvailability';
 import Save from './Save';
 import { pathOr } from 'ramda';
 import { Stages } from 'components/generic';
+import { Content } from 'components/layouts';
+import { Background } from 'components/generic';
 
 const PlanQuery = gql`
   query Plan {
@@ -30,37 +32,45 @@ export default class extends React.Component {
 
   render() {
     return (
-      <Query query={PlanQuery}>
-        {({ data, loading, error, refetch }) => {
-          if (loading || error) {
-            return null;
-          }
+      <React.Fragment>
+        <Background
+          color="var(--color-brand)"
+          backgroundKey="planEditBackground"
+        />
+        <Content mode="overlay">
+          <Query query={PlanQuery}>
+            {({ data, loading, error, refetch }) => {
+              if (loading || error) {
+                return null;
+              }
 
-          const plan = pathOr(null, ['me', 'group', 'plan'], data);
+              const plan = pathOr(null, ['me', 'group', 'plan'], data);
 
-          return (
-            <Stages
-              completedStage={!!plan ? 1 : 0}
-              onStageChanged={this.setStage}
-              stage={this.state.stage}
-            >
-              <Stages.Stage stageIndex={0} title="Plan Basics">
-                <EditDetails plan={plan} onSave={refetch} />
-              </Stages.Stage>
-              {plan && (
-                <React.Fragment>
-                  <Stages.Stage stageIndex={1} title="Your Schedule">
-                    <EditAvailability plan={plan} />
+              return (
+                <Stages
+                  completedStage={!!plan ? 1 : 0}
+                  onStageChanged={this.setStage}
+                  stage={this.state.stage}
+                >
+                  <Stages.Stage stageIndex={0} title="Plan Basics">
+                    <EditDetails plan={plan} onSave={refetch} />
                   </Stages.Stage>
-                  <Stages.Stage stageIndex={2} title="Create my plan">
-                    <Save />
-                  </Stages.Stage>
-                </React.Fragment>
-              )}
-            </Stages>
-          );
-        }}
-      </Query>
+                  {plan && (
+                    <React.Fragment>
+                      <Stages.Stage stageIndex={1} title="Your Schedule">
+                        <EditAvailability plan={plan} />
+                      </Stages.Stage>
+                      <Stages.Stage stageIndex={2} title="Preview & Save">
+                        <Save />
+                      </Stages.Stage>
+                    </React.Fragment>
+                  )}
+                </Stages>
+              );
+            }}
+          </Query>
+        </Content>
+      </React.Fragment>
     );
   }
 }

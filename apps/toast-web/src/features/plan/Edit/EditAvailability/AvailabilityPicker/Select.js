@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { withProps } from 'recompose';
 import { focusShadow } from 'components/effects';
 import { pathOr } from 'ramda';
-import { getColor, getForeground, getIcon, getLabel } from './common';
+import { getColor, getForeground, getIcon, getLabel } from '../../common';
 import Icon from './Icon';
 
 export default withProps({
@@ -11,12 +11,13 @@ export default withProps({
     container: base => ({
       ...base,
       flex: '1',
+      height: '10vh',
     }),
     control: (base, state) => {
       const value = pathOr('SKIP', [0, 'value'], state.getValue());
       return {
         ...base,
-        background: '#ffffffc0',
+        background: getColor(value),
         color: getForeground(value),
         boxShadow: state.isFocused ? focusShadow.default : 'none',
         cursor: 'pointer',
@@ -46,11 +47,7 @@ export default withProps({
       justifyContent: 'center',
     }),
   },
-  formatOptionLabel: data => (
-    <span>
-      <Icon value={data.value} /> {getLabel(data.value)}
-    </span>
-  ),
+  formatOptionLabel: data => <Icon value={data.value} />,
   getOptionLabel: data => getLabel(data.value),
   options: ['SKIP', 'EAT_OUT', 'NONE', 'SHORT', 'MEDIUM', 'LONG'].map(
     value => ({ label: getLabel(value), value }),
