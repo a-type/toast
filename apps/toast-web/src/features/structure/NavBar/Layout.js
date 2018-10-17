@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   display: grid;
-  grid-template-areas: 'logo user' 'search search';
+  grid-template-areas: 'logo controls' 'search search';
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   grid-gap: var(--spacing-md);
@@ -24,7 +24,7 @@ export default styled.div`
     width: 100%;
   }
   & > *:nth-child(3) {
-    grid-area: user;
+    grid-area: controls;
     justify-self: end;
     margin-top: auto;
     margin-bottom: auto;
@@ -32,7 +32,7 @@ export default styled.div`
 
   @media (min-width: 900px) {
     width: auto;
-    grid-template-areas: 'logo search user';
+    grid-template-areas: 'logo search controls';
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
     margin-left: 0;

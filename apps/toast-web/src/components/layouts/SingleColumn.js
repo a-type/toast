@@ -5,7 +5,7 @@ import { pathOr, path } from 'ramda';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
-const TOP_SPACE = '200px';
+const TOP_SPACE = '115px';
 
 const Layout = styled.div`
   width: 100%;

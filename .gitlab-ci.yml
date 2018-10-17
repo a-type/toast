@@ -34,6 +34,7 @@ build:
     - lerna bootstrap
   script:
     - docker login -u _json_key -p "$(cat ${HOME}/gcloud-service-key.json)" https://us.gcr.io
+    - npm run introspect
     - cd apis/toast-core
     - npm run containerize
     - docker tag toast-core $IMAGE_REPO_SOURCE

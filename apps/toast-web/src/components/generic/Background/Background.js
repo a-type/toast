@@ -2,6 +2,13 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { PORTAL_ID } from './constants';
 import context from './context';
+import styled from 'styled-components';
+
+const ColorBlock = styled.div`
+  width: 100%;
+  height: 100%;
+  background: ${props => props.color};
+`;
 
 class Background extends React.Component {
   componentDidMount() {
@@ -13,8 +20,12 @@ class Background extends React.Component {
   }
 
   render() {
-    const { children } = this.props;
-    return createPortal(children, document.getElementById(PORTAL_ID));
+    const { children, color } = this.props;
+
+    return createPortal(
+      color ? <ColorBlock color={color} /> : children,
+      document.getElementById(PORTAL_ID),
+    );
   }
 }
 

@@ -11,6 +11,7 @@ export type Props = {
   children: mixed,
   bubbleCount: number,
   style: {},
+  bubbleCount: number,
 };
 
 type State = {

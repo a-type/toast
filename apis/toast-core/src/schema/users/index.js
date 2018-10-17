@@ -1,5 +1,3 @@
-import { neo4jgraphql } from 'neo4j-graphql-js';
-import { getRecipeAuthor, mergeUser, getUser } from './service';
 import { gql } from 'apollo-server-express';
 
 export const typeDefs = gql`
@@ -23,21 +21,28 @@ export const typeDefs = gql`
     author: User
     discoverer: User
   }
+
+  extend type Group {
+    members: [User!]!
+  }
 `;
 
 export const resolvers = {
   Query: {
-    me: (parent, args, ctx, info) => {
-      return ctx.user ? getUser(ctx.user.sub, ctx) : null;
-    },
-    user: (_parent, { id }, ctx) => getUser(id, ctx),
+    me: (parent, args, ctx, info) =>
+      ctx.user ? ctx.graph.users.supplementAuth0Data(ctx.user) : null,
+    user: (_parent, { id }, ctx) => ctx.graph.users.get(id),
   },
   Mutation: {
-    mergeUser: (_parent, _args, ctx, info) => mergeUser(ctx),
+    mergeUser: (_parent, _args, ctx, info) => ctx.graph.users.login(),
   },
   Recipe: {
-    author: (parent, args, ctx, info) => getRecipeAuthor(parent.id, ctx),
+    author: (parent, args, ctx, info) =>
+      ctx.graph.users.getRecipeAuthor(parent.id),
     discoverer: (parent, args, ctx, info) =>
-      getRecipeDiscoverer(parent.id, ctx),
+      ctx.graph.users.getRecipeDiscoverer(parent.id),
+  },
+  Group: {
+    members: (parent, args, ctx) => ctx.graph.users.getGroupMembers(parent.id),
   },
 };

@@ -8,9 +8,13 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "start": "node ./scripts/start.js"
+    "start": "node ./scripts/start.js",
+    "introspect": "node ./scripts/introspection.js"
   },
   "lint-staged": {
     "*.{js,json,css,md}": ["prettier --write", "git add"]
+  },
+  "dependencies": {
+    "node-fetch": "^2.2.0"
   }
 }

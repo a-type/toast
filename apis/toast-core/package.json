@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "dev":
-      "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --exec babel-node",
+      "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --verbose --exec babel-node",
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "node ./db/indexes.js",
     "db-init": "run-s db:*",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://gitlab.com/a-type/toast-backend#README",
   "dependencies": {
+    "@google-cloud/firestore": "^0.17.0",
     "@google-cloud/storage": "^1.7.0",
     "apollo-server-express": "^2.0.6",
     "auth0": "^2.12.0",
@@ -43,11 +44,13 @@
     "body-parser": "^1.18.2",
     "casual": "^1.5.19",
     "chalk": "^2.4.1",
+    "change-case": "^3.0.2",
     "compromise": "^11.12.0",
     "compromise-plugin": "0.0.8",
     "config": "^1.30.0",
     "cors": "^2.8.4",
     "cross-env": "^5.1.4",
+    "date-fns": "^1.29.0",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "graphql": "^0.13.2",
@@ -81,6 +84,7 @@
     "jest": "^23.5.0",
     "nodemon": "^1.17.3",
     "npm-run-all": "^4.1.2",
+    "prettier": "^1.14.3",
     "rimraf": "^2.6.2"
   }
 }

@@ -4,10 +4,10 @@ import Icon from '../Icon';
 import { focusShadow } from 'components/effects';
 
 const Button = styled.button`
-  border: 2px solid var(--color-brand);
-  color: var(--color-dark);
+  border: 2px solid var(--color-control-background);
+  color: var(--color-control-foreground);
   cursor: pointer;
-  background: var(--color-brand);
+  background: var(--color-control-background);
   font-family: var(--font-default);
   font-style: italic;
   font-size: var(--font-size-md);
@@ -25,15 +25,16 @@ const Button = styled.button`
 
   &:active {
     outline: none;
-    border-color: var(--color-brand-light);
-    background: var(--color-brand-light);
-    color: var(--color-dark);
+    border-color: var(--color-control-background-active);
+    background: var(--color-control-background-active);
+    color: var(--color-control-foreground-active);
     box-shadow: none;
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: default;
+    border-style: dotted;
     border-color: var(--color-gray-light);
     background: var(--color-gray-lightest);
     color: var(--color-gray);
@@ -47,70 +48,55 @@ const Button = styled.button`
 `;
 
 Button.Positive = styled(Button)`
-  border-color: var(--color-positive);
-  background: var(--color-positive);
-  color: var(--color-white);
+  --color-control-background: var(--color-positive);
+  --color-control-foreground: var(--color-white);
+  --color-control-background-active: var(--color-positive-light);
+  --color-control-foreground-active: var(--color-white);
 
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
     box-shadow: ${focusShadow('positive-light')};
   }
-
-  &:active {
-    border-color: var(--color-positive-light);
-    background: var(--color-positive-light);
-  }
 `;
 
 Button.PositiveLight = styled(Button)`
-  border-color: var(--color-positive-light);
-  background: var(--color-positive-light);
+  --color-control-background: var(--color-positive-light);
+  --color-control-foreground: var(--color-positive);
+  --color-control-background-active: var(--color-positive);
+  --color-control-foreground-active: var(--color-white);
 
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
     box-shadow: ${focusShadow('positive')};
   }
-
-  &:active {
-    border-color: var(--color-positive);
-    background: var(--color-positive);
-  }
 `;
 
 Button.Negative = styled(Button)`
-  border-color: var(--color-negative);
-  background: var(--color-negative);
-  color: var(--color-white);
+  --color-control-background: var(--color-negative);
+  --color-control-foreground: var(--color-white);
+  --color-control-background-active: var(--color-negative-light);
+  --color-control-foreground-active: var(--color-white);
 
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
     box-shadow: ${focusShadow('negative-light')};
   }
-
-  &:active {
-    border-color: var(--color-negative-light);
-    background: var(--color-negative-light);
-  }
 `;
 
 Button.NegativeLight = styled(Button)`
-  border-color: var(--color-negative-light);
-  background: var(--color-negative-light);
+  --color-control-background: var(--color-negative-light);
+  --color-control-foreground: var(--color-negative);
+  --color-control-background-active: var(--color-negative);
+  --color-control-foreground-active: var(--color-white);
 
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
     box-shadow: ${focusShadow('negative')};
   }
-
-  &:active {
-    border-color: var(--color-negative);
-    background: var(--color-negative);
-  }
 `;
 
 Button.Ghost = styled(Button)`
   background: transparent;
-  border-style: dotted;
   border-color: var(--color-gray-light);
   color: var(--color-gray);
 
@@ -129,19 +115,13 @@ Button.Ghost = styled(Button)`
   }
 `;
 
-const InternalIconButton = styled.button`
-  border: 0;
-  background: transparent;
-  outline: none;
-  cursor: pointer;
+const InternalIconButton = styled(Button)`
   padding: 0;
-  margin: auto;
-  color: inherit;
-
-  &:focus > i,
-  &:hover > i {
-    color: var(--color-brand);
-  }
+  width: 38px;
+  height: 38px;
+  border-radius: 100%;
+  font-size: 24px;
+  color: var(--color-white);
 `;
 
 Button.Icon = ({ name, iconProps, ...others }) => (

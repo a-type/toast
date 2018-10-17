@@ -5,12 +5,12 @@ const spin = keyframes`
     transform: rotate(0deg);
   }
 
-  50% {
-    transform: rotate(0deg);
+  45% {
+    transform: rotate(390deg);
   }
 
-  95% {
-    transform: rotate(390deg);
+  50% {
+    transform: rotate(360deg);
   }
 
   100% {

@@ -77,6 +77,7 @@ export class Auth extends EventEmitter {
   };
 
   setSession = authResult => {
+    console.log(authResult);
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime(),
     );
@@ -106,6 +107,8 @@ export class Auth extends EventEmitter {
 
   scheduleRenewal = () => {
     const expiresAt = JSON.parse(localStorage.getItem(EXPIRES_AT_KEY));
+    console.log(expiresAt);
+    console.log(expiresAt - Date.now());
     const delay = expiresAt - Date.now();
     if (delay > 0) {
       this.renewalTimeout = setTimeout(() => {

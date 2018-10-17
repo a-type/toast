@@ -2,6 +2,9 @@ import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
 import logger from './logger';
 import { pathOr } from 'ramda';
+import firestore from 'services/firestore';
+import graph from 'services/graph';
+import planner from 'services/planner';
 
 console.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 
@@ -18,6 +21,7 @@ export const createContext = async req => {
   const isMutation = req.body.query.startsWith('mutation');
 
   const user = req.user ? { ...req.user, id: req.user.sub } : null;
+  const scopes = pathOr('', ['user', 'scope'], req).split(' ');
 
   const context = {
     driver,
@@ -38,8 +42,13 @@ export const createContext = async req => {
       const sess = driver.session();
       return sess.readTransaction(txFunction);
     },
+
+    firestore,
+    graph: graph({ writeMode: isMutation, user, scopes }),
+    planner,
+
     user,
-    scopes: pathOr('', ['user', 'scope'], req).split(' '),
+    scopes,
   };
 
   return context;
