@@ -1,12 +1,12 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function install() {
-  npm ci
+  npm i
   pushd ${DIR}/../../apis/toast-core
-  npm ci
+  npm i
   popd
   pushd ${DIR}/../../apps/toast-web
-  npm ci
+  npm i
   popd
 }
 
