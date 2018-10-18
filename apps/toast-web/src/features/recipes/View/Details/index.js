@@ -1,13 +1,11 @@
-// @flow
 import React from 'react';
 import Layout from './Layout';
 import { P, Link } from 'components/typeset';
-import { type Recipe } from 'types';
 import Servings from './Servings';
 import gql from 'fraql';
 import Time from './Time';
 
-const RecipeDetails = ({ recipe }: { recipe: Recipe }) => {
+const RecipeDetails = ({ recipe }) => {
   if (!recipe) {
     return null;
   }

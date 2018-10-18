@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import Rotator from './Rotator';
 import Linear from './Linear';
@@ -46,23 +45,14 @@ const icons = [
   'icons8-watermelon',
 ];
 
-type Props = {
-  size: number,
-  color: string,
-};
-
-type State = {
-  icon: string,
-};
-
-export default class Loader extends React.Component<Props, State> {
+export default class Loader extends React.Component {
   static Linear = Linear;
 
   state = {
     icon: 'icons8-food-and-wine',
   };
 
-  timer: ?TimeoutID = null;
+  timer = null;
 
   componentDidMount() {
     this.next();

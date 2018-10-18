@@ -1,25 +1,13 @@
-// @flow
-
 import React from 'react';
-import { type RecipeIngredient } from 'types';
 import Parser, { ParseIngredientFragment } from './Parser';
 import Fixer, { FixIngredientFragment } from './Fixer';
-
-export type Props = {
-  recipeIngredient: RecipeIngredient,
-  recipeId: string,
-};
-
-export type State = {
-  mode: 'fix' | 'parse',
-};
 
 export const fragments = {
   ParseIngredient: ParseIngredientFragment,
   FixIngredient: FixIngredientFragment,
 };
 
-export default class IngredientEditor extends React.Component<Props, State> {
+export default class IngredientEditor extends React.Component {
   state = {
     mode: this.props.recipeIngredient ? 'fix' : 'parse',
   };

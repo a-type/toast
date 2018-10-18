@@ -1,8 +1,5 @@
-// @flow
-
 import React from 'react';
 import { Card } from 'components/generic';
-import { type Recipe } from 'types';
 import gql from 'fraql';
 import { path } from 'ramda';
 import styled from 'styled-components';
@@ -30,7 +27,7 @@ const getClassName = recipe => {
   return 'normal';
 };
 
-const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
+const RecipeCard = ({ recipe }) => (
   <Card
     link={`/recipes/${recipe.id}`}
     imageSrc={path(['coverImage', 'url'], recipe)}

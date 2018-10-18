@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es6",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
+    "module": "es6",
+    "outDir": "./dist/",
+    "lib": [
+      "dom",
+      "es6",
+      "dom.iterable",
+      "scripthost",
+      "esnext.asynciterable",
+      "es2018.promise"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src/"
+  },
+  "include": ["./src/"]
+}

@@ -15,6 +15,7 @@
     "*.{js,json,css,md}": ["prettier --write", "git add"]
   },
   "dependencies": {
+    "apollo-cli": "^0.4.0",
     "node-fetch": "^2.2.0"
   }
 }

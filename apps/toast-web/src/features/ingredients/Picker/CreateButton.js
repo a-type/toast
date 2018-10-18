@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Icon } from 'components/generic';
 import styled from 'styled-components';
@@ -18,13 +17,7 @@ const Button = styled.button`
   }
 `;
 
-export default ({
-  onClick,
-  active,
-}: {
-  onClick(ev: MouseEvent): mixed,
-  active: boolean,
-}) => (
+export default ({ onClick, active }) => (
   <Button onClick={onClick} active={active}>
     Create new
     <Icon name="create" />

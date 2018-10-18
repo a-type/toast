@@ -1,0 +1,4 @@
+projects:
+  app:
+    schemaPath: apps/toast-web/src/generated/schema.json
+    includes: ["apps/toast-web/src/**/*.graphql"]

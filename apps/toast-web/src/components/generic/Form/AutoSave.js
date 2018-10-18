@@ -1,24 +1,9 @@
-// @flow
-
-import React, { type Node } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import { equals } from 'ramda';
 
-type Props = {
-  timeout: number,
-  values: { [string]: mixed },
-  render({ isSaving: boolean }): Node,
-  onSave({ [string]: mixed }): Promise<mixed>,
-};
-
-type State = {
-  isSaving: boolean,
-  lastSaved: ?Date,
-  saveError: ?string,
-};
-
-export default class AutoSave extends React.Component<Props, State> {
+export default class AutoSave extends React.Component {
   static defaultProps = {
     render: () => null,
     timeout: 300,
@@ -30,7 +15,7 @@ export default class AutoSave extends React.Component<Props, State> {
     saveError: null,
   };
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps) {
     if (!equals(prevProps.values, this.props.values)) {
       this.save();
     }

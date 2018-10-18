@@ -1,11 +1,16 @@
-import styled from 'styled-components';
+import styled, { StyledComponentClass } from 'styled-components';
+
+type IAppLayout = StyledComponentClass<any, any, any> & {
+  Navigation: StyledComponentClass<any, any, any>;
+  Content: StyledComponentClass<any, any, any>;
+};
 
 const AppLayout = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
   align-content: center;
-`;
+` as IAppLayout;
 
 AppLayout.Navigation = styled.div`
   flex: 0 0 auto;

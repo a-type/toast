@@ -1,12 +1,9 @@
-// @flow
-
 import React from 'react';
 import styled from 'styled-components';
 import { Card } from 'components/generic';
 import gql from 'fraql';
-import { type Ingredient } from 'types';
 
-const IngredientCard = ({ ingredient }: { ingredient: Ingredient }) => (
+const IngredientCard = ({ ingredient }) => (
   <Card link={`/ingredients/${ingredient.id}`} shape="normal">
     {ingredient.name}
   </Card>

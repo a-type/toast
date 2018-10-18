@@ -1,11 +1,8 @@
-// @flow
-
 import React from 'react';
-import Downshift, { type ControllerStateAndHelpers } from 'downshift';
+import Downshift from 'downshift';
 import { Input, Docked } from 'components/generic';
 import Suggestions from './Suggestions';
 import Border from './Border';
-import { type Ingredient, type SearchPayload } from 'types';
 import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 
@@ -30,18 +27,9 @@ const ingredientToString = ingredient => {
   return ingredient.name + ' (create)';
 };
 
-type Props = {
-  value: ?Ingredient,
-  onChange(value: Ingredient): any,
-  canCreate?: boolean,
-  create(name: String): Promise<any>,
-  disabled: boolean,
-};
-
-class IngredientPicker extends React.Component<Props, *> {
+class IngredientPicker extends React.Component {
   handleChange = async newValue => {
     const { onChange, create } = this.props;
-    console.info(newValue);
 
     if (!newValue.id) {
       const result = await create(newValue.name);
@@ -61,7 +49,7 @@ class IngredientPicker extends React.Component<Props, *> {
     inputValue,
     selectedItem,
     highlightedIndex,
-  }: ControllerStateAndHelpers) => {
+  }) => {
     return (
       <div style={{ width: '100%' }}>
         <Docked

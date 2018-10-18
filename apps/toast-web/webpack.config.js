@@ -25,6 +25,7 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
       'styled-components': path.resolve(
         __dirname,
@@ -42,6 +43,11 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         },
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: ['babel-loader', 'awesome-typescript-loader'],
       },
       {
         test: /\.html$/,

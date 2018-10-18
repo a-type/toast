@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Routes from './Routes';
 import Layout from './Layout';
 import { NavBar } from 'features/structure';
@@ -12,7 +12,7 @@ import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
 import history from 'browserHistory';
 
-class App extends React.Component {
+class App extends React.Component<any, any> {
   componentDidMount() {
     const SEEN_WELCOME_MESSAGE_KEY = 'toast_seen_welcome';
 

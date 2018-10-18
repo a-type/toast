@@ -1,5 +1,4 @@
-// @flow
-import React, { type Node } from 'react';
+import React from 'react';
 import { Icon, Pill, Button } from 'components/generic';
 import readAndCompressImage from 'browser-image-resizer';
 import styled from 'styled-components';
@@ -33,19 +32,7 @@ const defaultImageConfig = {
   maxHeight: 900,
 };
 
-type Props = {
-  onChange(image: ?File): any,
-  id: ?string,
-  children: Node,
-  config: {},
-  value: File | string | null,
-};
-
-type State = {
-  preview: ?string,
-};
-
-export default class ImageChooser extends React.Component<Props, State> {
+export default class ImageChooser extends React.Component {
   static defaultProps = {
     id: null,
     preview: null,
@@ -55,7 +42,7 @@ export default class ImageChooser extends React.Component<Props, State> {
     preview: null,
   };
 
-  id: string = `fileUpload_${Math.floor(Math.random() * 1000000000)}`;
+  id = `fileUpload_${Math.floor(Math.random() * 1000000000)}`;
 
   componentDidMount() {
     if (this.props.value && typeof this.props.value === 'string') {
@@ -77,7 +64,7 @@ export default class ImageChooser extends React.Component<Props, State> {
     }
   }
 
-  handleChange = async (ev: Event) => {
+  handleChange = async ev => {
     const config = this.props.config || defaultImageConfig;
     const file = ev.target.files && ev.target.files[0];
 

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import Ingredients from './Ingredients';
 import Steps from './Steps';
@@ -6,7 +5,6 @@ import Details from './Details';
 import { Query } from 'react-apollo';
 import gql from 'fraql';
 import { pathOr, path } from 'ramda';
-import { type Recipe, type RecipeIngredient, type Step } from 'types';
 import { Redirect } from 'react-router-dom';
 import { Content, Hero } from 'components/layouts';
 import { Loader } from 'components/generic';
@@ -58,26 +56,13 @@ const FullRecipeQuery = gql`
   }
 `;
 
-export type QueryResponse = {
-  loading: boolean,
-  error: string | null,
-  data: {
-    recipe: Recipe,
-  },
-  refetch(): any,
-};
-
-type Props = {
-  recipeId: string,
-};
-
-export default class RecipeView extends React.Component<Props> {
+export default class RecipeView extends React.Component {
   render() {
     const { recipeId } = this.props;
 
     return (
       <Query query={FullRecipeQuery} variables={{ id: recipeId }}>
-        {(response: QueryResponse) => {
+        {response => {
           if (
             !response.loading &&
             response.data &&

@@ -1,22 +1,9 @@
-// @flow
-
-import React, { type Node } from 'react';
+import React from 'react';
 import { Tip } from 'components/generic';
 import { Link } from 'components/typeset';
-import { type Ingredient } from 'types';
 import { sentence } from 'change-case';
 
-type Props = {
-  ingredient: Ingredient,
-  isHighlighted: boolean,
-  children: Node,
-};
-
-type State = {
-  hovered: boolean,
-};
-
-export default class IngredientLink extends React.PureComponent<Props, State> {
+export default class IngredientLink extends React.PureComponent {
   state = { hovered: false };
 
   startHover = () => this.setState({ hovered: true });

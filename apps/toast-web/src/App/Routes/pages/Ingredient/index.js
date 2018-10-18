@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { SingleColumn } from 'components/layouts';
 import Details from 'features/ingredients/Details';

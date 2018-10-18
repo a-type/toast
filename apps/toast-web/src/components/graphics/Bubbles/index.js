@@ -1,25 +1,8 @@
-// @flow
-
 import React, { createRef } from 'react';
 import Wrapper from './Wrapper';
 import Bubble from './Bubble';
 
-export type Props = {
-  animated: boolean,
-  backgroundColor: string,
-  bubbleColors: string[],
-  children: mixed,
-  bubbleCount: number,
-  style: {},
-  bubbleCount: number,
-};
-
-type State = {
-  showBubbles: boolean,
-  bubbleSize: number,
-};
-
-export default class Bubbles extends React.PureComponent<Props, State> {
+export default class Bubbles extends React.PureComponent {
   static defaultProps = {
     backgroundColor: 'brand',
     bubbleColors: ['positive', 'negative', 'brand'],

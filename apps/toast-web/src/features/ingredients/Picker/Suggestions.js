@@ -1,8 +1,5 @@
-// @flow
-
 import React from 'react';
 import { graphql, compose } from 'react-apollo';
-import { type Ingredient, type SearchPayload } from 'types';
 import Button from 'components/generic/Button';
 import Suggestion from './Suggestion';
 import Tip from './Tip';
@@ -20,29 +17,10 @@ const SearchIngredients = gql`
   }
 `;
 
-export type QueryData = {
-  searchIngredients: SearchPayload<Ingredient>,
-  loading: boolean,
-  error?: string,
-};
+const hasNoResults = ({ searchIngredients }) =>
+  !searchIngredients.items || searchIngredients.items.length === 0;
 
-type SuggestionsProps = {
-  term: string,
-  getItemProps({ item: any, index: number }): any,
-  selectedItem: any,
-  highlightedIndex: number,
-  data: QueryData,
-  onCreate(newValue: Ingredient): any,
-  canCreate: boolean,
-};
-
-const hasNoResults = ({
-  searchIngredients,
-}: {
-  searchIngredients: SearchPayload<Ingredient>,
-}) => !searchIngredients.items || searchIngredients.items.length === 0;
-
-class Suggestions extends React.PureComponent<SuggestionsProps, *> {
+class Suggestions extends React.PureComponent {
   renderCreate = (term, getItemProps, index, highlightedIndex) => (
     <Button
       {...getItemProps({ item: { name: term }, index })}

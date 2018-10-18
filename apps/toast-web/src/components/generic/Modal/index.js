@@ -1,15 +1,8 @@
-// @flow
-
-import React, { type Node } from 'react';
+import React from 'react';
 import { Box, TitleBar, Background } from './components';
 import Foreground from '../Foreground';
 
-type Props = {
-  onClose(): mixed,
-  children: Node,
-};
-
-export default class Modal extends React.PureComponent<Props> {
+export default class Modal extends React.PureComponent {
   static TitleBar = TitleBar;
 
   stopPropagation = ev => {
