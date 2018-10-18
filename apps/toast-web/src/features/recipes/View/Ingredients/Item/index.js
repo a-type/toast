@@ -9,7 +9,7 @@ import gql from 'fraql';
 import pluralize from 'pluralize';
 
 const GetPreferredServings = gql`
-  query GetPreferredServings {
+  query IngredientGetPreferredServings {
     preferredServings @client
   }
 `;

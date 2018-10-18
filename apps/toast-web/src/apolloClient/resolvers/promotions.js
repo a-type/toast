@@ -20,7 +20,7 @@ export const defaults = {
 };
 
 const query = gql`
-  query GetPromotions {
+  query InternalGetPromotions {
     promotions @client
   }
 `;

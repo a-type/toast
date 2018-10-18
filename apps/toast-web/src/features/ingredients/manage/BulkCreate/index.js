@@ -4,7 +4,7 @@ import gql from 'fraql';
 import { FileChooser } from 'components/generic';
 
 const CreateIngredient = gql`
-  mutation CreateIngredient($input: IngredientCreateInput!) {
+  mutation BulkCreateIngredient($input: IngredientCreateInput!) {
     createIngredient(input: $input) {
       id
       name

@@ -18,7 +18,7 @@ const AddMatchFilter = gql`
 `;
 
 const GetSearchInputValue = gql`
-  query GetSearchInputValue {
+  query SearchBarGetSearchInputValue {
     searchInputValue
   }
 `;

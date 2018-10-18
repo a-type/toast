@@ -7,7 +7,7 @@ import Card from 'features/recipes/Card';
 import { pathOr } from 'ramda';
 
 const GetFilters = gql`
-  query GetFilters {
+  query RecipeGetFilters {
     searchFilters @client {
       id
       type

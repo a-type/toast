@@ -1,0 +1,34 @@
+type Message {
+  id: ID!
+  contents: [String]!
+}
+
+type SearchFilter {
+  id: ID!
+  type: String!
+  subject: String
+  display: String
+}
+
+extend type Query {
+  messages: [Message!]!
+  promotions: [String!]!
+  preferredServings: Int
+  searchFilters: [SearchFilter!]!
+  searchInputValue: String!
+}
+
+extend type Mutation {
+  showMessage(contents: [String]!): Message
+  dismissMessage(id: ID!): Int
+  dismissPromotion(id: ID!): ID!
+  setPreferredServings(servings: Int!): Int!
+  setSearchInputValue(value: String!): String!
+  addSearchFilter(
+    type: String!
+    subject: String
+    display: String
+  ): SearchFilter!
+  removeSearchFilter(id: ID!): SearchFilter
+  resetSearch: Int
+}

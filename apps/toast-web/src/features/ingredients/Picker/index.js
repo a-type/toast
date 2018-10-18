@@ -7,7 +7,7 @@ import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 
 const CreateIngredient = gql`
-  mutation CreateIngredient($name: String!) {
+  mutation PickerCreateIngredient($name: String!) {
     createIngredient(input: { name: $name }) {
       id
       name

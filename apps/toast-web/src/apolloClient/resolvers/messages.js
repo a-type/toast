@@ -6,7 +6,7 @@ export const defaults = {
 };
 
 const query = gql`
-  query GetMessages {
+  query InternalGetMessages {
     messages @client {
       id
       contents

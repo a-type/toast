@@ -5,13 +5,17 @@ import { H1 } from 'components/typeset';
 import { Card, Layout, Skeleton } from './components';
 
 const GetSearchInputValue = gql`
-  query GetSearchInputValue {
+  query IngredientsGetSearchInputValue {
     searchInputValue
   }
 `;
 
 const AddFilter = gql`
-  mutation AddFilter($type: String!, $subject: String!, $display: String!) {
+  mutation IngredientsAddFilter(
+    $type: String!
+    $subject: String!
+    $display: String!
+  ) {
     addSearchFilter(type: $type, subject: $subject, display: $display) @client {
       id
       type
@@ -22,7 +26,7 @@ const AddFilter = gql`
 `;
 
 const SearchIngredients = gql`
-  query SearchIngredients($input: IngredientSearchInput!) {
+  query IngredientsSearchIngredients($input: IngredientSearchInput!) {
     searchIngredients(input: $input) {
       items {
         id
