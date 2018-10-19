@@ -1,4 +1,4 @@
-import microdata from 'microdata';
+import microdata from './microdata';
 import querystring from 'query-string';
 import { toSeconds } from 'iso8601-duration';
 import sendToFrame from './sendToFrame';
