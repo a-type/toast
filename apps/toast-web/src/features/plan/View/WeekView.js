@@ -3,6 +3,7 @@ import { DayView, Links } from './components';
 import { Query } from 'react-apollo';
 import { pathOr } from 'ramda';
 import gql from 'fraql';
+import { Redirect } from 'react-router-dom';
 
 const GetPlan = gql`
 query GetPlan($weekIndex: Int!) {
@@ -29,6 +30,10 @@ const WeekView = ({ weekIndex, dayIndex }) => (
       {({ data, loading, error }) => {
         if (loading || error) {
           return <DayView.Skeleton />;
+        }
+
+        if (!data) {
+          return <Redirect to="/plan/edit" />;
         }
 
         return (
