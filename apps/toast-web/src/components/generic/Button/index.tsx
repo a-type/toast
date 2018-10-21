@@ -1,9 +1,25 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { StyledComponentClass } from 'styled-components';
 import Icon from '../Icon';
 import { focusShadow } from 'components/effects';
 
-const Button = styled.button`
+export type ButtonProps = {};
+export type IconButtonProps = {
+  name: string;
+  iconProps: {};
+};
+
+interface ButtonWithVariants extends StyledComponentClass<ButtonProps, {}> {
+  Positive: StyledComponentClass<ButtonProps, {}>;
+  PositiveLight: StyledComponentClass<ButtonProps, {}>;
+  Negative: StyledComponentClass<ButtonProps, {}>;
+  NegativeLight: StyledComponentClass<ButtonProps, {}>;
+  Ghost: StyledComponentClass<ButtonProps, {}>;
+  Icon: React.StatelessComponent<IconButtonProps>;
+  Group: StyledComponentClass<{}, {}>;
+}
+
+const Button = (styled<ButtonProps, 'button'>('button')`
   border: 2px solid var(--color-control-background);
   color: var(--color-control-foreground);
   cursor: pointer;
@@ -45,7 +61,7 @@ const Button = styled.button`
   & + & {
     margin-left: var(--spacing-md);
   }
-`;
+` as unknown) as ButtonWithVariants;
 
 Button.Positive = styled(Button)`
   --color-control-background: var(--color-positive);
@@ -124,7 +140,7 @@ const InternalIconButton = styled(Button)`
   color: var(--color-white);
 `;
 
-Button.Icon = ({ name, iconProps, ...others }) => (
+Button.Icon = ({ name, iconProps, ...others }: IconButtonProps) => (
   <InternalIconButton {...others}>
     <Icon name={name} {...iconProps} />
   </InternalIconButton>

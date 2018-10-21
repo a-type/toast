@@ -1,7 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 
-const Blob = styled.span`
+export type SpanSkeletonProps = {
+  size?: number;
+};
+
+const Blob = styled<{ charCount: number }, 'span'>('span')`
   display: inline-block;
   background: var(--color-gray-lightest);
   height: 1em;
@@ -10,7 +14,7 @@ const Blob = styled.span`
   margin-right: 1em;
 `;
 
-export default class SpanSkeleton extends React.Component {
+export default class SpanSkeleton extends React.Component<SpanSkeletonProps> {
   charCount = this.props.size || Math.floor(Math.random() * 12) + 2;
 
   render() {

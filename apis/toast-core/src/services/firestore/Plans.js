@@ -19,7 +19,7 @@ export const addIds = plan => {
 };
 
 const defaulted = (plan, weekIndex) => {
-  if (weekIndex) {
+  if (weekIndex !== undefined) {
     return {
       servingsPerMeal: 0,
       days: [],

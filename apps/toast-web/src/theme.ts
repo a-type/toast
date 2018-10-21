@@ -24,7 +24,9 @@ export const spaceSizes = {
   xl: 48,
 };
 
-export const getSize = (sizeName = '0px') =>
+export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+export const getSize = (sizeName: Size | string = '0px'): string =>
   spaceSizes[sizeName] ? `${spaceSizes[sizeName]}px` : sizeName;
 
 injectGlobal`

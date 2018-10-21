@@ -10,7 +10,7 @@ type SearchFilter {
   display: String
 }
 
-extend type Query {
+type Query {
   messages: [Message!]!
   promotions: [String!]!
   preferredServings: Int
@@ -18,7 +18,7 @@ extend type Query {
   searchInputValue: String!
 }
 
-extend type Mutation {
+type Mutation {
   showMessage(contents: [String]!): Message
   dismissMessage(id: ID!): Int
   dismissPromotion(id: ID!): ID!

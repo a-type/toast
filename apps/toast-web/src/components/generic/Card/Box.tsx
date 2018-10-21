@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-const mainShadow = ({ imageSrc }) =>
+const mainShadow = ({ imageSrc }: { imageSrc?: string }) =>
   imageSrc ? 'inset 0 -36px 24px 0 #00000080' : '0';
-const hoverShadow = ({ imageSrc }) =>
+const hoverShadow = ({ imageSrc }: { imageSrc?: string }) =>
   imageSrc
     ? 'inset 0 -36px 24px 0 #00000080, 0 0 0 8px var(--color-brand-light)'
     : '0 0 0 8px var(--color-brand-light)';
 
-export default styled.div`
+export default styled<{ imageSrc?: string }, 'div'>('div')`
   padding: var(--spacing-sm);
   background-color: var(--color-white);
   background-image: ${({ imageSrc }) =>

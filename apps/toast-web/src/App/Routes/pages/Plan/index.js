@@ -1,6 +1,6 @@
 import React from 'react';
 import { SingleColumn } from 'components/layouts';
-import { Edit, View } from 'features/plan';
+import { Edit, View, Calendar } from 'features/plan';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { path } from 'ramda';
 
@@ -15,6 +15,14 @@ export default () => (
   <SingleColumn>
     <Switch>
       <Route path="/plan/edit" component={Edit} />
+      <Route
+        path="/plan/calendar/:weekIndex?"
+        render={({ match }) => (
+          <Calendar
+            weekIndex={parseIntOrNil(path(['params', 'weekIndex'], match))}
+          />
+        )}
+      />
       <Route
         path="/plan/:weekIndex?/:dayIndex?"
         render={({ match }) => (

@@ -4,7 +4,7 @@ import { CLASS_NAMES } from './constants';
 import styled from 'styled-components';
 import { Background } from '../generic';
 
-const BaseContentStyles = styled.div`
+const BaseContentStyles = styled<{ hasBackground: boolean }, 'div'>('div')`
   background: var(--color-content-background);
   color: var(--color-content-foreground);
   padding: ${props => (props.hasBackground ? 'var(--spacing-md)' : '0')};
@@ -17,7 +17,7 @@ const BaseContentStyles = styled.div`
 /**
  * A special Content style designed to overlay a primary-colored background
  */
-BaseContentStyles.Overlay = styled(BaseContentStyles)`
+const OverlayContentStyles = styled(BaseContentStyles)`
   --color-content-foreground: var(--color-white);
   --color-content-background: #ab5f0f70;
   --color-heading: var(--color-white);
@@ -25,9 +25,15 @@ BaseContentStyles.Overlay = styled(BaseContentStyles)`
   --color-field-foreground: var(--color-white);
 `;
 
-export default ({ className, mode = 'default', ...rest }) => {
+export type Props = {
+  className?: string;
+  mode?: 'default' | 'overlay';
+  children: React.ReactNode;
+};
+
+export default ({ className, mode = 'default', ...rest }: Props) => {
   const ContentStyles =
-    mode === 'overlay' ? BaseContentStyles.Overlay : BaseContentStyles;
+    mode === 'overlay' ? OverlayContentStyles : BaseContentStyles;
   return (
     <Background.Consumer>
       {({ hasBackground }) => (

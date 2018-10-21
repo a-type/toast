@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import MealView from './MealView';
 import gql from 'fraql';
 import { H1 } from 'components/typeset';
-import { format, isToday, isTomorrow } from 'date-fns';
+import { formatDay } from 'formatters/date';
 
 const Grid = styled.div`
   display: grid;
@@ -14,19 +14,9 @@ const Grid = styled.div`
   gap: var(--spacing-lg);
 `;
 
-const formatDate = dateStr => {
-  const date = new Date(dateStr);
-  if (isToday(date)) {
-    return 'Today';
-  } else if (isTomorrow(date)) {
-    return 'Tomorrow';
-  }
-  return format(date, 'dddd, MMM Do');
-};
-
 const DayView = ({ day }) => (
   <div>
-    <H1>{formatDate(day.date)}</H1>
+    <H1>{formatDay(day.date)}</H1>
     <Grid>
       <MealView
         style={{ gridArea: 'mainMeal' }}

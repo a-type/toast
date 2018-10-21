@@ -6,7 +6,7 @@ import Plans from './Plans';
 const firestore = new Firestore({
   projectId: config.gcloud.projectId,
 });
-firestore.settings = { timestampsInSnapshots: true };
+firestore.settings({ timestampsInSnapshots: true });
 
 export default {
   plans: new Plans(firestore),
