@@ -30,9 +30,9 @@ const Meal = ({ mealName, mealIndex, dayIndex, meal, ...rest }) => (
     {mutate => (
       <AvailabilityPicker
         value={meal.availability || 'SKIP'}
-        onChange={availability =>
+        onChange={value =>
           mutate({
-            variables: { details: { availability } },
+            variables: { details: { availability: value } },
           })
         }
         {...rest}

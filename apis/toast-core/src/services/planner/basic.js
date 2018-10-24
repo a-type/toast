@@ -1,47 +1,25 @@
 export default plan => {
-  const simpleActionAssignment = (meal, mealDay, mealIndex) => {
-    switch (meal.availability) {
-      case 'LONG':
-        return [
-          {
-            type: 'COOK',
-            servings: plan.servingsPerMeal,
-            mealType: 'FANCY',
-          },
-          { type: 'EAT', mealIndex, mealDay, leftovers: false },
-        ];
-      case 'MEDIUM':
-        return [
-          {
-            type: 'COOK',
-            servings: plan.servingsPerMeal,
-            mealType: 'NORMAL',
-          },
-          { type: 'EAT', mealIndex, mealDay, leftovers: false },
-        ];
-      case 'SHORT':
-        return [
-          {
-            type: 'COOK',
-            servings: plan.servingsPerMeal,
-            mealType: 'QUICK',
-          },
-          { type: 'EAT', mealIndex, mealDay, leftovers: false },
-        ];
-      case 'NONE':
-      case 'EAT_OUT':
-        return [{ type: 'EAT_OUT' }];
-    }
-  };
+  plan.reset();
 
-  return {
-    ...plan,
-    days: plan.days.map((day, idx) => ({
-      ...day,
-      meals: day.meals.map((meal, mealIndex) => ({
-        ...meal,
-        actions: simpleActionAssignment(meal, idx, mealIndex),
-      })),
-    })),
-  };
+  plan.days.forEach((day, dayIndex) => {
+    day.meals.forEach((meal, mealIndex) => {
+      const mealType = {
+        LONG: 'FANCY',
+        MEDIUM: 'NORMAL',
+        SHORT: 'QUICK',
+      }[meal.availability];
+      if (mealType) {
+        const cookAction = plan.addAction(dayIndex, mealIndex, 'COOK', {
+          mealType,
+        });
+        plan.addAction(dayIndex, mealIndex, 'EAT', {
+          cookActionId: cookAction.id,
+        });
+      } else {
+        plan.addAction(dayIndex, mealIndex, 'SKIP');
+      }
+    });
+  });
+
+  return plan;
 };

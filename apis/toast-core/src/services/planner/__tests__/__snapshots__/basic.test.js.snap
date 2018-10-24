@@ -4,290 +4,387 @@ exports[`basic meal plan converts availability to meal types 1`] = `
 Object {
   "days": Array [
     Object {
+      "dayIndex": 0,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_1",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 0,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_2",
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_2",
+              "id": "action_MOCK_ID_3",
               "leftovers": false,
-              "mealDay": 0,
-              "mealIndex": 1,
               "type": "EAT",
             },
           ],
           "availability": "SHORT",
+          "dayIndex": 0,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_4",
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_4",
+              "id": "action_MOCK_ID_5",
               "leftovers": false,
-              "mealDay": 0,
-              "mealIndex": 2,
               "type": "EAT",
             },
           ],
           "availability": "LONG",
+          "dayIndex": 0,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
     Object {
+      "dayIndex": 1,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_6",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 1,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_7",
+              "type": "SKIP",
             },
           ],
           "availability": "EAT_OUT",
+          "dayIndex": 1,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_8",
               "mealType": "NORMAL",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_8",
+              "id": "action_MOCK_ID_9",
               "leftovers": false,
-              "mealDay": 1,
-              "mealIndex": 2,
               "type": "EAT",
             },
           ],
           "availability": "MEDIUM",
+          "dayIndex": 1,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
     Object {
+      "dayIndex": 2,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_10",
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_10",
+              "id": "action_MOCK_ID_11",
               "leftovers": false,
-              "mealDay": 2,
-              "mealIndex": 0,
               "type": "EAT",
             },
           ],
           "availability": "SHORT",
+          "dayIndex": 2,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_12",
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_12",
+              "id": "action_MOCK_ID_13",
               "leftovers": false,
-              "mealDay": 2,
-              "mealIndex": 1,
               "type": "EAT",
             },
           ],
           "availability": "SHORT",
+          "dayIndex": 2,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_14",
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_14",
+              "id": "action_MOCK_ID_15",
               "leftovers": false,
-              "mealDay": 2,
-              "mealIndex": 2,
               "type": "EAT",
             },
           ],
           "availability": "SHORT",
+          "dayIndex": 2,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
     Object {
+      "dayIndex": 3,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_16",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 3,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_17",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 3,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_18",
+              "type": "SKIP",
             },
           ],
           "availability": "EAT_OUT",
+          "dayIndex": 3,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
     Object {
+      "dayIndex": 4,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_19",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 4,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_20",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 4,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_21",
               "mealType": "NORMAL",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_21",
+              "id": "action_MOCK_ID_22",
               "leftovers": false,
-              "mealDay": 4,
-              "mealIndex": 2,
               "type": "EAT",
             },
           ],
           "availability": "MEDIUM",
+          "dayIndex": 4,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
     Object {
+      "dayIndex": 5,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_23",
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_23",
+              "id": "action_MOCK_ID_24",
               "leftovers": false,
-              "mealDay": 5,
-              "mealIndex": 0,
               "type": "EAT",
             },
           ],
           "availability": "LONG",
+          "dayIndex": 5,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_25",
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_25",
+              "id": "action_MOCK_ID_26",
               "leftovers": false,
-              "mealDay": 5,
-              "mealIndex": 1,
               "type": "EAT",
             },
           ],
           "availability": "SHORT",
+          "dayIndex": 5,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_27",
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_27",
+              "id": "action_MOCK_ID_28",
               "leftovers": false,
-              "mealDay": 5,
-              "mealIndex": 2,
               "type": "EAT",
             },
           ],
           "availability": "LONG",
+          "dayIndex": 5,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
     Object {
+      "dayIndex": 6,
       "meals": Array [
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_29",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 6,
+          "mealIndex": 0,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
-              "type": "EAT_OUT",
+              "id": "action_MOCK_ID_30",
+              "type": "SKIP",
             },
           ],
           "availability": "NONE",
+          "dayIndex": 6,
+          "mealIndex": 1,
+          "servings": 2,
         },
         Object {
           "actions": Array [
             Object {
+              "id": "action_MOCK_ID_31",
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
+              "cookActionId": "action_MOCK_ID_31",
+              "id": "action_MOCK_ID_32",
               "leftovers": false,
-              "mealDay": 6,
-              "mealIndex": 2,
               "type": "EAT",
             },
           ],
           "availability": "LONG",
+          "dayIndex": 6,
+          "mealIndex": 2,
+          "servings": 2,
         },
       ],
     },
   ],
-  "servingsPerMeal": 2,
+  "defaultServings": 2,
+  "groceryDay": 0,
+  "id": "plan_MOCK_ID_0",
+  "isBlueprint": false,
+  "strategy": "BASIC",
+  "warnings": Array [],
+  "weekIndex": null,
 }
 `;

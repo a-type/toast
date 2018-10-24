@@ -5,11 +5,12 @@ import { Form, Select, Button, Field } from 'components/generic';
 import { Link, HelpText } from 'components/typeset';
 import { Formik } from 'formik';
 import Preview from './Preview';
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 
 const ProcessPlan = gql`
   mutation ProcessPlan($strategy: PlanStrategy!) {
-    processPlan(strategy: $strategy) {
+    setPlanStrategy(strategy: $strategy) {
+      id
       ${Preview.fragments.plan}
     }
   }
@@ -20,6 +21,7 @@ const GetPlan = gql`
     me {
       group {
         plan {
+          id
           ${Preview.fragments.plan}
         }
       }
@@ -42,15 +44,12 @@ const strategyDescriptions = {
 };
 
 export default class extends React.Component {
-  state = {
-    value: null,
-  };
-
   render() {
     return (
       <Query query={GetPlan}>
         {({ data, loading, error }) => {
           const plan = path(['me', 'group', 'plan'], data);
+          const strategy = pathOr(null, ['strategy'], plan);
 
           return (
             <React.Fragment>
@@ -58,20 +57,22 @@ export default class extends React.Component {
                 {mutate => (
                   <Field label="Plan strategy" required>
                     <Select
-                      onChange={val => {
-                        mutate({ variables: { strategy: val.value } });
-                        this.setState({ value: val });
+                      onChange={ev => {
+                        mutate({ variables: { strategy: ev.target.value } });
                       }}
-                      value={this.state.value}
+                      value={strategy}
                       name="strategy"
-                      options={options}
-                    />
+                    >
+                      <option value="BASIC">Basic</option>
+                      <option value="PREP">Prep</option>
+                      <option value="BIG_PREP">Big prep</option>
+                    </Select>
                   </Field>
                 )}
               </Mutation>
-              {this.state.value && (
+              {strategy && (
                 <HelpText spaceBelow="lg">
-                  {strategyDescriptions[this.state.value.value]}
+                  {strategyDescriptions[strategy]}
                 </HelpText>
               )}
               {plan && (

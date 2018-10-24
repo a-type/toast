@@ -1,5 +1,6 @@
 import { toMealList } from './utils';
 import { clone } from 'ramda';
+import logger from '../../logger';
 
 const ALLOWED_NONE_RATIO = 6;
 
@@ -20,31 +21,22 @@ const prepMealType = (availability, totalServings) => {
 
 const alreadyPlanned = meal =>
   meal.actions &&
-  meal.actions.some(action => ['EAT', 'EAT_OUT', 'SKIP'].includes(action.type));
+  meal.actions.some(action =>
+    ['EAT', 'EAT_OUT', 'READY_MADE', 'SKIP'].includes(action.type),
+  );
 
 const getPlannedMeals = mealList => mealList.filter(alreadyPlanned).length;
 
-export default _plan => {
-  const plan = clone(_plan);
+const countRemainingPrepCandidates = mealList =>
+  mealList.filter(
+    meal => meal.availability === 'NONE' && meal.actions.length === 0,
+  ).length;
 
-  // reset actions for a new plan
-  if (plan.days) {
-    plan.days.forEach(day => {
-      if (day.meals) {
-        day.meals.forEach(meal => {
-          meal.actions = [];
-        });
-      } else {
-        day.meals = [];
-      }
-    });
-  } else {
-    plan.days = [];
-  }
+export default plan => {
+  plan.reset();
 
-  plan.warnings = [];
   // skip breakfast for main planning
-  const mealList = toMealList(plan).filter((meal, index) => index % 3 !== 0);
+  const mealList = plan.listMeals([1, 2]);
 
   // TODO: make this servings based?
   const totalNones = mealList.filter(meal => meal.availability === 'NONE')
@@ -59,7 +51,7 @@ export default _plan => {
   }
 
   if (totalNones / totalPrepCandidates > ALLOWED_NONE_RATIO) {
-    plan.warnings.push(
+    plan.addWarning(
       `You don't seem to have a lot of time to prep meals! You'll need to prep ${totalNones} meals in only ${totalPrepCandidates} day${
         totalPrepCandidates > 1 ? 's' : ''
       }. You can make your schedule more realistic by switching some meals to eating out.`,
@@ -67,128 +59,116 @@ export default _plan => {
   }
 
   let pointer = 0;
-  let prepMealTuples = [];
+  let prepMeals = [];
   let needPrepMeals = [];
   let totalIterations = 0;
 
-  while (getPlannedMeals(mealList) < mealList.length && totalIterations < 24) {
-    // WARNING: pretty brittle. based on the number of meals per day represented in list
-    const dayPointer = Math.floor(pointer / 2);
-    const mealIndex = 1 + pointer % 2;
+  // first skip breakfasts... for now...
+  for (let i = 0; i < 7; i++) {
+    plan.addAction(i, 0, 'SKIP');
+  }
+
+  while (!plan.fullyPrepared && totalIterations++ < 28) {
+    const currentMeal = mealList[pointer];
+    const dayIndex = currentMeal.dayIndex;
+    const mealIndex = currentMeal.mealIndex;
 
     // L / M meals count as 'prep-ready'; i.e. we can increase their portions by decreasing
     // the complexity of the recipe so we can distribute portions to later "N" meals
-    if (['LONG', 'MEDIUM'].includes(mealList[pointer].availability)) {
+    if (['LONG', 'MEDIUM'].includes(currentMeal.availability)) {
       // if we already are tracking some prep candidates AND we already have meals which
       // need prepping, trigger the 'flush' behavior that goes ahead and correlates
       // prep meals to prepped meals
       if (
-        (prepMealTuples.length > 0 && needPrepMeals.length > 0) ||
-        // edge case: this is the last meal left
-        getPlannedMeals(mealList) === mealList.length - 1
+        (prepMeals.length > 0 && needPrepMeals.length > 0) ||
+        // edge case: this is the last meal(s) left
+        countRemainingPrepCandidates(mealList) === 0
       ) {
         // keep track of how many meals we still need to plan
         let mealCountLeft = needPrepMeals.length;
 
         // iterate through 'prep-ready' meals we have collected so far
-        prepMealTuples.forEach(prepMealTuple => {
-          const [prepMealDay, prepMealIndex] = prepMealTuple;
-          const prepMeal = plan.days[prepMealDay].meals[prepMealIndex];
+        prepMeals.forEach(prepMeal => {
           // grab a portion of the needy meals and assign them to this prep. Minimum 1 meal.
           // if there's only 1 meal but many prep-ready meals, the latter prep-ready meals
           // just become regular meals.
           const countOfMealsToPrepFor = Math.ceil(
-            mealCountLeft / prepMealTuples.length,
+            mealCountLeft / prepMeals.length,
           );
           mealCountLeft -= countOfMealsToPrepFor;
 
           // add a cook action to cover all needed meals, plus eat for this meal.
-          prepMeal.actions = [
+          const cookAction = plan.addAction(
+            prepMeal.dayIndex,
+            prepMeal.mealIndex,
+            'COOK',
             {
-              type: 'COOK',
-              servings: plan.servingsPerMeal * (1 + countOfMealsToPrepFor),
+              servings: plan.defaultServings * (1 + countOfMealsToPrepFor),
               mealType: prepMealType(
                 prepMeal.availability,
-                (1 + countOfMealsToPrepFor) * plan.servingsPerMeal,
+                (1 + countOfMealsToPrepFor) * plan.defaultServings,
               ),
             },
-            {
-              type: 'EAT',
-              mealDay: prepMealDay,
-              mealIndex: prepMealIndex,
-              leftovers: false,
-            },
-          ];
+          );
+          plan.addAction(prepMeal.dayIndex, prepMeal.mealIndex, 'EAT', {
+            cookActionId: cookAction.id,
+          });
 
           // grab the prepped meals from the list and apply them
           for (let i = 0; i < countOfMealsToPrepFor; i++) {
             const preppedMeal = needPrepMeals.shift();
-            preppedMeal.actions = [
-              {
-                type: 'EAT',
-                mealDay: prepMealDay,
-                mealIndex: prepMealIndex,
-                leftovers: true,
-              },
-            ];
+            plan.addAction(preppedMeal.dayIndex, preppedMeal.mealIndex, 'EAT', {
+              cookActionId: cookAction.id,
+              leftovers: true,
+            });
           }
         });
 
         needPrepMeals = [];
-        prepMealTuples = [];
+        prepMeals = [];
       }
 
-      if (!alreadyPlanned(mealList[pointer])) {
-        prepMealTuples.push([dayPointer, mealIndex]);
+      if (!alreadyPlanned(currentMeal)) {
+        prepMeals.push(currentMeal);
       }
-    } else if (mealList[pointer].availability === 'NONE') {
+    } else if (
+      currentMeal.availability === 'NONE' &&
+      !alreadyPlanned(currentMeal)
+    ) {
       // note: if we don't have any prep meals ready, we can catch this on the next round
-      if (prepMealTuples.length > 0 && !alreadyPlanned(mealList[pointer])) {
-        needPrepMeals.push(mealList[pointer]);
+      if (prepMeals.length > 0) {
+        needPrepMeals.push(currentMeal);
       }
-    } else if (mealList[pointer].availability === 'SHORT') {
+    } else if (
+      currentMeal.availability === 'SHORT' &&
+      !alreadyPlanned(currentMeal)
+    ) {
       // short stuff just gets assigned like normal, no sense prepping on these meals
-      mealList[pointer].actions = [
+      const cookAction = plan.addAction(
+        currentMeal.dayIndex,
+        currentMeal.mealIndex,
+        'COOK',
         {
-          type: 'COOK',
-          servings: plan.servingsPerMeal,
           mealType: 'QUICK',
         },
-        {
-          type: 'EAT',
-          mealDay: dayPointer,
-          mealIndex,
-          leftovers: false,
-        },
-      ];
-    } else {
+      );
+      plan.addAction(currentMeal.dayIndex, currentMeal.mealIndex, 'EAT', {
+        cookActionId: cookAction.id,
+      });
+    } else if (!alreadyPlanned(currentMeal)) {
       // eat out is transparently copied over
-      mealList[pointer].actions = [
-        {
-          type: 'EAT_OUT',
-        },
-      ];
+      plan.addAction(currentMeal.dayIndex, currentMeal.mealIndex, 'EAT_OUT');
     }
 
     pointer = (pointer + 1) % mealList.length;
-    totalIterations++;
   }
 
-  if (totalIterations === 24 && getPlannedMeals(mealList) < mealList.length) {
+  if (totalIterations > 28 && !plan.fullyPrepared) {
+    logger.warn(JSON.stringify(plan.toJSON()));
     throw new Error(
       'Something went wrong while planning. You might want to check with support.',
     );
   }
-
-  const breakfasts = toMealList(plan).filter((meal, index) => index % 3 === 0);
-  // TODO...
-  breakfasts.forEach(meal => {
-    meal.actions = [
-      {
-        type: 'EAT_OUT',
-      },
-    ];
-  });
 
   return plan;
 };

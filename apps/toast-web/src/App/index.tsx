@@ -11,6 +11,7 @@ import { ApolloProvider } from 'react-apollo';
 import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
 import history from 'browserHistory';
+import { GlobalStyle } from 'theme';
 
 class App extends React.Component<any, any> {
   componentDidMount() {
@@ -32,21 +33,24 @@ class App extends React.Component<any, any> {
   render() {
     return (
       <ApolloProvider client={apolloClient}>
-        <Router history={history}>
-          <TokenContext.Provider>
-            <Background.Manager>
-              <Layout>
-                <Layout.Navigation>
-                  <NavBar />
-                </Layout.Navigation>
-                <Layout.Content>
-                  <Routes />
-                </Layout.Content>
-                <GlobalMessages />
-              </Layout>
-            </Background.Manager>
-          </TokenContext.Provider>
-        </Router>
+        <React.Fragment>
+          <Router history={history}>
+            <TokenContext.Provider>
+              <Background.Manager>
+                <Layout>
+                  <Layout.Navigation>
+                    <NavBar />
+                  </Layout.Navigation>
+                  <Layout.Content>
+                    <Routes />
+                  </Layout.Content>
+                  <GlobalMessages />
+                </Layout>
+              </Background.Manager>
+            </TokenContext.Provider>
+          </Router>
+          <GlobalStyle />
+        </React.Fragment>
       </ApolloProvider>
     );
   }

@@ -1,40 +1,7 @@
+import Plan from 'services/planner/Plan';
+
 const COLLECTION = 'plans';
 const START_WEEK_DAY = new Date(2018, 9, 7);
-
-export const addIds = plan => {
-  const planId = plan.id;
-  if (!planId) {
-    throw new Error('Plan ID must be provided for a plan to be saved');
-  }
-
-  plan.days.forEach((day, dayIndex) => {
-    day.id = `${planId}_day_${dayIndex}`;
-
-    day.meals.forEach((meal, mealIndex) => {
-      meal.id = `${day.id}_meal_${mealIndex}`;
-    });
-  });
-
-  return plan;
-};
-
-const defaulted = (plan, weekIndex) => {
-  if (weekIndex !== undefined) {
-    return {
-      servingsPerMeal: 0,
-      days: [],
-      ...plan,
-      id: `week_${weekIndex}`,
-      weekIndex,
-    };
-  }
-
-  return {
-    servingsPerMeal: 0,
-    days: [],
-    ...plan,
-  };
-};
 
 export default class Plans {
   static START_WEEK_DAY = START_WEEK_DAY;
@@ -54,20 +21,20 @@ export default class Plans {
       return null;
     }
 
-    return addIds(defaulted(docRef.data()));
+    return Plan.fromJSON(docRef.data());
   };
 
   merge = async (planId, planData) => {
     const document = this.firestore.doc(`${COLLECTION}/${planId}`);
-    await document.set(addIds(planData), { merge: true });
+    await document.set(planData.toJSON(), { merge: true });
     const docRef = await document.get();
-    return defaulted(docRef.data());
+    return Plan.fromJSON(docRef.data());
   };
 
   set = async (planId, plan) => {
     const document = this.firestore.doc(`${COLLECTION}/${planId}`);
-    await document.set(addIds(plan));
-    return defaulted(plan);
+    await document.set(plan.toJSON());
+    return plan;
   };
 
   /**
@@ -89,21 +56,20 @@ export default class Plans {
       }
 
       const basePlan = await basePlanDocRef.data();
-      return addIds(defaulted(basePlan, week));
+      return Plan.fromJSON(basePlan, week);
     }
 
-    return addIds(defaulted(docRef.data(), week));
+    return Plan.fromJSON(docRef.data(), week);
   };
 
   mergeWeek = async (planId, week, planData) => {
     const document = this.firestore.doc(
       `${COLLECTION}/${planId}/weeks/week_${week}`,
     );
-    await document.set(
-      addIds({ ...planData, id: `week_${week}`, weekIndex: week }), // enforce id, week index...
-      { merge: true },
-    );
+    planData.id = `week_${week}`;
+    planData.weekIndex = week;
+    await document.set(planData.toJSON(), { merge: true });
     const docRef = await document.get();
-    return defaulted(docRef.data(), week);
+    return Plan.fromJSON(docRef.data(), week);
   };
 }

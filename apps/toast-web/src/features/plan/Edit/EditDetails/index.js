@@ -8,7 +8,7 @@ const fragments = {
   plan: gql`
     fragment EditDetails on Plan {
       id
-      servingsPerMeal
+      defaultServings
     }
   `,
 };
@@ -35,8 +35,8 @@ const EditDetails = ({ plan, onSave }) => (
           <Form onSubmit={handleSubmit}>
             <Field label="Servings per meal" required>
               <Input
-                value={values.servingsPerMeal}
-                name="servingsPerMeal"
+                value={values.defaultServings}
+                name="defaultServings"
                 onChange={handleChange}
               />
             </Field>

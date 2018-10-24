@@ -41,7 +41,7 @@ const Input = styled.input`
   }
 `;
 
-const Label = Button.withComponent('label');
+const Label = props => <Button as="label" {...props} />;
 
 export default class RadioButton extends React.PureComponent {
   id = `${Math.floor(Math.random() * 1000000)}`;

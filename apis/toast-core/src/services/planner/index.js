@@ -2,8 +2,8 @@ import basic from './basic';
 import prep from './prep';
 
 export default {
-  run: (plan, strategy) => {
-    switch (strategy) {
+  run: plan => {
+    switch (plan.strategy) {
       case 'BASIC':
         return basic(plan);
       case 'PREP':

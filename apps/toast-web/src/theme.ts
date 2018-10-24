@@ -1,4 +1,4 @@
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 export const rhythmHeight = 24;
 
@@ -29,7 +29,7 @@ export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export const getSize = (sizeName: Size | string = '0px'): string =>
   spaceSizes[sizeName] ? `${spaceSizes[sizeName]}px` : sizeName;
 
-injectGlobal`
+export const GlobalStyle = createGlobalStyle`
 :root {
   --rhythm: ${rhythmHeight}px;
 

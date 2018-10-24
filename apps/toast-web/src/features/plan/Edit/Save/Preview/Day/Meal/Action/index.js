@@ -18,8 +18,6 @@ const fragments = {
       }
 
       ... on PlanActionEat {
-        mealDay
-        mealIndex
         leftovers
       }
 

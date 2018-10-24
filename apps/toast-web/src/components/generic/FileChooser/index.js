@@ -16,7 +16,7 @@ const Input = styled.input`
   position: absolute;
   opacity: 0;
 `;
-const Label = Button.withComponent('label');
+const Label = props => <Button as="label" {...props} />;
 const Preview = styled.div`
   width: 41px;
   height: 41px;

@@ -9,8 +9,10 @@
       "request": "launch",
       "name": "Core: Jest All",
       "cwd": "${workspaceFolder}/apis/toast-core",
-      "program":
-        "${workspaceFolder}/apis/toast-core/node_modules/jest/bin/jest.js",
+      "program": "${workspaceFolder}/apis/toast-core/node_modules/jest/bin/jest.js",
+      "env": {
+        "NODE_PATH": "${workspaceFolder}/apis/toast-core/src"
+      },
       "args": ["--runInBand"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
@@ -21,8 +23,10 @@
       "request": "launch",
       "name": "Core: Jest Current File",
       "cwd": "${workspaceFolder}/apis/toast-core",
-      "program":
-        "${workspaceFolder}/apis/toast-core/node_modules/jest/bin/jest.js",
+      "program": "${workspaceFolder}/apis/toast-core/node_modules/jest/bin/jest.js",
+      "env": {
+        "NODE_PATH": "${workspaceFolder}/apis/toast-core/src"
+      },
       "args": ["${relativeFile}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",

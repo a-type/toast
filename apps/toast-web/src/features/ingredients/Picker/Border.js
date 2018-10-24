@@ -1,4 +1,4 @@
 import styled from 'styled-components';
 import { Input } from 'components/generic';
 
-export default Input.withComponent('div');
+export default props => <Input as="div" {...props} />;

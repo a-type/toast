@@ -4,6 +4,7 @@ import { path, pathOr, assocPath, compose, mergeDeepLeft } from 'ramda';
 import { UserInputError } from 'errors';
 import getWeekIndex from './getWeekIndex';
 import getWeekDay from './getWeekDay';
+import Plan from 'services/planner/Plan';
 
 const emptyPlan = {
   days: new Array(7).fill(null).map(() => ({
@@ -46,34 +47,38 @@ export const typeDefs = gql`
   }
 
   interface PlanAction {
+    id: ID!
     type: PlanActionType!
   }
 
   type PlanActionEatOut implements PlanAction {
+    id: ID!
     type: PlanActionType!
     note: String
   }
 
   type PlanActionCook implements PlanAction {
+    id: ID!
     type: PlanActionType!
     servings: Int!
     mealType: PlanMealType!
   }
 
   type PlanActionEat implements PlanAction {
+    id: ID!
     type: PlanActionType!
-    mealDay: Int!
-    mealIndex: Int!
     leftovers: Boolean!
     cookAction: PlanActionCook!
   }
 
   type PlanActionReadyMade implements PlanAction {
+    id: ID!
     type: PlanActionType!
     note: String
   }
 
   type PlanActionSkip implements PlanAction {
+    id: ID!
     type: PlanActionType!
   }
 
@@ -91,7 +96,7 @@ export const typeDefs = gql`
 
   type Plan {
     id: ID!
-    servingsPerMeal: Int!
+    defaultServings: Int!
     days: [PlanDay!]!
     groceryDay: Int!
     warnings: [String!]!
@@ -111,7 +116,7 @@ export const typeDefs = gql`
   }
 
   input PlanSetDetailsInput {
-    servingsPerMeal: Int
+    defaultServings: Int
     groceryDay: Int
   }
 
@@ -127,7 +132,9 @@ export const typeDefs = gql`
       mealIndex: Int!
       details: PlanSetMealDetailsInput!
     ): Plan! @hasScope(scope: "update:plan")
-    processPlan(strategy: PlanStrategy): Plan!
+    setPlanStrategy(strategy: PlanStrategy): Plan!
+
+    setPlanActionRecipe(actionId: ID!, recipeId: ID!): PlanAction!
   }
 
   extend type Group {
@@ -164,7 +171,7 @@ export const resolvers = {
   },
 
   Mutation: {
-    setPlanDetails: async (_parent, args, ctx) => {
+    setPlanDetails: async (_parent, { details }, ctx) => {
       const group = await ctx.graph.groups.getMine();
       let planId = path(['planId'], group);
       // create plan if it doesn't exist
@@ -173,12 +180,12 @@ export const resolvers = {
         await ctx.graph.groups.mergeMine({ planId });
       }
 
-      const defaultPlan = {
-        ...emptyPlan,
-        id: planId,
-      };
+      const defaultPlan = new Plan({ id: planId });
       const plan = (await ctx.firestore.plans.get(planId)) || defaultPlan;
-      return ctx.firestore.plans.set(planId, { ...plan, ...args.details });
+      plan.defaultServings = details.defaultServings;
+      plan.groceryDay = details.groceryDay;
+      const processed = ctx.planner.run(plan);
+      return ctx.firestore.plans.set(planId, processed);
     },
 
     setPlanMealDetails: async (
@@ -194,21 +201,14 @@ export const resolvers = {
 
       const plan = await ctx.firestore.plans.get(group.planId);
 
-      const meal = pathOr({}, ['days', dayIndex, 'meals', mealIndex], plan);
-      const updatedPlan = assocPath(
-        ['days', dayIndex, 'meals', mealIndex],
-        {
-          ...meal,
-          ...details,
-        },
-        plan,
-      );
+      plan.setMealDetails(dayIndex, mealIndex, details);
+      const processed = ctx.planner.run(plan);
 
-      await ctx.firestore.plans.set(group.planId, updatedPlan);
-      return updatedPlan;
+      await ctx.firestore.plans.set(group.planId, plan);
+      return plan;
     },
 
-    processPlan: async (_parent, { strategy }, ctx) => {
+    setPlanStrategy: async (_parent, { strategy }, ctx) => {
       const group = await ctx.graph.groups.getMine();
 
       if (!group || !group.planId) {
@@ -216,7 +216,8 @@ export const resolvers = {
       }
 
       const plan = await ctx.firestore.plans.get(group.planId);
-      const processed = ctx.planner.run(plan, strategy);
+      plan.strategy = strategy;
+      const processed = ctx.planner.run(plan);
       await ctx.firestore.plans.set(group.planId, processed);
       return processed;
     },
@@ -285,28 +286,24 @@ export const resolvers = {
         plan = await ctx.firestore.plans.get(group.planId);
       }
 
-      return pathOr(
-        [],
-        ['days', parent.mealDay, 'meals', parent.mealIndex, 'actions'],
-        plan,
-      ).find(action => action.type === 'COOK');
+      const { cookActionId } = parent;
+
+      return plan.getAction(cookActionId);
     },
   },
 
   PlanDay: {
     date: (parent, args, ctx) => {
-      if (parent.id.includes('week_')) {
-        // this information can be parsed from the id
-        const match = /week_(-?\d+)_day_(\d+)/.exec(parent.id);
-        if (match) {
-          const [_, week, day] = match;
-          const date = getWeekDay({
-            weekIndex: week,
-            startDay: ctx.firestore.plans.START_WEEK_DAY,
-            dayOffset: day,
-          });
-          return date;
-        }
+      if (ctx.week) {
+        const weekIndex = ctx.week.weekIndex;
+        const { dayIndex } = parent;
+
+        const date = getWeekDay({
+          weekIndex,
+          startDay: ctx.firestore.plans.START_WEEK_DAY,
+          dayOffset: dayIndex,
+        });
+        return date;
       }
       return null;
     },
