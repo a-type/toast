@@ -51,8 +51,10 @@ export default class Plan {
     this.data = merge(EMPTY, data);
     this.data.id = this.data.id || generateId('plan');
 
-    this.data.days.forEach(day => {
-      day.meals.forEach(meal => {
+    this.data.days.forEach((day, dayIndex) => {
+      day.id = `${this.data.id}-day_${dayIndex}`;
+      day.meals.forEach((meal, mealIndex) => {
+        meal.id = `${this.data.id}-day_${dayIndex}-meal_${mealIndex}`;
         meal.actions.forEach(action => {
           if (!action.id) {
             action.id = generateId('action');

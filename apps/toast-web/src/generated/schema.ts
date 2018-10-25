@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-10-21T16:27:28-04:00 */
+/** Generated in 2018-10-24T21:53:59-04:00 */
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = any, Context = any, Args = any> = (
@@ -34,6 +34,7 @@ export type Date = any;
 export type Upload = any;
 
 export interface PlanAction {
+  id: string;
   type: PlanActionType;
 }
 
@@ -145,7 +146,7 @@ export interface Group {
 
 export interface Plan {
   id: string;
-  servingsPerMeal: number;
+  defaultServings: number;
   days: PlanDay[];
   groceryDay: number;
   warnings: string[];
@@ -211,7 +212,8 @@ export interface Mutation {
   mergeUser?: User | null;
   setPlanDetails: Plan;
   setPlanMealDetails: Plan;
-  processPlan: Plan;
+  setPlanStrategy: Plan;
+  setPlanActionRecipe: PlanAction;
   showMessage?: Message | null;
   dismissMessage?: number | null;
   dismissPromotion: string;
@@ -223,30 +225,33 @@ export interface Mutation {
 }
 
 export interface PlanActionCook extends PlanAction {
+  id: string;
   type: PlanActionType;
   servings: number;
   mealType: PlanMealType;
 }
 
 export interface PlanActionEat extends PlanAction {
+  id: string;
   type: PlanActionType;
-  mealDay: number;
-  mealIndex: number;
   leftovers: boolean;
   cookAction: PlanActionCook;
 }
 
 export interface PlanActionEatOut extends PlanAction {
+  id: string;
   type: PlanActionType;
   note?: string | null;
 }
 
 export interface PlanActionReadyMade extends PlanAction {
+  id: string;
   type: PlanActionType;
   note?: string | null;
 }
 
 export interface PlanActionSkip extends PlanAction {
+  id: string;
   type: PlanActionType;
 }
 
@@ -356,7 +361,7 @@ export interface RecipeStepCreateInput {
 }
 
 export interface PlanSetDetailsInput {
-  servingsPerMeal?: number | null;
+  defaultServings?: number | null;
   groceryDay?: number | null;
 }
 
@@ -490,8 +495,12 @@ export interface SetPlanMealDetailsMutationArgs {
   mealIndex: number;
   details: PlanSetMealDetailsInput;
 }
-export interface ProcessPlanMutationArgs {
+export interface SetPlanStrategyMutationArgs {
   strategy?: PlanStrategy | null;
+}
+export interface SetPlanActionRecipeMutationArgs {
+  actionId: string;
+  recipeId: string;
 }
 export interface ShowMessageMutationArgs {
   contents: (string | null)[];
@@ -1143,7 +1152,7 @@ export namespace GroupResolvers {
 export namespace PlanResolvers {
   export interface Resolvers<Context = any> {
     id?: IdResolver<string, any, Context>;
-    servingsPerMeal?: ServingsPerMealResolver<number, any, Context>;
+    defaultServings?: DefaultServingsResolver<number, any, Context>;
     days?: DaysResolver<PlanDay[], any, Context>;
     groceryDay?: GroceryDayResolver<number, any, Context>;
     warnings?: WarningsResolver<string[], any, Context>;
@@ -1156,7 +1165,7 @@ export namespace PlanResolvers {
     Parent,
     Context
   >;
-  export type ServingsPerMealResolver<
+  export type DefaultServingsResolver<
     R = number,
     Parent = any,
     Context = any
@@ -1367,7 +1376,8 @@ export namespace MutationResolvers {
     mergeUser?: MergeUserResolver<User | null, any, Context>;
     setPlanDetails?: SetPlanDetailsResolver<Plan, any, Context>;
     setPlanMealDetails?: SetPlanMealDetailsResolver<Plan, any, Context>;
-    processPlan?: ProcessPlanResolver<Plan, any, Context>;
+    setPlanStrategy?: SetPlanStrategyResolver<Plan, any, Context>;
+    setPlanActionRecipe?: SetPlanActionRecipeResolver<PlanAction, any, Context>;
     showMessage?: ShowMessageResolver<Message | null, any, Context>;
     dismissMessage?: DismissMessageResolver<number | null, any, Context>;
     dismissPromotion?: DismissPromotionResolver<string, any, Context>;
@@ -1612,13 +1622,23 @@ export namespace MutationResolvers {
     details: PlanSetMealDetailsInput;
   }
 
-  export type ProcessPlanResolver<
+  export type SetPlanStrategyResolver<
     R = Plan,
     Parent = any,
     Context = any
-  > = Resolver<R, Parent, Context, ProcessPlanArgs>;
-  export interface ProcessPlanArgs {
+  > = Resolver<R, Parent, Context, SetPlanStrategyArgs>;
+  export interface SetPlanStrategyArgs {
     strategy?: PlanStrategy | null;
+  }
+
+  export type SetPlanActionRecipeResolver<
+    R = PlanAction,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, SetPlanActionRecipeArgs>;
+  export interface SetPlanActionRecipeArgs {
+    actionId: string;
+    recipeId: string;
   }
 
   export type ShowMessageResolver<
@@ -1695,11 +1715,17 @@ export namespace MutationResolvers {
 
 export namespace PlanActionCookResolvers {
   export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
     type?: TypeResolver<PlanActionType, any, Context>;
     servings?: ServingsResolver<number, any, Context>;
     mealType?: MealTypeResolver<PlanMealType, any, Context>;
   }
 
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
   export type TypeResolver<
     R = PlanActionType,
     Parent = any,
@@ -1719,25 +1745,19 @@ export namespace PlanActionCookResolvers {
 
 export namespace PlanActionEatResolvers {
   export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
     type?: TypeResolver<PlanActionType, any, Context>;
-    mealDay?: MealDayResolver<number, any, Context>;
-    mealIndex?: MealIndexResolver<number, any, Context>;
     leftovers?: LeftoversResolver<boolean, any, Context>;
     cookAction?: CookActionResolver<PlanActionCook, any, Context>;
   }
 
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
   export type TypeResolver<
     R = PlanActionType,
-    Parent = any,
-    Context = any
-  > = Resolver<R, Parent, Context>;
-  export type MealDayResolver<
-    R = number,
-    Parent = any,
-    Context = any
-  > = Resolver<R, Parent, Context>;
-  export type MealIndexResolver<
-    R = number,
     Parent = any,
     Context = any
   > = Resolver<R, Parent, Context>;
@@ -1755,10 +1775,16 @@ export namespace PlanActionEatResolvers {
 
 export namespace PlanActionEatOutResolvers {
   export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
     type?: TypeResolver<PlanActionType, any, Context>;
     note?: NoteResolver<string | null, any, Context>;
   }
 
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
   export type TypeResolver<
     R = PlanActionType,
     Parent = any,
@@ -1773,10 +1799,16 @@ export namespace PlanActionEatOutResolvers {
 
 export namespace PlanActionReadyMadeResolvers {
   export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
     type?: TypeResolver<PlanActionType, any, Context>;
     note?: NoteResolver<string | null, any, Context>;
   }
 
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
   export type TypeResolver<
     R = PlanActionType,
     Parent = any,
@@ -1791,9 +1823,15 @@ export namespace PlanActionReadyMadeResolvers {
 
 export namespace PlanActionSkipResolvers {
   export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
     type?: TypeResolver<PlanActionType, any, Context>;
   }
 
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
   export type TypeResolver<
     R = PlanActionType,
     Parent = any,
@@ -1870,8 +1908,6 @@ export namespace CalendarMeal {
 
   export type PlanActionEatInlineFragment = {
     __typename?: 'PlanActionEat';
-    mealDay: number;
-    mealIndex: number;
     leftovers: boolean;
     cookAction: CookAction;
   };

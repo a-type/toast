@@ -35,7 +35,7 @@ class InnerSelfLink extends React.Component {
     return (
       <Tip.Toggle tipContent={this.renderTipContent()}>
         {({ ref, onClick }) => (
-          <Button.Icon name="view-more" innerRef={ref} onClick={onClick} />
+          <Button.Icon name="view-more" ref={ref} onClick={onClick} />
         )}
       </Tip.Toggle>
     );

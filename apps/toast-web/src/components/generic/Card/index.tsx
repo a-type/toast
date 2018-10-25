@@ -6,28 +6,29 @@ import Skeleton from './Skeleton';
 import Overlay from './Overlay';
 import { CardShape } from './types';
 
-export type Props = {
+interface Props {
   link?: string;
   imageSrc?: string;
   children: React.ReactNode;
   shape?: CardShape;
-};
+  ref?: React.Ref<any>;
+  onClick?: (ev: MouseEvent) => void;
+}
 
-const Card = ({
-  link,
-  imageSrc,
-  children,
-  shape = 'normal',
-  ...rest
-}: Props) => (
-  <Link to={link} className={shape} {...rest}>
-    <Box imageSrc={imageSrc}>
-      {React.Children.map(
-        children,
-        child => child && <Overlay>{child}</Overlay>,
-      )}
-    </Box>
-  </Link>
+const Card: React.ComponentType<Props> & {
+  Grid?: typeof Grid;
+  Skeleton?: typeof Skeleton;
+} = React.forwardRef<any, Props>(
+  ({ link, imageSrc, children, shape = 'normal', ...rest }, ref) => (
+    <Link to={link} className={shape} {...rest}>
+      <Box imageSrc={imageSrc} ref={ref as any}>
+        {React.Children.map(
+          children,
+          child => child && <Overlay>{child}</Overlay>,
+        )}
+      </Box>
+    </Link>
+  ),
 );
 
 Card.Grid = Grid;

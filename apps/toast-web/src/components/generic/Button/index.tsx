@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
 import Icon from '../Icon';
 import { focusShadow } from 'components/effects';
@@ -15,7 +15,7 @@ interface ButtonWithVariants extends StyledComponentClass<ButtonProps, {}> {
   Negative: StyledComponentClass<ButtonProps, {}>;
   NegativeLight: StyledComponentClass<ButtonProps, {}>;
   Ghost: StyledComponentClass<ButtonProps, {}>;
-  Icon: React.StatelessComponent<IconButtonProps>;
+  Icon: React.ComponentType<IconButtonProps>;
   Group: StyledComponentClass<{}, {}>;
 }
 
@@ -140,10 +140,12 @@ const InternalIconButton = styled(Button)`
   color: var(--color-white);
 `;
 
-Button.Icon = ({ name, iconProps, ...others }: IconButtonProps) => (
-  <InternalIconButton {...others}>
-    <Icon name={name} {...iconProps} />
-  </InternalIconButton>
+Button.Icon = forwardRef(
+  ({ name, iconProps, ...others }: IconButtonProps, ref) => (
+    <InternalIconButton {...others} ref={ref as any}>
+      <Icon name={name} {...iconProps} />
+    </InternalIconButton>
+  ),
 );
 
 Button.Group = styled.div`

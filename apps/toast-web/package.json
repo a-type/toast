@@ -14,7 +14,8 @@
     "gen:schema:server": "apollo schema:download ./src/generated/schema.json --endpoint=http://localhost:4000/api",
     "gen:schema:client": "apollo schema:download ./src/generated/clientSchema.json --endpoint=./src/apolloClient/resolvers/clientSchema.graphql",
     "gen:schema": "run-p gen:schema:*",
-    "gen:models": "gql-gen --template=graphql-codegen-typescript-template --clientSchema=./src/generated/clientSchema.json --schema=./src/generated/schema.json --out ./src/generated/schema.ts \"./src/**/*.tsx\""
+    "gen:types": "gql-gen --template=graphql-codegen-typescript-template --clientSchema=./src/generated/clientSchema.json --schema=./src/generated/schema.json --out ./src/generated/schema.ts \"./src/**/*.tsx\"",
+    "gen": "run-s gen:*"
   },
   "lint-staged": {
     "*.{js,json,css.md}": [

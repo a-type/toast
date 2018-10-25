@@ -1,6 +1,6 @@
 import * as React from 'react';
 import gql from 'graphql-tag';
-import { Card } from 'components/generic';
+import { Card, Tip } from 'components/generic';
 import { PlanMeal } from 'generated/schema';
 
 export type Props = {
@@ -21,8 +21,6 @@ export default class CalendarMeal extends React.Component<any, any> {
           }
 
           ... on PlanActionEat {
-            mealDay
-            mealIndex
             leftovers
             cookAction {
               servings
@@ -53,6 +51,14 @@ export default class CalendarMeal extends React.Component<any, any> {
   render() {
     const mealType = this.getMealType();
 
-    return <Card>{mealType}</Card>;
+    return (
+      <Tip.Toggle>
+        {({ ref, onClick }) => (
+          <Card ref={ref} onClick={onClick}>
+            {mealType}
+          </Card>
+        )}
+      </Tip.Toggle>
+    );
   }
 }

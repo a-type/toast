@@ -16,31 +16,39 @@ export type LinkProps = InnerLinkProps & {
   spaceBelow?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string;
 };
 
-export const BaseLink = ({
-  to,
-  children,
-  forceRemote,
-  newTab,
-  ...props
-}: InnerLinkProps) => {
-  if (!to) {
-    return <span {...props}>{children}</span>;
-  }
+export const BaseLink = React.forwardRef(
+  (
+    { to, children, forceRemote, newTab, ...props }: InnerLinkProps,
+    ref: any,
+  ) => {
+    if (!to) {
+      return (
+        <div {...props} ref={ref}>
+          {children}
+        </div>
+      );
+    }
 
-  if (/^https?:\/\//.test(to) || forceRemote) {
+    if (/^https?:\/\//.test(to) || forceRemote) {
+      return (
+        <a href={to} target="_blank" {...props} ref={ref}>
+          {children}
+        </a>
+      );
+    }
+
     return (
-      <a href={to} target="_blank" {...props}>
+      <LibLink
+        to={to}
+        {...props}
+        target={newTab ? '_blank' : undefined}
+        ref={ref}
+      >
         {children}
-      </a>
+      </LibLink>
     );
-  }
-
-  return (
-    <LibLink to={to} {...props} target={newTab ? '_blank' : undefined}>
-      {children}
-    </LibLink>
-  );
-};
+  },
+);
 
 export default styled<LinkProps>(({ spaceBelow, ...rest }) => (
   <BaseLink {...rest} />

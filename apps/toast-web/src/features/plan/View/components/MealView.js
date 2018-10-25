@@ -47,8 +47,6 @@ MealView.fragments = {
         }
 
         ... on PlanActionEat {
-          mealDay
-          mealIndex
           leftovers
           cookAction {
             servings
