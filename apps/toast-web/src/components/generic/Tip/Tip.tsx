@@ -13,15 +13,21 @@ import { Placement } from 'popper.js';
 
 interface TipProps {
   children(props: ReferenceChildrenProps): React.ReactNode;
-  onBlur(ev: MouseEvent): void;
+  onBlur?(ev: MouseEvent): void;
   tipContent: React.ReactNode;
   disabled?: boolean;
   placement?: Placement;
   positionFixed?: boolean;
 }
 
+interface TipToggleProps extends TipProps {
+  children(
+    props: ReferenceChildrenProps & { onClick(): void },
+  ): React.ReactNode;
+}
+
 export default class Tip extends React.Component<TipProps> {
-  static Toggle: React.ComponentClass;
+  static Toggle: React.ComponentClass<TipToggleProps>;
 
   handleClickOutside = ev => {
     this.props.onBlur(ev);
@@ -66,12 +72,6 @@ export default class Tip extends React.Component<TipProps> {
       </Manager>
     );
   }
-}
-
-interface TipToggleProps extends TipProps {
-  children(
-    props: ReferenceChildrenProps & { onClick(): void },
-  ): React.ReactNode;
 }
 
 Tip.Toggle = class TipToggle extends React.PureComponent<TipToggleProps> {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import gql from 'graphql-tag';
-import { Card, Tip } from 'components/generic';
+import { Card, Tip, Button } from 'components/generic';
 import { PlanMeal } from 'generated/schema';
 
 export type Props = {
@@ -48,11 +48,15 @@ export default class CalendarMeal extends React.Component<any, any> {
     return 'SKIP';
   };
 
+  renderContent = () => {
+    return <Button>Choose Recipe</Button>;
+  };
+
   render() {
     const mealType = this.getMealType();
 
     return (
-      <Tip.Toggle>
+      <Tip.Toggle tipContent={this.renderContent()}>
         {({ ref, onClick }) => (
           <Card ref={ref} onClick={onClick}>
             {mealType}
