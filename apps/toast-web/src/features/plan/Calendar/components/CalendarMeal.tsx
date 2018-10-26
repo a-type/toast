@@ -2,12 +2,21 @@ import * as React from 'react';
 import gql from 'graphql-tag';
 import { Card, Tip, Button } from 'components/generic';
 import { PlanMeal } from 'generated/schema';
+import { RecipeSelector } from 'features/plan';
 
-export type Props = {
+interface CalendarMealProps {
   meal: PlanMeal;
-};
+  weekIndex: number;
+}
 
-export default class CalendarMeal extends React.Component<any, any> {
+interface CalendarMealState {
+  showRecipeSelector: boolean;
+}
+
+export default class CalendarMeal extends React.Component<
+  CalendarMealProps,
+  CalendarMealState
+> {
   static fragments = {
     meal: gql`
       fragment CalendarMeal on PlanMeal {
@@ -32,6 +41,10 @@ export default class CalendarMeal extends React.Component<any, any> {
     `,
   };
 
+  state = {
+    showRecipeSelector: false,
+  };
+
   getMealType = (): 'COOK' | 'EAT' | 'SKIP' => {
     const {
       meal: { actions },
@@ -48,21 +61,35 @@ export default class CalendarMeal extends React.Component<any, any> {
     return 'SKIP';
   };
 
+  showRecipeSelector = () => this.setState({ showRecipeSelector: true });
+  hideRecipeSelector = () => this.setState({ showRecipeSelector: false });
+
+  setRecipe = () => {};
+
   renderContent = () => {
-    return <Button>Choose Recipe</Button>;
+    return <Button onClick={this.showRecipeSelector}>Choose Recipe</Button>;
   };
 
   render() {
     const mealType = this.getMealType();
+    const { showRecipeSelector } = this.state;
 
     return (
-      <Tip.Toggle tipContent={this.renderContent()}>
-        {({ ref, onClick }) => (
-          <Card ref={ref} onClick={onClick}>
-            {mealType}
-          </Card>
+      <React.Fragment>
+        <Tip.Toggle tipContent={this.renderContent()}>
+          {({ ref, onClick }) => (
+            <Card ref={ref} onClick={onClick}>
+              {mealType}
+            </Card>
+          )}
+        </Tip.Toggle>
+        {showRecipeSelector && (
+          <RecipeSelector
+            onCancel={this.hideRecipeSelector}
+            onChange={this.setRecipe}
+          />
         )}
-      </Tip.Toggle>
+      </React.Fragment>
     );
   }
 }

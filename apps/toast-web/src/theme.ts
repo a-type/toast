@@ -87,6 +87,9 @@ export const GlobalStyle = createGlobalStyle`
   --color-content-background: var(--color-white);
   --color-content-foreground: var(--color-black);
 
+  --color-popover-background: var(--color-white);
+  --color-popover-foreground: var(--color-black);
+
   --color-heading: var(--color-dark);
 
   --shadow-md: 0 4px 8px 0 #280f3420;

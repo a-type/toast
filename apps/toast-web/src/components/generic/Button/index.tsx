@@ -3,7 +3,9 @@ import styled, { StyledComponentClass } from 'styled-components';
 import Icon from '../Icon';
 import { focusShadow } from 'components/effects';
 
-export type ButtonProps = {};
+export type ButtonProps = {
+  onClick?(ev: MouseEvent): void;
+};
 export type IconButtonProps = {
   name: string;
   iconProps: {};
