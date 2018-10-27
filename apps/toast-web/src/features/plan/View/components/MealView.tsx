@@ -1,6 +1,8 @@
 import React from 'react';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Card } from 'components/generic';
+import { PlanMeal } from 'generated/schema';
+import { CardSkeletonProps } from 'components/generic/Card/Skeleton';
 
 const getCookAction = actions => actions.find(action => action.type === 'COOK');
 const getEatAction = actions => actions.find(action => action.type === 'EAT');
@@ -13,7 +15,21 @@ const ActionDetails = ({ action }) => {
   return <span>{action.type}</span>;
 };
 
-const MealView = ({ meal, title, main, ...rest }) => {
+interface MealViewProps {
+  meal: PlanMeal;
+  title: string;
+  main?: boolean;
+  style?: React.CSSProperties;
+}
+
+interface MealViewWithSkeleton extends React.SFC<MealViewProps> {
+  Skeleton?: React.SFC<CardSkeletonProps>;
+  fragments: {
+    [name: string]: any;
+  };
+}
+
+const MealView: MealViewWithSkeleton = ({ meal, title, main, ...rest }) => {
   if (!meal) {
     return null;
   }

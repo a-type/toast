@@ -1,19 +1,11 @@
 import React from 'react';
-import { Query } from 'react-apollo';
-import gql from 'fraql';
 import { IsLoggedIn } from 'features/auth/gates';
 import { pathOr } from 'ramda';
 import { differenceInDays, addDays } from 'date-fns';
 import WeekView from './WeekView';
 import { AnonLanding } from './components';
 import { Content } from 'components/layouts';
-
-const GetWeekIndex = gql`
-  query GetWeekIndex($year: Int!, $month: Int!, $date: Int!) {
-    planWeekIndex(year: $year, month: $month, date: $date)
-    planStartWeekDate
-  }
-`;
+import GetWeekIndexQuery from './GetWeekIndexQuery';
 
 const AutoWeekSelectorView = ({ weekIndex, dayIndex }) => {
   if (weekIndex !== undefined)
@@ -27,8 +19,7 @@ const AutoWeekSelectorView = ({ weekIndex, dayIndex }) => {
 
   return (
     <Content>
-      <Query
-        query={GetWeekIndex}
+      <GetWeekIndexQuery
         variables={{
           year: today.getFullYear(),
           month: today.getMonth(),
@@ -37,9 +28,7 @@ const AutoWeekSelectorView = ({ weekIndex, dayIndex }) => {
       >
         {({ data, loading, error }) => {
           if (loading || error) {
-            return (
-              <WeekView.Skeleton weekIndex={weekIndex} dayIndex={dayIndex} />
-            );
+            return <WeekView.Skeleton weekIndex={weekIndex} dayIndex={0} />;
           }
 
           // figure out what day to focus
@@ -58,7 +47,7 @@ const AutoWeekSelectorView = ({ weekIndex, dayIndex }) => {
             <WeekView weekIndex={data.planWeekIndex} dayIndex={dayIndex} />
           );
         }}
-      </Query>
+      </GetWeekIndexQuery>
     </Content>
   );
 };

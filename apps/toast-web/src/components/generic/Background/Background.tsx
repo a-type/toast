@@ -10,7 +10,17 @@ const ColorBlock = styled.div`
   background: ${props => props.color};
 `;
 
-class Background extends React.Component {
+interface BackgroundProps {
+  backgroundKey: string;
+  color?: string;
+}
+
+interface ProvidedBackgroundProps extends BackgroundProps {
+  register(key: string): void;
+  unregister(key: string): void;
+}
+
+class Background extends React.Component<ProvidedBackgroundProps> {
   componentDidMount() {
     this.props.register(this.props.backgroundKey);
   }
@@ -29,7 +39,7 @@ class Background extends React.Component {
   }
 }
 
-export default props => (
+export default (props: BackgroundProps) => (
   <context.Consumer>
     {({ register, unregister }) => (
       <Background {...props} register={register} unregister={unregister} />

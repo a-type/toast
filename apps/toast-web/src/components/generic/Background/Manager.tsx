@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import context from './context';
 
 export default class BackgroundManager extends React.Component {

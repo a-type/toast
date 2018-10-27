@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import MealView from './MealView';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { H1 } from 'components/typeset';
 import { formatDay } from 'formatters/date';
 
@@ -14,29 +14,30 @@ const Grid = styled.div`
   gap: var(--spacing-lg);
 `;
 
-const DayView = ({ day }) => (
-  <div>
-    <H1>{formatDay(day.date)}</H1>
-    <Grid>
-      <MealView
-        style={{ gridArea: 'mainMeal' }}
-        meal={day.meals[2]}
-        title="Dinner"
-        main
-      />
-      <MealView
-        style={{ gridArea: 'secondaryMeal' }}
-        meal={day.meals[1]}
-        title="Lunch"
-      />
-      <MealView
-        style={{ gridArea: 'tertiaryMeal' }}
-        meal={day.meals[0]}
-        title="Breakfast"
-      />
-    </Grid>
-  </div>
-);
+const DayView = ({ day }) =>
+  day && (
+    <div>
+      <H1>{formatDay(day.date)}</H1>
+      <Grid>
+        <MealView
+          style={{ gridArea: 'mainMeal' }}
+          meal={day.meals[2]}
+          title="Dinner"
+          main
+        />
+        <MealView
+          style={{ gridArea: 'secondaryMeal' }}
+          meal={day.meals[1]}
+          title="Lunch"
+        />
+        <MealView
+          style={{ gridArea: 'tertiaryMeal' }}
+          meal={day.meals[0]}
+          title="Breakfast"
+        />
+      </Grid>
+    </div>
+  );
 
 DayView.Skeleton = props => (
   <div {...props}>
@@ -55,9 +56,11 @@ DayView.fragments = {
       id
       date
       meals {
-        ${MealView.fragments.meal}
+        ...MealView
       }
     }
+
+    ${MealView.fragments.meal}
   `,
 };
 

@@ -1,39 +1,19 @@
 import React from 'react';
 import { DayView, Links, CalendarViewLink } from './components';
-import { Query } from 'react-apollo';
 import { pathOr } from 'ramda';
-import gql from 'fraql';
 import { Redirect } from 'react-router-dom';
-
-const GetPlan = gql`
-query GetPlan($weekIndex: Int!) {
-  me {
-    group {
-      plan {
-        id
-        week(weekIndex: $weekIndex) {
-          startDate
-          id
-          days {
-            ${DayView.fragments.day}
-          }
-        }
-      }
-    }
-  }
-}
-`;
+import GetPlanQuery from './GetPlanQuery';
 
 const WeekView = ({ weekIndex, dayIndex }) => (
   <React.Fragment>
     <CalendarViewLink weekIndex={weekIndex} />
-    <Query query={GetPlan} variables={{ weekIndex }}>
+    <GetPlanQuery variables={{ weekIndex }}>
       {({ data, loading, error }) => {
         if (loading || error) {
           return <DayView.Skeleton />;
         }
 
-        if (!data) {
+        if (!data || !pathOr(null, ['me', 'group', 'plan'], data)) {
           return <Redirect to="/plan/edit" />;
         }
 
@@ -49,7 +29,7 @@ const WeekView = ({ weekIndex, dayIndex }) => (
           </React.Fragment>
         );
       }}
-    </Query>
+    </GetPlanQuery>
     <Links weekIndex={weekIndex} dayIndex={dayIndex} />
   </React.Fragment>
 );

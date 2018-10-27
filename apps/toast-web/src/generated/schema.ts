@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-10-27T12:20:15-04:00 */
+/** Generated in 2018-10-27T17:07:00-04:00 */
 
 // ====================================================
 // START: Typescript template
@@ -811,11 +811,15 @@ export namespace CalendarPlan {
   export type Me = {
     __typename?: 'User';
 
+    id: string;
+
     group?: Group | null;
   };
 
   export type Group = {
     __typename?: 'Group';
+
+    id: string;
 
     plan?: Plan | null;
   };
@@ -867,6 +871,66 @@ export namespace RecipeSuggestions {
   export type DiscoveredRecipes = RecipeCard.Fragment;
 
   export type LikedRecipes = RecipeCard.Fragment;
+}
+
+export namespace GetPlan {
+  export type Variables = {
+    weekIndex: number;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    me?: Me | null;
+  };
+
+  export type Me = {
+    __typename?: 'User';
+
+    group?: Group | null;
+  };
+
+  export type Group = {
+    __typename?: 'Group';
+
+    plan?: Plan | null;
+  };
+
+  export type Plan = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    week?: Week | null;
+  };
+
+  export type Week = {
+    __typename?: 'Plan';
+
+    startDate?: Date | null;
+
+    id: string;
+
+    days: Days[];
+  };
+
+  export type Days = DayView.Fragment;
+}
+
+export namespace GetWeekIndex {
+  export type Variables = {
+    year: number;
+    month: number;
+    date: number;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    planWeekIndex: number;
+
+    planStartWeekDate: Date;
+  };
 }
 
 export namespace FeaturedRecipes {
@@ -1077,23 +1141,77 @@ export namespace CalendarMeal {
   };
 }
 
-export namespace RecipeCard {
+export namespace DayView {
   export type Fragment = {
-    __typename?: 'Recipe';
+    __typename?: 'PlanDay';
 
     id: string;
 
-    title: string;
+    date?: Date | null;
 
-    coverImage?: CoverImage | null;
-  } & LikeButton.Fragment;
+    meals: Meals[];
+  };
 
-  export type CoverImage = {
-    __typename?: 'Image';
+  export type Meals = MealView.Fragment;
+}
+
+export namespace MealView {
+  export type Fragment = {
+    __typename?: 'PlanMeal';
 
     id: string;
 
-    url: string;
+    actions: Actions[];
+  };
+
+  export type Actions = {
+    __typename?:
+      | PlanActionEatOutInlineFragment['__typename']
+      | PlanActionCookInlineFragment['__typename']
+      | PlanActionEatInlineFragment['__typename']
+      | PlanActionReadyMadeInlineFragment['__typename'];
+
+    type: PlanActionType;
+  } & (
+    | PlanActionEatOutInlineFragment
+    | PlanActionCookInlineFragment
+    | PlanActionEatInlineFragment
+    | PlanActionReadyMadeInlineFragment);
+
+  export type PlanActionEatOutInlineFragment = {
+    __typename?: 'PlanActionEatOut';
+
+    note?: string | null;
+  };
+
+  export type PlanActionCookInlineFragment = {
+    __typename?: 'PlanActionCook';
+
+    servings: number;
+
+    mealType: PlanMealType;
+  };
+
+  export type PlanActionEatInlineFragment = {
+    __typename?: 'PlanActionEat';
+
+    leftovers: boolean;
+
+    cookAction: CookAction;
+  };
+
+  export type CookAction = {
+    __typename?: 'PlanActionCook';
+
+    servings: number;
+
+    mealType: PlanMealType;
+  };
+
+  export type PlanActionReadyMadeInlineFragment = {
+    __typename?: 'PlanActionReadyMade';
+
+    note?: string | null;
   };
 }
 
@@ -1132,5 +1250,25 @@ export namespace LikeButton {
     id: string;
 
     likedAt?: string | null;
+  };
+}
+
+export namespace RecipeCard {
+  export type Fragment = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    coverImage?: CoverImage | null;
+  } & LikeButton.Fragment;
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
   };
 }

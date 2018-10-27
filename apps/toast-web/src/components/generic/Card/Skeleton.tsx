@@ -2,11 +2,12 @@ import React from 'react';
 import Box from './Box';
 import { CardShape } from './types';
 
-export type Props = {
+export interface CardSkeletonProps {
   shape?: CardShape;
-};
+  style?: React.CSSProperties;
+}
 
-export default ({ shape, ...rest }: Props) => {
+export default ({ shape, ...rest }: CardSkeletonProps) => {
   const isBig = Math.random() > 0.7;
   const isWide = !isBig && Math.random() > 0.8;
 
