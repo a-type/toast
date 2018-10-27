@@ -1,8 +1,8 @@
+import { hot } from 'react-hot-loader';
 import * as React from 'react';
 import Routes from './Routes';
 import Layout from './Layout';
 import { NavBar } from 'features/structure';
-import { hot } from 'react-hot-loader';
 import { Global as GlobalMessages } from 'features/messages';
 import { Background } from 'components/generic';
 import { show } from '../messages';

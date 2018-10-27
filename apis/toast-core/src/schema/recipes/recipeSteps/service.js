@@ -1,5 +1,4 @@
 import uuid from 'uuid';
-import { RECIPE_FIELDS } from '../service';
 import { pick } from 'ramda';
 
 export const RECIPE_STEP_FIELDS = '.id, .index';
@@ -30,7 +29,7 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
       OPTIONAL MATCH (recipe)<-[allSteps:STEP_OF]-()
       WITH recipe, count(allSteps) as index
       CREATE (recipe)<-[rel:STEP_OF {id: $relId, index: index}]-(step:Step {id: $stepId, text: $text})
-      RETURN recipe {${RECIPE_FIELDS}}
+      RETURN recipe {${ctx.graph.recipes.dbFields}}
       `,
       {
         id: recipeId,
@@ -41,9 +40,7 @@ export const createRecipeStep = async (recipeId, args, ctx) => {
       },
     );
 
-    if (result.records.length) {
-      return result.records[0].get('recipe');
-    }
+    return ctx.graph.recipes.hydrateOne(result);
   });
 };
 
@@ -53,7 +50,7 @@ export const deleteRecipeStep = async (id, ctx) => {
       `
       MATCH (:User {id: $userId})-[:AUTHOR_OF]->(recipe:Recipe)<-[rel:STEP_OF {id: $id}]-()
       DELETE rel
-      RETURN recipe {${RECIPE_FIELDS}}
+      RETURN recipe {${ctx.graph.recipes.dbFields}}
       `,
       {
         id,
@@ -61,9 +58,7 @@ export const deleteRecipeStep = async (id, ctx) => {
       },
     );
 
-    if (result.records.length) {
-      return result.records[0].get('recipe');
-    }
+    return ctx.graph.recipes.hydrateOne(result);
   });
 };
 

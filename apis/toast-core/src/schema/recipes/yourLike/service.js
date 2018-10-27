@@ -1,5 +1,4 @@
 import { id, timestamp } from 'tools';
-import { RECIPE_FIELDS, defaulted } from '../service';
 
 const LIKE_INFO_FIELDS = `.id, .likedAt`;
 
@@ -24,24 +23,24 @@ export const likeRecipe = (recipeId, ctx) =>
   ctx.transaction(async tx => {
     const result = await tx.run(
       `
-    MATCH (r:Recipe { id: $id }), (u:User { id: $userId })
-    MERGE (r)<-[l:LIKES]-(u)
+    MATCH (recipe:Recipe { id: $id }), (u:User { id: $userId })
+    MERGE (recipe)<-[l:LIKES]-(u)
     SET l.id = $likeId, l.likedAt = $likedAt
-    RETURN r { ${RECIPE_FIELDS} }
+    RETURN recipe { ${db.graph.recipes.dbFields} }
     `,
       { id: recipeId, userId: ctx.user.id, likedAt: timestamp(), likeId: id() },
     );
 
-    return defaulted(result.records[0].get('r'));
+    return db.graph.recipes.hydrateOne(result);
   });
 
 export const unlikeRecipe = (recipeId, ctx) =>
   ctx.transaction(async tx => {
     const result = await tx.run(
       `
-      MATCH (r:Recipe { id: $id })<-[l:LIKES]-(:User { id: $userId })
+      MATCH (recipe:Recipe { id: $id })<-[l:LIKES]-(:User { id: $userId })
       DELETE l
-      RETURN r { ${RECIPE_FIELDS} }
+      RETURN recipe { ${db.graph.recipes.dbFields} }
       `,
       {
         id: recipeId,
@@ -49,9 +48,5 @@ export const unlikeRecipe = (recipeId, ctx) =>
       },
     );
 
-    if (!result.records.length) {
-      return null;
-    }
-
-    return defaulted(result.records[0].get('r'));
+    return db.graph.recipes.hydrateOne(result);
   });

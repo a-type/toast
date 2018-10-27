@@ -62,6 +62,7 @@ export const typeDefs = gql`
     type: PlanActionType!
     servings: Int!
     mealType: PlanMealType!
+    recipe: Recipe
   }
 
   type PlanActionEat implements PlanAction {
@@ -134,7 +135,13 @@ export const typeDefs = gql`
     ): Plan! @hasScope(scope: "update:plan")
     setPlanStrategy(strategy: PlanStrategy): Plan!
 
-    setPlanActionRecipe(actionId: ID!, recipeId: ID!): PlanAction!
+    setPlanActionRecipe(
+      weekIndex: Int!
+      dayIndex: Int!
+      mealIndex: Int!
+      actionId: ID!
+      recipeId: ID!
+    ): PlanAction!
   }
 
   extend type Group {
@@ -221,6 +228,23 @@ export const resolvers = {
       await ctx.firestore.plans.set(group.planId, processed);
       return processed;
     },
+
+    setPlanActionRecipe: async (
+      _parent,
+      { weekIndex, dayIndex, mealIndex, actionId, recipeId },
+      ctx,
+    ) => {
+      const group = await ctx.graph.groups.getMine();
+
+      if (!group || !group.planId) {
+        throw new UserInputError("You haven't created a plan yet");
+      }
+
+      const plan = await ctx.firestore.plans.getWeek(group.planId, weekIndex);
+      plan.setActionRecipe(dayIndex, mealIndex, actionId, recipeId);
+      await ctx.firestore.plans.mergeWeek(group.planId, weekIndex, plan);
+      return plan;
+    },
   },
 
   Group: {
@@ -234,7 +258,7 @@ export const resolvers = {
 
   Plan: {
     week: async (parent, args, ctx) => {
-      if (parent.id.includes('week_')) {
+      if (parent.weekIndex !== null) {
         throw new UserInputError(
           "You can't access the week field on a Plan which represents a week already",
         );
@@ -289,6 +313,16 @@ export const resolvers = {
       const { cookActionId } = parent;
 
       return plan.getAction(cookActionId);
+    },
+  },
+
+  PlanActionCook: {
+    recipe: async (parent, args, ctx) => {
+      if (!parent.recipeId) {
+        return null;
+      }
+
+      return ctx.graph.recipes.get(parent.recipeId);
     },
   },
 

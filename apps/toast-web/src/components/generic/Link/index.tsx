@@ -53,7 +53,7 @@ export const BaseLink = React.forwardRef(
 export default styled<LinkProps>(({ spaceBelow, ...rest }) => (
   <BaseLink {...rest} />
 ))`
-  color: inherit !important;
+  color: inherit;
   text-decoration: none;
   margin-bottom: ${props =>
     props.spaceBelow ? getSize(props.spaceBelow) : 'initial'};

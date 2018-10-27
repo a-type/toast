@@ -6,7 +6,7 @@ const sharedSolidStyles = css`
   font-size: var(--font-size-md);
   background: var(--color-field-background);
   color: var(--color-field-foreground);
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   outline: none;
   border: 1px solid var(--color-field-background);
   font-family: var(--font-default);

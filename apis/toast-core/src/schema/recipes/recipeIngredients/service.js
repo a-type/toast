@@ -1,6 +1,5 @@
 import uuid from 'uuid';
 import { id, timestamp } from 'tools';
-import { RECIPE_FIELDS } from '../service';
 import { INGREDIENT_FIELDS } from '../../ingredients/service';
 import { pick } from 'ramda';
 import parse from './parseIngredient';
@@ -199,7 +198,7 @@ export const parseRecipeIngredient_withTransaction = async (
         ingredientTextMatch: $ingredientTextMatch,
         text: $text
       })<-[:USED_IN]-(ingredient)
-      RETURN recipe {${RECIPE_FIELDS}}
+      RETURN recipe {${ctx.graph.recipes.dbFields}}
       `,
     {
       text: input.text,
@@ -325,7 +324,7 @@ export const moveRecipeIngredient = (recipeId, args, ctx) => {
     }
 
     const recipeResult = await tx.run(
-      `MATCH (r:Recipe {id: $id}) RETURN r {${RECIPE_FIELDS}}`,
+      `MATCH (r:Recipe {id: $id}) RETURN r {${ctx.graph.recipes.dbFields}}`,
       { id: recipeId },
     );
     return recipeResult.records[0].get('r');
@@ -340,7 +339,7 @@ export const deleteRecipeIngredient = (id, ctx) => {
       `
       MATCH (recipe:Recipe)<-[rel:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient {id: $id})
       DETACH DELETE recipIngredient
-      RETURN recipe {${RECIPE_FIELDS}}
+      RETURN recipe {${ctx.graph.recipes.dbFields}}
       `,
       {
         id,

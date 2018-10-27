@@ -1,5 +1,4 @@
 import gcloudStorage from 'services/gcloudStorage';
-import { RECIPE_FIELDS } from 'schema/recipes/service';
 import uuid from 'uuid';
 import fetch from 'node-fetch';
 import { Readable } from 'stream';
@@ -50,7 +49,7 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
         `
         MATCH (r:Recipe { id: $id })
         MERGE (r)-[:COVER_IMAGE]->(i:Image {id: $imageId, url: $url, attribution: $attribution})
-        RETURN r { ${RECIPE_FIELDS} }, i { ${IMAGE_FIELDS} }
+        RETURN r { ${ctx.graph.recipes.dbFields} }, i { ${IMAGE_FIELDS} }
         `,
         {
           id,
@@ -70,7 +69,7 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
         `
         MATCH (r:Recipe { id: $id })-[:COVER_IMAGE]->(i:Image)
         SET i.attribution = $attribution
-        RETURN r { ${RECIPE_FIELDS} }, i { ${IMAGE_FIELDS} }
+        RETURN r { ${ctx.graph.recipes.dbFields} }, i { ${IMAGE_FIELDS} }
         `,
         {
           id,

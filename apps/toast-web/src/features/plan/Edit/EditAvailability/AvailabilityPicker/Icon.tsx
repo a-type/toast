@@ -6,9 +6,14 @@ import { withProps } from 'recompose';
 
 const SIZE = 48;
 
-const CircleIcon = styled<{ value: string; name: string }>(
-  ({ value, ...rest }) => <Icon {...rest} />,
-)`
+interface CircleIconProps {
+  value: string;
+  name: string;
+}
+
+const CircleIcon = styled<CircleIconProps>(({ value, ...rest }) => (
+  <Icon {...rest} />
+))`
   background: ${({ value }) => getIconColor(value)};
   color: ${({ value }) => getForeground(value)};
   width: ${SIZE}px;
@@ -26,6 +31,7 @@ const CircleIcon = styled<{ value: string; name: string }>(
   }
 `;
 
-export default withProps(ownProps => ({
+export default withProps<CircleIconProps, { value: string }>(ownProps => ({
+  value: ownProps.value,
   name: getIcon(ownProps.value),
 }))(CircleIcon);

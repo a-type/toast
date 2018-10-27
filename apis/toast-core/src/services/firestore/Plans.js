@@ -11,6 +11,8 @@ export default class Plans {
     this.firestore = firestore;
   }
 
+  generateWeekId = (planId, week) => `${planId}_w_${week}`;
+
   /**
    * For user's default plan, use user id
    */
@@ -56,20 +58,22 @@ export default class Plans {
       }
 
       const basePlan = await basePlanDocRef.data();
-      return Plan.fromJSON(basePlan, week);
+      basePlan.id = this.generateWeekId(planId, week);
+      basePlan.weekIndex = week;
+      return Plan.fromJSON(basePlan);
     }
 
-    return Plan.fromJSON(docRef.data(), week);
+    return Plan.fromJSON(docRef.data());
   };
 
   mergeWeek = async (planId, week, planData) => {
     const document = this.firestore.doc(
       `${COLLECTION}/${planId}/weeks/week_${week}`,
     );
-    planData.id = `week_${week}`;
+    planData.id = this.generateWeekId(planId, week);
     planData.weekIndex = week;
     await document.set(planData.toJSON(), { merge: true });
     const docRef = await document.get();
-    return Plan.fromJSON(docRef.data(), week);
+    return Plan.fromJSON(docRef.data());
   };
 }

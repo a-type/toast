@@ -1,5 +1,6 @@
 import { id } from 'tools';
 import { clone, mergeDeepWith, mergeDeepRight, pathOr } from 'ramda';
+import { UserInputError } from 'errors';
 
 const EMPTY = {
   id: null,
@@ -188,6 +189,19 @@ export default class Plan {
   setMealDetails = (dayIndex, mealIndex, details = {}) => {
     const meal = this.data.days[dayIndex].meals[mealIndex];
     Object.assign(meal, details);
+  };
+
+  setActionRecipe = (dayIndex, actionId, recipeId) => {
+    const meal = this.data.days[dayIndex].meals[mealIndex];
+    const action = meal.actions.find(action => action.id === actionId);
+    if (!action || !action.type === 'COOK') {
+      throw new UserInputError(
+        "You can't assign a recipe to a non-cooking action",
+      );
+    }
+
+    action.recipeId = recipeId;
+    return action;
   };
 
   addWarning = warning => {

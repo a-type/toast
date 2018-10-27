@@ -1,8 +1,4 @@
 import {
-  defaulted as recipeDefaulted,
-  RECIPE_FIELDS,
-} from '../recipes/service';
-import {
   defaulted as ingredientDefaulted,
   INGREDIENT_FIELDS,
 } from '../ingredients/service';
@@ -16,18 +12,6 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
     };
   }
 
-  const processResult = result => {
-    if (result.records.length === 0) {
-      return {
-        items: [],
-      };
-    }
-
-    return {
-      items: result.records.map(record => recipeDefaulted(record.get('r'))),
-    };
-  };
-
   // FIXME: this is probably possible to express as a single query!
 
   if (term && term.length > 0 && !ingredients) {
@@ -35,9 +19,12 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       const result = await tx.run(
         `
         CALL apoc.index.search("recipes", $term) YIELD node, weight
-        WHERE node.published = true
-        WITH collect(node) as recipes, weight
-        RETURN recipes {${RECIPE_FIELDS}} ORDER BY weight DESC SKIP $offset LIMIT $count
+        WITH node as recipe, weight
+        WHERE recipe.published = true
+        WITH recipe, weight
+        RETURN recipe {${
+          ctx.graph.recipes.dbFields
+        }} ORDER BY weight DESC SKIP $offset LIMIT $count
       `,
         {
           term: `${normalizeTerm(term)}~`,
@@ -46,23 +33,23 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
         },
       );
 
-      return processResult(result);
+      return { items: ctx.graph.recipes.hydrateList(result) };
     });
   } else if (!term && ingredients) {
     const { include = [], exclude = [] } = ingredients;
     return ctx.transaction(async tx => {
       const result = await tx.run(
         `
-      MATCH (r:Recipe)
-      WHERE none(x in $exclude WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
-      AND all(c in $include WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
-      AND r.published = true
-      WITH r
-      RETURN r {${RECIPE_FIELDS}} SKIP $offset LIMIT $count;
+      MATCH (recipe:Recipe)
+      WHERE none(x in $exclude WHERE exists((recipe)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
+      AND all(c in $include WHERE exists((recipe)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
+      AND recipe.published = true
+      WITH recipe
+      RETURN recipe {${ctx.graph.recipes.dbFields}} SKIP $offset LIMIT $count;
       `,
         { include, exclude, offset: 0, count: 100 },
       );
-      return processResult(result);
+      return { items: ctx.graph.recipes.hydrateList(result) };
     });
   } else {
     const { include = [], exclude = [] } = ingredients;
@@ -70,12 +57,14 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
       const result = await tx.run(
         `
       CALL apoc.index.search("recipes", $term) YIELD node, weight
-      WITH node as r, weight
-      WHERE none(x in $exclude WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
-      AND all(c in $include WHERE exists((r)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
-      AND r.published = true
-      WITH r, weight
-      RETURN r {${RECIPE_FIELDS}} ORDER BY weight DESC SKIP $offset LIMIT $count;
+      WITH node as recipe, weight
+      WHERE none(x in $exclude WHERE exists((recipe)<-[:INGREDIENT_OF]-(:Ingredient {id: x})))
+      AND all(c in $include WHERE exists((recipe)<-[:INGREDIENT_OF]-(:Ingredient {id: c})))
+      AND recipe.published = true
+      WITH recipe, weight
+      RETURN recipe {${
+        ctx.graph.recipes.dbFields
+      }} ORDER BY weight DESC SKIP $offset LIMIT $count;
       `,
         {
           term: `${normalizeTerm(term)}~`,
@@ -85,7 +74,7 @@ export const searchRecipes = async ({ term, ingredients }, ctx) => {
           count: 100,
         },
       );
-      return processResult(result);
+      return { items: ctx.graph.recipes.hydrateList(result) };
     });
   }
 };

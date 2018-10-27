@@ -3,7 +3,7 @@ import Box from './Box';
 import { CardShape } from './types';
 
 export type Props = {
-  shape: CardShape;
+  shape?: CardShape;
 };
 
 export default ({ shape, ...rest }: Props) => {

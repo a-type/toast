@@ -1,7 +1,7 @@
 import * as React from 'react';
 import gql from 'graphql-tag';
 import { Card, Tip, Button } from 'components/generic';
-import { PlanMeal } from 'generated/schema';
+import { PlanMeal, PlanActionType, Plan } from 'generated/schema';
 import { RecipeSelector } from 'features/plan';
 
 interface CalendarMealProps {
@@ -45,20 +45,27 @@ export default class CalendarMeal extends React.Component<
     showRecipeSelector: false,
   };
 
-  getMealType = (): 'COOK' | 'EAT' | 'SKIP' => {
+  getMealType = (): PlanActionType => {
     const {
       meal: { actions },
     } = this.props;
 
-    if (actions.find(action => action.type === 'COOK')) {
-      return 'COOK';
+    const proiritizedActionTypes: PlanActionType[] = [
+      PlanActionType.COOK,
+      PlanActionType.EAT,
+      PlanActionType.EAT_OUT,
+      PlanActionType.READY_MADE,
+      PlanActionType.SKIP,
+    ];
+
+    for (let i in proiritizedActionTypes) {
+      const t = proiritizedActionTypes[i];
+      if (actions.find(action => action.type === t)) {
+        return t;
+      }
     }
 
-    if (actions.find(action => action.type === 'EAT')) {
-      return 'EAT';
-    }
-
-    return 'SKIP';
+    return PlanActionType.SKIP;
   };
 
   showRecipeSelector = () => this.setState({ showRecipeSelector: true });
@@ -66,8 +73,10 @@ export default class CalendarMeal extends React.Component<
 
   setRecipe = () => {};
 
-  renderContent = () => {
-    return <Button onClick={this.showRecipeSelector}>Choose Recipe</Button>;
+  renderContent = (mealType: PlanActionType) => {
+    if (mealType === PlanActionType.COOK) {
+      return <Button onClick={this.showRecipeSelector}>Choose Recipe</Button>;
+    }
   };
 
   render() {
@@ -76,7 +85,7 @@ export default class CalendarMeal extends React.Component<
 
     return (
       <React.Fragment>
-        <Tip.Toggle tipContent={this.renderContent()}>
+        <Tip.Toggle tipContent={this.renderContent(mealType)}>
           {({ ref, onClick }) => (
             <Card ref={ref} onClick={onClick}>
               {mealType}

@@ -1,17 +1,3 @@
-import {
-  createRecipe,
-  updateRecipeDetails,
-  getRecipe,
-  listRecipes,
-  listRecipesForIngredient,
-  publishRecipe,
-  listRecipesForUser,
-  linkRecipe,
-  listDiscoveredRecipesForUser,
-  recordRecipeView,
-  listDraftRecipesForUser,
-  listLikedRecipesForUser,
-} from './service';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
 import * as yourLike from './yourLike';
@@ -119,57 +105,50 @@ export const typeDefs = () => [
 export const resolvers = [
   {
     Query: {
-      recipes: (_parent, args, ctx, info) => listRecipes(args.pagination, ctx),
-      recipe: async (_parent, args, ctx, info) => {
-        try {
-          const recipe = await getRecipe(args.id, ctx);
-          return recipe;
-        } catch (err) {
-          console.dir(err);
-          throw err;
-        }
-      },
+      recipes: (_parent, args, ctx, info) =>
+        ctx.graph.recipes.list(args.pagination),
+      recipe: async (_parent, args, ctx, info) =>
+        ctx.graph.recipes.get(args.id),
     },
     Mutation: {
-      createRecipe: (_parent, args, ctx, info) => createRecipe(args.input, ctx),
-      linkRecipe: (_parent, args, ctx, info) => linkRecipe(args.input, ctx),
+      createRecipe: (_parent, args, ctx, info) =>
+        ctx.graph.recipes.create(args.input),
+      linkRecipe: (_parent, args, ctx, info) =>
+        ctx.graph.recipes.link(args.input),
       updateRecipeDetails: (_parent, args, ctx, info) =>
-        updateRecipeDetails(args.id, args.input, ctx),
-      publishRecipe: (_parent, args, ctx, info) => publishRecipe(args.id, ctx),
-      recordRecipeView: (_parent, args, ctx) => recordRecipeView(args.id, ctx),
+        ctx.graph.recipes.updateDetails(args.id, args.input),
+      publishRecipe: (_parent, args, ctx, info) =>
+        ctx.graph.recipes.publish(args.id),
+      recordRecipeView: (_parent, args, ctx) =>
+        ctx.graph.recipes.recordView(args.id),
     },
     Ingredient: {
       recipes: (parent, args, ctx, info) =>
-        listRecipesForIngredient(
+        ctx.graph.recipes.listForIngredient(
           parent.id,
           args.input || { offset: 0, count: 25 },
-          ctx,
         ),
     },
     User: {
       recipes: (parent, args, ctx, info) =>
-        listRecipesForUser(
+        ctx.graph.recipes.listAuthoredForUser(
           parent.id,
           args.pagination || { offset: 0, count: 25 },
-          ctx,
         ),
       discoveredRecipes: (parent, args, ctx, info) =>
-        listDiscoveredRecipesForUser(
+        ctx.graph.recipes.listDiscoveredForUser(
           parent.id,
           args.pagination || { offset: 0, count: 25 },
-          ctx,
         ),
       draftRecipes: (parent, args, ctx, info) =>
-        listDraftRecipesForUser(
+        ctx.graph.recipes.listDraftsForUser(
           parent.id,
           args.pagination || { offset: 0, count: 25 },
-          ctx,
         ),
       likedRecipes: (parent, args, ctx, info) =>
-        listLikedRecipesForUser(
+        ctx.graph.recipes.listLikedForUser(
           parent.id,
           args.pagination || { offset: 0, count: 25 },
-          ctx,
         ),
     },
   },
