@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export default styled.div`
   background: var(--color-gray-light);
   color: var(--color-dark);
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
 
   display: flex;
   flex-direction: row;
@@ -13,5 +13,6 @@ export default styled.div`
   }
   & > *:first-child {
     flex: 1;
+    margin: 0;
   }
 `;

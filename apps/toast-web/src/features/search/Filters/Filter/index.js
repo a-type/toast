@@ -1,8 +1,7 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'fraql';
-import { Pill, Type, Display, Controls } from './components';
-import { Button } from 'components/generic';
+import { Pill, Type, Display, Controls, RemoveButton } from './components';
 
 const RemoveFilter = gql`
   mutation RemoveFilter($id: ID!) {
@@ -35,7 +34,7 @@ export default class Filter extends React.PureComponent {
             <Type color={colorMap[type]}>{typeNameMap[type]}</Type>
             <Display>{display}</Display>
             <Controls>
-              <Button.Icon name="delete" onClick={remove} />
+              <RemoveButton onClick={remove} />
             </Controls>
           </Pill>
         )}

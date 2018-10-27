@@ -15,7 +15,7 @@ const Blob = styled<{ charCount: number }, 'span'>('span')`
 `;
 
 export default class SpanSkeleton extends React.Component<SpanSkeletonProps> {
-  charCount = this.props.size || Math.floor(Math.random() * 12) + 2;
+  charCount = this.props.size || Math.floor(Math.random() * 4) + 2;
 
   render() {
     return <Blob charCount={this.charCount} />;

@@ -17,6 +17,7 @@ export default styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border: 2px solid var(--color-gray-lightest);
 
   &.appear-appear {
     bottom: -80vh;
@@ -44,5 +45,16 @@ export default styled.div`
     box-shadow: 0px -8px 8px 8px var(--color-popover-background);
     padding: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
+  }
+
+  @media (min-width: 700px) {
+    left: 50%;
+    width: 100vw;
+    max-width: 700px;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 900px;
   }
 `;

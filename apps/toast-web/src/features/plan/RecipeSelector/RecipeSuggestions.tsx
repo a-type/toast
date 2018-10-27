@@ -15,7 +15,12 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
   <RecipeSuggestionsQuery>
     {({ data, loading }) => {
       if (loading) {
-        return <RecipeCards.Skeleton />;
+        return (
+          <Content>
+            <H3.Skeleton />
+            <RecipeCards.Skeleton />
+          </Content>
+        );
       }
 
       const {
