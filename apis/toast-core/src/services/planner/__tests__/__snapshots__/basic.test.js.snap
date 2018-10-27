@@ -5,6 +5,7 @@ Object {
   "days": Array [
     Object {
       "dayIndex": 0,
+      "id": "plan_MOCK_ID_0-day_0",
       "meals": Array [
         Object {
           "actions": Array [
@@ -15,6 +16,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 0,
+          "id": "plan_MOCK_ID_0-day_0-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -35,6 +37,7 @@ Object {
           ],
           "availability": "SHORT",
           "dayIndex": 0,
+          "id": "plan_MOCK_ID_0-day_0-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -55,6 +58,7 @@ Object {
           ],
           "availability": "LONG",
           "dayIndex": 0,
+          "id": "plan_MOCK_ID_0-day_0-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
@@ -62,6 +66,7 @@ Object {
     },
     Object {
       "dayIndex": 1,
+      "id": "plan_MOCK_ID_0-day_1",
       "meals": Array [
         Object {
           "actions": Array [
@@ -72,6 +77,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 1,
+          "id": "plan_MOCK_ID_0-day_1-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -84,6 +90,7 @@ Object {
           ],
           "availability": "EAT_OUT",
           "dayIndex": 1,
+          "id": "plan_MOCK_ID_0-day_1-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -104,6 +111,7 @@ Object {
           ],
           "availability": "MEDIUM",
           "dayIndex": 1,
+          "id": "plan_MOCK_ID_0-day_1-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
@@ -111,6 +119,7 @@ Object {
     },
     Object {
       "dayIndex": 2,
+      "id": "plan_MOCK_ID_0-day_2",
       "meals": Array [
         Object {
           "actions": Array [
@@ -129,6 +138,7 @@ Object {
           ],
           "availability": "SHORT",
           "dayIndex": 2,
+          "id": "plan_MOCK_ID_0-day_2-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -149,6 +159,7 @@ Object {
           ],
           "availability": "SHORT",
           "dayIndex": 2,
+          "id": "plan_MOCK_ID_0-day_2-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -169,6 +180,7 @@ Object {
           ],
           "availability": "SHORT",
           "dayIndex": 2,
+          "id": "plan_MOCK_ID_0-day_2-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
@@ -176,6 +188,7 @@ Object {
     },
     Object {
       "dayIndex": 3,
+      "id": "plan_MOCK_ID_0-day_3",
       "meals": Array [
         Object {
           "actions": Array [
@@ -186,6 +199,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 3,
+          "id": "plan_MOCK_ID_0-day_3-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -198,6 +212,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 3,
+          "id": "plan_MOCK_ID_0-day_3-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -210,6 +225,7 @@ Object {
           ],
           "availability": "EAT_OUT",
           "dayIndex": 3,
+          "id": "plan_MOCK_ID_0-day_3-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
@@ -217,6 +233,7 @@ Object {
     },
     Object {
       "dayIndex": 4,
+      "id": "plan_MOCK_ID_0-day_4",
       "meals": Array [
         Object {
           "actions": Array [
@@ -227,6 +244,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 4,
+          "id": "plan_MOCK_ID_0-day_4-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -239,6 +257,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 4,
+          "id": "plan_MOCK_ID_0-day_4-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -259,6 +278,7 @@ Object {
           ],
           "availability": "MEDIUM",
           "dayIndex": 4,
+          "id": "plan_MOCK_ID_0-day_4-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
@@ -266,6 +286,7 @@ Object {
     },
     Object {
       "dayIndex": 5,
+      "id": "plan_MOCK_ID_0-day_5",
       "meals": Array [
         Object {
           "actions": Array [
@@ -284,6 +305,7 @@ Object {
           ],
           "availability": "LONG",
           "dayIndex": 5,
+          "id": "plan_MOCK_ID_0-day_5-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -304,6 +326,7 @@ Object {
           ],
           "availability": "SHORT",
           "dayIndex": 5,
+          "id": "plan_MOCK_ID_0-day_5-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -324,6 +347,7 @@ Object {
           ],
           "availability": "LONG",
           "dayIndex": 5,
+          "id": "plan_MOCK_ID_0-day_5-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
@@ -331,6 +355,7 @@ Object {
     },
     Object {
       "dayIndex": 6,
+      "id": "plan_MOCK_ID_0-day_6",
       "meals": Array [
         Object {
           "actions": Array [
@@ -341,6 +366,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 6,
+          "id": "plan_MOCK_ID_0-day_6-meal_0",
           "mealIndex": 0,
           "servings": 2,
         },
@@ -353,6 +379,7 @@ Object {
           ],
           "availability": "NONE",
           "dayIndex": 6,
+          "id": "plan_MOCK_ID_0-day_6-meal_1",
           "mealIndex": 1,
           "servings": 2,
         },
@@ -373,6 +400,7 @@ Object {
           ],
           "availability": "LONG",
           "dayIndex": 6,
+          "id": "plan_MOCK_ID_0-day_6-meal_2",
           "mealIndex": 2,
           "servings": 2,
         },
