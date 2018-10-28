@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import history from '../browserHistory';
 import jwt from 'jwt-decode';
 import apolloClient from 'apolloClient';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 
 export const ACCESS_TOKEN_KEY = 'toast_access_token';
 export const ID_TOKEN_KEY = 'toast_id_token';
@@ -107,8 +107,6 @@ export class Auth extends EventEmitter {
 
   scheduleRenewal = () => {
     const expiresAt = JSON.parse(localStorage.getItem(EXPIRES_AT_KEY));
-    console.log(expiresAt);
-    console.log(expiresAt - Date.now());
     const delay = expiresAt - Date.now();
     if (delay > 0) {
       this.renewalTimeout = setTimeout(() => {
