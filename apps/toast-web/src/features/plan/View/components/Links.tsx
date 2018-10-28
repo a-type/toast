@@ -1,32 +1,31 @@
 import styled from 'styled-components';
 import React from 'react';
-import { Link } from 'components/typeset';
-import { Button } from 'components/generic';
+import { Button, Link } from 'components/generic';
 
 const NextDay = ({ weekIndex, dayIndex }) => (
-  <Link.Clear
+  <Link
     to={`/plan/${weekIndex + (dayIndex === 6 ? 1 : 0)}/${
       dayIndex === 6 ? 0 : dayIndex + 1
     }`}
   >
     <Button>Next day</Button>
-  </Link.Clear>
+  </Link>
 );
 
 const PreviousDay = ({ weekIndex, dayIndex }) => (
-  <Link.Clear
+  <Link
     to={`/plan/${weekIndex - (dayIndex === 0 ? 1 : 0)}/${
       dayIndex === 0 ? 6 : dayIndex - 1
     }`}
   >
     <Button>Previous day</Button>
-  </Link.Clear>
+  </Link>
 );
 
 const Edit = () => (
-  <Link.Clear to="/plan/edit">
+  <Link to="/plan/edit">
     <Button.Ghost>Edit your Plan</Button.Ghost>
-  </Link.Clear>
+  </Link>
 );
 
 const Layout = styled.div`

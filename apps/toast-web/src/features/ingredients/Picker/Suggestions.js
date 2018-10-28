@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, compose } from 'react-apollo';
-import Button from 'components/generic/Button';
+import Button from 'components/generic/Button/Button';
 import Suggestion from './Suggestion';
 import Tip from './Tip';
 import CreateButton from './CreateButton';

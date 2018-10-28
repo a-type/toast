@@ -2,7 +2,7 @@ import React from 'react';
 import Replace from 'react-css-transition-replace';
 import styled from 'styled-components';
 
-const StyleContext = styled.div`
+const StyleContext = styled<{ duration: number }, 'div'>('div')`
   & .cross-fade-leave {
     opacity: 1;
   }
@@ -26,7 +26,12 @@ const StyleContext = styled.div`
   }
 `;
 
-export default ({ children, duration = 350 }) => (
+export interface CrossFadeProps {
+  children: React.ReactNode;
+  duration?: number;
+}
+
+const CrossFade: React.SFC<CrossFadeProps> = ({ children, duration = 350 }) => (
   <StyleContext duration={duration}>
     <Replace
       transitionName="cross-fade"
@@ -37,3 +42,5 @@ export default ({ children, duration = 350 }) => (
     </Replace>
   </StyleContext>
 );
+
+export default CrossFade;

@@ -8,7 +8,7 @@ import {
 } from './components';
 import { Consumer } from './Context';
 import { H2 } from 'components/typeset';
-import CrossFade from '../CrossFade';
+import CrossFade from '../CrossFade/CrossFade';
 
 export default ({ title, summary, stageIndex, children }) => (
   <Consumer>

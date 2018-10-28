@@ -1,8 +1,19 @@
 import React from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { StyledComponentClass } from 'styled-components';
 import { loading, focusShadow } from 'components/effects';
 
-const sharedSolidStyles = css`
+interface InputProps {
+  loading?: boolean;
+  focused?: boolean;
+  invalid?: boolean;
+}
+
+export interface InputWithVariants
+  extends StyledComponentClass<InputProps, 'input'> {
+  Block?: StyledComponentClass<{}, any>;
+}
+
+const Input: InputWithVariants = styled<InputProps, 'input'>('input')`
   font-size: var(--font-size-md);
   background: var(--color-field-background);
   color: var(--color-field-foreground);
@@ -26,33 +37,19 @@ const sharedSolidStyles = css`
   }
   box-shadow: ${props => (props.focused ? focusShadow('brand') : 'none')};
 
-  ${props =>
-    props.invalid &&
-    `
-    border-color: var(--color-negative);
-  `};
+  ${props => props.invalid && `border-color: var(--color-negative);`};
 
   padding: 5px 11px;
-`;
 
-const Input = styled.input`
-  ${sharedSolidStyles} ${props => (props.loading ? loading : '')};
+  ${props => (props.loading ? loading : '')};
 `;
 
 Input.defaultProps = {
   loading: false,
 };
 
-Input.H1 = styled(Input)`
-  font-size: var(--font-size-xl);
-  font-family: var(--font-fancy);
-  display: inline-block;
-  margin-top: 6px;
-  padding-bottom: 0;
-`;
-
-Input.Block = styled('textarea')`
-  ${sharedSolidStyles} width: 100%;
+Input.Block = styled(props => <Input as="textarea" {...props} />)`
+  width: 100%;
   margin-bottom: auto;
 `;
 

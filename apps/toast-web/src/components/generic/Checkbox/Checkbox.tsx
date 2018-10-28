@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import PropTypes from 'prop-types';
-import CheckboxInput from './Input';
-import CheckboxLabel from './Label';
+import Input from './Input';
+import Label from './Label';
 
-export default class Checkbox extends React.Component {
+interface CheckboxProps {
+  className?: string;
+  id?: string;
+  checked: boolean;
+  required?: boolean;
+  disabled?: boolean;
+  children?: React.ReactNode;
+  onChange(ev: ChangeEvent<HTMLInputElement>): void;
+}
+
+export default class Checkbox extends React.Component<CheckboxProps> {
   static propTypes = {
     /**
      * Adds a class name to the input element.
@@ -33,14 +43,6 @@ export default class Checkbox extends React.Component {
      * Callback for the onChange event of the input.
      */
     onChange: PropTypes.func,
-    /**
-     * A component to render an input, by default hidden.
-     */
-    Input: PropTypes.func,
-    /**
-     * A component to render a label. By default this component renders the checkbox itself as a pseudoelement pair.
-     */
-    Label: PropTypes.func,
   };
 
   static defaultProps = {
@@ -51,30 +53,27 @@ export default class Checkbox extends React.Component {
     disabled: false,
     children: null,
     onChange: () => null,
-    Input: CheckboxInput,
-    Label: CheckboxLabel,
   };
 
   naturalId = `checkbox${Math.floor(Math.random() * 10000000)}`;
 
   render() {
     const {
+      id,
       className,
       disabled,
       checked,
       required,
       children,
       onChange,
-      Input,
-      Label,
     } = this.props;
 
-    const id = this.props.id || this.naturalId;
+    const finalId = id || this.naturalId;
 
     return (
       <div>
         <Input
-          id={id}
+          id={finalId}
           className={className}
           type="checkbox"
           disabled={disabled}
@@ -82,9 +81,7 @@ export default class Checkbox extends React.Component {
           required={required}
           onChange={onChange}
         />
-        <Label htmlFor={id} active={checked}>
-          {children}
-        </Label>
+        <Label htmlFor={finalId}>{children}</Label>
       </div>
     );
   }

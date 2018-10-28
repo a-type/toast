@@ -1,10 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { StyledComponentClass } from 'styled-components';
 import Input from './Input';
 import Button from '../Button';
 import { focusShadow } from 'components/effects';
 
-const Container = styled.div`
+const Container = styled<{ hasChildren: boolean }, 'div'>('div')`
   display: inline-flex;
   flex-direction: column;
 
@@ -73,7 +73,13 @@ const GroupedContent = styled.div`
   }
 `;
 
-const ModifiedButton = styled(Button)`
+interface GroupButtonWithVariants
+  extends StyledComponentClass<{}, typeof Button> {
+  Negative?: React.SFC<{}>;
+  Positive?: React.SFC<{}>;
+}
+
+const ModifiedButton: GroupButtonWithVariants = styled(Button)`
   border-radius: 0;
   margin: 0 !important;
 `;
