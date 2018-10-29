@@ -10,7 +10,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_32",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -23,15 +25,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_39",
+              "mealIndex": 1,
               "mealType": "NORMAL",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_39",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_40",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -44,15 +50,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_42",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_42",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_43",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -71,7 +81,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_33",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -85,8 +97,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_39",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_41",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -99,15 +113,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_44",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_44",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_45",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -126,7 +144,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_34",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -140,8 +160,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_44",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_46",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -154,15 +176,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_47",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_47",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_48",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -181,7 +207,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_35",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -195,8 +223,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_47",
+              "dayIndex": 3,
               "id": "action_MOCK_ID_49",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -209,15 +239,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_54",
+              "mealIndex": 2,
               "mealType": "NORMAL",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_54",
+              "dayIndex": 3,
               "id": "action_MOCK_ID_55",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -236,7 +270,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_36",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -250,8 +286,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_54",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_56",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -264,15 +302,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_50",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_50",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_51",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -291,7 +333,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_37",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -305,8 +349,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_54",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_57",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -319,15 +365,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_52",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_52",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_53",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -346,7 +396,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_38",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -359,15 +411,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_58",
+              "mealIndex": 1,
               "mealType": "NORMAL",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_58",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_59",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -380,15 +436,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_60",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_60",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_61",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -421,7 +481,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_29",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -435,8 +497,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_52",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_54",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -449,15 +513,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_36",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_36",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_37",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -476,7 +544,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_30",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -490,8 +560,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_36",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_38",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -504,15 +576,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_39",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_39",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_40",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -531,7 +607,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_31",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -545,8 +623,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_39",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_41",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -559,15 +639,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_48",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_48",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_49",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -586,7 +670,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_32",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -599,7 +685,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_42",
+              "mealIndex": 1,
               "type": "EAT_OUT",
             },
           ],
@@ -612,15 +700,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_43",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_43",
+              "dayIndex": 3,
               "id": "action_MOCK_ID_44",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -639,7 +731,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_33",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -653,8 +747,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_48",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_50",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -667,7 +763,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_45",
+              "mealIndex": 2,
               "type": "EAT_OUT",
             },
           ],
@@ -686,7 +784,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_34",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -700,8 +800,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_48",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_51",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -714,15 +816,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_46",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_46",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_47",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -741,7 +847,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_35",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -754,15 +862,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_52",
+              "mealIndex": 1,
               "mealType": "NORMAL",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_52",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_53",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -775,15 +887,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_55",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_55",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_56",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -816,7 +932,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_1",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -829,7 +947,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_8",
+              "mealIndex": 1,
               "type": "EAT_OUT",
             },
           ],
@@ -842,15 +962,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_18",
+              "mealIndex": 2,
               "mealType": "BIG",
               "servings": 12,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_19",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -869,7 +993,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_2",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -882,15 +1008,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_9",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_9",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_10",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -903,15 +1033,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_21",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_21",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_22",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -930,7 +1064,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_3",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -943,15 +1079,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_11",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_11",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_12",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -964,15 +1104,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_13",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_13",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_14",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -991,7 +1135,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_4",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1005,8 +1151,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 3,
               "id": "action_MOCK_ID_20",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1019,7 +1167,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_15",
+              "mealIndex": 2,
               "type": "EAT_OUT",
             },
           ],
@@ -1038,7 +1188,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_5",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1051,15 +1203,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_16",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_16",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_17",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1072,15 +1228,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_23",
+              "mealIndex": 2,
               "mealType": "BIG",
               "servings": 12,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_23",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_24",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1099,7 +1259,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_6",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1113,8 +1275,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_23",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_25",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1127,15 +1291,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_26",
+              "mealIndex": 2,
               "mealType": "BIG",
               "servings": 12,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_26",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_27",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1154,7 +1322,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_7",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1168,8 +1338,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_26",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_28",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1182,15 +1354,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_29",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 6,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_29",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_30",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1223,7 +1399,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_1",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1236,15 +1414,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_8",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_8",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_9",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1257,15 +1439,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_10",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_10",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_11",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1284,7 +1470,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_2",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1297,7 +1485,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_12",
+              "mealIndex": 1,
               "type": "EAT_OUT",
             },
           ],
@@ -1311,8 +1501,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_23",
               "leftovers": true,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1331,7 +1523,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_3",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1345,8 +1539,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_24",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1359,15 +1555,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_13",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_13",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_14",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1386,7 +1586,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_4",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1400,8 +1602,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 3,
               "id": "action_MOCK_ID_25",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1414,7 +1618,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_15",
+              "mealIndex": 2,
               "type": "EAT_OUT",
             },
           ],
@@ -1433,7 +1639,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_5",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1447,8 +1655,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_26",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1461,15 +1671,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_18",
+              "mealIndex": 2,
               "mealType": "BIG",
               "servings": 16,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_19",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1488,7 +1702,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_6",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1502,8 +1718,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_20",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1516,15 +1734,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_16",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_16",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_17",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1543,7 +1765,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_7",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1557,8 +1781,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_21",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1572,8 +1798,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_18",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_22",
               "leftovers": true,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1608,7 +1836,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_1",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1621,15 +1851,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_8",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_8",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_9",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1642,15 +1876,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 0,
               "id": "action_MOCK_ID_16",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_16",
+              "dayIndex": 0,
               "id": "action_MOCK_ID_17",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1669,7 +1907,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_2",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1682,7 +1922,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_10",
+              "mealIndex": 1,
               "type": "EAT_OUT",
             },
           ],
@@ -1695,15 +1937,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 1,
               "id": "action_MOCK_ID_19",
+              "mealIndex": 2,
               "mealType": "NORMAL",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_19",
+              "dayIndex": 1,
               "id": "action_MOCK_ID_20",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1722,7 +1968,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_3",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1735,15 +1983,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_11",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_11",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_12",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1756,15 +2008,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 2,
               "id": "action_MOCK_ID_13",
+              "mealIndex": 2,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_13",
+              "dayIndex": 2,
               "id": "action_MOCK_ID_14",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1783,7 +2039,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_4",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1797,8 +2055,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_16",
+              "dayIndex": 3,
               "id": "action_MOCK_ID_18",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1811,7 +2071,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 3,
               "id": "action_MOCK_ID_15",
+              "mealIndex": 2,
               "type": "EAT_OUT",
             },
           ],
@@ -1830,7 +2092,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_5",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1844,8 +2108,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_19",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_21",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1858,15 +2124,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 4,
               "id": "action_MOCK_ID_24",
+              "mealIndex": 2,
               "mealType": "NORMAL",
               "servings": 4,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_24",
+              "dayIndex": 4,
               "id": "action_MOCK_ID_25",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1885,7 +2155,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_6",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1898,15 +2170,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_22",
+              "mealIndex": 1,
               "mealType": "QUICK",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_22",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_23",
               "leftovers": false,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1919,15 +2195,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 5,
               "id": "action_MOCK_ID_27",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_27",
+              "dayIndex": 5,
               "id": "action_MOCK_ID_28",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
@@ -1946,7 +2226,9 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_7",
+              "mealIndex": 0,
               "type": "SKIP",
             },
           ],
@@ -1960,8 +2242,10 @@ Object {
           "actions": Array [
             Object {
               "cookActionId": "action_MOCK_ID_24",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_26",
               "leftovers": true,
+              "mealIndex": 1,
               "type": "EAT",
             },
           ],
@@ -1974,15 +2258,19 @@ Object {
         Object {
           "actions": Array [
             Object {
+              "dayIndex": 6,
               "id": "action_MOCK_ID_29",
+              "mealIndex": 2,
               "mealType": "FANCY",
               "servings": 2,
               "type": "COOK",
             },
             Object {
               "cookActionId": "action_MOCK_ID_29",
+              "dayIndex": 6,
               "id": "action_MOCK_ID_30",
               "leftovers": false,
+              "mealIndex": 2,
               "type": "EAT",
             },
           ],
