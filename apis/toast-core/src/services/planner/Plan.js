@@ -174,6 +174,8 @@ export default class Plan {
 
   addAction = (day, meal, type, details = {}) => {
     const action = {
+      dayIndex: day,
+      mealIndex: meal,
       ...this.getActionDefaults(type),
       ...details,
     };
@@ -191,7 +193,7 @@ export default class Plan {
     Object.assign(meal, details);
   };
 
-  setActionRecipe = (dayIndex, actionId, recipeId) => {
+  setActionRecipe = (dayIndex, mealIndex, actionId, recipeId) => {
     const meal = this.data.days[dayIndex].meals[mealIndex];
     const action = meal.actions.find(action => action.id === actionId);
     if (!action || !action.type === 'COOK') {

@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import CalendarMeal from './CalendarMeal';
 import { formatDay } from 'formatters/date';
 import { H3, Link } from 'components/typeset';
-import MealRow from './MealRow';
+import MealRow from './components/MealRow';
 
 type Props = {
   day: PlanDay;
@@ -40,8 +40,14 @@ export default class CalendarDay extends React.Component<Props, any> {
           <H3 spaceBelow="sm">{formatDay(date)}</H3>
         </Link>
         <MealRow>
-          {meals.map(meal => (
-            <CalendarMeal key={meal.id} weekIndex={weekIndex} meal={meal} />
+          {meals.map((meal, mealIndex) => (
+            <CalendarMeal
+              key={meal.id}
+              weekIndex={weekIndex}
+              dayIndex={dayIndex}
+              mealIndex={mealIndex}
+              meal={meal}
+            />
           ))}
         </MealRow>
       </div>

@@ -27,11 +27,11 @@ const getClassName = recipe => {
   return 'normal';
 };
 
-const RecipeCard = ({ recipe }) => (
+const RecipeCard = ({ recipe, onClick }) => (
   <Card
-    link={`/recipes/${recipe.id}`}
     imageSrc={path(['coverImage', 'url'], recipe)}
     shape={getClassName(recipe)}
+    onClick={onClick}
   >
     <Row>
       <span>{recipe.title}</span>

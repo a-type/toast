@@ -1,1 +1,1 @@
-export { default as CalendarDay } from './CalendarDay';
+export { default as MealRow } from './MealRow';

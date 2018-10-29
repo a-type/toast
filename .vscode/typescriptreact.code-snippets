@@ -54,7 +54,7 @@
     "prefix": "atm",
     "body": [
       "import * as React from 'react';",
-      "import { Mutation, MutationResult } from 'react-apollo';",
+      "import { Mutation, MutationFn } from 'react-apollo';",
       "import gql from 'graphql-tag';",
       "import { ${1:${TM_FILENAME/(.*)Mutation\\..+$/$1/}} } from 'generated/schema';",
       "",
@@ -68,7 +68,7 @@
       "  variables?: $1.Variables;",
       "  skip?: boolean;",
       "  children(",
-      "    result: MutationResult<",
+      "    mutateFn: MutationFn<",
       "      $1.Mutation,",
       "      $1.Variables",
       "    >,",

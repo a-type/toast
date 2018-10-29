@@ -7,13 +7,17 @@ import { withProps, compose } from 'recompose';
 
 interface RecipeCardsProps {
   recipes: RecipeCardTypes.Fragment[];
-  onRecipeSelected?(recipe: Recipe): void;
+  onRecipeSelected?(recipe: RecipeCardTypes.Fragment): void;
 }
 
-const Grid: React.SFC<RecipeCardsProps> = ({ recipes }) => (
+const Grid: React.SFC<RecipeCardsProps> = ({ recipes, onRecipeSelected }) => (
   <Card.Grid>
     {recipes.map(recipe => (
-      <RecipeCard key={recipe.id} recipe={recipe} />
+      <RecipeCard
+        key={recipe.id}
+        recipe={recipe}
+        onClick={() => onRecipeSelected(recipe)}
+      />
     ))}
   </Card.Grid>
 );
@@ -26,6 +30,7 @@ const withDefaultSelectBehavior = withProps<
   onRecipeSelected:
     ownProps.onRecipeSelected ||
     function(recipe: Recipe) {
+      console.log(`nav to ${recipe.id}`);
       ownProps.history.push(`/recipes/${recipe.id}`);
     },
 }));

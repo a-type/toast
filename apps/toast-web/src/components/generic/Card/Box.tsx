@@ -7,7 +7,7 @@ const hoverShadow = ({ imageSrc }: { imageSrc?: string }) =>
     ? 'inset 0 -36px 24px 0 #00000080, 0 0 0 8px var(--color-brand-light)'
     : '0 0 0 8px var(--color-brand-light)';
 
-export default styled<{ imageSrc?: string }, 'div'>('div')`
+export default styled<{ imageSrc?: string; className?: string }, 'div'>('div')`
   padding: var(--spacing-sm);
   background-color: var(--color-white);
   background-image: ${({ imageSrc }) =>

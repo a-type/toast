@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
-import { CalendarDay } from './components';
+import CalendarDay from './CalendarDay';
 import { Content, Controls } from 'components/layouts';
 import { PlanDay } from 'generated/schema';
 import CalendarPlanQuery from './CalendarPlanQuery';

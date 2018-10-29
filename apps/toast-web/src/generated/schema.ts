@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-10-27T17:07:00-04:00 */
+/** Generated in 2018-10-28T17:33:58-04:00 */
 
 // ====================================================
 // START: Typescript template
@@ -335,6 +335,8 @@ export interface PlanActionCook extends PlanAction {
   servings: number;
 
   mealType: PlanMealType;
+
+  recipe?: Recipe | null;
 }
 
 export interface PlanActionEat extends PlanAction {
@@ -680,6 +682,12 @@ export interface SetPlanStrategyMutationArgs {
   strategy?: PlanStrategy | null;
 }
 export interface SetPlanActionRecipeMutationArgs {
+  weekIndex: number;
+
+  dayIndex: number;
+
+  mealIndex: number;
+
   actionId: string;
 
   recipeId: string;
@@ -795,6 +803,28 @@ export namespace IngredientDetails {
   };
 
   export type Recipes = RecipeCard.Fragment;
+}
+
+export namespace CalendarMealSetRecipe {
+  export type Variables = {
+    weekIndex: number;
+    dayIndex: number;
+    mealIndex: number;
+    actionId: string;
+    recipeId: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setPlanActionRecipe: SetPlanActionRecipe;
+  };
+
+  export type SetPlanActionRecipe = {
+    __typename?: 'PlanAction';
+
+    id: string;
+  } & CalendarDay.Fragment;
 }
 
 export namespace CalendarPlan {

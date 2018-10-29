@@ -49,17 +49,23 @@ export const typeDefs = gql`
   interface PlanAction {
     id: ID!
     type: PlanActionType!
+    dayIndex: Int
+    mealIndex: Int
   }
 
   type PlanActionEatOut implements PlanAction {
     id: ID!
     type: PlanActionType!
+    dayIndex: Int
+    mealIndex: Int
     note: String
   }
 
   type PlanActionCook implements PlanAction {
     id: ID!
     type: PlanActionType!
+    dayIndex: Int
+    mealIndex: Int
     servings: Int!
     mealType: PlanMealType!
     recipe: Recipe
@@ -68,19 +74,25 @@ export const typeDefs = gql`
   type PlanActionEat implements PlanAction {
     id: ID!
     type: PlanActionType!
+    dayIndex: Int
+    mealIndex: Int
     leftovers: Boolean!
-    cookAction: PlanActionCook!
+    cookAction: PlanActionCook
   }
 
   type PlanActionReadyMade implements PlanAction {
     id: ID!
     type: PlanActionType!
+    dayIndex: Int
+    mealIndex: Int
     note: String
   }
 
   type PlanActionSkip implements PlanAction {
     id: ID!
     type: PlanActionType!
+    dayIndex: Int
+    mealIndex: Int
   }
 
   type PlanMeal {
@@ -241,9 +253,14 @@ export const resolvers = {
       }
 
       const plan = await ctx.firestore.plans.getWeek(group.planId, weekIndex);
-      plan.setActionRecipe(dayIndex, mealIndex, actionId, recipeId);
+      const action = plan.setActionRecipe(
+        dayIndex,
+        mealIndex,
+        actionId,
+        recipeId,
+      );
       await ctx.firestore.plans.mergeWeek(group.planId, weekIndex, plan);
-      return plan;
+      return action;
     },
   },
 
