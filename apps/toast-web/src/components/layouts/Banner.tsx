@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { CLASS_NAMES } from './constants';
 import { Icon } from 'components/generic';
 
-const Banner = styled.div`
+const BannerStyles = styled.div`
   background: var(--color-brand);
   color: var(--color-dark);
   padding: var(--spacing-md);
@@ -38,8 +38,19 @@ const Banner = styled.div`
   }
 `;
 
-export default ({ className, children, onDismiss, ...rest }) => (
-  <Banner
+export interface BannerProps {
+  className?: string;
+  children: React.ReactNode;
+  onDismiss?(): void;
+}
+
+const Banner: React.SFC<BannerProps> = ({
+  className,
+  children,
+  onDismiss,
+  ...rest
+}) => (
+  <BannerStyles
     className={classnames(CLASS_NAMES.BANNER, CLASS_NAMES.CONTENT, className)}
     {...rest}
   >
@@ -50,5 +61,7 @@ export default ({ className, children, onDismiss, ...rest }) => (
       onClick={onDismiss}
       className="banner-dismiss"
     />
-  </Banner>
+  </BannerStyles>
 );
+
+export default Banner;

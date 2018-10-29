@@ -6,6 +6,7 @@ export type IconStyleProps = {
   iconGroup?: 'Toast2' | 'Food';
   size?: string;
   color?: string;
+  onClick?(event: React.MouseEvent<HTMLElement>): void;
 };
 
 export type IconProps = IconStyleProps & {

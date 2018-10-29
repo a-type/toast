@@ -316,7 +316,7 @@ export const resolvers = {
 
   PlanActionEat: {
     cookAction: async (parent, args, ctx) => {
-      let plan = ctx.plan;
+      let plan = ctx.week || ctx.plan;
       if (!plan) {
         const group = await ctx.graph.groups.getMine();
 

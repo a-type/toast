@@ -16,6 +16,10 @@ export default styled<{ loading?: boolean }, 'div'>('div')`
     grid-auto-rows: 20vmax;
   }
 
+  & > * {
+    height: 100%;
+  }
+
   & > *.large {
     grid-column-end: span 2;
     grid-row-end: span 2;

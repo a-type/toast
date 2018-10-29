@@ -7,9 +7,13 @@ import {
   PlanActionCook,
   PlanActionEat,
 } from 'generated/schema';
-import { CookAction, EatAction, SkipAction } from './actions';
+import { CookAction, EatAction, SkipAction } from 'features/plan/actions';
 import { pick } from 'ramda';
-import actionsFragment from './actions/fragment';
+import actionsFragment from 'features/plan/actions/fragment';
+import { Label } from 'components/typeset';
+import { MealStack } from './components';
+
+const MEALS = ['Breakfast', 'Lunch', 'Dinner'];
 
 interface CalendarMealProps {
   meal: PlanMeal;
@@ -68,7 +72,7 @@ export default class CalendarMeal extends React.Component<
     return null;
   };
 
-  render() {
+  renderAction() {
     const passOnProps = pick(
       ['weekIndex', 'dayIndex', 'mealIndex'],
       this.props,
@@ -85,5 +89,16 @@ export default class CalendarMeal extends React.Component<
       default:
         return <SkipAction />;
     }
+  }
+
+  render() {
+    const { mealIndex } = this.props;
+
+    return (
+      <MealStack>
+        <Label>{MEALS[mealIndex]}</Label>
+        {this.renderAction()}
+      </MealStack>
+    );
   }
 }

@@ -14,7 +14,6 @@ export default styled<{ imageSrc?: string; className?: string }, 'div'>('div')`
     imageSrc ? `url(${imageSrc})` : 'none'};
   background-size: cover;
   background-position: center;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

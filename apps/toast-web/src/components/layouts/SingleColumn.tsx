@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tip, Background } from '../generic';
-import { pathOr, path } from 'ramda';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
 const TOP_SPACE = '115px';
 
-const Layout = styled.div`
+const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -46,6 +44,10 @@ const Layout = styled.div`
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
+  }
+
+  & .${CLASS_NAMES.CONTROLS} {
+    margin-bottom: var(--spacing-sm);
   }
 
   @media (min-width: 900px) {
@@ -87,26 +89,25 @@ const Layout = styled.div`
   }
 `;
 
-const SingleColumnLayout = ({
-  headerImage,
+export interface SingleColumnLayoutProps {
+  wide?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
+const SingleColumnLayout: React.SFC<SingleColumnLayoutProps> = ({
   children,
   wide,
-  loading,
   className,
   ...rest
 }) => (
-  <Background.Consumer>
-    {({ hasBackground }) => (
-      <Layout
-        hasHeaderImage={!!hasBackground}
-        wide={wide}
-        className={classnames(className, CLASS_NAMES.LAYOUT)}
-        {...rest}
-      >
-        {children}
-      </Layout>
-    )}
-  </Background.Consumer>
+  <Layout
+    wide={wide}
+    className={classnames(className, CLASS_NAMES.LAYOUT)}
+    {...rest}
+  >
+    {children}
+  </Layout>
 );
 
 export default SingleColumnLayout;

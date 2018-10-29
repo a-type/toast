@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Card } from 'components/generic';
 import { PlanActionEat } from 'generated/schema';
 import { pathOr } from 'ramda';
+import { Span, HelpText } from 'components/typeset';
 
 interface CalendarEatActionProps {
   action: PlanActionEat;
@@ -38,9 +39,17 @@ export default class CalendarEatAction extends React.Component<
     const recipe = pathOr(null, ['cookAction', 'recipe'], action);
     const cookDay = pathOr(null, ['cookAction', 'dayIndex'], action);
     if (recipe) {
-      return `Leftovers: ${recipe.title}`;
+      return (
+        <Span>
+          <HelpText>Leftovers</HelpText> {recipe.title}
+        </Span>
+      );
     }
-    return `Leftovers from ${cookDay === null ? '...' : DAYS[cookDay]}`;
+    return (
+      <HelpText>
+        Leftovers from {cookDay === null ? '...' : DAYS[cookDay]}
+      </HelpText>
+    );
   };
 
   render() {
