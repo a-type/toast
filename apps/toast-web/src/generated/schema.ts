@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-10-28T17:33:58-04:00 */
+/** Generated in 2018-10-30T19:14:31-04:00 */
 
 // ====================================================
 // START: Typescript template
@@ -21,6 +21,10 @@ export interface PlanAction {
   id: string;
 
   type: PlanActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
 }
 
 // ====================================================
@@ -49,6 +53,10 @@ export interface Query {
   planWeekIndex: number;
 
   planStartWeekDate: Date;
+
+  plan?: Plan | null;
+
+  week?: Plan | null;
 
   messages: Message[];
 
@@ -332,6 +340,10 @@ export interface PlanActionCook extends PlanAction {
 
   type: PlanActionType;
 
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
   servings: number;
 
   mealType: PlanMealType;
@@ -344,15 +356,23 @@ export interface PlanActionEat extends PlanAction {
 
   type: PlanActionType;
 
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
   leftovers: boolean;
 
-  cookAction: PlanActionCook;
+  cookAction?: PlanActionCook | null;
 }
 
 export interface PlanActionEatOut extends PlanAction {
   id: string;
 
   type: PlanActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
 
   note?: string | null;
 }
@@ -362,6 +382,10 @@ export interface PlanActionReadyMade extends PlanAction {
 
   type: PlanActionType;
 
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
   note?: string | null;
 }
 
@@ -369,6 +393,10 @@ export interface PlanActionSkip extends PlanAction {
   id: string;
 
   type: PlanActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
 }
 
 // ====================================================
@@ -564,6 +592,9 @@ export interface PlanWeekIndexQueryArgs {
   month: number;
 
   date: number;
+}
+export interface WeekQueryArgs {
+  weekIndex: number;
 }
 export interface RecipesIngredientArgs {
   pagination?: ListPaginationInput | null;
@@ -824,7 +855,7 @@ export namespace CalendarMealSetRecipe {
     __typename?: 'PlanAction';
 
     id: string;
-  } & CalendarDay.Fragment;
+  } & CalendarPlanAction.Fragment;
 }
 
 export namespace CalendarPlan {
@@ -834,30 +865,6 @@ export namespace CalendarPlan {
 
   export type Query = {
     __typename?: 'Query';
-
-    me?: Me | null;
-  };
-
-  export type Me = {
-    __typename?: 'User';
-
-    id: string;
-
-    group?: Group | null;
-  };
-
-  export type Group = {
-    __typename?: 'Group';
-
-    id: string;
-
-    plan?: Plan | null;
-  };
-
-  export type Plan = {
-    __typename?: 'Plan';
-
-    id: string;
 
     week?: Week | null;
   };
@@ -873,6 +880,22 @@ export namespace CalendarPlan {
   };
 
   export type Days = CalendarDay.Fragment;
+}
+
+export namespace GetWeekIndex {
+  export type Variables = {
+    year: number;
+    month: number;
+    date: number;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    planWeekIndex: number;
+
+    planStartWeekDate: Date;
+  };
 }
 
 export namespace RecipeSuggestions {
@@ -901,66 +924,6 @@ export namespace RecipeSuggestions {
   export type DiscoveredRecipes = RecipeCard.Fragment;
 
   export type LikedRecipes = RecipeCard.Fragment;
-}
-
-export namespace GetPlan {
-  export type Variables = {
-    weekIndex: number;
-  };
-
-  export type Query = {
-    __typename?: 'Query';
-
-    me?: Me | null;
-  };
-
-  export type Me = {
-    __typename?: 'User';
-
-    group?: Group | null;
-  };
-
-  export type Group = {
-    __typename?: 'Group';
-
-    plan?: Plan | null;
-  };
-
-  export type Plan = {
-    __typename?: 'Plan';
-
-    id: string;
-
-    week?: Week | null;
-  };
-
-  export type Week = {
-    __typename?: 'Plan';
-
-    startDate?: Date | null;
-
-    id: string;
-
-    days: Days[];
-  };
-
-  export type Days = DayView.Fragment;
-}
-
-export namespace GetWeekIndex {
-  export type Variables = {
-    year: number;
-    month: number;
-    date: number;
-  };
-
-  export type Query = {
-    __typename?: 'Query';
-
-    planWeekIndex: number;
-
-    planStartWeekDate: Date;
-  };
 }
 
 export namespace FeaturedRecipes {
@@ -1115,18 +1078,92 @@ export namespace UserInfo {
   export type LikedRecipes = RecipeCard.Fragment;
 }
 
-export namespace CalendarDay {
-  export type Fragment = {
-    __typename?: 'PlanDay';
+export namespace MergeUser {
+  export type Variables = {};
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    mergeUser?: MergeUser | null;
+  };
+
+  export type MergeUser = {
+    __typename?: 'User';
 
     id: string;
 
-    date?: Date | null;
+    name?: string | null;
 
-    meals: Meals[];
+    email?: string | null;
+  };
+}
+
+export namespace CalendarPlanAction {
+  export type Fragment = {
+    __typename?: 'PlanAction';
+
+    id: string;
+
+    type: PlanActionType;
+  } & (PlanActionCookInlineFragment | PlanActionEatInlineFragment);
+
+  export type PlanActionCookInlineFragment = {
+    __typename?: 'PlanActionCook';
+
+    servings: number;
+
+    mealType: PlanMealType;
+
+    recipe?: Recipe | null;
   };
 
-  export type Meals = CalendarMeal.Fragment;
+  export type Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    coverImage?: CoverImage | null;
+  };
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    url: string;
+  };
+
+  export type PlanActionEatInlineFragment = {
+    __typename?: 'PlanActionEat';
+
+    cookAction?: CookAction | null;
+  };
+
+  export type CookAction = {
+    __typename?: 'PlanActionCook';
+
+    id: string;
+
+    dayIndex?: number | null;
+
+    recipe?: _Recipe | null;
+  };
+
+  export type _Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    coverImage?: _CoverImage | null;
+  };
+
+  export type _CoverImage = {
+    __typename?: 'Image';
+
+    url: string;
+  };
 }
 
 export namespace CalendarMeal {
@@ -1139,39 +1176,19 @@ export namespace CalendarMeal {
   };
 
   export type Actions = {
-    __typename?:
-      | PlanActionCookInlineFragment['__typename']
-      | PlanActionEatInlineFragment['__typename'];
+    __typename?: 'PlanAction';
+
+    id: string;
 
     type: PlanActionType;
-  } & (PlanActionCookInlineFragment | PlanActionEatInlineFragment);
-
-  export type PlanActionCookInlineFragment = {
-    __typename?: 'PlanActionCook';
-
-    servings: number;
-
-    mealType: PlanMealType;
-  };
-
-  export type PlanActionEatInlineFragment = {
-    __typename?: 'PlanActionEat';
-
-    leftovers: boolean;
-
-    cookAction: CookAction;
-  };
-
-  export type CookAction = {
-    __typename?: 'PlanActionCook';
-
-    servings: number;
-
-    mealType: PlanMealType;
-  };
+  } & CalendarPlanAction.Fragment;
 }
 
-export namespace DayView {
+export namespace CalendarDayViewMeals {
+  export type Fragment = CalendarMeal.Fragment;
+}
+
+export namespace CalendarDay {
   export type Fragment = {
     __typename?: 'PlanDay';
 
@@ -1182,67 +1199,7 @@ export namespace DayView {
     meals: Meals[];
   };
 
-  export type Meals = MealView.Fragment;
-}
-
-export namespace MealView {
-  export type Fragment = {
-    __typename?: 'PlanMeal';
-
-    id: string;
-
-    actions: Actions[];
-  };
-
-  export type Actions = {
-    __typename?:
-      | PlanActionEatOutInlineFragment['__typename']
-      | PlanActionCookInlineFragment['__typename']
-      | PlanActionEatInlineFragment['__typename']
-      | PlanActionReadyMadeInlineFragment['__typename'];
-
-    type: PlanActionType;
-  } & (
-    | PlanActionEatOutInlineFragment
-    | PlanActionCookInlineFragment
-    | PlanActionEatInlineFragment
-    | PlanActionReadyMadeInlineFragment);
-
-  export type PlanActionEatOutInlineFragment = {
-    __typename?: 'PlanActionEatOut';
-
-    note?: string | null;
-  };
-
-  export type PlanActionCookInlineFragment = {
-    __typename?: 'PlanActionCook';
-
-    servings: number;
-
-    mealType: PlanMealType;
-  };
-
-  export type PlanActionEatInlineFragment = {
-    __typename?: 'PlanActionEat';
-
-    leftovers: boolean;
-
-    cookAction: CookAction;
-  };
-
-  export type CookAction = {
-    __typename?: 'PlanActionCook';
-
-    servings: number;
-
-    mealType: PlanMealType;
-  };
-
-  export type PlanActionReadyMadeInlineFragment = {
-    __typename?: 'PlanActionReadyMade';
-
-    note?: string | null;
-  };
+  export type Meals = CalendarMeal.Fragment;
 }
 
 export namespace RecipeSpotlight {

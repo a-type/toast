@@ -32,6 +32,7 @@ export class Auth extends EventEmitter {
 
   eventTypes = {
     tokenStored: 'AUTH_TOKEN_STORED',
+    tokenExpired: 'AUTH_TOKEN_EXPIRED',
   };
 
   renewalTimeout = null;
@@ -112,6 +113,8 @@ export class Auth extends EventEmitter {
       this.renewalTimeout = setTimeout(() => {
         this.renewToken();
       }, delay);
+    } else {
+      this.emit(this.eventTypes.tokenExpired);
     }
   };
 
@@ -147,4 +150,6 @@ export class Auth extends EventEmitter {
   }
 }
 
-export default new Auth();
+const auth = new Auth();
+
+export default auth;

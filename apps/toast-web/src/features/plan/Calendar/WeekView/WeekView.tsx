@@ -29,15 +29,11 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
           return <Disconnected />;
         }
 
-        if (!pathOr(null, ['me', 'group', 'plan'])) {
+        if (!data) {
           return <Redirect to="/plan/edit" />;
         }
 
-        const days = pathOr(
-          [],
-          ['me', 'group', 'plan', 'week', 'days'],
-          data,
-        ) as PlanDay[];
+        const days = pathOr([], ['week', 'days'], data) as PlanDay[];
 
         return (
           <React.Fragment>

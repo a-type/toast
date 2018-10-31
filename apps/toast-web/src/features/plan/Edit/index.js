@@ -11,14 +11,10 @@ import { Background } from 'components/generic';
 
 const PlanQuery = gql`
   query Plan {
-    me {
-      group {
-        plan {
-          id
-          ${EditDetails.fragments.plan}
-          ${EditAvailability.fragments.plan}
-        }
-      }
+    plan {
+      id
+      ${EditDetails.fragments.plan}
+      ${EditAvailability.fragments.plan}
     }
   }
 `;

@@ -12,17 +12,20 @@ class TokenProvider extends React.Component {
   };
 
   componentDidMount() {
-    auth.addListener(auth.eventTypes.tokenStored, this.onTokenStored);
+    auth.addListener(auth.eventTypes.tokenStored, this.onTokenChanged);
+    auth.addListener(auth.eventTypes.tokenExpired, this.onTokenChanged);
   }
 
   componentWillUnmount() {
-    auth.removeListener(auth.eventTypes.tokenStored, this.onTokenStored);
+    auth.removeListener(auth.eventTypes.tokenStored, this.onTokenChanged);
+    auth.removeListener(auth.eventTypes.tokenExpired, this.onTokenChanged);
   }
 
-  onTokenStored = () => {
+  onTokenChanged = () => {
     this.setState({
       user: auth.user,
       isLoggedIn: auth.isLoggedIn,
+      scopes: auth.scopes,
     });
   };
 

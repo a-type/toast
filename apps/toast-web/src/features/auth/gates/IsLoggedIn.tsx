@@ -8,6 +8,12 @@ interface IsLoggedInProps {
 const IsLoggedIn: React.SFC<IsLoggedInProps> = ({
   children,
   fallback = null,
-}) => <Consumer>{state => (state.isLoggedIn ? children : fallback)}</Consumer>;
+}) => (
+  <Consumer>
+    {state => {
+      return state.isLoggedIn ? children : fallback;
+    }}
+  </Consumer>
+);
 
 export default IsLoggedIn;

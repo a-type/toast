@@ -6,20 +6,11 @@ import CalendarDay from './WeekView/CalendarDay';
 
 export const Document = gql`
   query CalendarPlan($weekIndex: Int!) {
-    me {
+    week(weekIndex: $weekIndex) {
+      startDate
       id
-      group {
-        id
-        plan {
-          id
-          week(weekIndex: $weekIndex) {
-            startDate
-            id
-            days {
-              ...CalendarDay
-            }
-          }
-        }
+      days {
+        ...CalendarDay
       }
     }
   }

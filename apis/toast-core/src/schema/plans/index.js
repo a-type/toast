@@ -172,6 +172,14 @@ export const typeDefs = gql`
     planWeekIndex and the weekIndex field on Plan itself
     """
     planStartWeekDate: Date!
+    """
+    A shortcut for me.group.plan
+    """
+    plan: Plan @authenticated
+    """
+    A shortcut for me.group.plan.week
+    """
+    week(weekIndex: Int!): Plan @authenticated
   }
 `;
 
@@ -187,6 +195,30 @@ export const resolvers = {
 
     planStartWeekDate: (_parent, _args, ctx) =>
       ctx.firestore.plans.START_WEEK_DAY,
+
+    plan: async (_parent, _args, ctx) => {
+      const group = await ctx.graph.groups.getMine();
+      let planId = path(['planId'], group);
+
+      if (!planId) {
+        return null;
+      }
+
+      return ctx.firestore.plans.get(planId) || null;
+    },
+
+    week: async (_parent, { weekIndex }, ctx) => {
+      const group = await ctx.graph.groups.getMine();
+      let planId = path(['planId'], group);
+
+      if (!planId) {
+        return null;
+      }
+
+      const week = await ctx.firestore.plans.getWeek(planId, weekIndex);
+      ctx.week = week;
+      return week;
+    },
   },
 
   Mutation: {
