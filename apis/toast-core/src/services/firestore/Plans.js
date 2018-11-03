@@ -1,7 +1,7 @@
-import Plan from 'services/planner/Plan';
+import Plan from 'models/Plan';
+import { START_WEEK_DAY } from '../../constants';
 
 const COLLECTION = 'plans';
-const START_WEEK_DAY = new Date(2018, 9, 7);
 
 export default class Plans {
   static START_WEEK_DAY = START_WEEK_DAY;
@@ -12,6 +12,7 @@ export default class Plans {
   }
 
   generateWeekId = (planId, week) => `${planId}_w_${week}`;
+  generateShoppingListId = (planId, week) => `${planId}_sl_w_${week}`;
 
   /**
    * For user's default plan, use user id

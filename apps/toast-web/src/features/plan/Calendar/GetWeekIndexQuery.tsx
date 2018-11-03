@@ -18,9 +18,17 @@ interface GetWeekIndexQueryProps {
   ): React.ReactNode;
 }
 
+const today = new Date();
+
 const GetWeekIndexQuery: React.SFC<GetWeekIndexQueryProps> = props => (
   <Query<GetWeekIndex.Query, GetWeekIndex.Variables>
     query={Document}
+    variables={{
+      year: today.getFullYear(),
+      month: today.getMonth(),
+      date: today.getDate(),
+      ...props.variables,
+    }}
     {...props}
   />
 );

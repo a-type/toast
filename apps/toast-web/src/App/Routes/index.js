@@ -12,6 +12,7 @@ import LoggedInPage from './pages/LoggedIn';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
 import PlanPage from './pages/Plan';
+import ShoppingList from './pages/ShoppingList';
 
 export default () => (
   <Switch>
@@ -27,6 +28,7 @@ export default () => (
     <Route path="/scanner" component={ScannerPage} />
     <Route path="/manage" component={ManagePage} />
     <Route path="/plan" component={PlanPage} />
+    <Route path="/shoppingList" component={ShoppingList} />
     <Route component={NotFoundPage} />
   </Switch>
 );

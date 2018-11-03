@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-10-30T19:14:31-04:00 */
+/** Generated in 2018-11-03T16:36:17-04:00 */
 
 // ====================================================
 // START: Typescript template
@@ -221,6 +221,8 @@ export interface Plan {
   week?: Plan | null;
 
   startDate?: Date | null;
+
+  shoppingList?: ShoppingList | null;
 }
 
 export interface PlanDay {
@@ -237,6 +239,20 @@ export interface PlanMeal {
   availability: PrepAvailability;
 
   actions: PlanAction[];
+}
+
+export interface ShoppingList {
+  ingredients: ShoppingListIngredient[];
+}
+
+export interface ShoppingListIngredient {
+  ingredient?: Ingredient | null;
+
+  totalValue?: number | null;
+
+  unit?: string | null;
+
+  recipes: Recipe[];
 }
 
 export interface RecipeSearchResponse {
@@ -1037,6 +1053,58 @@ export namespace SearchRecipes {
     id: string;
 
     url: string;
+  };
+}
+
+export namespace GetShoppingList {
+  export type Variables = {
+    weekIndex: number;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    week?: Week | null;
+  };
+
+  export type Week = {
+    __typename?: 'Plan';
+
+    shoppingList?: ShoppingList | null;
+  };
+
+  export type ShoppingList = {
+    __typename?: 'ShoppingList';
+
+    ingredients: Ingredients[];
+  };
+
+  export type Ingredients = {
+    __typename?: 'ShoppingListIngredient';
+
+    totalValue?: number | null;
+
+    unit?: string | null;
+
+    ingredient?: Ingredient | null;
+
+    recipes: Recipes[];
+  };
+
+  export type Ingredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
+
+  export type Recipes = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
   };
 }
 

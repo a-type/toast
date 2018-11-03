@@ -142,6 +142,12 @@ export default class Plan {
     return this.actions[id];
   };
 
+  getActionsOfType = actionType => {
+    return Object.values(this.actions).filter(
+      action => action.type === actionType,
+    );
+  };
+
   getTypedActionDefaults = actionType => {
     return (
       {

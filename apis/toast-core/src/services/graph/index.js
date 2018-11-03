@@ -2,7 +2,13 @@ import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
 import { camel } from 'change-case';
 
-import { Users, Groups, Recipes } from './sources';
+import {
+  Users,
+  Groups,
+  Recipes,
+  Ingredients,
+  RecipeIngredients,
+} from './sources';
 
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,
@@ -43,6 +49,8 @@ export default (
   graph.users = new Users(ctx, graph);
   graph.groups = new Groups(ctx, graph);
   graph.recipes = new Recipes(ctx, graph);
+  graph.ingredients = new Ingredients(ctx, graph);
+  graph.recipeIngredients = new RecipeIngredients(ctx, graph);
 
   return graph;
 };

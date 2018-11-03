@@ -37,6 +37,36 @@ export default class Recipes extends Source {
       return this.hydrateOne(result);
     });
 
+  getAllWithIngredients = recipeIds =>
+    this.ctx.readTransaction(async tx => {
+      const result = await tx.run(
+        `
+          UNWIND $recipeIds as id
+          MATCH (recipe:Recipe {id: id})<-[:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient)<-[:USED_IN]-(ingredient:Ingredient)
+          WITH recipe, [recipeIngredient, ingredient] as tuple
+          WITH recipe, collect(tuple) as recipeIngredients
+          RETURN recipe {${this.dbFields}}, recipeIngredients
+        `,
+        { recipeIds },
+      );
+
+      if (result.records.length) {
+        return result.records.map(record => {
+          const recipe = record.get('recipe');
+          const recipeIngredients = record
+            .get('recipeIngredients')
+            .map(([ri, i]) => {
+              const recipeIngredient = ri.properties;
+              recipeIngredient.ingredient = i.properties;
+              return recipeIngredient;
+            });
+          recipe.ingredients = recipeIngredients;
+          return recipe;
+        });
+      }
+      return [];
+    });
+
   list = ({ offset = 0, count = 25 } = {}) =>
     this.ctx.readTransaction(async tx => {
       const result = await tx.run(
