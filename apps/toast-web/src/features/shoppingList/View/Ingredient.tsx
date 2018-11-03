@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { cold } from 'react-hot-loader';
 import { GetShoppingList } from 'generated/schema';
 
 export interface ShoppingListIngredientProps {
@@ -39,4 +40,4 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
   );
 };
 
-export default ShoppingListIngredient;
+export default cold(ShoppingListIngredient);

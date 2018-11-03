@@ -68,7 +68,7 @@ export const resolvers = {
               // convert to existing unit and add
               const existingQty = qty(existing.totalValue, existing.unit);
               const addedQty = qty(
-                recipeIngredient.value * multiplier,
+                (recipeIngredient.value || 1) * multiplier,
                 recipeIngredient.unit,
               );
               existingQty.add(addedQty);
@@ -88,7 +88,7 @@ export const resolvers = {
                 [recipeIngredient.ingredient.id]: {
                   ingredient: recipeIngredient.ingredient,
                   unit: recipeIngredient.unit,
-                  totalValue: recipeIngredient.value * multiplier,
+                  totalValue: (recipeIngredient.value || 1) * multiplier,
                   recipes: new Set([recipe]),
                 },
               };
