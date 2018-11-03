@@ -1,6 +1,7 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
 import GetWeekIndexQuery from 'features/plan/Calendar/GetWeekIndexQuery';
+import Ingredient from './Ingredient';
 
 const View: React.SFC<{}> = () => (
   <GetWeekIndexQuery>
@@ -23,7 +24,11 @@ const View: React.SFC<{}> = () => (
             }
 
             return (
-              <div>{JSON.stringify(data.week.shoppingList, null, ' ')}</div>
+              <div>
+                {data.week.shoppingList.ingredients.map(ing => (
+                  <Ingredient key={ing.ingredient.id} {...ing} />
+                ))}
+              </div>
             );
           }}
         </GetShoppingListQuery>

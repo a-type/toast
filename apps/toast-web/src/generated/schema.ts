@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-03T16:36:17-04:00 */
+/** Generated in 2018-11-03T17:29:12-04:00 */
 
 // ====================================================
 // START: Typescript template
@@ -246,9 +246,9 @@ export interface ShoppingList {
 }
 
 export interface ShoppingListIngredient {
-  ingredient?: Ingredient | null;
+  ingredient: Ingredient;
 
-  totalValue?: number | null;
+  totalValue: number;
 
   unit?: string | null;
 
@@ -1082,11 +1082,11 @@ export namespace GetShoppingList {
   export type Ingredients = {
     __typename?: 'ShoppingListIngredient';
 
-    totalValue?: number | null;
+    totalValue: number;
 
     unit?: string | null;
 
-    ingredient?: Ingredient | null;
+    ingredient: Ingredient;
 
     recipes: Recipes[];
   };

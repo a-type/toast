@@ -4,8 +4,8 @@ import qty from 'js-quantities';
 
 export const typeDefs = gql`
   type ShoppingListIngredient {
-    ingredient: Ingredient
-    totalValue: Float
+    ingredient: Ingredient!
+    totalValue: Float!
     unit: String
     recipes: [Recipe!]!
   }
