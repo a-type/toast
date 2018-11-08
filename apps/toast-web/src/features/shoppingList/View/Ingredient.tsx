@@ -3,6 +3,7 @@ import { cold } from 'react-hot-loader';
 import { GetShoppingList } from 'generated/schema';
 import { Checkbox } from 'components/generic';
 import { Layout } from './components';
+import { formatIngredient } from 'formatters';
 
 export interface ShoppingListIngredientProps {
   totalValue: number;
@@ -26,9 +27,7 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
         checked={done}
         onChange={ev => setDone(ev.target.checked)}
       />
-      <div>
-        {totalValue} {unit} {ingredient.name}
-      </div>
+      <div>{formatIngredient(totalValue, unit || '', ingredient.name)}</div>
       <div>
         [
         {recipes.map(recipe => (
