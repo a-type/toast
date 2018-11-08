@@ -100,7 +100,9 @@ export const GlobalStyle = createGlobalStyle`
   --spacing-xs: ${spaceSizes.xs}px;
   --spacing-xl: ${spaceSizes.xl}px;
 
+  --border-radius-sm: 4px;
   --border-radius-md: 8px;
+  --border-radius-lg: 14px;
 }
 
 html, body {

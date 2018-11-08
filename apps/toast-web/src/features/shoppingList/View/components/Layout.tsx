@@ -7,6 +7,7 @@ export default styled.div`
   grid-template-areas: 'checkbox ingredient' 'checkbox recipes';
   grid-template-rows: repeat(2, auto);
   grid-template-columns: auto 1fr;
+  gap: var(--spacing-md);
 
   ${gridAreas(['checkbox', 'ingredient', 'recipes'])};
 `;

@@ -10,24 +10,27 @@ export default styled.label`
   cursor: pointer;
   width: ${SIZE}px;
   height: ${SIZE}px;
+  transition: 0.2s ease all;
 
   &::before,
   &::after {
     content: '';
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
     display: inline-block;
     z-index: 0;
+    transition: 0.2s ease all;
   }
 
   &::before {
-    background: var(--color-gray-lightest);
-    border: 0;
-    width: ${SIZE}px;
-    height: ${SIZE}px;
+    background: var(--color-white);
+    border: 4px solid var(--color-gray-light);
+    width: ${SIZE - 8}px;
+    height: ${SIZE - 8}px;
   }
 
   &::after {
     content: '\f11d';
+    color: var(--color-white);
     font-family: 'Toast2';
     font-size: ${(SIZE * 3) / 4}px;
     font-weight: bold;
@@ -41,5 +44,15 @@ export default styled.label`
 
   input:checked + &::after {
     opacity: 1;
+  }
+
+  input:checked + &::before {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+  }
+
+  &:focus,
+  &:active {
+    outline: 0;
   }
 `;
