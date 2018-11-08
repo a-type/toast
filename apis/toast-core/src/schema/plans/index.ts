@@ -1,28 +1,12 @@
 import { gql } from 'apollo-server-express';
 import { id } from 'tools';
-import {
-  path,
-  pathOr,
-  assocPath,
-  compose,
-  mergeDeepLeft,
-  mergeDeepRight,
-} from 'ramda';
+import { path, mergeDeepRight } from 'ramda';
 import { UserInputError } from 'errors';
 import getWeekIndex from './getWeekIndex';
 import getWeekDay from './getWeekDay';
 import Plan from 'models/Plan';
 
 import * as shoppingList from './shoppingList';
-
-const emptyPlan = {
-  days: new Array(7).fill(null).map(() => ({
-    meals: new Array(3).fill(null).map(() => ({
-      availability: 'SKIP',
-      actions: [],
-    })),
-  })),
-};
 
 export const typeDefs = () => [
   gql`
@@ -237,7 +221,7 @@ export const resolvers = [
     Mutation: {
       setPlanDetails: async (_parent, { details }, ctx) => {
         const group = await ctx.graph.groups.getMine();
-        let planId = path(['planId'], group);
+        let planId = path<string>(['planId'], group);
         // create plan if it doesn't exist
         if (!planId) {
           planId = id('plan');

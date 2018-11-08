@@ -39,7 +39,7 @@ export default class Users extends Source {
       return this.hydrateOne(result);
     });
 
-  getMe = () => this.getUser(this.ctx.user.id);
+  getMe = () => this.get(this.ctx.user.id);
 
   update = async (userId, data) =>
     this.ctx.writeTransaction(async tx => {
@@ -58,7 +58,7 @@ export default class Users extends Source {
       return this.hydrateOne(result, { throwIfNone: true });
     });
 
-  updateMe = async data => this.updateUser(this.ctx.user.id);
+  updateMe = async data => this.update(this.ctx.user.id, data);
 
   getRecipeAuthor = recipeId =>
     this.ctx.transaction(async tx => {
@@ -80,7 +80,7 @@ export default class Users extends Source {
         MATCH (user:User)-[:DISCOVERER_OF]->(:Recipe {id: $id})
         RETURN user {${this.dbFields}}
         `,
-        { id },
+        { id: recipeId },
       );
 
       return this.hydrateOne(result);

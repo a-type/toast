@@ -89,7 +89,7 @@ export const getRecipeIngredient_withTransaction = async (id, tx) => {
 
 export const parseRecipeIngredient = (recipeId, input, ctx) => {
   return ctx.transaction(async tx => {
-    return parseRecipeIngredient_withTransaction(recipeId, input, tx);
+    return parseRecipeIngredient_withTransaction(recipeId, input, tx, ctx);
   });
 };
 
@@ -181,6 +181,7 @@ export const parseRecipeIngredient_withTransaction = async (
   recipeId,
   input,
   tx,
+  ctx,
 ) => {
   const parsed = await parseRecipeIngredientText(input.text, tx);
 

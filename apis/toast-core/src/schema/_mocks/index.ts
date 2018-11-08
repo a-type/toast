@@ -18,7 +18,7 @@ export default {
       if (casual.integer(0, 10) < 5) {
         return {
           id: uuid(),
-          url: casual.image,
+          url: (casual as any).image,
         };
       }
       return null;
@@ -38,7 +38,7 @@ export default {
   }),
 
   RecipeIngredient: () => {
-    const unit = casual.unit;
+    const unit = (casual as any).unit;
     const value = casual.integer(1, 6);
     const text = unit + ' ' + value + ' of Ingredient';
 
@@ -69,6 +69,6 @@ export default {
   },
 
   Image: () => ({
-    url: casual.image,
+    url: (casual as any).image,
   }),
 };

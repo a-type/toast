@@ -1,6 +1,6 @@
 import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
-import { camel } from 'change-case';
+import { GraphContext } from './types';
 
 import {
   Users,
@@ -15,14 +15,22 @@ const driver = neo4j.driver(
   neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password),
 );
 
+export type Graph = {
+  users: Users;
+  groups: Groups;
+  recipes: Recipes;
+  ingredients: Ingredients;
+  recipeIngredients: RecipeIngredients;
+};
+
 export default (
   { writeMode = false, user = null, scopes = [] } = {
     writeMode: false,
     user: null,
     scopes: [],
   },
-) => {
-  const ctx = {
+): Graph => {
+  const ctx: GraphContext = {
     user,
     scopes,
     transaction: txFunction => {
@@ -43,14 +51,14 @@ export default (
     },
   };
 
-  const graph = {
-    transaction: ctx.transaction,
-  };
-  graph.users = new Users(ctx, graph);
-  graph.groups = new Groups(ctx, graph);
-  graph.recipes = new Recipes(ctx, graph);
-  graph.ingredients = new Ingredients(ctx, graph);
-  graph.recipeIngredients = new RecipeIngredients(ctx, graph);
+  let graph = {};
+  Object.assign(graph, {
+    users: new Users(ctx, graph),
+    groups: new Groups(ctx, graph),
+    recipes: new Recipes(ctx, graph),
+    ingredients: new Ingredients(ctx, graph),
+    recipeIngredients: new RecipeIngredients(ctx, graph),
+  });
 
-  return graph;
+  return graph as Graph;
 };

@@ -1,5 +1,6 @@
 import Plan from 'models/Plan';
 import { START_WEEK_DAY } from '../../constants';
+import { Firestore } from '@google-cloud/firestore';
 
 const COLLECTION = 'plans';
 
@@ -7,7 +8,9 @@ export default class Plans {
   static START_WEEK_DAY = START_WEEK_DAY;
   START_WEEK_DAY = START_WEEK_DAY;
 
-  constructor(firestore) {
+  firestore: Firestore;
+
+  constructor(firestore: Firestore) {
     this.firestore = firestore;
   }
 

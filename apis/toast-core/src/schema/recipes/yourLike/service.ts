@@ -26,12 +26,12 @@ export const likeRecipe = (recipeId, ctx) =>
     MATCH (recipe:Recipe { id: $id }), (u:User { id: $userId })
     MERGE (recipe)<-[l:LIKES]-(u)
     SET l.id = $likeId, l.likedAt = $likedAt
-    RETURN recipe { ${db.graph.recipes.dbFields} }
+    RETURN recipe { ${ctx.graph.recipes.dbFields} }
     `,
       { id: recipeId, userId: ctx.user.id, likedAt: timestamp(), likeId: id() },
     );
 
-    return db.graph.recipes.hydrateOne(result);
+    return ctx.graph.recipes.hydrateOne(result);
   });
 
 export const unlikeRecipe = (recipeId, ctx) =>
@@ -40,7 +40,7 @@ export const unlikeRecipe = (recipeId, ctx) =>
       `
       MATCH (recipe:Recipe { id: $id })<-[l:LIKES]-(:User { id: $userId })
       DELETE l
-      RETURN recipe { ${db.graph.recipes.dbFields} }
+      RETURN recipe { ${ctx.graph.recipes.dbFields} }
       `,
       {
         id: recipeId,
@@ -48,5 +48,5 @@ export const unlikeRecipe = (recipeId, ctx) =>
       },
     );
 
-    return db.graph.recipes.hydrateOne(result);
+    return ctx.graph.recipes.hydrateOne(result);
   });

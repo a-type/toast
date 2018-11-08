@@ -1,5 +1,5 @@
-import logger from 'logger';
-import { timestamp } from 'tools';
+import { timestamp, id } from 'tools';
+import { omit, pick } from 'ramda';
 import Source from './Source';
 // TODO; migrate
 import { parseRecipeIngredient_withTransaction } from 'schema/recipes/recipeIngredients/service';
@@ -263,6 +263,7 @@ export default class Recipes extends Source {
             recipe.id,
             { text: ingredientString },
             tx,
+            this.ctx,
           );
         }),
       );
@@ -272,7 +273,7 @@ export default class Recipes extends Source {
 
   updateDetails = (id, input) =>
     this.ctx.transaction(async tx => {
-      const details = await tx.run(
+      const result = await tx.run(
         `
           MATCH (recipe:Recipe {id: $id})<-[:AUTHOR_OF]-(:User {id: $userId})
           SET recipe += $input

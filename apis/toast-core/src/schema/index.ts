@@ -1,5 +1,3 @@
-import minimist from 'minimist';
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 import { mergeDeepRight } from 'ramda';
 import * as images from './images';
 import * as ingredients from './ingredients';
@@ -13,10 +11,9 @@ import * as plans from './plans';
 import * as directives from './directives';
 import * as scalars from './scalars';
 
-import logger from 'logger';
 import { gql } from 'apollo-server-express';
 
-export { default as mocks } from './__mocks__';
+export { default as mocks } from './_mocks';
 
 export { scalars, directives };
 
@@ -60,12 +57,12 @@ export const typeDefs = [
   globalTypeDefs,
   images.typeDefs,
   ingredients.typeDefs,
-  recipes.typeDefs,
+  ...recipes.typeDefs(),
   search.typeDefs,
   steps.typeDefs,
   users.typeDefs,
   groups.typeDefs,
-  plans.typeDefs,
+  ...plans.typeDefs(),
 ];
 export const resolvers = [
   images.resolvers,

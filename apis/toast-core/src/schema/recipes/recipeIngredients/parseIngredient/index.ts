@@ -1,5 +1,4 @@
-import nlp from 'compromise';
-import plug from 'compromise-plugin';
+import * as compromise from 'compromise';
 import parser from 'ingredients-parser';
 
 const abbreviations = {
@@ -35,12 +34,13 @@ export default text => {
   const withoutExtras = removeWeirdCharacters(removeAsides(text));
   const parsed = parser.parse(withoutExtras);
 
-  const doc = nlp(withoutExtras);
+  const doc = compromise.tokenize(withoutExtras);
 
   const unitRaw = parsed.unit;
 
   const unitNormalized = unabbreviate(
-    nlp(unitRaw)
+    compromise
+      .tokenize(unitRaw)
       .normalize({ plurals: true, case: true })
       .out('text')
       .trim()
@@ -49,13 +49,15 @@ export default text => {
 
   const valueRaw = parsed.amount;
 
-  const valueNormalized = nlp(valueRaw)
+  const valueNormalized = compromise
+    .tokenize(valueRaw)
     .values()
     .numbers()[0];
 
   const ingredientRaw = parsed.ingredient;
 
-  const ingredientNormalized = nlp(ingredientRaw)
+  const ingredientNormalized = compromise
+    .tokenize(ingredientRaw)
     .normalize({ plurals: true, case: true })
     .out('text')
     .trim()

@@ -8,7 +8,7 @@ import {
 export { AuthenticationError, ValidationError, ForbiddenError, UserInputError };
 
 export class NotFoundError extends UserInputError {
-  constructor(resourceType, id) {
+  constructor(resourceType: string, id?: string) {
     if (id) {
       super(`Couldn't find a ${resourceType} for ${id}`);
     } else {

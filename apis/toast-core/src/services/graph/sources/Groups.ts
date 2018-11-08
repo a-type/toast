@@ -1,6 +1,4 @@
-import logger from 'logger';
 import Source from './Source';
-import { NotFoundError, AuthenticationError } from 'errors';
 import { id } from 'tools';
 
 export default class Groups extends Source {

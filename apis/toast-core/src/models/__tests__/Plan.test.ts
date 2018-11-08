@@ -1,5 +1,5 @@
 import Plan from '../Plan';
-import createPlans from './createPlans';
+import createPlans from '../../services/planner/__tests__/createPlans';
 const { variety, prePlanned } = createPlans();
 
 describe('the Plan class', () => {

@@ -12,17 +12,22 @@ const storage = new Storage({
 
 const bucket = config.gcloud.storage.bucket;
 
+export interface UploadResult {
+  id: string;
+  url: string;
+}
+
 export default {
-  upload: async (file, mediaType) => {
+  upload: async (file, mediaType): Promise<UploadResult> => {
     const id = uuid();
-    const { stream, filename, mimetype } = file;
+    const { stream, mimetype } = file;
 
     const directory = config.gcloud.storage.directories[mediaType];
     const fileName = `${directory}/${id}`;
 
     const gFile = storage.bucket(bucket).file(fileName);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<UploadResult>((resolve, reject) => {
       stream
         .pipe(
           gFile.createWriteStream({

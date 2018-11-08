@@ -4,12 +4,13 @@
   "description": "Toast API",
   "main": "src/server.js",
   "scripts": {
-    "dev": "cross-env NODE_PATH=src nodemon ./src/server.js --inspect --watch src --verbose --exec babel-node",
+    "dev:run": "node --inspect=9229 -r ts-node/register src/server.ts",
+    "dev": "cross-env NODE_PATH=src nodemon",
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "node ./db/indexes.js",
     "db-init": "run-s db:*",
     "build:clean": "rimraf build",
-    "build:transpile": "babel src --out-dir build",
+    "build:transpile": "tsc",
     "build": "run-s build:*",
     "build-client:pack": "cd ../../apps/toast-web && npm run build",
     "build-client:copy": "cp -r ../../apps/toast-web/dist ./client",
@@ -78,6 +79,11 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/jest": "^23.3.9",
+    "@types/minimist": "^1.2.0",
+    "@types/ramda": "^0.25.41",
+    "@types/uuid": "^3.4.4",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^23.4.2",
@@ -88,6 +94,9 @@
     "nodemon": "^1.17.3",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.14.3",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "ts-jest": "^23.10.4",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6"
   }
 }

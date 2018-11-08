@@ -1,8 +1,20 @@
 import { pick, omit } from 'ramda';
 import { NotFoundError } from 'errors';
+import { GraphContext } from '../types';
 
 export default class Source {
-  constructor(ctx, graph, resourceName, fields) {
+  ctx: GraphContext;
+  graph: any;
+  fields: string[];
+  resourceName: string;
+  dbFields: string;
+
+  constructor(
+    ctx: GraphContext,
+    graph: any,
+    resourceName: string,
+    fields: string[],
+  ) {
     this.ctx = ctx;
     this.graph = graph;
     this.fields = fields;

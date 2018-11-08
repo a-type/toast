@@ -1,8 +1,82 @@
 import { id } from 'tools';
-import { clone, mergeDeepWith, mergeDeepRight, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import { UserInputError } from 'errors';
 
-const EMPTY = {
+export enum PlanActionType {
+  Cook = 'COOK',
+  Eat = 'EAT',
+  Skip = 'SKIP',
+  EatOut = 'EAT_OUT',
+  ReadyMade = 'READY_MADE',
+}
+
+export interface PlanActionBase {
+  id: string;
+  type: PlanActionType;
+}
+
+export interface PlanActionCook extends PlanActionBase {
+  type: PlanActionType.Cook;
+  recipeId: string;
+  servings: number;
+  mealType: string; // TODO: enum
+}
+
+export interface PlanActionEat extends PlanActionBase {
+  type: PlanActionType.Eat;
+  cookActionId: string;
+  leftovers: boolean;
+}
+
+export interface PlanActionSkip extends PlanActionBase {
+  type: PlanActionType.Skip;
+}
+
+export interface PlanActionEatOut extends PlanActionBase {
+  type: PlanActionType.EatOut;
+  note?: string;
+}
+
+export interface PlanActionReadyMade extends PlanActionBase {
+  type: PlanActionType.ReadyMade;
+  note?: string;
+}
+
+export type PlanAction =
+  | PlanActionCook
+  | PlanActionEat
+  | PlanActionSkip
+  | PlanActionEatOut
+  | PlanActionReadyMade;
+
+export type PlanMeal = {
+  id?: string;
+  mealIndex?: number;
+  dayIndex?: number;
+  availability?: string; // TODO: enum
+  servings?: number;
+  actions?: Array<PlanAction>;
+};
+
+export type PlanDay = {
+  id?: string;
+  dayIndex?: number;
+  meals?: PlanMeal[];
+};
+
+export type PlanData = {
+  id?: string;
+  defaultServings?: number;
+  groceryDay?: number;
+  weekIndex?: number;
+  isBlueprint?: boolean;
+  strategy?: string; // TODO: enum
+
+  days?: PlanDay[];
+  warnings?: string[];
+};
+
+const EMPTY: PlanData = {
   id: null,
   defaultServings: 2,
   groceryDay: 0,
@@ -45,7 +119,8 @@ const merge = (def, override) => ({
 
 export default class Plan {
   data = EMPTY;
-  actions = {};
+  actions: { [id: string]: PlanAction } = {};
+  generateId: (name: string) => string;
 
   constructor(data = EMPTY, { generateId = id } = {}) {
     this.generateId = generateId;
@@ -84,10 +159,6 @@ export default class Plan {
 
   get groceryDay() {
     return this.data.groceryDay;
-  }
-
-  get weekIndex() {
-    return this.data.weekIndex;
   }
 
   get isBlueprint() {
@@ -202,13 +273,13 @@ export default class Plan {
   setActionRecipe = (dayIndex, mealIndex, actionId, recipeId) => {
     const meal = this.data.days[dayIndex].meals[mealIndex];
     const action = meal.actions.find(action => action.id === actionId);
-    if (!action || !action.type === 'COOK') {
+    if (!action || action.type !== 'COOK') {
       throw new UserInputError(
         "You can't assign a recipe to a non-cooking action",
       );
     }
 
-    action.recipeId = recipeId;
+    (action as PlanActionCook).recipeId = recipeId;
     return action;
   };
 

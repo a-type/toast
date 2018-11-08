@@ -13,7 +13,7 @@ const s3 = new S3({
 export default {
   upload: async (file, directory) => {
     const id = uuid();
-    const { stream, filename, mimetype, encoding } = file;
+    const { stream, mimetype } = file;
 
     const location = await s3
       .upload({
@@ -21,6 +21,7 @@ export default {
         ACL: 'public-read',
         Body: stream,
         ContentType: mimetype,
+        Bucket: config.aws.s3.bucket,
       })
       .promise()
       .then(response => response.Location);

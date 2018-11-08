@@ -1,4 +1,11 @@
-import Plan from '../Plan';
+import Plan, {
+  PlanActionType,
+  PlanActionCook,
+  PlanActionEat,
+  PlanActionEatOut,
+  PlanActionReadyMade,
+  PlanActionSkip,
+} from 'models/Plan';
 
 export default () => {
   const mockId = () => {
@@ -117,33 +124,48 @@ export default () => {
               availability: 'SHORT',
               actions: [
                 {
-                  type: 'COOK',
+                  id: '1',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'QUICK',
-                },
-                { type: 'EAT', leftovers: false },
+                } as PlanActionCook,
+                {
+                  id: '2',
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                } as PlanActionEat,
               ],
             },
             {
               availability: 'MEDIUM',
               actions: [
                 {
-                  type: 'COOK',
+                  id: '3',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'NORMAL',
-                },
-                { type: 'EAT', leftovers: false },
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '4',
+                } as PlanActionEat,
               ],
             },
             {
               availability: 'LONG',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'FANCY',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '5',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '6',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -152,21 +174,30 @@ export default () => {
           meals: [
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '7' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '8' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'LONG',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'FANCY',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '9',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '10',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -175,21 +206,30 @@ export default () => {
           meals: [
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '11' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '12' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'LONG',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'FANCY',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '13',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '14',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -198,21 +238,30 @@ export default () => {
           meals: [
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '15' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '16' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'MEDIUM',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'NORMAL',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '17',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '18',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -221,21 +270,30 @@ export default () => {
           meals: [
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '19' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '20' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'SHORT',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'QUICK',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '21',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '22',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -244,21 +302,30 @@ export default () => {
           meals: [
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '23' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'NONE',
-              actions: [{ type: 'SKIP' }],
+              actions: [
+                { type: PlanActionType.Skip, id: '24' } as PlanActionSkip,
+              ],
             },
             {
               availability: 'SHORT',
               actions: [
                 {
-                  type: 'COOK',
+                  id: '25',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'QUICK',
-                },
-                { type: 'EAT', leftovers: false },
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '26',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -269,33 +336,48 @@ export default () => {
               availability: 'LONG',
               actions: [
                 {
-                  type: 'COOK',
+                  id: '27',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'FANCY',
-                },
-                { type: 'EAT', leftovers: false },
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '28',
+                } as PlanActionEat,
               ],
             },
             {
               availability: 'MEDIUM',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'NORMAL',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '29',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '30',
+                } as PlanActionEat,
               ],
             },
             {
               availability: 'LONG',
               actions: [
                 {
-                  type: 'COOK',
+                  type: PlanActionType.Cook,
                   servings: 2,
                   mealType: 'FANCY',
-                },
-                { type: 'EAT', leftovers: false },
+                  id: '31',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  leftovers: false,
+                  id: '32',
+                } as PlanActionEat,
               ],
             },
           ],
@@ -512,12 +594,31 @@ export default () => {
       days: [
         {
           meals: [
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
-            { actions: [{ type: 'EAT_OUT' }], availability: 'NONE' },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '1' } as PlanActionEatOut,
+              ],
+            },
             {
               actions: [
-                { mealType: 'FANCY', type: 'COOK', servings: 2 },
-                { mealDay: 0, type: 'EAT', mealIndex: 2 },
+                { type: PlanActionType.EatOut, id: '2' } as PlanActionEatOut,
+              ],
+              availability: 'NONE',
+            },
+            {
+              actions: [
+                {
+                  mealType: 'FANCY',
+                  type: PlanActionType.Cook,
+                  servings: 2,
+                  id: '3',
+                } as PlanActionCook,
+                {
+                  cookActionId: '3',
+                  type: PlanActionType.Eat,
+                  id: '4',
+                } as PlanActionEat,
               ],
               availability: 'LONG',
             },
@@ -525,25 +626,63 @@ export default () => {
         },
         {
           meals: [
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '5' } as PlanActionEatOut,
+              ],
+            },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '6' } as PlanActionEatOut,
+              ],
+            },
             {
               availability: 'LONG',
               actions: [
-                { servings: 2, mealType: 'FANCY', type: 'COOK' },
-                { mealIndex: 2, mealDay: 1, type: 'EAT' },
+                {
+                  servings: 2,
+                  mealType: 'FANCY',
+                  type: PlanActionType.Cook,
+                  id: '7',
+                } as PlanActionCook,
+                {
+                  cookActionId: '7',
+                  type: PlanActionType.Eat,
+                  id: '8',
+                } as PlanActionEat,
               ],
             },
           ],
         },
         {
           meals: [
-            { actions: [{ type: 'EAT_OUT' }], availability: 'NONE' },
-            { actions: [{ type: 'EAT_OUT' }], availability: 'NONE' },
             {
               actions: [
-                { servings: 2, mealType: 'FANCY', type: 'COOK' },
-                { mealIndex: 2, mealDay: 2, type: 'EAT' },
+                { type: PlanActionType.EatOut, id: '9' } as PlanActionEatOut,
+              ],
+              availability: 'NONE',
+            },
+            {
+              actions: [
+                { type: PlanActionType.EatOut, id: '10' } as PlanActionEatOut,
+              ],
+              availability: 'NONE',
+            },
+            {
+              actions: [
+                {
+                  servings: 2,
+                  mealType: 'FANCY',
+                  type: PlanActionType.Cook,
+                  id: '11',
+                } as PlanActionCook,
+                {
+                  cookActionId: '11',
+                  type: PlanActionType.Eat,
+                  id: '12',
+                } as PlanActionEat,
               ],
               availability: 'LONG',
             },
@@ -551,32 +690,85 @@ export default () => {
         },
         {
           meals: [
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
-            { availability: 'EAT_OUT', actions: [{ type: 'EAT_OUT' }] },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '13' } as PlanActionEatOut,
+              ],
+            },
+            {
+              availability: 'EAT_OUT',
+              actions: [
+                { type: PlanActionType.EatOut, id: '14' } as PlanActionEatOut,
+              ],
+            },
             {
               availability: 'SHORT',
               actions: [
-                { type: 'COOK', servings: 2, mealType: 'QUICK' },
-                { type: 'EAT', mealIndex: 2, mealDay: 3 },
+                {
+                  type: PlanActionType.Cook,
+                  servings: 2,
+                  mealType: 'QUICK',
+                  id: '15',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  id: '16',
+                  cookActionId: '15',
+                } as PlanActionEat,
               ],
             },
           ],
         },
         {
           meals: [
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
-            { availability: 'EAT_OUT', actions: [{ type: 'EAT_OUT' }] },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '16' } as PlanActionEatOut,
+              ],
+            },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '17' } as PlanActionEatOut,
+              ],
+            },
+            {
+              availability: 'EAT_OUT',
+              actions: [
+                { type: PlanActionType.EatOut, id: '18' } as PlanActionEatOut,
+              ],
+            },
           ],
         },
         {
           meals: [
-            { actions: [{ type: 'EAT_OUT' }], availability: 'NONE' },
-            { availability: 'NONE', actions: [{ type: 'EAT_OUT' }] },
             {
               actions: [
-                { mealType: 'QUICK', type: 'COOK', servings: 2 },
-                { mealIndex: 2, mealDay: 5, type: 'EAT' },
+                { type: PlanActionType.EatOut, id: '19' } as PlanActionEatOut,
+              ],
+              availability: 'NONE',
+            },
+            {
+              availability: 'NONE',
+              actions: [
+                { type: PlanActionType.EatOut, id: '20' } as PlanActionEatOut,
+              ],
+            },
+            {
+              actions: [
+                {
+                  mealType: 'QUICK',
+                  type: PlanActionType.Cook,
+                  servings: 2,
+                  id: '21',
+                } as PlanActionCook,
+                {
+                  cookActionId: '21',
+                  type: PlanActionType.Eat,
+                  id: '22',
+                } as PlanActionEat,
               ],
               availability: 'SHORT',
             },
@@ -587,22 +779,49 @@ export default () => {
             {
               availability: 'MEDIUM',
               actions: [
-                { mealType: 'NORMAL', type: 'COOK', servings: 2 },
-                { mealDay: 6, type: 'EAT', mealIndex: 0 },
+                {
+                  mealType: 'NORMAL',
+                  type: PlanActionType.Cook,
+                  servings: 2,
+                  id: '23',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  id: '24',
+                  cookActionId: '23',
+                } as PlanActionEat,
               ],
             },
             {
               availability: 'MEDIUM',
               actions: [
-                { mealType: 'NORMAL', type: 'COOK', servings: 2 },
-                { mealDay: 6, type: 'EAT', mealIndex: 1 },
+                {
+                  mealType: 'NORMAL',
+                  type: PlanActionType.Cook,
+                  servings: 2,
+                  id: '25',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  cookActionId: '25',
+                  id: '26',
+                } as PlanActionEat,
               ],
             },
             {
               availability: 'LONG',
               actions: [
-                { mealType: 'FANCY', type: 'COOK', servings: 2 },
-                { mealDay: 6, type: 'EAT', mealIndex: 2 },
+                {
+                  mealType: 'FANCY',
+                  type: PlanActionType.Cook,
+                  servings: 2,
+                  id: '27',
+                } as PlanActionCook,
+                {
+                  type: PlanActionType.Eat,
+                  cookActionId: '27',
+                  id: '28',
+                } as PlanActionEat,
               ],
             },
           ],
