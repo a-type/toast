@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { cold } from 'react-hot-loader';
 import { GetShoppingList } from 'generated/schema';
+import { Checkbox } from 'components/generic';
+import { Layout } from './components';
 
 export interface ShoppingListIngredientProps {
   totalValue: number;
@@ -18,17 +20,15 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
   const [done, setDone] = React.useState(false);
 
   return (
-    <div>
-      <input
-        type="checkbox"
+    <Layout>
+      <Checkbox
         value="done"
         checked={done}
         onChange={ev => setDone(ev.target.checked)}
       />
       <div>
-        {totalValue} {unit}
+        {totalValue} {unit} {ingredient.name}
       </div>
-      <div>{ingredient.name}</div>
       <div>
         [
         {recipes.map(recipe => (
@@ -36,7 +36,7 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
         ))}
         ]
       </div>
-    </div>
+    </Layout>
   );
 };
 

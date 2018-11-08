@@ -6,6 +6,7 @@ import Label from './Label';
 interface CheckboxProps {
   className?: string;
   id?: string;
+  value: string;
   checked: boolean;
   required?: boolean;
   disabled?: boolean;
@@ -14,41 +15,10 @@ interface CheckboxProps {
 }
 
 export default class Checkbox extends React.Component<CheckboxProps> {
-  static propTypes = {
-    /**
-     * Adds a class name to the input element.
-     */
-    className: PropTypes.string,
-    /**
-     * Adds an id to the input element.
-     */
-    id: PropTypes.string,
-    /**
-     * The value of the checkbox.
-     */
-    checked: PropTypes.bool,
-    /**
-     * Whether the checkbox is required for form submission.
-     */
-    required: PropTypes.bool,
-    /**
-     * Whether the user is prevented from interacting with the checkbox.
-     */
-    disabled: PropTypes.bool,
-    /**
-     * A description to display next to the checkbox.
-     */
-    children: PropTypes.node,
-    /**
-     * Callback for the onChange event of the input.
-     */
-    onChange: PropTypes.func,
-  };
-
   static defaultProps = {
     className: null,
     id: null,
-    value: false,
+    value: '',
     required: false,
     disabled: false,
     children: null,

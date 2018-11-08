@@ -24,11 +24,13 @@
 .icons8-calendar-delete:before,
 .icons8-calendar-plus:before,
 .icons8-calendar:before,
+.icons8-check-list:before,
 .icons8-chef-toque:before,
 .icons8-copybook:before,
 .icons8-delete-button:before,
 .icons8-draft:before,
 .icons8-edit:before,
+.icons8-green-check-mark:before,
 .icons8-heart-outline:before,
 .icons8-heart:before,
 .icons8-image:before,
@@ -77,6 +79,9 @@
 .icons8-calendar-plus:before {
   content: '\f113';
 }
+.icons8-check-list:before {
+  content: '\f11e';
+}
 .icons8-chef-toque:before {
   content: '\f11c';
 }
@@ -91,6 +96,9 @@
 }
 .icons8-edit:before {
   content: '\f102';
+}
+.icons8-green-check-mark:before {
+  content: '\f11d';
 }
 .icons8-heart:before {
   content: '\f108';
