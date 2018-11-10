@@ -96,6 +96,10 @@ export default class RecipeView extends React.Component {
                   <H1 name="Title">
                     {pathOr('', ['data', 'recipe', 'title'], response)}
                     <EditButton
+                      displayType={path(
+                        ['data', 'recipe', 'displayType'],
+                        response,
+                      )}
                       recipeId={recipeId}
                       authorId={path(
                         ['data', 'recipe', 'author', 'id'],

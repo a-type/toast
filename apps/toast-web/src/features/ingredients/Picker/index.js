@@ -69,7 +69,7 @@ class IngredientPicker extends React.Component {
           {({ ref }) => (
             <Input
               {...getInputProps({
-                innerRef: ref,
+                ref,
                 style: { width: '100%' },
               })}
             />

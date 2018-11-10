@@ -6,6 +6,10 @@ const StatusRow = styled.div`
   font-size: var(--font-size-md);
   user-select: none;
 
+  & > * {
+    margin: auto 0;
+  }
+
   & > * + * {
     margin-left: var(--spacing-sm);
   }

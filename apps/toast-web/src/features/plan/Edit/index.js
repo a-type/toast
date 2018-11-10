@@ -40,7 +40,7 @@ export default class extends React.Component {
                 return null;
               }
 
-              const plan = pathOr(null, ['me', 'group', 'plan'], data);
+              const plan = pathOr(null, ['plan'], data);
 
               return (
                 <Stages

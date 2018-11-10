@@ -66,20 +66,18 @@ export default class Bubbles extends React.PureComponent {
         onTouchEnd={this.onMouseLeave}
         backgroundColor={backgroundColor}
         style={style}
-        innerRef={this.wrapperRef}
+        ref={this.wrapperRef}
         {...rest}
       >
-        {new Array(bubbleCount)
-          .fill(null)
-          .map((_, key) => (
-            <Bubble
-              colorOptions={bubbleColors}
-              show={this.state.showBubbles}
-              key={key}
-              size={bubbleSize}
-              animated={animated}
-            />
-          ))}
+        {new Array(bubbleCount).fill(null).map((_, key) => (
+          <Bubble
+            colorOptions={bubbleColors}
+            show={this.state.showBubbles}
+            key={key}
+            size={bubbleSize}
+            animated={animated}
+          />
+        ))}
         {children}
       </Wrapper>
     );

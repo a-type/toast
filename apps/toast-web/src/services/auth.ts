@@ -20,6 +20,14 @@ const MergeUser = gql`
   }
 `;
 
+interface AuthToken {
+  sub: string;
+}
+
+export interface AuthUser extends AuthToken {
+  id: string;
+}
+
 export class Auth extends EventEmitter {
   auth0 = new auth0.WebAuth({
     domain: CONFIG.auth0.domain,
@@ -137,8 +145,11 @@ export class Auth extends EventEmitter {
       : null;
   }
 
-  get user() {
-    return this.idToken ? jwt(this.idToken) : null;
+  get user(): AuthUser {
+    if (!this.idToken) return null;
+    const user = jwt(this.idToken) as AuthToken;
+    (user as AuthUser).id = user.sub;
+    return user as AuthUser;
   }
 
   get scopes() {

@@ -82,7 +82,7 @@ export default class IngredientEditorParser extends React.PureComponent {
                     name="text"
                     required
                     onChange={handleChange}
-                    innerRef={this.inputRef}
+                    ref={this.inputRef}
                   />
                 </Field>
                 <Field>

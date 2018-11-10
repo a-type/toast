@@ -1,6 +1,7 @@
 import React from 'react';
 import { Selection, Handle, Container, TipContent } from './components';
-import { Tip, HelpText } from 'components/generic';
+import { Tip } from 'components/generic';
+import { HelpText } from 'components/typeset';
 
 export default class SelectionEditor extends React.Component {
   state = {
@@ -164,7 +165,7 @@ export default class SelectionEditor extends React.Component {
             color={color || 'brand'}
             data-selection-name={name}
             onClick={this.chooseSelection}
-            innerRef={ref}
+            ref={ref}
           >
             <Handle
               interactive={isActive}

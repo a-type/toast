@@ -40,7 +40,7 @@ export default ({ children, dockedContent }) => (
       }}
     >
       {({ ref, style, placement }) => (
-        <Container innerRef={ref} style={style} data-placement={placement}>
+        <Container ref={ref} style={style} data-placement={placement}>
           {dockedContent}
         </Container>
       )}
