@@ -201,7 +201,10 @@ export const resolvers = [
           return null;
         }
 
-        return ctx.firestore.plans.get(planId) || null;
+        const plan = await ctx.firestore.plans.get(planId);
+        ctx.plan = plan;
+        ctx.planId = plan.id;
+        return plan;
       },
 
       week: async (_parent, { weekIndex }, ctx) => {
@@ -214,6 +217,7 @@ export const resolvers = [
 
         const week = await ctx.firestore.plans.getWeek(planId, weekIndex);
         ctx.week = week;
+        ctx.planId = planId;
         return week;
       },
     },
@@ -252,7 +256,7 @@ export const resolvers = [
         plan.setMealDetails(dayIndex, mealIndex, details);
         const processed = ctx.planner.run(plan);
 
-        await ctx.firestore.plans.set(group.planId, plan);
+        await ctx.firestore.plans.set(group.planId, processed);
         return plan;
       },
 
@@ -298,6 +302,7 @@ export const resolvers = [
         const { planId } = parent;
         const plan = await ctx.firestore.plans.get(planId);
         ctx.plan = plan;
+        ctx.planId = planId;
         return plan;
       },
     },

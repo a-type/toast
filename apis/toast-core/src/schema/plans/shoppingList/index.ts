@@ -1,21 +1,30 @@
 import { gql } from 'apollo-server-express';
-import { UserInputError } from 'errors';
-import qty from 'js-quantities';
+import { UserInputError, NotFoundError } from 'errors';
+import { addQuantities, subtractQuantities } from '../../../tools/quantities';
+import getWeekIndex from '../getWeekIndex';
+import { ShoppingList } from 'models';
+import compileShoppingList from './compileShoppingList';
 
 export const typeDefs = gql`
   type ShoppingListIngredient {
     ingredient: Ingredient!
     totalValue: Float!
+    purchasedValue: Float!
     unit: String
-    recipes: [Recipe!]!
   }
 
   type ShoppingList {
+    id: ID!
+    weekIndex: Int!
     ingredients: [ShoppingListIngredient!]!
   }
 
   extend type Plan {
-    shoppingList: ShoppingList
+    shoppingList: ShoppingList!
+  }
+
+  extend type Mutation {
+    markPurchased(ingredientId: ID!, value: Float!, unit: String): ShoppingList!
   }
 `;
 
@@ -28,82 +37,68 @@ export const resolvers = {
         );
       }
 
-      // collect all recipes
-      const cookActions = parent.getActionsOfType('COOK');
-      const recipeMap = cookActions.reduce((recipes, action) => {
-        if (!action.recipeId) {
-          return recipes;
-        }
+      const { planId } = ctx;
 
-        if (recipes[action.recipeId]) {
-          return {
-            ...recipes,
-            [action.recipeId]: {
-              servings: recipes[action.recipeId].servings + action.servings,
-            },
-          };
-        }
+      if (!planId) {
+        throw new NotFoundError(
+          "Can't find a shopping list, no plan was specified.",
+        );
+      }
 
-        return {
-          ...recipes,
-          [action.recipeId]: {
-            servings: action.servings,
-          },
-        };
-      }, {});
-
-      const recipes = await ctx.graph.recipes.getAllWithIngredients(
-        Object.keys(recipeMap),
+      let shoppingList: ShoppingList = await ctx.firestore.plans.getShoppingList(
+        planId,
+        parent.weekIndex,
       );
 
-      // multiply by servings and combine ingredients
-      // note: this relies on recipeMap / recipe indexing to be stable... maybe not wise?
-      const ingredientQuantities = Object.keys(recipeMap)
-        .map((id, idx) => [id, recipeMap[id], recipes[idx]])
-        .reduce((ingredients, [id, info, recipe]) => {
-          const multiplier = info.servings / recipe.servings;
-          return recipe.ingredients.reduce((quantities, recipeIngredient) => {
-            const existing = quantities[recipeIngredient.ingredient.id];
-            if (existing) {
-              // convert to existing unit and add
-              const existingQty = qty(existing.totalValue, existing.unit);
-              const addedQty = qty(
-                (recipeIngredient.value || 1) * multiplier,
-                recipeIngredient.unit,
-              );
-              existingQty.add(addedQty);
+      if (shoppingList) {
+        return shoppingList;
+      } else {
+        shoppingList = await compileShoppingList(parent, ctx);
+        await ctx.firestore.plans.setShoppingList(
+          planId,
+          parent.weekIndex,
+          shoppingList,
+        );
+        return shoppingList;
+      }
+    },
+  },
 
-              existing.recipes.add(recipe);
+  Mutation: {
+    markPurchased: async (_parent, { ingredientId, value, unit }, ctx) => {
+      const group = await ctx.graph.groups.getMine();
 
-              return {
-                ...quantities,
-                [recipeIngredient.ingredient.id]: {
-                  ...existing,
-                  totalValue: existingQty.scalar,
-                },
-              };
-            } else {
-              return {
-                ...quantities,
-                [recipeIngredient.ingredient.id]: {
-                  ingredient: recipeIngredient.ingredient,
-                  unit: recipeIngredient.unit,
-                  totalValue: (recipeIngredient.value || 1) * multiplier,
-                  recipes: new Set([recipe]),
-                },
-              };
-            }
-          }, ingredients);
-        }, {});
+      if (!group || !group.planId) {
+        throw new UserInputError("You haven't created a plan yet");
+      }
 
-      const ingredientList = Object.keys(ingredientQuantities).map(id => ({
-        ingredientId: id,
-        ...ingredientQuantities[id],
-      }));
+      const now = new Date();
+      const currentWeekIndex = getWeekIndex({
+        year: now.getFullYear(),
+        month: now.getMonth(),
+        date: now.getDate(),
+        startDay: ctx.firestore.plans.START_WEEK_DAY,
+      });
+      const shoppingList = await ctx.firestore.plans.getShoppingList(
+        group.planId,
+        currentWeekIndex,
+      );
+      shoppingList.addPurchase(ingredientId, { value, unit });
+      return ctx.firestore.plans.setShoppingList(
+        group.planId,
+        currentWeekIndex,
+        shoppingList,
+      );
+    },
+  },
 
-      return {
-        ingredients: ingredientList,
-      };
+  ShoppingList: {
+    /**
+     * Transforms the ingredient map of a shopping list into
+     * a list for the API schema
+     */
+    ingredients: parent => {
+      return Object.values(parent.ingredients);
     },
   },
 
@@ -115,15 +110,5 @@ export const resolvers = {
 
       return ctx.graph.ingredients.get(parent.ingredientId);
     },
-
-    // recipes: (parent, _args, _ctx) => {
-    //   if (parent.recipes instanceof Set) {
-    //     const recipes = Array.from(parent.recipes);
-    //     console.dir(recipes);
-    //     return recipes;
-    //   }
-
-    //   return parent.recipes;
-    // },
   },
 };

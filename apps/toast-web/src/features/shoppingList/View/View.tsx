@@ -34,9 +34,13 @@ const View: React.SFC<{}> = () => (
               return (
                 <React.Fragment>
                   <div>
-                    {data.week.shoppingList.ingredients.map(ing => (
-                      <Ingredient key={ing.ingredient.id} {...ing} />
-                    ))}
+                    {data.week.shoppingList.ingredients
+                      .sort((a, b) =>
+                        a.ingredient.name.localeCompare(b.ingredient.name),
+                      )
+                      .map(ing => (
+                        <Ingredient key={ing.ingredient.id} {...ing} />
+                      ))}
                   </div>
                 </React.Fragment>
               );

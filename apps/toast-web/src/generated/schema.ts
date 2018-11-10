@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-03T17:29:12-04:00 */
+/** Generated in 2018-11-10T16:36:03-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -222,7 +222,7 @@ export interface Plan {
 
   startDate?: Date | null;
 
-  shoppingList?: ShoppingList | null;
+  shoppingList: ShoppingList;
 }
 
 export interface PlanDay {
@@ -242,6 +242,10 @@ export interface PlanMeal {
 }
 
 export interface ShoppingList {
+  id: string;
+
+  weekIndex: number;
+
   ingredients: ShoppingListIngredient[];
 }
 
@@ -249,6 +253,8 @@ export interface ShoppingListIngredient {
   ingredient: Ingredient;
 
   totalValue: number;
+
+  purchasedValue: number;
 
   unit?: string | null;
 
@@ -333,6 +339,8 @@ export interface Mutation {
   setPlanStrategy: Plan;
 
   setPlanActionRecipe: PlanAction;
+
+  markPurchased: ShoppingList;
 
   showMessage?: Message | null;
 
@@ -739,6 +747,13 @@ export interface SetPlanActionRecipeMutationArgs {
 
   recipeId: string;
 }
+export interface MarkPurchasedMutationArgs {
+  ingredientId: string;
+
+  value: number;
+
+  unit?: string | null;
+}
 export interface ShowMessageMutationArgs {
   contents: (string | null)[];
 }
@@ -1041,19 +1056,7 @@ export namespace SearchRecipes {
     __typename?: 'Recipe';
 
     id: string;
-
-    title: string;
-
-    coverImage?: CoverImage | null;
-  };
-
-  export type CoverImage = {
-    __typename?: 'Image';
-
-    id: string;
-
-    url: string;
-  };
+  } & RecipeCard.Fragment;
 }
 
 export namespace GetShoppingList {
@@ -1070,42 +1073,28 @@ export namespace GetShoppingList {
   export type Week = {
     __typename?: 'Plan';
 
-    shoppingList?: ShoppingList | null;
+    id: string;
+
+    shoppingList: ShoppingList;
   };
 
-  export type ShoppingList = {
-    __typename?: 'ShoppingList';
+  export type ShoppingList = ShoppingListView.Fragment;
+}
 
-    ingredients: Ingredients[];
-  };
-
-  export type Ingredients = {
-    __typename?: 'ShoppingListIngredient';
-
-    totalValue: number;
-
+export namespace MarkPurchased {
+  export type Variables = {
+    ingredientId: string;
+    value: number;
     unit?: string | null;
-
-    ingredient: Ingredient;
-
-    recipes: Recipes[];
   };
 
-  export type Ingredient = {
-    __typename?: 'Ingredient';
+  export type Mutation = {
+    __typename?: 'Mutation';
 
-    id: string;
-
-    name: string;
+    markPurchased: MarkPurchased;
   };
 
-  export type Recipes = {
-    __typename?: 'Recipe';
-
-    id: string;
-
-    title: string;
-  };
+  export type MarkPurchased = ShoppingListView.Fragment;
 }
 
 export namespace UserInfo {
@@ -1198,6 +1187,8 @@ export namespace CalendarPlanAction {
   export type CoverImage = {
     __typename?: 'Image';
 
+    id: string;
+
     url: string;
   };
 
@@ -1229,6 +1220,8 @@ export namespace CalendarPlanAction {
 
   export type _CoverImage = {
     __typename?: 'Image';
+
+    id: string;
 
     url: string;
   };
@@ -1325,5 +1318,43 @@ export namespace RecipeCard {
     id: string;
 
     url: string;
+  };
+}
+
+export namespace ShoppingListView {
+  export type Fragment = {
+    __typename?: 'ShoppingList';
+
+    ingredients: Ingredients[];
+  };
+
+  export type Ingredients = {
+    __typename?: 'ShoppingListIngredient';
+
+    totalValue: number;
+
+    unit?: string | null;
+
+    purchasedValue: number;
+
+    ingredient: Ingredient;
+
+    recipes: Recipes[];
+  };
+
+  export type Ingredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
+
+  export type Recipes = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
   };
 }

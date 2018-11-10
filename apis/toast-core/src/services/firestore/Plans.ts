@@ -1,6 +1,7 @@
 import Plan from 'models/Plan';
 import { START_WEEK_DAY } from '../../constants';
 import { Firestore } from '@google-cloud/firestore';
+import ShoppingList from 'models/ShoppingList';
 
 const COLLECTION = 'plans';
 
@@ -79,5 +80,34 @@ export default class Plans {
     await document.set(planData.toJSON(), { merge: true });
     const docRef = await document.get();
     return Plan.fromJSON(docRef.data());
+  };
+
+  /**
+   * Shopping Lists - keeps track of what the user should buy each week
+   */
+  getShoppingList = async (planId, week: number) => {
+    const document = this.firestore.doc(
+      `${COLLECTION}/${planId}/shoppingLists/week_${week}`,
+    );
+    const docRef = await document.get();
+
+    if (!docRef.exists) {
+      return null;
+    }
+
+    return ShoppingList.fromJSON(docRef.data());
+  };
+
+  setShoppingList = async (
+    planId,
+    week: number,
+    shoppingList: ShoppingList,
+  ) => {
+    const document = this.firestore.doc(
+      `${COLLECTION}/${planId}/shoppingLists/week_${week}`,
+    );
+
+    await document.set(shoppingList.toJSON());
+    return shoppingList;
   };
 }

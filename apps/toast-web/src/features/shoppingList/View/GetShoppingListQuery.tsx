@@ -2,27 +2,19 @@ import * as React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import gql from 'graphql-tag';
 import { GetShoppingList } from 'generated/schema';
+import { shoppingList } from './fragments';
 
 export const Document = gql`
   query GetShoppingList($weekIndex: Int!) {
     week(weekIndex: $weekIndex) {
       id
       shoppingList {
-        ingredients {
-          totalValue
-          unit
-          ingredient {
-            id
-            name
-          }
-          recipes {
-            id
-            title
-          }
-        }
+        ...ShoppingListView
       }
     }
   }
+
+  ${shoppingList}
 `;
 
 interface GetShoppingListQueryProps {
