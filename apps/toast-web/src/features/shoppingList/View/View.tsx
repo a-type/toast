@@ -3,8 +3,10 @@ import GetShoppingListQuery from './GetShoppingListQuery';
 import GetWeekIndexQuery from 'features/plan/Calendar/GetWeekIndexQuery';
 import Ingredient from './Ingredient';
 import { Content } from 'components/layouts';
-import { H1, HelpText } from 'components/typeset';
+import { H1, HelpText, H3 } from 'components/typeset';
 import { format, startOfWeek } from 'date-fns';
+
+const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
 
 const View: React.SFC<{}> = () => (
   <Content>
@@ -31,16 +33,34 @@ const View: React.SFC<{}> = () => (
                 return <div>{error.message}</div>;
               }
 
+              const ingredients = data.week.shoppingList.ingredients.sort(
+                sortByName,
+              );
+              const purchased = ingredients.filter(
+                ing => ing.purchasedValue >= ing.totalValue,
+              );
+              const unpurchased = ingredients.filter(
+                ing => ing.purchasedValue < ing.totalValue,
+              );
+
               return (
                 <React.Fragment>
                   <div>
-                    {data.week.shoppingList.ingredients
-                      .sort((a, b) =>
-                        a.ingredient.name.localeCompare(b.ingredient.name),
-                      )
-                      .map(ing => (
+                    {unpurchased.map(ing => (
+                      <Ingredient key={ing.ingredient.id} {...ing} />
+                    ))}
+                  </div>
+                  <H3>Purchased</H3>
+                  <div style={{ opacity: 0.5 }}>
+                    {!!purchased.length ? (
+                      purchased.map(ing => (
                         <Ingredient key={ing.ingredient.id} {...ing} />
-                      ))}
+                      ))
+                    ) : (
+                      <HelpText>
+                        Check items off the list and they will move here
+                      </HelpText>
+                    )}
                   </div>
                 </React.Fragment>
               );

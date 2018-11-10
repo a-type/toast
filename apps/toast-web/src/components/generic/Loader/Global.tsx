@@ -12,6 +12,6 @@ const GlobalContainer = styled.div`
 
 export default props => (
   <GlobalContainer {...props}>
-    <Loader size="20vw" />
+    <Loader size="15vw" />
   </GlobalContainer>
 );

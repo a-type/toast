@@ -1,7 +1,8 @@
 import React, { ChangeEvent } from 'react';
-import PropTypes from 'prop-types';
 import Input from './Input';
 import Label from './Label';
+import Wrapper from './Wrapper';
+import { Size } from 'theme';
 
 interface CheckboxProps {
   className?: string;
@@ -12,6 +13,8 @@ interface CheckboxProps {
   disabled?: boolean;
   children?: React.ReactNode;
   onChange(ev: ChangeEvent<HTMLInputElement>): void;
+  wrapperProps?: React.HTMLAttributes<HTMLDivElement>;
+  spaceBelow?: Size;
 }
 
 export default class Checkbox extends React.Component<CheckboxProps> {
@@ -23,6 +26,7 @@ export default class Checkbox extends React.Component<CheckboxProps> {
     disabled: false,
     children: null,
     onChange: () => null,
+    spaceBelow: 'md',
   };
 
   naturalId = `checkbox${Math.floor(Math.random() * 10000000)}`;
@@ -36,12 +40,14 @@ export default class Checkbox extends React.Component<CheckboxProps> {
       required,
       children,
       onChange,
+      wrapperProps,
+      spaceBelow,
     } = this.props;
 
     const finalId = id || this.naturalId;
 
     return (
-      <div>
+      <Wrapper {...wrapperProps} spaceBelow={spaceBelow}>
         <Input
           id={finalId}
           className={className}
@@ -52,7 +58,7 @@ export default class Checkbox extends React.Component<CheckboxProps> {
           onChange={onChange}
         />
         <Label htmlFor={finalId}>{children}</Label>
-      </div>
+      </Wrapper>
     );
   }
 }
