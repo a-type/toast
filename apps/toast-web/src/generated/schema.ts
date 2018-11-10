@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-10T16:36:03-05:00 */
+/** Generated in 2018-11-10T17:42:50-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -257,8 +257,6 @@ export interface ShoppingListIngredient {
   purchasedValue: number;
 
   unit?: string | null;
-
-  recipes: Recipe[];
 }
 
 export interface RecipeSearchResponse {
@@ -341,6 +339,8 @@ export interface Mutation {
   setPlanActionRecipe: PlanAction;
 
   markPurchased: ShoppingList;
+
+  markUnpurchased: ShoppingList;
 
   showMessage?: Message | null;
 
@@ -749,10 +749,9 @@ export interface SetPlanActionRecipeMutationArgs {
 }
 export interface MarkPurchasedMutationArgs {
   ingredientId: string;
-
-  value: number;
-
-  unit?: string | null;
+}
+export interface MarkUnpurchasedMutationArgs {
+  ingredientId: string;
 }
 export interface ShowMessageMutationArgs {
   contents: (string | null)[];
@@ -1084,8 +1083,6 @@ export namespace GetShoppingList {
 export namespace MarkPurchased {
   export type Variables = {
     ingredientId: string;
-    value: number;
-    unit?: string | null;
   };
 
   export type Mutation = {
@@ -1095,6 +1092,20 @@ export namespace MarkPurchased {
   };
 
   export type MarkPurchased = ShoppingListView.Fragment;
+}
+
+export namespace MarkUnpurchased {
+  export type Variables = {
+    ingredientId: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    markUnpurchased: MarkUnpurchased;
+  };
+
+  export type MarkUnpurchased = ShoppingListView.Fragment;
 }
 
 export namespace UserInfo {
@@ -1325,6 +1336,8 @@ export namespace ShoppingListView {
   export type Fragment = {
     __typename?: 'ShoppingList';
 
+    id: string;
+
     ingredients: Ingredients[];
   };
 
@@ -1338,8 +1351,6 @@ export namespace ShoppingListView {
     purchasedValue: number;
 
     ingredient: Ingredient;
-
-    recipes: Recipes[];
   };
 
   export type Ingredient = {
@@ -1348,13 +1359,5 @@ export namespace ShoppingListView {
     id: string;
 
     name: string;
-  };
-
-  export type Recipes = {
-    __typename?: 'Recipe';
-
-    id: string;
-
-    title: string;
   };
 }

@@ -24,27 +24,30 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
 
   return (
     <MarkPurchasedMutation
-      variables={{ ingredientId: ingredient.id, unit, value: totalValue }}
+      purchased={purchasedValue >= totalValue}
+      variables={{ ingredientId: ingredient.id }}
     >
       {mutate => (
-        <Checkbox
-          value="done"
-          checked={purchasedValue >= totalValue}
-          onChange={async () => {
-            setLoading(true);
-            try {
-              await mutate();
-            } catch (err) {
-              logger.fatal(err);
-            } finally {
-              setLoading(false);
-            }
-          }}
-          data-grid-area="checkbox"
-        >
-          {formatIngredient(totalValue, unit || '', ingredient.name)}{' '}
+        <React.Fragment>
+          <Checkbox
+            value="done"
+            checked={purchasedValue >= totalValue}
+            onChange={async () => {
+              setLoading(true);
+              try {
+                await mutate();
+              } catch (err) {
+                logger.fatal(err);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            data-grid-area="checkbox"
+          >
+            {formatIngredient(totalValue, unit || '', ingredient.name)}{' '}
+          </Checkbox>
           {loading && <GlobalLoader />}
-        </Checkbox>
+        </React.Fragment>
       )}
     </MarkPurchasedMutation>
   );

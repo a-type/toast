@@ -24,7 +24,8 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    markPurchased(ingredientId: ID!, value: Float!, unit: String): ShoppingList!
+    markPurchased(ingredientId: ID!): ShoppingList!
+    markUnpurchased(ingredientId: ID!): ShoppingList!
   }
 `;
 
@@ -65,7 +66,7 @@ export const resolvers = {
   },
 
   Mutation: {
-    markPurchased: async (_parent, { ingredientId, value, unit }, ctx) => {
+    markPurchased: async (_parent, { ingredientId }, ctx) => {
       const group = await ctx.graph.groups.getMine();
 
       if (!group || !group.planId) {
@@ -83,7 +84,33 @@ export const resolvers = {
         group.planId,
         currentWeekIndex,
       );
-      shoppingList.addPurchase(ingredientId, { value, unit });
+      shoppingList.purchase(ingredientId);
+      return ctx.firestore.plans.setShoppingList(
+        group.planId,
+        currentWeekIndex,
+        shoppingList,
+      );
+    },
+
+    markUnpurchased: async (_parent, { ingredientId }, ctx) => {
+      const group = await ctx.graph.groups.getMine();
+
+      if (!group || !group.planId) {
+        throw new UserInputError("You haven't created a plan yet");
+      }
+
+      const now = new Date();
+      const currentWeekIndex = getWeekIndex({
+        year: now.getFullYear(),
+        month: now.getMonth(),
+        date: now.getDate(),
+        startDay: ctx.firestore.plans.START_WEEK_DAY,
+      });
+      const shoppingList = await ctx.firestore.plans.getShoppingList(
+        group.planId,
+        currentWeekIndex,
+      );
+      shoppingList.unpurchase(ingredientId);
       return ctx.firestore.plans.setShoppingList(
         group.planId,
         currentWeekIndex,

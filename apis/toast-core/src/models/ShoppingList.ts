@@ -54,24 +54,23 @@ export default class ShoppingList {
     this.data.ingredients[id] = item;
   };
 
-  addPurchase = (id, { unit, value }) => {
+  purchase = id => {
     const existing = this.data.ingredients[id];
     if (!existing) {
-      this.data.ingredients[id] = {
-        ingredientId: id,
-        unit: unit,
-        totalValue: value,
-        purchasedValue: value,
-      };
+      return;
     } else {
-      const added = quantities.addQuantities(
-        { value: existing.purchasedValue, unit: existing.unit },
-        {
-          unit,
-          value,
-        },
-      );
-      this.data.ingredients[id].purchasedValue = added.value;
+      this.data.ingredients[id].purchasedValue = this.data.ingredients[
+        id
+      ].totalValue;
+    }
+  };
+
+  unpurchase = id => {
+    const existing = this.data.ingredients[id];
+    if (!existing) {
+      return;
+    } else {
+      this.data.ingredients[id].purchasedValue = 0;
     }
   };
 

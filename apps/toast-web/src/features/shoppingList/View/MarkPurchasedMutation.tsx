@@ -4,9 +4,19 @@ import gql from 'graphql-tag';
 import { MarkPurchased } from 'generated/schema';
 import { shoppingList } from './fragments';
 
-export const Document = gql`
-  mutation MarkPurchased($ingredientId: ID!, $value: Float!, $unit: String) {
-    markPurchased(ingredientId: $ingredientId, value: $value, unit: $unit) {
+export const PurchaseDocument = gql`
+  mutation MarkPurchased($ingredientId: ID!) {
+    markPurchased(ingredientId: $ingredientId) {
+      ...ShoppingListView
+    }
+  }
+
+  ${shoppingList}
+`;
+
+export const UnpurchaseDocument = gql`
+  mutation MarkUnpurchased($ingredientId: ID!) {
+    markUnpurchased(ingredientId: $ingredientId) {
       ...ShoppingListView
     }
   }
@@ -15,6 +25,7 @@ export const Document = gql`
 `;
 
 interface MarkPurchasedMutationProps {
+  purchased: boolean;
   variables?: MarkPurchased.Variables;
   skip?: boolean;
   children(
@@ -22,9 +33,12 @@ interface MarkPurchasedMutationProps {
   ): React.ReactNode;
 }
 
-const MarkPurchasedMutation: React.SFC<MarkPurchasedMutationProps> = props => (
+const MarkPurchasedMutation: React.SFC<MarkPurchasedMutationProps> = ({
+  purchased,
+  ...props
+}) => (
   <Mutation<MarkPurchased.Mutation, MarkPurchased.Variables>
-    mutation={Document}
+    mutation={purchased ? UnpurchaseDocument : PurchaseDocument}
     {...props}
   />
 );
