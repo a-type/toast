@@ -4,7 +4,7 @@ import { GetShoppingList } from 'generated/schema';
 import { Checkbox } from 'components/generic';
 import { Layout } from './components';
 import { formatIngredient } from 'formatters';
-import { HelpText } from 'components/typeset';
+import { HelpText, Link } from 'components/typeset';
 
 export interface ShoppingListIngredientProps {
   totalValue: number;
@@ -30,7 +30,12 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
       />
       <div>{formatIngredient(totalValue, unit || '', ingredient.name)}</div>
       <HelpText>
-        from: {recipes.map(recipe => recipe.title).join(', ')}
+        from:{' '}
+        {recipes.map(recipe => (
+          <span>
+            <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>{' '}
+          </span>
+        ))}
       </HelpText>
     </Layout>
   );

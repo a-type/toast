@@ -29,6 +29,7 @@ const Link = styled<TextLinkProps>(ProtectedBaseLink)`
   transition: 0.25s ease-in-out;
   font-size: ${props =>
     props.textSize ? `var(--font-size-${props.textSize})` : `inherit`};
+  display: inline-block;
 
   &:hover {
     color: var(--color-brand-dark);
