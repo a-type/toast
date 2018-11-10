@@ -4,7 +4,7 @@ import BaseLink, { LinkProps } from 'components/generic/Link';
 import { getSize } from 'theme';
 
 export type TextLinkProps = LinkProps & {
-  to: string;
+  to?: string;
   textSize?: 'sm' | 'md' | 'lg';
   inline?: boolean;
   spaceBelow?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string;

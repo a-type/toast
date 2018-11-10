@@ -32,6 +32,16 @@ AppLayout.Content = styled.div`
   & > * {
     pointer-events: initial;
   }
+
+  @media (min-width: 1000px) {
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+  }
+
+  @media (min-width: 1600px) {
+    width: 1200px;
+  }
 `;
 
 export default AppLayout;

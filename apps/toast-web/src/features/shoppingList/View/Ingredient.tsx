@@ -27,9 +27,12 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
         value="done"
         checked={done}
         onChange={ev => setDone(ev.target.checked)}
+        data-grid-area="checkbox"
       />
-      <div>{formatIngredient(totalValue, unit || '', ingredient.name)}</div>
-      <HelpText>
+      <div data-grid-area="ingredient">
+        {formatIngredient(totalValue, unit || '', ingredient.name)}
+      </div>
+      <HelpText data-grid-area="recipes">
         from:{' '}
         {recipes.map(recipe => (
           <span>

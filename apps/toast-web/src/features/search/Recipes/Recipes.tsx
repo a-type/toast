@@ -5,11 +5,11 @@ import { pathOr } from 'ramda';
 import RecipeSearchFiltersQuery from './RecipeSearchFiltersQuery';
 import SearchRecipesQuery from './SearchRecipesQuery';
 
-const SearchRecipeResults: React.SFC<{}> = () => (
+const SearchRecipeResults: React.SFC<{}> = props => (
   <RecipeSearchFiltersQuery>
     {({ data, error }) => {
       if (error) {
-        return <div>{error.message}</div>;
+        return <div {...props}>{error.message}</div>;
       }
 
       const { searchFilters: filters = [] } = data;
@@ -38,7 +38,7 @@ const SearchRecipeResults: React.SFC<{}> = () => (
       };
 
       return (
-        <div>
+        <div {...props}>
           <H1 spaceBelow={filters.length ? 'xl' : 'sm'}>Recipes</H1>
           {filters.length === 0 && (
             <HelpText spaceBelow="lg">

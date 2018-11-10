@@ -2,8 +2,8 @@ import { css } from 'styled-components';
 
 export default (areaNames: string[]) =>
   areaNames.map(
-    (areaName, idx) => css`
-      & > *:nth-child(${idx + 1}) {
+    areaName => css`
+      & > *[data-grid-area="${areaName}"] {
         grid-area: ${areaName};
       }
     `,

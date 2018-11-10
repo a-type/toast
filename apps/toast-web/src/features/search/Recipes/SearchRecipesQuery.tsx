@@ -2,20 +2,19 @@ import * as React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import gql from 'graphql-tag';
 import { SearchRecipes } from 'generated/schema';
+import { RecipeCards } from 'features/recipes';
 
 export const Document = gql`
   query SearchRecipes($input: RecipeSearchInput!) {
     searchRecipes(input: $input) {
       items {
         id
-        title
-        coverImage {
-          id
-          url
-        }
+        ...RecipeCard
       }
     }
   }
+
+  ${RecipeCards.fragments.recipe}
 `;
 
 interface SearchRecipesQueryProps {

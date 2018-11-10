@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'fraql';
-import { Layout, BorderContainer } from './components';
+import { Layout } from './components';
 import Filter from './Filter';
 import { H2 } from 'components/typeset';
 
@@ -32,20 +32,20 @@ export default class Filters extends React.Component {
       <Query query={GetFilters}>
         {({ data, loading, error }) => {
           if (error) {
-            return <div>{error.message}</div>;
+            return <div {...this.props}>{error.message}</div>;
           }
 
           const { searchFilters = [] } = data;
 
           return (
-            <BorderContainer>
+            <div {...this.props}>
               <H2>Filters</H2>
               <Layout>
                 {searchFilters.map(filter => (
                   <Filter key={filter.id} {...filter} />
                 ))}
               </Layout>
-            </BorderContainer>
+            </div>
           );
         }}
       </Query>

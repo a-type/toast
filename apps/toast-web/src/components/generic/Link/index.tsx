@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 import * as React from 'react';
-import { Link as LibLink } from 'react-router-dom';
+import { Link as LibLink, NavLink as LibNavLink } from 'react-router-dom';
 import { getSize } from 'theme';
 
-type InnerLinkProps = {
-  to: string;
+type InnerLinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
+  to?: string;
   children: React.ReactNode;
   forceRemote?: boolean;
   newTab?: boolean;
   className?: string;
   id?: string;
+  nav?: boolean;
 };
 
 export type LinkProps = InnerLinkProps & {
@@ -18,14 +19,14 @@ export type LinkProps = InnerLinkProps & {
 
 export const BaseLink = React.forwardRef(
   (
-    { to, children, forceRemote, newTab, ...props }: InnerLinkProps,
+    { to, children, forceRemote, newTab, nav, ...props }: InnerLinkProps,
     ref: any,
   ) => {
     if (!to) {
       return (
-        <div {...props} ref={ref}>
+        <a href="#" {...props} ref={ref}>
           {children}
-        </div>
+        </a>
       );
     }
 
@@ -34,6 +35,19 @@ export const BaseLink = React.forwardRef(
         <a href={to} target="_blank" {...props} ref={ref}>
           {children}
         </a>
+      );
+    }
+
+    if (nav) {
+      return (
+        <LibNavLink
+          to={to}
+          {...props}
+          ref={ref}
+          activeClassName="link-matching"
+        >
+          {children}
+        </LibNavLink>
       );
     }
 

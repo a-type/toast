@@ -140,6 +140,7 @@
     "react-select": "^2.1.0",
     "react-spring": "^5.1.1",
     "react-transition-group": "^2.5.0",
+    "react-use": "^4.9.0",
     "react-wireframe": "^0.1.1",
     "readable-fractions": "^0.1.0",
     "recompose": "^0.26.0",

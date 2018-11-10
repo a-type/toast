@@ -31,7 +31,7 @@ const Edit = () => (
 const Layout = styled.div`
   display: grid;
   grid-template-areas: 'previous next' 'edit blank';
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
   margin-top: var(--spacing-lg);
 
   & > *:first-child {

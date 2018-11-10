@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
-const TOP_SPACE = '115px';
+const TOP_SPACE = '65px';
 
 const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   width: 100%;
@@ -65,13 +65,11 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
 
   @media (min-width: 1600px) {
     & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.HERO_CONTENT} {
-      margin-right: auto;
       max-width: ${props => (props.wide ? 'auto' : '900px')};
     }
 
     & .${CLASS_NAMES.CONTENT} {
       width: 100%;
-      margin-left: auto;
     }
 
     & .${CLASS_NAMES.HERO} {

@@ -39,11 +39,16 @@
 .icons8-list-view:before,
 .icons8-login:before,
 .icons8-microwave:before,
+.icons8-more:before,
 .icons8-next-page:before,
 .icons8-plus-math:before,
 .icons8-run:before,
 .icons8-sand-timer:before,
+.icons8-search:before,
 .icons8-skip-this-track:before,
+.icons8-star:before,
+.icons8-three-dots-symbol:before,
+.icons8-timer:before,
 .icons8-unavailable-cloud:before,
 .icons8-view-more:before,
 .icons8-waiter:before,
@@ -124,6 +129,9 @@
 .icons8-microwave:before {
   content: '\f116';
 }
+.icons8-more:before {
+  content: '\f122';
+}
 .icons8-next-page:before {
   content: '\f109';
 }
@@ -136,8 +144,20 @@
 .icons8-sand-timer:before {
   content: '\f117';
 }
+.icons8-search:before {
+  content: '\f11f';
+}
 .icons8-skip-this-track:before {
   content: '\f11b';
+}
+.icons8-star:before {
+  content: '\f120';
+}
+.icons8-three-dots-symbol:before {
+  content: '\f123';
+}
+.icons8-timer:before {
+  content: '\f121';
 }
 .icons8-unavailable-cloud:before {
   content: '\f110';

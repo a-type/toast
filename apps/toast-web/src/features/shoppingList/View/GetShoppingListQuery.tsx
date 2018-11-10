@@ -6,6 +6,7 @@ import { GetShoppingList } from 'generated/schema';
 export const Document = gql`
   query GetShoppingList($weekIndex: Int!) {
     week(weekIndex: $weekIndex) {
+      id
       shoppingList {
         ingredients {
           totalValue

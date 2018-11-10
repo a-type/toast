@@ -11,6 +11,7 @@ const actionFragment = gql`
         id
         title
         coverImage {
+          id
           url
         }
       }
@@ -23,6 +24,7 @@ const actionFragment = gql`
           id
           title
           coverImage {
+            id
             url
           }
         }

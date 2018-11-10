@@ -2,9 +2,11 @@ import * as React from 'react';
 import CalendarMealSetRecipeMutation from './CalendarMealSetRecipeMutation';
 import { RecipeSelector } from 'features/plan';
 import { PlanActionCook } from 'generated/schema';
-import { Card, Loader } from 'components/generic';
+import { Card, Icon } from 'components/generic';
+import CardBox from 'components/generic/Card/Box';
 import logger from 'logger';
 import { pathOr } from 'ramda';
+import styled from 'styled-components';
 
 interface CalendarCookActionProps {
   action: PlanActionCook;
@@ -18,6 +20,19 @@ interface CalendarCookActionState {
   loading: boolean;
   error: Error | null;
 }
+
+const EmptyCard = styled(CardBox)`
+  background: var(--color-gray-lightest);
+  border-color: var(--color-gray-lightest);
+  display: flex;
+  height: 100%;
+  color: var(--color-gray);
+  cursor: pointer;
+
+  & > * {
+    margin: auto;
+  }
+`;
 
 export default class CalendarCookAction extends React.Component<
   CalendarCookActionProps,
@@ -38,20 +53,24 @@ export default class CalendarCookAction extends React.Component<
     return url;
   };
 
-  renderCardContents = () => {
+  renderCard = () => {
     const { action } = this.props;
     const { loading } = this.state;
     const recipe = action.recipe || null;
 
     if (recipe) {
-      return recipe.title;
+      return <Card imageSrc={this.getCardImage()}>{recipe.title}</Card>;
     }
 
     if (loading) {
-      return <Loader size={50} />;
+      return <Card.Skeleton />;
     }
 
-    return 'Choose a recipe';
+    return (
+      <EmptyCard onClick={this.showRecipeSelector}>
+        <Icon name="add" size="60px" />
+      </EmptyCard>
+    );
   };
 
   render() {
@@ -60,9 +79,7 @@ export default class CalendarCookAction extends React.Component<
 
     return (
       <React.Fragment>
-        <Card onClick={this.showRecipeSelector} imageSrc={this.getCardImage()}>
-          {this.renderCardContents()}
-        </Card>
+        {this.renderCard()}
         {showRecipeSelector && (
           <CalendarMealSetRecipeMutation>
             {mutate => (

@@ -82,6 +82,7 @@ class SearchBar extends React.Component {
   };
 
   render() {
+    const { history, reset, ...rest } = this.props;
     const { inputValue } = this.state;
 
     return (
@@ -90,6 +91,7 @@ class SearchBar extends React.Component {
         onChange={this.handleInputChanged}
         placeholder="Search recipes or ingredients..."
         onKeyDown={this.handleKeyDown}
+        groupProps={rest}
       >
         {inputValue.length > 0 && (
           <React.Fragment>

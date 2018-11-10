@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'components/generic';
 
-const Circle = styled.div`
+const Circle = styled<{ avatarUrl: string }, 'div'>('div')`
   border-radius: 100%;
   background: var(--color-white);
   display: flex;
@@ -20,8 +20,14 @@ const Circle = styled.div`
   }
 `;
 
-export default ({ innerRef, onClick, avatarUrl, ...rest }) => (
-  <Circle avatarUrl={avatarUrl} innerRef={innerRef} onClick={onClick} {...rest}>
+export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+  avatarUrl: string;
+}
+
+const Avatar: React.SFC<AvatarProps> = ({ onClick, avatarUrl, ...rest }) => (
+  <Circle avatarUrl={avatarUrl} onClick={onClick} {...rest}>
     {!avatarUrl && <Icon name="profile-picture" />}
   </Circle>
 );
+
+export default Avatar;

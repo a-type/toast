@@ -39,15 +39,17 @@ const SearchIngredients = gql`
 export default class SearchRecipeResults extends React.Component {
   renderSearchResults = ({ data, loading, error }) => {
     if (error) {
-      return <div>{error.message}</div>;
+      return <div {...this.props}>{error.message}</div>;
     }
 
     if (loading) {
       return (
-        <div>
+        <div {...this.props}>
           <H1>Ingredients</H1>
           <Layout>
-            {new Array(10).fill(null).map((_, idx) => <Skeleton key={idx} />)}
+            {new Array(10).fill(null).map((_, idx) => (
+              <Skeleton key={idx} />
+            ))}
           </Layout>
         </div>
       );
@@ -56,7 +58,7 @@ export default class SearchRecipeResults extends React.Component {
     const { items } = data.searchIngredients;
 
     return (
-      <div>
+      <div {...this.props}>
         <H1>Ingredients</H1>
         <Layout>
           <Mutation mutation={AddFilter}>
@@ -97,7 +99,7 @@ export default class SearchRecipeResults extends React.Component {
       <Query query={GetSearchInputValue}>
         {({ data, loading, error }) => {
           if (error) {
-            return <div>{error.message}</div>;
+            return <div {...this.props}>{error.message}</div>;
           }
 
           const { searchInputValue } = data;

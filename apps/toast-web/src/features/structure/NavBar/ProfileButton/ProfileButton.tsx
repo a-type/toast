@@ -1,12 +1,20 @@
 import React from 'react';
-import { Loader, Tip, Button } from 'components/generic';
+import { Tip, Button } from 'components/generic';
 import { Avatar, LinkStack } from './components';
 import { Link } from 'components/typeset';
 import auth from 'services/auth';
 import { Consumer } from 'features/auth/TokenContext';
 import { path } from 'ramda';
+import LoginButton from './LoginButton';
 
-class InnerSelfLink extends React.Component {
+interface InnerSelfLinkProps {
+  user: {
+    picture: string;
+    sub: string;
+  };
+}
+
+class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
   login = () => {
     auth.login();
   };
@@ -17,6 +25,10 @@ class InnerSelfLink extends React.Component {
 
   renderTipContent = () => {
     const { user } = this.props;
+
+    if (!user) {
+      return <LoginButton />;
+    }
 
     return (
       <LinkStack>
@@ -30,12 +42,10 @@ class InnerSelfLink extends React.Component {
   };
 
   render() {
-    const { user } = this.props;
-
     return (
       <Tip.Toggle tipContent={this.renderTipContent()}>
         {({ ref, onClick }) => (
-          <Button.Icon name="view-more" ref={ref} onClick={onClick} />
+          <Button.Icon name="three-dots-symbol" ref={ref} onClick={onClick} />
         )}
       </Tip.Toggle>
     );

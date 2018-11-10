@@ -90,8 +90,8 @@ ModifiedButton.Positive = props => (
   <ModifiedButton as={Button.Positive} {...props} />
 );
 
-const InputGroup = ({ children, ...inputProps }) => (
-  <Container hasChildren={!!children}>
+const InputGroup = ({ children, groupProps, ...inputProps }) => (
+  <Container hasChildren={!!children} {...groupProps}>
     <Input {...inputProps} />
     {children && <GroupedContent>{children}</GroupedContent>}
   </Container>

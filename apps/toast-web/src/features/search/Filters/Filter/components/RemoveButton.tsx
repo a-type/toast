@@ -8,7 +8,7 @@ const ButtonStyle = styled(Button)`
 `;
 
 interface RemoveButtonProps {
-  onClick(ev: MouseEvent): void;
+  onClick(ev: React.MouseEvent<HTMLButtonElement>): void;
 }
 
 const RemoveButton: React.SFC<RemoveButtonProps> = ({ onClick }) => (

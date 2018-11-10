@@ -80,7 +80,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                 <React.Fragment>
                   <Controls>
                     <Link to={`/plan/calendar/${weekIndex}`}>
-                      <Button>
+                      <Button spaceBelow="lg">
                         <Icon name="calendar" /> Calendar view
                       </Button>
                     </Link>
@@ -97,19 +97,21 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                         dayIndex === 0 ? 6 : dayIndex - 1
                       }`}
                     >
-                      <Button>Previous day</Button>
+                      <Button spaceBelow="lg">Previous day</Button>
                     </Link>
                     <Link
                       to={`/plan/${weekIndex + (dayIndex === 6 ? 1 : 0)}/${
                         dayIndex === 6 ? 0 : dayIndex + 1
                       }`}
                     >
-                      <Button>Next day</Button>
+                      <Button spaceBelow="lg">Next day</Button>
                     </Link>
                   </Controls>
                   <Controls>
                     <Link to="/plan/edit">
-                      <Button.Ghost>Edit your Plan</Button.Ghost>
+                      <Button.Ghost spaceBelow="lg">
+                        Edit your Plan
+                      </Button.Ghost>
                     </Link>
                   </Controls>
                 </React.Fragment>

@@ -1,14 +1,17 @@
-import React, { forwardRef } from 'react';
+import * as React from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
 import Icon from '../Icon';
 import { focusShadow } from 'components/effects';
+import { Size, getSize } from 'theme';
 
-export type ButtonProps = {
-  onClick?(ev: MouseEvent): void;
+export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
+  spaceBelow?: Size;
 };
-export type IconButtonProps = {
+export type IconButtonProps = ButtonProps & {
   name: string;
-  iconProps: {};
+  iconProps?: {};
+  as?: StyledComponentClass<ButtonProps, {}>;
+  ref?: React.Ref<HTMLButtonElement>;
 };
 
 interface ButtonWithVariants extends StyledComponentClass<ButtonProps, {}> {
@@ -33,6 +36,7 @@ const Button = (styled<ButtonProps, 'button'>('button')`
   transition: 0.25s ease-in-out;
   display: inline-block;
   position: relative;
+  margin-bottom: ${props => getSize(props.spaceBelow) || 'auto'};
 
   &:hover:not(:disabled),
   &:focus:not(:disabled) {
@@ -133,21 +137,47 @@ Button.Ghost = styled(Button)`
   }
 `;
 
-const InternalIconButton = styled(Button)`
+const ClearIconButton = styled(Button)`
+  background: transparent;
+  border-color: transparent;
   padding: 0;
   width: 38px;
   height: 38px;
   border-radius: 100%;
-  font-size: 24px;
-  color: var(--color-white);
+  font-size: 20px;
+  color: var(--color-gray);
+
+  &:hover {
+    background-color: var(--color-gray-lightest);
+    border-color: var(--color-gray-lightest);
+  }
+
+  &:focus {
+    background-color: var(--color-brand-light);
+    border-color: var(--color-brand-light);
+  }
+
+  &:active {
+    background-color: var(--color-brand);
+    border-color: var(--color-brand);
+  }
+
+  .link-matching > & {
+    background-color: var(--color-brand);
+    border-color: var(--color-brand);
+    color: var(--color-white);
+  }
 `;
 
-Button.Icon = forwardRef(
-  ({ name, iconProps, ...others }: IconButtonProps, ref) => (
-    <InternalIconButton {...others} ref={ref as any}>
-      <Icon name={name} {...iconProps} />
-    </InternalIconButton>
-  ),
+Button.Icon = React.forwardRef(
+  ({ name, iconProps, as: asProp, ...others }: IconButtonProps, ref) => {
+    const IconButton = asProp || ClearIconButton;
+    return (
+      <IconButton {...others} ref={ref as any}>
+        <Icon name={name} {...iconProps} />
+      </IconButton>
+    );
+  },
 );
 
 Button.Group = styled.div`
