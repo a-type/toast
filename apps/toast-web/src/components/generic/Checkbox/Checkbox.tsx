@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import Input from './Input';
 import Label from './Label';
 import Wrapper from './Wrapper';
+import Skeleton from './Skeleton';
 import { Size } from 'theme';
 
 interface CheckboxProps {
@@ -28,6 +29,8 @@ export default class Checkbox extends React.Component<CheckboxProps> {
     onChange: () => null,
     spaceBelow: 'md',
   };
+
+  static Skeleton = Skeleton;
 
   naturalId = `checkbox${Math.floor(Math.random() * 10000000)}`;
 

@@ -5,8 +5,18 @@ import Ingredient from './Ingredient';
 import { Content } from 'components/layouts';
 import { H1, HelpText, H3 } from 'components/typeset';
 import { format, startOfWeek } from 'date-fns';
+import { Checkbox, Disconnected } from 'components/generic';
+import logger from 'logger';
 
 const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
+
+const Skeleton = () => (
+  <div>
+    {new Array(8).fill(null).map((_, idx) => (
+      <Checkbox.Skeleton key={idx} size={12} />
+    ))}
+  </div>
+);
 
 const View: React.SFC<{}> = () => (
   <Content>
@@ -17,7 +27,7 @@ const View: React.SFC<{}> = () => (
     <GetWeekIndexQuery>
       {({ data: indexData, loading: indexLoading, error: indexError }) => {
         if (indexLoading || indexError) {
-          return <div>...</div>;
+          return <Skeleton />;
         }
 
         return (
@@ -26,11 +36,12 @@ const View: React.SFC<{}> = () => (
           >
             {({ data, loading, error }) => {
               if (loading) {
-                return <div>loading</div>;
+                return <Skeleton />;
               }
 
               if (error) {
-                return <div>{error.message}</div>;
+                logger.fatal(error);
+                return <Disconnected />;
               }
 
               const ingredients = data.week.shoppingList.ingredients.sort(
