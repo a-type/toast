@@ -7,6 +7,7 @@ import { H1, HelpText, H3 } from 'components/typeset';
 import { format, startOfWeek } from 'date-fns';
 import { Checkbox, Disconnected } from 'components/generic';
 import logger from 'logger';
+import { Redirect } from 'react-router-dom';
 
 const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
 
@@ -42,6 +43,11 @@ const View: React.SFC<{}> = () => (
               if (error) {
                 logger.fatal(error);
                 return <Disconnected />;
+              }
+
+              if (!data || !data.week) {
+                // TODO: splash screen for shopping list, then send to plan
+                return <Redirect to="/plan/edit" />;
               }
 
               const ingredients = data.week.shoppingList.ingredients.sort(

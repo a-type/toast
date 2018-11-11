@@ -66,7 +66,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                 return <Disconnected />;
               }
 
-              if (!data) {
+              if (!data || !data.week) {
                 return <Redirect to="/plan/edit" />;
               }
 
