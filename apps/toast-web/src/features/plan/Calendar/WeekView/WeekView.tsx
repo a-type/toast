@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
-import { PlanDay } from 'generated/schema';
+import { PlanWeekMeal, PlanWeek } from 'generated/schema';
 import CalendarDay from './CalendarDay';
 import { Content, Controls } from 'components/layouts';
 import { Link, Button, Loader, Disconnected } from 'components/generic';
@@ -10,6 +10,7 @@ import { Redirect } from 'react-router-dom';
 import { H3 } from 'components/typeset';
 import { formatDay } from 'formatters/date';
 import gql from 'graphql-tag';
+import { addDays } from 'date-fns';
 
 interface CalendarWeeklyViewProps {
   weekIndex: number;
@@ -33,16 +34,28 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
           return <Redirect to="/plan/edit" />;
         }
 
-        const days = pathOr([], ['week', 'days'], data) as PlanDay[];
+        const week = pathOr(null, ['week'], data) as PlanWeek;
+        const meals = pathOr([], ['meals'], week) as PlanWeekMeal[];
+        // group by day
+        const mealDays = meals.reduce((days, meal) => {
+          days[meal.dayIndex].push(meal);
+          return days;
+        }, []);
 
         return (
           <React.Fragment>
-            {days.map((day, index) => (
-              <div key={day.id}>
+            {mealDays.map((dayMeals, index) => (
+              <div key={`day_${index}`}>
                 <Link to={`/plan/${weekIndex}/${index}`}>
-                  <H3 spaceBelow="sm">{formatDay(day.date)}</H3>
+                  <H3 spaceBelow="sm">
+                    {formatDay(addDays(week.startDate, index))}
+                  </H3>
                 </Link>
-                <CalendarDay day={day} weekIndex={weekIndex} dayIndex={index} />
+                <CalendarDay
+                  meals={dayMeals}
+                  weekIndex={weekIndex}
+                  dayIndex={index}
+                />
               </div>
             ))}
             <Controls>

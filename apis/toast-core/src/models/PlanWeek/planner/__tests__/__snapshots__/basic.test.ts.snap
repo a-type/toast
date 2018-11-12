@@ -1,0 +1,363 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic meal plan converts availability to meal types 1`] = `
+Object {
+  "meals": Array [
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 0,
+          "mealIndex": 0,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 0,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 0,
+          "mealIndex": 1,
+          "mealType": "QUICK",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 0,
+          "leftovers": false,
+          "mealIndex": 1,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 0,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 0,
+          "mealIndex": 2,
+          "mealType": "FANCY",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 0,
+          "leftovers": false,
+          "mealIndex": 2,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 0,
+      "mealIndex": 2,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 1,
+          "mealIndex": 0,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 1,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 1,
+          "mealIndex": 1,
+          "type": "EAT_OUT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 1,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 1,
+          "mealIndex": 2,
+          "mealType": "NORMAL",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 1,
+          "leftovers": false,
+          "mealIndex": 2,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 1,
+      "mealIndex": 2,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 2,
+          "mealIndex": 0,
+          "mealType": "QUICK",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 2,
+          "leftovers": false,
+          "mealIndex": 0,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 2,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 2,
+          "mealIndex": 1,
+          "mealType": "QUICK",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 2,
+          "leftovers": false,
+          "mealIndex": 1,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 2,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 2,
+          "mealIndex": 2,
+          "mealType": "QUICK",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 2,
+          "leftovers": false,
+          "mealIndex": 2,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 2,
+      "mealIndex": 2,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 3,
+          "mealIndex": 0,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 3,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 3,
+          "mealIndex": 1,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 3,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 3,
+          "mealIndex": 2,
+          "type": "EAT_OUT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 3,
+      "mealIndex": 2,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 4,
+          "mealIndex": 0,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 4,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 4,
+          "mealIndex": 1,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 4,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 4,
+          "mealIndex": 2,
+          "mealType": "NORMAL",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 4,
+          "leftovers": false,
+          "mealIndex": 2,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 4,
+      "mealIndex": 2,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 5,
+          "mealIndex": 0,
+          "mealType": "FANCY",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 5,
+          "leftovers": false,
+          "mealIndex": 0,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 5,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 5,
+          "mealIndex": 1,
+          "mealType": "QUICK",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 5,
+          "leftovers": false,
+          "mealIndex": 1,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 5,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 5,
+          "mealIndex": 2,
+          "mealType": "FANCY",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 5,
+          "leftovers": false,
+          "mealIndex": 2,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 5,
+      "mealIndex": 2,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 6,
+          "mealIndex": 0,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 6,
+      "mealIndex": 0,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 6,
+          "mealIndex": 1,
+          "type": "SKIP",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 6,
+      "mealIndex": 1,
+    },
+    Object {
+      "actions": Array [
+        Object {
+          "dayIndex": 6,
+          "mealIndex": 2,
+          "mealType": "FANCY",
+          "servings": 2,
+          "type": "COOK",
+          "weekIndex": 0,
+        },
+        Object {
+          "dayIndex": 6,
+          "leftovers": false,
+          "mealIndex": 2,
+          "type": "EAT",
+          "weekIndex": 0,
+        },
+      ],
+      "dayIndex": 6,
+      "mealIndex": 2,
+    },
+  ],
+  "mealsPerDay": 3,
+  "startDay": 0,
+  "startMeal": 0,
+  "weekIndex": 0,
+}
+`;

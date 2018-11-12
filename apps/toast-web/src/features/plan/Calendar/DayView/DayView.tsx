@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
-import { PlanDay } from 'generated/schema';
+import { PlanWeek } from 'generated/schema';
 import { Content, Controls } from 'components/layouts';
 import { Button, Link, Disconnected, Icon, Loader } from 'components/generic';
 import { H1 } from 'components/typeset';
@@ -62,6 +62,16 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
               }
 
               if (error) {
+                if (
+                  pathOr(
+                    null,
+                    ['graphQLErrors', '0', 'extensions', 'code'],
+                    error,
+                  ) === 'BAD_USER_INPUT'
+                ) {
+                  return <Redirect to="/plan/edit" />;
+                }
+
                 logger.fatal(error);
                 return <Disconnected />;
               }
@@ -70,11 +80,12 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                 return <Redirect to="/plan/edit" />;
               }
 
-              const day = pathOr(
-                null,
-                ['week', 'days', dayIndex],
-                data,
-              ) as PlanDay;
+              const week = pathOr(null, ['week'], data) as PlanWeek;
+
+              const date = addDays(week.startDate, dayIndex);
+              const meals = week.meals
+                .filter(meal => meal.dayIndex === dayIndex)
+                .sort((a, b) => a.mealIndex - b.mealIndex);
 
               return (
                 <React.Fragment>
@@ -85,9 +96,9 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                       </Button>
                     </Link>
                   </Controls>
-                  <H1>{formatDay(day.date)}</H1>
+                  <H1>{formatDay(date)}</H1>
                   <Meals
-                    meals={day.meals}
+                    meals={meals}
                     weekIndex={weekIndex}
                     dayIndex={dayIndex}
                   />

@@ -1,9 +1,9 @@
-import { Plan, ShoppingList } from 'models';
-import { PlanActionCook } from 'models/Plan';
-import { addQuantities, subtractQuantities } from 'tools/quantities';
+import { ShoppingList, PlanWeek } from 'models';
+import { PlanActionCook } from 'models/PlanWeek/types';
+import { addQuantities } from 'tools/quantities';
 import { ShoppingListIngredientQuantities } from 'models/ShoppingList';
 
-export default async (week: Plan, ctx) => {
+export default async (week: PlanWeek, ctx) => {
   // collect all recipes
   const cookActions = week.getActionsOfType('COOK') as PlanActionCook[];
   const recipeMap = cookActions.reduce((recipes, action) => {

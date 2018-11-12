@@ -1,6 +1,5 @@
 import { gql } from 'apollo-server-express';
 import { UserInputError, NotFoundError } from 'errors';
-import { addQuantities, subtractQuantities } from '../../../tools/quantities';
 import getWeekIndex from '../getWeekIndex';
 import { ShoppingList } from 'models';
 import compileShoppingList from './compileShoppingList';
@@ -19,7 +18,7 @@ export const typeDefs = gql`
     ingredients: [ShoppingListIngredient!]!
   }
 
-  extend type Plan {
+  extend type PlanWeek {
     shoppingList: ShoppingList!
   }
 
@@ -30,24 +29,16 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {
-  Plan: {
+  PlanWeek: {
     shoppingList: async (parent, args, ctx) => {
-      if (!parent.weekIndex) {
-        throw new UserInputError(
-          "You can't get a shopping list from the blueprint plan",
-        );
-      }
+      const group = await ctx.graph.groups.getMine();
 
-      const { planId } = ctx;
-
-      if (!planId) {
-        throw new NotFoundError(
-          "Can't find a shopping list, no plan was specified.",
-        );
+      if (!group || !group.planId) {
+        throw new UserInputError("You haven't created a plan yet");
       }
 
       let shoppingList: ShoppingList = await ctx.firestore.plans.getShoppingList(
-        planId,
+        group.planId,
         parent.weekIndex,
       );
 
@@ -56,7 +47,7 @@ export const resolvers = {
       } else {
         shoppingList = await compileShoppingList(parent, ctx);
         await ctx.firestore.plans.setShoppingList(
-          planId,
+          group.planId,
           parent.weekIndex,
           shoppingList,
         );

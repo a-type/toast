@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-10T17:42:50-05:00 */
+/** Generated in 2018-11-11T23:21:26-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -50,13 +50,13 @@ export interface Query {
 
   user?: User | null;
 
-  planWeekIndex: number;
-
   planStartWeekDate: Date;
 
   plan?: Plan | null;
 
-  week?: Plan | null;
+  planWeekIndex: number;
+
+  week?: PlanWeek | null;
 
   messages: Message[];
 
@@ -212,31 +212,47 @@ export interface Plan {
 
   defaultServings: number;
 
-  days: PlanDay[];
+  meals: PlanMeal[];
 
   groceryDay: number;
 
   warnings: string[];
 
-  week?: Plan | null;
-
-  startDate?: Date | null;
-
-  shoppingList: ShoppingList;
-}
-
-export interface PlanDay {
-  id: string;
-
-  date?: Date | null;
-
-  meals: PlanMeal[];
+  week?: PlanWeek | null;
 }
 
 export interface PlanMeal {
   id: string;
 
   availability: PrepAvailability;
+}
+
+export interface PlanWeek {
+  id: string;
+
+  weekIndex: number;
+
+  startDay: number;
+
+  startMeal: number;
+
+  mealsPerDay: number;
+
+  startDate: Date;
+
+  meals: PlanWeekMeal[];
+
+  shoppingList: ShoppingList;
+}
+
+export interface PlanWeekMeal {
+  id: string;
+
+  weekIndex: number;
+
+  mealIndex: number;
+
+  dayIndex: number;
 
   actions: PlanAction[];
 }
@@ -336,7 +352,7 @@ export interface Mutation {
 
   setPlanStrategy: Plan;
 
-  setPlanActionRecipe: PlanAction;
+  setWeekActionRecipe: PlanAction;
 
   markPurchased: ShoppingList;
 
@@ -736,12 +752,8 @@ export interface SetPlanMealDetailsMutationArgs {
 export interface SetPlanStrategyMutationArgs {
   strategy?: PlanStrategy | null;
 }
-export interface SetPlanActionRecipeMutationArgs {
+export interface SetWeekActionRecipeMutationArgs {
   weekIndex: number;
-
-  dayIndex: number;
-
-  mealIndex: number;
 
   actionId: string;
 
@@ -869,8 +881,6 @@ export namespace IngredientDetails {
 export namespace CalendarMealSetRecipe {
   export type Variables = {
     weekIndex: number;
-    dayIndex: number;
-    mealIndex: number;
     actionId: string;
     recipeId: string;
   };
@@ -878,10 +888,10 @@ export namespace CalendarMealSetRecipe {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    setPlanActionRecipe: SetPlanActionRecipe;
+    setWeekActionRecipe: SetWeekActionRecipe;
   };
 
-  export type SetPlanActionRecipe = {
+  export type SetWeekActionRecipe = {
     __typename?: 'PlanAction';
 
     id: string;
@@ -900,16 +910,26 @@ export namespace CalendarPlan {
   };
 
   export type Week = {
-    __typename?: 'Plan';
+    __typename?: 'PlanWeek';
 
-    startDate?: Date | null;
+    startDate: Date;
 
     id: string;
 
-    days: Days[];
+    meals: Meals[];
   };
 
-  export type Days = CalendarDay.Fragment;
+  export type Meals = {
+    __typename?: 'PlanWeekMeal';
+
+    id: string;
+
+    weekIndex: number;
+
+    dayIndex: number;
+
+    mealIndex: number;
+  } & CalendarMeal.Fragment;
 }
 
 export namespace GetWeekIndex {
@@ -1070,7 +1090,7 @@ export namespace GetShoppingList {
   };
 
   export type Week = {
-    __typename?: 'Plan';
+    __typename?: 'PlanWeek';
 
     id: string;
 
@@ -1240,7 +1260,7 @@ export namespace CalendarPlanAction {
 
 export namespace CalendarMeal {
   export type Fragment = {
-    __typename?: 'PlanMeal';
+    __typename?: 'PlanWeekMeal';
 
     id: string;
 
@@ -1258,20 +1278,6 @@ export namespace CalendarMeal {
 
 export namespace CalendarDayViewMeals {
   export type Fragment = CalendarMeal.Fragment;
-}
-
-export namespace CalendarDay {
-  export type Fragment = {
-    __typename?: 'PlanDay';
-
-    id: string;
-
-    date?: Date | null;
-
-    meals: Meals[];
-  };
-
-  export type Meals = CalendarMeal.Fragment;
 }
 
 export namespace RecipeSpotlight {

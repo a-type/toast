@@ -1,17 +1,16 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Form, Select, Button, Field } from 'components/generic';
 import { Link, HelpText } from 'components/typeset';
 import { Formik } from 'formik';
-import Preview from './Preview';
 import { path, pathOr } from 'ramda';
 
 const ProcessPlan = gql`
   mutation ProcessPlan($strategy: PlanStrategy!) {
     setPlanStrategy(strategy: $strategy) {
       id
-      ${Preview.fragments.plan}
+      strategy
     }
   }
 `;
@@ -22,7 +21,7 @@ const GetPlan = gql`
       group {
         plan {
           id
-          ${Preview.fragments.plan}
+          strategy
         }
       }
     }
@@ -77,7 +76,7 @@ export default class extends React.Component {
               )}
               {plan && (
                 <React.Fragment>
-                  <Preview plan={plan} />
+                  {/* <Preview plan={plan} /> */}
                   <Link.Clear to="/plan">
                     <Button>Start planning</Button>
                   </Link.Clear>

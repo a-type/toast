@@ -1,4 +1,4 @@
-import getWeekIndex from '../getWeekIndex';
+import getWeekIndex from '../weeks/getWeekIndex';
 
 describe('getWeekIndex helper', () => {
   test('gets 0 weeks', () => {

@@ -27,35 +27,44 @@ const dayNames = [
   'Saturday',
 ];
 
-const EditAvailability = ({ plan }) => (
-  <div>
-    <HelpText spaceBelow="lg">
-      What's your average week look like? How much time would you like to spend
-      on each meal? How you answer is up to you; anywhere from 'realistic' to
-      'aspirational'.
-    </HelpText>
-    <MealGrid>
-      {({ getMealStyle }) =>
-        new Array(7)
-          .fill(null)
-          .map((_, dayIndex) => (
-            <DayRow
-              dayIndex={dayIndex}
-              day={pathOr({}, ['days', dayIndex], plan)}
-              getMealStyle={getMealStyle}
-            />
-          ))
-      }
-    </MealGrid>
-  </div>
-);
+const EditAvailability = ({ plan }) => {
+  const meals = pathOr([], ['meals'], plan);
+
+  return (
+    <div>
+      <HelpText spaceBelow="lg">
+        What's your average week look like? How much time would you like to
+        spend on each meal? How you answer is up to you; anywhere from
+        'realistic' to 'aspirational'.
+      </HelpText>
+      <MealGrid>
+        {({ getMealStyle }) =>
+          new Array(7).fill(null).map((_, dayIndex) => {
+            const dayMeals = meals
+              .filter(meal => meal.dayIndex === dayIndex)
+              .sort((a, b) => a.mealIndex - b.mealIndex);
+
+            return (
+              <DayRow
+                key={`day_${dayIndex}`}
+                dayIndex={dayIndex}
+                meals={dayMeals}
+                getMealStyle={getMealStyle}
+              />
+            );
+          })
+        }
+      </MealGrid>
+    </div>
+  );
+};
 
 EditAvailability.fragments = {
   plan: gql`
     fragment EditAvailability on Plan {
       id
-      days {
-        ${DayRow.fragments.day}
+      meals {
+        ${DayRow.fragments.meals}
       }
     }
   `,

@@ -2,6 +2,8 @@ import Plan from 'models/Plan';
 import { START_WEEK_DAY } from '../../constants';
 import { Firestore } from '@google-cloud/firestore';
 import ShoppingList from 'models/ShoppingList';
+import { PlanWeek } from 'models';
+import { UserInputError } from 'errors';
 
 const COLLECTION = 'plans';
 
@@ -54,40 +56,32 @@ export default class Plans {
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      // copy the base plan instead
-      const basePlanDocument = this.firestore.doc(`${COLLECTION}/${planId}`);
-      const basePlanDocRef = await basePlanDocument.get();
-
-      if (!basePlanDocRef.exists) {
+      const planDocument = this.firestore.doc(`${COLLECTION}/${planId}`);
+      const planDocRef = await planDocument.get();
+      if (!planDocRef.exists) {
         return null;
       }
-
-      const basePlan = await basePlanDocRef.data();
-      basePlan.id = this.generateWeekId(planId, week);
-      basePlan.weekIndex = week;
-      return Plan.fromJSON(basePlan);
+      const plan = Plan.fromJSON(planDocRef.data());
+      return PlanWeek.fromPlan(plan, week);
     }
 
-    return Plan.fromJSON(docRef.data());
+    return PlanWeek.fromJSON(docRef.data());
   };
 
-  mergeWeek = async (planId, week, planData) => {
+  setWeek = async (planId: string, weekData: PlanWeek) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/weeks/week_${week}`,
+      `${COLLECTION}/${planId}/weeks/week_${weekData.weekIndex}`,
     );
-    planData.id = this.generateWeekId(planId, week);
-    planData.weekIndex = week;
-    await document.set(planData.toJSON(), { merge: true });
-    const docRef = await document.get();
-    return Plan.fromJSON(docRef.data());
+    await document.set(weekData.toJSON());
+    return weekData;
   };
 
   /**
    * Shopping Lists - keeps track of what the user should buy each week
    */
-  getShoppingList = async (planId, week: number) => {
+  getShoppingList = async (weekId: string, planId: string) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/shoppingLists/week_${week}`,
+      `${COLLECTION}/${planId}/shoppingLists/${weekId}`,
     );
     const docRef = await document.get();
 
@@ -99,12 +93,12 @@ export default class Plans {
   };
 
   setShoppingList = async (
-    planId,
-    week: number,
+    planId: string,
+    weekId: string,
     shoppingList: ShoppingList,
   ) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/shoppingLists/week_${week}`,
+      `${COLLECTION}/${planId}/shoppingLists/${weekId}`,
     );
 
     await document.set(shoppingList.toJSON());
