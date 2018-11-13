@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PlanMeal } from 'generated/schema';
+import { PlanWeekMeal } from 'generated/schema';
 import gql from 'graphql-tag';
 import CalendarMeal from '../CalendarMeal';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const Grid = styled.div`
 `;
 
 interface CalendarDayViewMealsProps {
-  meals: PlanMeal[];
+  meals: PlanWeekMeal[];
   weekIndex: number;
   dayIndex: number;
 }
@@ -36,7 +36,7 @@ export default class CalendarDayViewMeals extends React.Component<
 > {
   static fragments = {
     day: gql`
-      fragment CalendarDayViewMeals on PlanMeal {
+      fragment CalendarDayViewMeals on ScheduleMeal {
         ...CalendarMeal
       }
 

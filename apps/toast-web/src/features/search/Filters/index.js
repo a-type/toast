@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Layout } from './components';
 import Filter from './Filter';
 import { H2 } from 'components/typeset';

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Card } from 'components/generic';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 
 const IngredientCard = ({ ingredient }) => (
   <Card link={`/ingredients/${ingredient.id}`} shape="normal">

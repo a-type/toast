@@ -2,7 +2,7 @@ import { pick, omit } from 'ramda';
 import { NotFoundError } from 'errors';
 import { GraphContext } from '../types';
 
-export default class Source {
+export default class Source<T> {
   ctx: GraphContext;
   graph: any;
   fields: string[];
@@ -27,7 +27,7 @@ export default class Source {
   hydrateOne = (
     result,
     { key = this.resourceName.toLowerCase(), throwIfNone = false } = {},
-  ) => {
+  ): T => {
     if (!result.records.length) {
       if (throwIfNone) {
         throw new NotFoundError(this.resourceName);
@@ -40,7 +40,7 @@ export default class Source {
   hydrateList = (
     result,
     { key = this.resourceName.toLowerCase(), throwIfNone = false } = {},
-  ) => {
+  ): T[] => {
     if (!result.records.length) {
       if (throwIfNone) {
         throw new NotFoundError(this.resourceName);

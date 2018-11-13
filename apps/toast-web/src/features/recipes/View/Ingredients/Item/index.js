@@ -5,7 +5,7 @@ import Note from './Note';
 import { toDisplay } from 'formatters/unitValue';
 import IngredientLink from 'features/ingredients/Link';
 import { graphql } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import pluralize from 'pluralize';
 
 const GetPreferredServings = gql`
@@ -24,7 +24,7 @@ class IngredientItem extends React.Component {
 
     return (
       <b key={`value-${key}`}>
-        {toDisplay(preferredServings / servings * value)}
+        {toDisplay((preferredServings / servings) * value)}
       </b>
     );
   };

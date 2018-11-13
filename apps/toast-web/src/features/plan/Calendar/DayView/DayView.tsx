@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
-import { PlanDay } from 'generated/schema';
+import { PlanWeek } from 'generated/schema';
 import { Content, Controls } from 'components/layouts';
 import { Button, Link, Disconnected, Icon, Loader } from 'components/generic';
 import { H1 } from 'components/typeset';
@@ -11,6 +11,7 @@ import { Redirect } from 'react-router';
 import Meals from './Meals';
 import GetWeekIndexQuery from '../GetWeekIndexQuery';
 import { addDays, differenceInDays } from 'date-fns';
+import LandingPage from 'features/plan/LandingPage';
 
 interface CalendarDayViewProps {
   weekIndex?: number;
@@ -35,11 +36,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
       date: today.getDate(),
     }}
   >
-    {({
-      data: { planWeekIndex, planStartWeekDate },
-      loading: weekIndexLoading,
-      error: weekIndexError,
-    }) => {
+    {({ data, loading: weekIndexLoading, error: weekIndexError }) => {
       if (weekIndexLoading) {
         return <Loader size={90} />;
       }
@@ -49,9 +46,14 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
         return <Disconnected />;
       }
 
-      const weekIndex = providedWeekIndex || planWeekIndex;
+      const weekIndex =
+        providedWeekIndex !== undefined
+          ? providedWeekIndex
+          : data.planWeekIndex;
       const dayIndex =
-        providedDayIndex || getDayIndex(planStartWeekDate, planWeekIndex);
+        providedDayIndex !== undefined
+          ? providedDayIndex
+          : getDayIndex(data.scheduleStartWeekDate, data.planWeekIndex);
 
       return (
         <Content>
@@ -62,19 +64,30 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
               }
 
               if (error) {
+                if (
+                  pathOr(
+                    null,
+                    ['graphQLErrors', '0', 'extensions', 'code'],
+                    error,
+                  ) === 'BAD_USER_INPUT'
+                ) {
+                  return <Redirect to="/plan/edit" />;
+                }
+
                 logger.fatal(error);
                 return <Disconnected />;
               }
 
               if (!data || !data.week) {
-                return <Redirect to="/plan/edit" />;
+                return <LandingPage />;
               }
 
-              const day = pathOr(
-                null,
-                ['week', 'days', dayIndex],
-                data,
-              ) as PlanDay;
+              const week = pathOr(null, ['week'], data) as PlanWeek;
+
+              const date = addDays(week.startDate, dayIndex);
+              const meals = week.meals
+                .filter(meal => meal.dayIndex === dayIndex)
+                .sort((a, b) => a.mealIndex - b.mealIndex);
 
               return (
                 <React.Fragment>
@@ -85,9 +98,9 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                       </Button>
                     </Link>
                   </Controls>
-                  <H1>{formatDay(day.date)}</H1>
+                  <H1>{formatDay(date)}</H1>
                   <Meals
-                    meals={day.meals}
+                    meals={meals}
                     weekIndex={weekIndex}
                     dayIndex={dayIndex}
                   />

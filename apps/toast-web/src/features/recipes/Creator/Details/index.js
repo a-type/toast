@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Form, Input, Button, Field, RadioButton } from 'components/generic';
 import { merge } from 'ramda';
@@ -23,17 +23,21 @@ export const RecipeCreateDetailsFragment = gql`
 const CreateRecipe = gql`
   mutation CreateRecipe($input: RecipeCreateInput!) {
     createRecipe(input: $input) {
-      ${RecipeCreateDetailsFragment}
+      ...RecipeCreateDetails
     }
   }
+
+  ${RecipeCreateDetailsFragment}
 `;
 
 const UpdateRecipe = gql`
   mutation UpdateRecipe($id: ID!, $input: RecipeDetailsUpdateInput!) {
     updateRecipeDetails(id: $id, input: $input) {
-      ${RecipeCreateDetailsFragment}
+      ...RecipeCreateDetails
     }
   }
+
+  ${RecipeCreateDetailsFragment}
 `;
 
 export default class RecipeCreatorDetails extends React.PureComponent {

@@ -1,12 +1,17 @@
 import Source from './Source';
 import { id } from 'tools';
 
-export default class Groups extends Source {
+export interface Group {
+  id: string;
+  scheduleId: string;
+}
+
+export default class Groups extends Source<Group> {
   constructor(ctx, graph) {
-    super(ctx, graph, 'Group', ['id', 'planId']);
+    super(ctx, graph, 'Group', ['id', 'scheduleId']);
   }
 
-  get = groupId =>
+  get = (groupId: string) =>
     this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
@@ -36,7 +41,7 @@ export default class Groups extends Source {
       return this.hydrateOne(result);
     });
 
-  mergeMine = (input = {}) =>
+  mergeMine = (input: Partial<Group> = {}) =>
     this.ctx.writeTransaction(async tx => {
       const result = await tx.run(
         `

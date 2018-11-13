@@ -17,7 +17,7 @@ const publicUrl = '';
 module.exports = {
   mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
 
-  entry: ['babel-polyfill', 'resize-observer-polyfill', './src/index.js'],
+  entry: ['babel-polyfill', 'resize-observer-polyfill', './src/index.tsx'],
   output: {
     publicPath: '/',
     path: path.resolve(process.cwd(), 'dist'),

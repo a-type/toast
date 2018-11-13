@@ -1,22 +1,31 @@
 import * as React from 'react';
 import gql from 'graphql-tag';
 import {
-  PlanMeal,
+  PlanWeekMeal,
   PlanAction,
   PlanActionType,
   PlanActionCook,
   PlanActionEat,
+  PlanActionEatOut,
+  PlanActionReadyMade,
 } from 'generated/schema';
-import { CookAction, EatAction, SkipAction } from 'features/plan/actions';
+import {
+  CookAction,
+  EatAction,
+  SkipAction,
+  EatOutAction,
+  ReadyMadeAction,
+} from 'features/plan/actions';
 import { pick } from 'ramda';
 import actionsFragment from 'features/plan/actions/fragment';
 import { Label } from 'components/typeset';
 import { MealStack } from './components';
+import getPrimaryAction from 'features/plan/getPrimaryAction';
 
 const MEALS = ['Breakfast', 'Lunch', 'Dinner'];
 
 interface CalendarMealProps {
-  meal: PlanMeal;
+  meal: PlanWeekMeal;
   weekIndex: number;
   dayIndex: number;
   mealIndex: number;
@@ -32,7 +41,7 @@ export default class CalendarMeal extends React.Component<
 > {
   static fragments = {
     meal: gql`
-      fragment CalendarMeal on PlanMeal {
+      fragment CalendarMeal on PlanWeekMeal {
         id
         actions {
           id
@@ -48,36 +57,16 @@ export default class CalendarMeal extends React.Component<
     showRecipeSelector: false,
   };
 
-  getPrimaryAction = (): PlanAction | null => {
-    const {
-      meal: { actions },
-    } = this.props;
-
-    const proiritizedActionTypes: PlanActionType[] = [
-      PlanActionType.COOK,
-      PlanActionType.EAT,
-      PlanActionType.EAT_OUT,
-      PlanActionType.READY_MADE,
-      PlanActionType.SKIP,
-    ];
-
-    for (let i in proiritizedActionTypes) {
-      const t = proiritizedActionTypes[i];
-      const action = actions.find(action => action.type === t);
-      if (action) {
-        return action;
-      }
-    }
-
-    return null;
-  };
-
   renderAction() {
     const passOnProps = pick(
       ['weekIndex', 'dayIndex', 'mealIndex'],
       this.props,
     );
-    const action = this.getPrimaryAction();
+    const action = getPrimaryAction(this.props.meal);
+
+    if (!action) {
+      return <SkipAction />;
+    }
 
     switch (action.type) {
       case PlanActionType.COOK:
@@ -86,6 +75,17 @@ export default class CalendarMeal extends React.Component<
         );
       case PlanActionType.EAT:
         return <EatAction {...passOnProps} action={action as PlanActionEat} />;
+      case PlanActionType.EAT_OUT:
+        return (
+          <EatOutAction {...passOnProps} action={action as PlanActionEatOut} />
+        );
+      case PlanActionType.READY_MADE:
+        return (
+          <ReadyMadeAction
+            {...passOnProps}
+            action={action as PlanActionReadyMade}
+          />
+        );
       default:
         return <SkipAction />;
     }

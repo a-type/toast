@@ -75,7 +75,7 @@ export default class CalendarCookAction extends React.Component<
 
   render() {
     const { showRecipeSelector } = this.state;
-    const { weekIndex, dayIndex, mealIndex, action } = this.props;
+    const { weekIndex, action } = this.props;
 
     return (
       <React.Fragment>
@@ -92,8 +92,6 @@ export default class CalendarCookAction extends React.Component<
                     await mutate({
                       variables: {
                         weekIndex,
-                        dayIndex,
-                        mealIndex,
                         actionId: action.id,
                         recipeId: recipe.id,
                       },

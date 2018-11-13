@@ -6,7 +6,6 @@ import { InMemoryCache, HttpLink } from 'apollo-boost';
 import { withClientState } from 'apollo-link-state';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
-import gql from 'fraql';
 import customFetch from './fetch';
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import introspectionQueryResultData from 'generated/fragmentTypes.json';

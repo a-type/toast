@@ -2,15 +2,19 @@ import React from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
 import { loading, focusShadow } from 'components/effects';
 
-interface InputProps {
+type InputProps = React.HTMLAttributes<HTMLInputElement> & {
   loading?: boolean;
   focused?: boolean;
   invalid?: boolean;
-}
+  value?: string;
+  onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
+  name?: string;
+  type?: string;
+};
 
 export interface InputWithVariants
   extends StyledComponentClass<InputProps, 'input'> {
-  Block?: StyledComponentClass<{}, any>;
+  Block?: StyledComponentClass<InputProps, any>;
 }
 
 const Input: InputWithVariants = styled<InputProps, 'input'>('input')`
@@ -48,7 +52,7 @@ Input.defaultProps = {
   loading: false,
 };
 
-Input.Block = styled(props => <Input as="textarea" {...props} />)`
+Input.Block = styled<InputProps>(props => <Input as="textarea" {...props} />)`
   width: 100%;
   margin-bottom: auto;
 `;

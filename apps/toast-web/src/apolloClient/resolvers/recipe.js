@@ -1,5 +1,3 @@
-import gql from 'fraql';
-
 export const defaults = {
   preferredServings: null,
 };

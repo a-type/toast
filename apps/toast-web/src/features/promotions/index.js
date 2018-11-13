@@ -1,7 +1,7 @@
 import React from 'react';
 import Scanner from './Scanner';
 import { Query, Mutation } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 
 const GetPromotions = gql`
   query GetPromotions {

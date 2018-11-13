@@ -1,5 +1,5 @@
 import React from 'react';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Chooser } from 'features/images';
 import { Button, Field, Form, Input } from 'components/generic';
@@ -23,9 +23,11 @@ export const RecipeCreateImageFragment = gql`
 const UpdateImage = gql`
   mutation UpdateRecipeCoverImage($id: ID!, $input: ImageCreateInput!) {
     updateRecipeCoverImage(id: $id, input: $input) {
-      ${RecipeCreateImageFragment}
+      ...RecipeCreateImage
     }
   }
+
+  ${RecipeCreateImageFragment}
 `;
 
 export default class RecipeCreatorImages extends React.PureComponent {

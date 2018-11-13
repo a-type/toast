@@ -3,7 +3,7 @@ import config from 'config';
 import { pathOr } from 'ramda';
 import firestore from 'services/firestore';
 import graph, { Graph } from 'services/graph';
-import planner from 'services/planner';
+import planner from 'models/PlanWeek/planner';
 import logger from './logger';
 import { TransactionFunction } from 'types';
 

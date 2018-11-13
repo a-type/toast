@@ -3,7 +3,7 @@ import Ingredients from './Ingredients';
 import Steps from './Steps';
 import Details from './Details';
 import { Query } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { pathOr, path } from 'ramda';
 import { Redirect } from 'react-router-dom';
 import { Content, Hero } from 'components/layouts';
@@ -20,7 +20,6 @@ const FullRecipeQuery = gql`
       id
       published
       displayType
-      ${Details.fragments.Recipe}
       ingredients {
         id
         unit
@@ -48,12 +47,16 @@ const FullRecipeQuery = gql`
         url
         attribution
       }
+
+      ...RecipeDetails
     }
 
     me {
       id
     }
   }
+
+  ${Details.fragments.Recipe}
 `;
 
 export default class RecipeView extends React.Component {

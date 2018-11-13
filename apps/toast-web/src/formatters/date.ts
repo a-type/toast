@@ -1,6 +1,6 @@
 import { format, isToday, isTomorrow } from 'date-fns';
 
-export const formatDay = (dateStr: string) => {
+export const formatDay = (dateStr: string | Date) => {
   const date = new Date(dateStr);
   if (isToday(date)) {
     return 'Today';

@@ -2,8 +2,6 @@ import React from 'react';
 import Layout from './Layout';
 import Logo from 'components/brand/Logo';
 import { Link } from 'components/generic';
-import { IsLoggedIn } from 'features/auth/gates';
-import LoginButton from './ProfileButton/LoginButton';
 import ProfileButton from './ProfileButton';
 import { Button } from 'components/generic';
 import PlanButton from './PlanButton';
@@ -22,9 +20,7 @@ const NavBar = () => {
         </Link>
         <PlanButton />
         <ShoppingListButton />
-        <IsLoggedIn fallback={<LoginButton />}>
-          <ProfileButton />
-        </IsLoggedIn>
+        <ProfileButton />
       </Controls>
     </Layout>
   );
