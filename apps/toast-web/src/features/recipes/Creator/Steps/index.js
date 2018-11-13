@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Form, Input, Field, Button } from 'components/generic';
 import { H3 } from 'components/typeset';
 import { Formik } from 'formik';
@@ -10,22 +10,28 @@ export const RecipeCreateStepsFragment = gql`
   fragment RecipeCreateSteps on Recipe {
     id
     steps {
-      ${RecipeCreateStepFragment}
+      ...RecipeCreateSteps
     }
   }
+
+  ${RecipeCreateStepFragment}
 `;
 
 const CreateStep = gql`
   mutation CreateStep($recipeId: ID!, $input: RecipeStepCreateInput!) {
     createRecipeStep(recipeId: $recipeId, input: $input) {
-      ${RecipeCreateStepsFragment}
+      ...RecipeCreateSteps
     }
   }
+
+  ${RecipeCreateStepsFragment}
 `;
 
 export default ({ recipeId, steps }) => (
   <div>
-    {steps.map(step => <StepEditor key={step.id} step={step} />)}
+    {steps.map(step => (
+      <StepEditor key={step.id} step={step} />
+    ))}
 
     <div>
       <H3>Add a Step</H3>

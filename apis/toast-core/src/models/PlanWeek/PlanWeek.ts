@@ -3,7 +3,7 @@ import { UserInputError } from 'errors';
 import { addDays, addWeeks } from 'date-fns';
 import { START_WEEK_DAY } from '../../constants';
 import { PlanWeekData, PlanAction, PlanActionCook } from './types';
-import Plan from '../Plan';
+import Schedule from '../Schedule';
 import planner from './planner';
 
 const getWeekDay = ({ weekIndex, startDay, dayOffset = 0 }) => {
@@ -153,7 +153,7 @@ export default class PlanWeek {
     return new PlanWeek(json);
   }
 
-  static fromPlan(plan: Plan, weekIndex: number) {
+  static fromSchedule(plan: Schedule, weekIndex: number) {
     return planner.run(plan, weekIndex);
   }
 }

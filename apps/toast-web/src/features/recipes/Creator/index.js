@@ -1,6 +1,6 @@
 import React from 'react';
 import View, { RecipeCreateViewFragment } from './View';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
 import { Redirect } from 'react-router-dom';
@@ -10,12 +10,14 @@ import { Gate } from 'features/auth/gates';
 const GetRecipeForEditing = gql`
   query GetRecipeForEditing($id: ID!) {
     recipe(id: $id) {
-      ${RecipeCreateViewFragment}
+      ...RecipeCreateView
       author {
         id
       }
     }
   }
+
+  ${RecipeCreateViewFragment}
 `;
 
 export default props => (

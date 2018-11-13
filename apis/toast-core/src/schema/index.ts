@@ -6,7 +6,7 @@ import * as search from './search';
 import * as steps from './steps';
 import * as users from './users';
 import * as groups from './groups';
-import * as plans from './plans';
+import * as schedules from './schedules';
 
 import * as directives from './directives';
 import * as scalars from './scalars';
@@ -62,7 +62,7 @@ export const typeDefs = [
   steps.typeDefs,
   users.typeDefs,
   groups.typeDefs,
-  ...plans.typeDefs(),
+  ...schedules.typeDefs(),
 ];
 export const resolvers = [
   images.resolvers,
@@ -72,6 +72,6 @@ export const resolvers = [
   steps.resolvers,
   users.resolvers,
   groups.resolvers,
-  plans.resolvers,
+  schedules.resolvers,
   scalars,
 ].reduce(mergeDeepRight, globalResolvers);

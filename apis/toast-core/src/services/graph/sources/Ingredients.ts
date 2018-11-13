@@ -1,6 +1,14 @@
 import Source from './Source';
 
-export default class Ingredients extends Source {
+export interface Ingredient {
+  id: string;
+  name: string;
+  description: string;
+  attribution: string;
+  alternateNames: string[];
+}
+
+export default class Ingredients extends Source<Ingredient> {
   constructor(ctx, graph) {
     super(ctx, graph, 'Ingredient', [
       'id',

@@ -1,8 +1,7 @@
 import logger from 'logger';
-import { Plan } from 'models';
+import { Schedule } from 'models';
 import PlanWeek from '../PlanWeek';
 import {
-  PlanWeekData,
   PlanActionCook,
   PlanActionType,
   PlanActionEat,
@@ -33,8 +32,8 @@ const alreadyPlanned = (meal: PlanWeekMeal): boolean =>
     ['EAT', 'EAT_OUT', 'READY_MADE', 'SKIP'].includes(action.type),
   );
 
-export default (plan: Plan, weekIndex: number): PlanWeek => {
-  const week = initializeWeek(plan, weekIndex);
+export default (schedule: Schedule, weekIndex: number): PlanWeek => {
+  const week = initializeWeek(schedule, weekIndex);
 
   // FIXME: move this logic somewhere else...
   // const totalNones = mealList.filter(meal => meal.availability === 'NONE')
@@ -49,7 +48,7 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
   // }
 
   // if (totalNones / totalPrepCandidates > ALLOWED_NONE_RATIO) {
-  //   plan.addWarning(
+  //   schedule.addWarning(
   //     `You don't seem to have a lot of time to prep meals! You'll need to prep ${totalNones} meals in only ${totalPrepCandidates} day${
   //       totalPrepCandidates > 1 ? 's' : ''
   //     }. You can make your schedule more realistic by switching some meals to eating out.`,
@@ -60,12 +59,15 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
   let needPrepMeals: PlanWeekMeal[] = [];
 
   const flushPrepMeals = () => {
-    // keep track of how many meals we still need to plan
+    // keep track of how many meals we still need to schedule
     let mealCountLeft = needPrepMeals.length;
 
     // iterate through 'prep-ready' meals we have collected so far
     prepMeals.forEach(prepMeal => {
-      const prepPlanMeal = plan.getMeal(prepMeal.dayIndex, prepMeal.mealIndex);
+      const prepScheduleMeal = schedule.getMeal(
+        prepMeal.dayIndex,
+        prepMeal.mealIndex,
+      );
       // grab a portion of the needy meals and assign them to this prep. Minimum 1 meal.
       // if there's only 1 meal but many prep-ready meals, the latter prep-ready meals
       // just become regular meals.
@@ -79,10 +81,10 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
         dayIndex: prepMeal.dayIndex,
         mealIndex: prepMeal.mealIndex,
         type: PlanActionType.Cook,
-        servings: plan.defaultServings * (1 + countOfMealsToPrepFor),
+        servings: schedule.defaultServings * (1 + countOfMealsToPrepFor),
         mealType: prepMealType(
-          prepPlanMeal.availability,
-          (1 + countOfMealsToPrepFor) * plan.defaultServings,
+          prepScheduleMeal.availability,
+          (1 + countOfMealsToPrepFor) * schedule.defaultServings,
         ),
       };
       const eatAction: PlanActionEat = {
@@ -128,11 +130,11 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
       continue;
     }
 
-    const planMeal = plan.getMeal(dayIndex, mealIndex);
+    const ScheduleMeal = schedule.getMeal(dayIndex, mealIndex);
 
     // L / M meals count as 'prep-ready'; i.e. we can increase their portions by decreasing
     // the complexity of the recipe so we can distribute portions to later "N" meals
-    if (['LONG', 'MEDIUM'].includes(planMeal.availability)) {
+    if (['LONG', 'MEDIUM'].includes(ScheduleMeal.availability)) {
       // if we already are tracking some prep candidates AND we already have meals which
       // need prepping, trigger the 'flush' behavior that goes ahead and correlates
       // prep meals to prepped meals
@@ -144,7 +146,7 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
         prepMeals.push(currentMeal);
       }
     } else if (
-      planMeal.availability === 'NONE' &&
+      ScheduleMeal.availability === 'NONE' &&
       !alreadyPlanned(currentMeal)
     ) {
       // note: if we don't have any prep meals ready, we can catch this on the next round
@@ -152,7 +154,7 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
         needPrepMeals.push(currentMeal);
       }
     } else if (
-      planMeal.availability === 'SHORT' &&
+      ScheduleMeal.availability === 'SHORT' &&
       !alreadyPlanned(currentMeal)
     ) {
       // short stuff just gets assigned like normal, no sense prepping on these meals
@@ -163,7 +165,7 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
         mealIndex: currentMeal.mealIndex,
         type: PlanActionType.Cook,
         mealType: 'QUICK',
-        servings: plan.defaultServings,
+        servings: schedule.defaultServings,
       };
       const eatAction: PlanActionEat = {
         id: id('action'),

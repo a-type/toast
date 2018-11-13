@@ -265,8 +265,8 @@
             "deprecationReason": null
           },
           {
-            "name": "planStartWeekDate",
-            "description": "The start date of the entire plan system. You can reference this\nto determine the chronology of plan weeks in conjunction with\nplanWeekIndex and the weekIndex field on Plan itself",
+            "name": "scheduleStartWeekDate",
+            "description": "The start date of the entire plan system. You can reference this\nto determine the chronology of plan weeks in conjunction with\nplanWeekIndex and the weekIndex field on Schedule itself",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -281,12 +281,12 @@
             "deprecationReason": null
           },
           {
-            "name": "plan",
-            "description": "A shortcut for me.group.plan",
+            "name": "schedule",
+            "description": "A shortcut for me.group.schedule",
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "Plan",
+              "name": "Schedule",
               "ofType": null
             },
             "isDeprecated": false,
@@ -353,7 +353,7 @@
           },
           {
             "name": "week",
-            "description": "A shortcut for me.group.plan.week",
+            "description": "A shortcut for me.group.schedule.week",
             "args": [
               {
                 "name": "weekIndex",
@@ -1615,12 +1615,12 @@
             "deprecationReason": null
           },
           {
-            "name": "plan",
+            "name": "schedule",
             "description": "",
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "Plan",
+              "name": "Schedule",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1634,7 +1634,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Plan",
+        "name": "Schedule",
         "description": "",
         "fields": [
           {
@@ -1684,7 +1684,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "PlanMeal",
+                    "name": "ScheduleMeal",
                     "ofType": null
                   }
                 }
@@ -1734,6 +1734,49 @@
             "deprecationReason": null
           },
           {
+            "name": "strategy",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "PlanStrategy",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "previewWeek",
+            "description": "Lets the user preview how a week would look with a particular strategy (even if they don't have access to the strategy)",
+            "args": [
+              {
+                "name": "strategy",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PlanStrategy",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PlanWeek",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "week",
             "description": "",
             "args": [
@@ -1768,7 +1811,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "PlanMeal",
+        "name": "ScheduleMeal",
         "description": "",
         "fields": [
           {
@@ -1796,7 +1839,39 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "PrepAvailability",
+                "name": "ScheduleAvailability",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "dayIndex",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "mealIndex",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -1811,7 +1886,7 @@
       },
       {
         "kind": "ENUM",
-        "name": "PrepAvailability",
+        "name": "ScheduleAvailability",
         "description": "",
         "fields": null,
         "inputFields": null,
@@ -1849,6 +1924,35 @@
           },
           {
             "name": "LONG",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PlanStrategy",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "BASIC",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PREP",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "BIG_PREP",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -3364,7 +3468,7 @@
             "deprecationReason": null
           },
           {
-            "name": "setPlanDetails",
+            "name": "setScheduleDetails",
             "description": "",
             "args": [
               {
@@ -3375,7 +3479,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "PlanSetDetailsInput",
+                    "name": "ScheduleSetDetailsInput",
                     "ofType": null
                   }
                 },
@@ -3387,7 +3491,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Plan",
+                "name": "Schedule",
                 "ofType": null
               }
             },
@@ -3395,7 +3499,7 @@
             "deprecationReason": null
           },
           {
-            "name": "setPlanMealDetails",
+            "name": "setScheduleMealDetails",
             "description": "",
             "args": [
               {
@@ -3434,7 +3538,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "PlanSetMealDetailsInput",
+                    "name": "ScheduleSetMealDetailsInput",
                     "ofType": null
                   }
                 },
@@ -3446,7 +3550,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Plan",
+                "name": "Schedule",
                 "ofType": null
               }
             },
@@ -3454,7 +3558,7 @@
             "deprecationReason": null
           },
           {
-            "name": "setPlanStrategy",
+            "name": "setScheduleStrategy",
             "description": "",
             "args": [
               {
@@ -3473,7 +3577,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Plan",
+                "name": "Schedule",
                 "ofType": null
               }
             },
@@ -4276,7 +4380,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "PlanSetDetailsInput",
+        "name": "ScheduleSetDetailsInput",
         "description": "",
         "fields": null,
         "inputFields": [
@@ -4307,7 +4411,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "PlanSetMealDetailsInput",
+        "name": "ScheduleSetMealDetailsInput",
         "description": "",
         "fields": null,
         "inputFields": [
@@ -4316,7 +4420,7 @@
             "description": "",
             "type": {
               "kind": "ENUM",
-              "name": "PrepAvailability",
+              "name": "ScheduleAvailability",
               "ofType": null
             },
             "defaultValue": null
@@ -4324,35 +4428,6 @@
         ],
         "interfaces": null,
         "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "PlanStrategy",
-        "description": "",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "BASIC",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "PREP",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "BIG_PREP",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
         "possibleTypes": null
       },
       {
@@ -5195,7 +5270,7 @@
       },
       {
         "kind": "ENUM",
-        "name": "PlanMealType",
+        "name": "ScheduleMealType",
         "description": "",
         "fields": null,
         "inputFields": null,
@@ -5399,7 +5474,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "PlanMealType",
+                "name": "ScheduleMealType",
                 "ofType": null
               }
             },

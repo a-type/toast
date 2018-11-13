@@ -5,7 +5,7 @@ import {
   PlanActionEat,
   PlanActionEatOut,
   PlanActionSkip,
-} from 'models/Plan';
+} from 'models/PlanWeek';
 
 export function isCookAction(action: PlanAction): action is PlanActionCook {
   return action.type === PlanActionType.Cook;

@@ -2,7 +2,7 @@ import React from 'react';
 import IngredientPicker from 'features/ingredients/Picker';
 import IngredientEditor, { fragments } from './Editor';
 import { Mutation } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { HelpText, Field } from 'components/generic';
 import { H3 } from 'components/typeset';
 
@@ -10,10 +10,13 @@ export const RecipeCreateIngredientsFragment = gql`
   fragment RecipeCreateIngredients on Recipe {
     id
     ingredients {
-      ${fragments.ParseIngredient}
-      ${fragments.FixIngredient}
+      ...ParseIngredient
+      ...FixIngredient
     }
   }
+
+  ${fragments.ParseIngredient}
+  ${fragments.FixIngredient}
 `;
 
 export default ({

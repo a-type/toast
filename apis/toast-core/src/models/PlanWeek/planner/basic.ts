@@ -1,4 +1,4 @@
-import { Plan, PlanWeek } from 'models';
+import { Schedule, PlanWeek } from 'models';
 import {
   PlanActionCook,
   PlanActionType,
@@ -8,16 +8,16 @@ import {
 import { initializeWeek } from './utils';
 import { id } from 'tools';
 
-export default (plan: Plan, weekIndex: number): PlanWeek => {
-  const week = initializeWeek(plan, weekIndex, () => true);
+export default (schedule: Schedule, weekIndex: number): PlanWeek => {
+  const week = initializeWeek(schedule, weekIndex, () => true);
 
   week.meals.forEach(meal => {
-    const planMeal = plan.getMeal(meal.dayIndex, meal.mealIndex);
+    const ScheduleMeal = schedule.getMeal(meal.dayIndex, meal.mealIndex);
     const mealType = {
       LONG: 'FANCY',
       MEDIUM: 'NORMAL',
       SHORT: 'QUICK',
-    }[planMeal.availability];
+    }[ScheduleMeal.availability];
     if (mealType) {
       const cookAction: PlanActionCook = {
         id: id('action'),
@@ -26,7 +26,7 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
         weekIndex,
         dayIndex: meal.dayIndex,
         mealIndex: meal.mealIndex,
-        servings: plan.defaultServings,
+        servings: schedule.defaultServings,
       };
       const eatAction: PlanActionEat = {
         id: id('action'),
@@ -46,7 +46,7 @@ export default (plan: Plan, weekIndex: number): PlanWeek => {
         dayIndex: meal.dayIndex,
         mealIndex: meal.mealIndex,
         type:
-          planMeal.availability === 'EAT_OUT'
+          ScheduleMeal.availability === 'EAT_OUT'
             ? PlanActionType.EatOut
             : PlanActionType.Skip,
       } as PlanAction);

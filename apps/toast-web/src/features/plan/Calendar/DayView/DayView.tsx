@@ -35,11 +35,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
       date: today.getDate(),
     }}
   >
-    {({
-      data: { planWeekIndex, planStartWeekDate },
-      loading: weekIndexLoading,
-      error: weekIndexError,
-    }) => {
+    {({ data, loading: weekIndexLoading, error: weekIndexError }) => {
       if (weekIndexLoading) {
         return <Loader size={90} />;
       }
@@ -49,9 +45,14 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
         return <Disconnected />;
       }
 
-      const weekIndex = providedWeekIndex || planWeekIndex;
+      const weekIndex =
+        providedWeekIndex !== undefined
+          ? providedWeekIndex
+          : data.planWeekIndex;
       const dayIndex =
-        providedDayIndex || getDayIndex(planStartWeekDate, planWeekIndex);
+        providedDayIndex !== undefined
+          ? providedDayIndex
+          : getDayIndex(data.scheduleStartWeekDate, data.planWeekIndex);
 
       return (
         <Content>

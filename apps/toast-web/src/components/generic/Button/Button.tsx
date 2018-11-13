@@ -6,6 +6,7 @@ import { Size, getSize } from 'theme';
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   spaceBelow?: Size;
+  type?: string;
 };
 export type IconButtonProps = ButtonProps & {
   name: string;

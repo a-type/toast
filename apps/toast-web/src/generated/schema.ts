@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-11T23:21:26-05:00 */
+/** Generated in 2018-11-12T21:55:33-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -50,9 +50,9 @@ export interface Query {
 
   user?: User | null;
 
-  planStartWeekDate: Date;
+  scheduleStartWeekDate: Date;
 
-  plan?: Plan | null;
+  schedule?: Schedule | null;
 
   planWeekIndex: number;
 
@@ -204,27 +204,35 @@ export interface Group {
 
   members: User[];
 
-  plan?: Plan | null;
+  schedule?: Schedule | null;
 }
 
-export interface Plan {
+export interface Schedule {
   id: string;
 
   defaultServings: number;
 
-  meals: PlanMeal[];
+  meals: ScheduleMeal[];
 
   groceryDay: number;
 
   warnings: string[];
 
+  strategy?: PlanStrategy | null;
+
+  previewWeek: PlanWeek;
+
   week?: PlanWeek | null;
 }
 
-export interface PlanMeal {
+export interface ScheduleMeal {
   id: string;
 
-  availability: PrepAvailability;
+  availability: ScheduleAvailability;
+
+  dayIndex: number;
+
+  mealIndex: number;
 }
 
 export interface PlanWeek {
@@ -346,11 +354,11 @@ export interface Mutation {
 
   mergeUser?: User | null;
 
-  setPlanDetails: Plan;
+  setScheduleDetails: Schedule;
 
-  setPlanMealDetails: Plan;
+  setScheduleMealDetails: Schedule;
 
-  setPlanStrategy: Plan;
+  setScheduleStrategy: Schedule;
 
   setWeekActionRecipe: PlanAction;
 
@@ -386,7 +394,7 @@ export interface PlanActionCook extends PlanAction {
 
   servings: number;
 
-  mealType: PlanMealType;
+  mealType: ScheduleMealType;
 
   recipe?: Recipe | null;
 }
@@ -589,14 +597,14 @@ export interface RecipeStepCreateInput {
   text: string;
 }
 
-export interface PlanSetDetailsInput {
+export interface ScheduleSetDetailsInput {
   defaultServings?: number | null;
 
   groceryDay?: number | null;
 }
 
-export interface PlanSetMealDetailsInput {
-  availability?: PrepAvailability | null;
+export interface ScheduleSetMealDetailsInput {
+  availability?: ScheduleAvailability | null;
 }
 
 // ====================================================
@@ -651,7 +659,10 @@ export interface DraftRecipesUserArgs {
 export interface LikedRecipesUserArgs {
   pagination?: ListPaginationInput | null;
 }
-export interface WeekPlanArgs {
+export interface PreviewWeekScheduleArgs {
+  strategy: PlanStrategy;
+}
+export interface WeekScheduleArgs {
   weekIndex: number;
 }
 export interface UpdateRecipeCoverImageMutationArgs {
@@ -739,17 +750,17 @@ export interface LikeRecipeMutationArgs {
 export interface UnlikeRecipeMutationArgs {
   id: string;
 }
-export interface SetPlanDetailsMutationArgs {
-  details: PlanSetDetailsInput;
+export interface SetScheduleDetailsMutationArgs {
+  details: ScheduleSetDetailsInput;
 }
-export interface SetPlanMealDetailsMutationArgs {
+export interface SetScheduleMealDetailsMutationArgs {
   dayIndex: number;
 
   mealIndex: number;
 
-  details: PlanSetMealDetailsInput;
+  details: ScheduleSetMealDetailsInput;
 }
-export interface SetPlanStrategyMutationArgs {
+export interface SetScheduleStrategyMutationArgs {
   strategy?: PlanStrategy | null;
 }
 export interface SetWeekActionRecipeMutationArgs {
@@ -805,13 +816,19 @@ export enum RecipeDisplayType {
   FULL = 'FULL',
 }
 
-export enum PrepAvailability {
+export enum ScheduleAvailability {
   SKIP = 'SKIP',
   EAT_OUT = 'EAT_OUT',
   NONE = 'NONE',
   SHORT = 'SHORT',
   MEDIUM = 'MEDIUM',
   LONG = 'LONG',
+}
+
+export enum PlanStrategy {
+  BASIC = 'BASIC',
+  PREP = 'PREP',
+  BIG_PREP = 'BIG_PREP',
 }
 
 export enum PlanActionType {
@@ -822,18 +839,12 @@ export enum PlanActionType {
   SKIP = 'SKIP',
 }
 
-export enum PlanStrategy {
-  BASIC = 'BASIC',
-  PREP = 'PREP',
-  BIG_PREP = 'BIG_PREP',
-}
-
 export enum CacheControlScope {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE',
 }
 
-export enum PlanMealType {
+export enum ScheduleMealType {
   QUICK = 'QUICK',
   BIG = 'BIG',
   FANCY = 'FANCY',
@@ -944,8 +955,28 @@ export namespace GetWeekIndex {
 
     planWeekIndex: number;
 
-    planStartWeekDate: Date;
+    scheduleStartWeekDate: Date;
   };
+}
+
+export namespace PreviewWeek {
+  export type Variables = {
+    strategy: PlanStrategy;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    schedule?: Schedule | null;
+  };
+
+  export type Schedule = {
+    __typename?: 'Schedule';
+
+    previewWeek: PreviewWeek;
+  };
+
+  export type PreviewWeek = PlanPreview.Fragment;
 }
 
 export namespace RecipeSuggestions {
@@ -1032,6 +1063,114 @@ export namespace UnlikeRecipe {
   };
 
   export type UnlikeRecipe = LikeButton.Fragment;
+}
+
+export namespace ScheduleQuery {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    schedule?: Schedule | null;
+  };
+
+  export type Schedule = {
+    __typename?: 'Schedule';
+
+    id: string;
+  };
+}
+
+export namespace SetMealDetails {
+  export type Variables = {
+    dayIndex: number;
+    mealIndex: number;
+    details: ScheduleSetMealDetailsInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setScheduleMealDetails: SetScheduleMealDetails;
+  };
+
+  export type SetScheduleMealDetails = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    meals: Meals[];
+  };
+
+  export type Meals = {
+    __typename?: 'ScheduleMeal';
+
+    id: string;
+  } & DayRowMeal.Fragment;
+}
+
+export namespace SetScheduleDetails {
+  export type Variables = {
+    details: ScheduleSetDetailsInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setScheduleDetails: SetScheduleDetails;
+  };
+
+  export type SetScheduleDetails = EditDetails.Fragment;
+}
+
+export namespace ProcessSchedule {
+  export type Variables = {
+    strategy: PlanStrategy;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setScheduleStrategy: SetScheduleStrategy;
+  };
+
+  export type SetScheduleStrategy = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    strategy?: PlanStrategy | null;
+  };
+}
+
+export namespace GetSchedule {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    me?: Me | null;
+  };
+
+  export type Me = {
+    __typename?: 'User';
+
+    group?: Group | null;
+  };
+
+  export type Group = {
+    __typename?: 'Group';
+
+    schedule?: Schedule | null;
+  };
+
+  export type Schedule = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    strategy?: PlanStrategy | null;
+  };
 }
 
 export namespace RecipeSearchFilters {
@@ -1200,7 +1339,7 @@ export namespace CalendarPlanAction {
 
     servings: number;
 
-    mealType: PlanMealType;
+    mealType: ScheduleMealType;
 
     recipe?: Recipe | null;
   };
@@ -1280,6 +1419,104 @@ export namespace CalendarDayViewMeals {
   export type Fragment = CalendarMeal.Fragment;
 }
 
+export namespace PlanPreviewMeal {
+  export type Fragment = {
+    __typename?: 'PlanWeekMeal';
+
+    id: string;
+
+    dayIndex: number;
+
+    mealIndex: number;
+
+    actions: Actions[];
+  };
+
+  export type Actions = {
+    __typename?:
+      | PlanActionCookInlineFragment['__typename']
+      | PlanActionEatInlineFragment['__typename'];
+
+    id: string;
+
+    type: PlanActionType;
+  } & (PlanActionCookInlineFragment | PlanActionEatInlineFragment);
+
+  export type PlanActionCookInlineFragment = {
+    __typename?: 'PlanActionCook';
+
+    servings: number;
+
+    mealType: ScheduleMealType;
+
+    recipe?: Recipe | null;
+  };
+
+  export type Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    coverImage?: CoverImage | null;
+  };
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
+  };
+
+  export type PlanActionEatInlineFragment = {
+    __typename?: 'PlanActionEat';
+
+    cookAction?: CookAction | null;
+  };
+
+  export type CookAction = {
+    __typename?: 'PlanActionCook';
+
+    id: string;
+
+    dayIndex?: number | null;
+
+    recipe?: _Recipe | null;
+  };
+
+  export type _Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    coverImage?: _CoverImage | null;
+  };
+
+  export type _CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
+  };
+}
+
+export namespace PlanPreview {
+  export type Fragment = {
+    __typename?: 'PlanWeek';
+
+    id: string;
+
+    meals: Meals[];
+  };
+
+  export type Meals = PlanPreviewMeal.Fragment;
+}
+
 export namespace RecipeSpotlight {
   export type Fragment = {
     __typename?: 'Recipe';
@@ -1335,6 +1572,42 @@ export namespace RecipeCard {
     id: string;
 
     url: string;
+  };
+}
+
+export namespace DayRowMeal {
+  export type Fragment = {
+    __typename?: 'ScheduleMeal';
+
+    id: string;
+
+    availability: ScheduleAvailability;
+
+    dayIndex: number;
+
+    mealIndex: number;
+  };
+}
+
+export namespace EditAvailability {
+  export type Fragment = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    meals: Meals[];
+  };
+
+  export type Meals = DayRowMeal.Fragment;
+}
+
+export namespace EditDetails {
+  export type Fragment = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    defaultServings: number;
   };
 }
 

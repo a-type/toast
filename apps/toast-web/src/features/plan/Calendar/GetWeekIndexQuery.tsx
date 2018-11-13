@@ -6,7 +6,7 @@ import { GetWeekIndex } from 'generated/schema';
 export const Document = gql`
   query GetWeekIndex($year: Int!, $month: Int!, $date: Int!) {
     planWeekIndex(year: $year, month: $month, date: $date)
-    planStartWeekDate
+    scheduleStartWeekDate
   }
 `;
 

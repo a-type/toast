@@ -4,7 +4,25 @@ import Source from './Source';
 // TODO; migrate
 import { parseRecipeIngredient_withTransaction } from 'schema/recipes/recipeIngredients/service';
 
-export default class Recipes extends Source {
+export interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  attribution: string;
+  sourceUrl: string;
+  published: boolean;
+  displayType: 'LINK' | 'FULL';
+  createdAt: any;
+  updatedAt: any;
+  viewedAt: any;
+  views: number;
+  servings: number;
+  cookTime: number;
+  prepTime: number;
+  unattendedTime: number;
+}
+
+export default class Recipes extends Source<Recipe> {
   constructor(ctx, graph) {
     super(ctx, graph, 'Recipe', [
       'id',
@@ -176,7 +194,7 @@ export default class Recipes extends Source {
       return this.hydrateList(result);
     });
 
-  create = input =>
+  create = (input: Partial<Recipe>) =>
     this.ctx.transaction(async tx => {
       const time = timestamp();
       const user = this.ctx.user;
@@ -205,7 +223,7 @@ export default class Recipes extends Source {
       return this.hydrateOne(result);
     });
 
-  link = input =>
+  link = (input: Partial<Recipe> & { ingredientStrings: string[] }) =>
     this.ctx.transaction(async tx => {
       const user = this.ctx.user;
       const time = timestamp();
@@ -271,7 +289,7 @@ export default class Recipes extends Source {
       return recipe;
     });
 
-  updateDetails = (id, input) =>
+  updateDetails = (id: string, input: Partial<Recipe>) =>
     this.ctx.transaction(async tx => {
       const result = await tx.run(
         `
@@ -305,7 +323,7 @@ export default class Recipes extends Source {
       return this.hydrateOne(result, { throwIfNone: true });
     });
 
-  publish = id =>
+  publish = (id: string) =>
     this.ctx.transaction(async tx => {
       const result = await tx.run(
         `
@@ -319,7 +337,7 @@ export default class Recipes extends Source {
       return this.hydrateOne(result, { throwIfNone: true });
     });
 
-  recordView = id =>
+  recordView = (id: string) =>
     this.ctx.transaction(async tx => {
       const result = await tx.run(
         `

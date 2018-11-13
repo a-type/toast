@@ -1,6 +1,7 @@
 import React from 'react';
 import { SingleColumn } from 'components/layouts';
-import { Edit, Calendar, AnonLandingPage } from 'features/plan';
+import { Edit } from 'features/schedule';
+import { Calendar, AnonLandingPage } from 'features/plan';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { path } from 'ramda';
 import { IsLoggedIn } from 'features/auth/gates';

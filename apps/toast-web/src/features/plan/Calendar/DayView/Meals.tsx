@@ -36,7 +36,7 @@ export default class CalendarDayViewMeals extends React.Component<
 > {
   static fragments = {
     day: gql`
-      fragment CalendarDayViewMeals on PlanMeal {
+      fragment CalendarDayViewMeals on ScheduleMeal {
         ...CalendarMeal
       }
 

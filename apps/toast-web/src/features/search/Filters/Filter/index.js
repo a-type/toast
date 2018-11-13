@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { Pill, Type, Display, Controls, RemoveButton } from './components';
 
 const RemoveFilter = gql`

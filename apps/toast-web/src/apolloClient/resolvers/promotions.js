@@ -1,5 +1,5 @@
 import uuid from 'uuid';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { difference } from 'ramda';
 
 const PROMOTION_STORAGE_KEY = 'toast_seen_promotions';

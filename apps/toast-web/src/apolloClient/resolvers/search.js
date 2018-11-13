@@ -1,4 +1,4 @@
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import uuid from 'uuid';
 import queryString from 'query-string';
 import browserHistory from '../../browserHistory';

@@ -1,6 +1,6 @@
 // TODO: refactor this to some place that makes sense
 import client from './apolloClient';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 
 const ShowMessage = gql`
   mutation ShowMessage($contents: [String]!) {

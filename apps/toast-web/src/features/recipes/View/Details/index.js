@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from './Layout';
 import { P, Link } from 'components/typeset';
 import Servings from './Servings';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import Time from './Time';
 
 const RecipeDetails = ({ recipe }) => {

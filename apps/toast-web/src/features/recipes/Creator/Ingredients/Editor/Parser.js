@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 import { Input, Field, Button } from 'components/generic';
 import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
-import gql from 'fraql';
+import gql from 'graphql-tag';
 import { path } from 'ramda';
 
 export const ParseIngredientFragment = gql`
@@ -22,23 +22,27 @@ export const ParseIngredientFragment = gql`
   }
 `;
 
-const ParseIngredient = gql`
-  mutation ParseIngredient($recipeId: ID!, $text: String!) {
+const DoParseIngredient = gql`
+  mutation DoParseIngredient($recipeId: ID!, $text: String!) {
     addRecipeIngredient(recipeId: $recipeId, input: { text: $text }) {
       id
       ingredients {
-        ${ParseIngredientFragment}
+        ...ParseIngredient
       }
     }
   }
+
+  ${ParseIngredientFragment}
 `;
 
-const ReparseIngredient = gql`
-  mutation ReparseIngredient($id: ID!, $text: String!) {
+const DoReparseIngredient = gql`
+  mutation DoReparseIngredient($id: ID!, $text: String!) {
     reparseRecipeIngredient(id: $id, input: { text: $text }) {
-      ${ParseIngredientFragment}
+      ...ParseIngredient
     }
   }
+
+  ${ParseIngredientFragment}
 `;
 
 export default class IngredientEditorParser extends React.PureComponent {
@@ -53,7 +57,7 @@ export default class IngredientEditorParser extends React.PureComponent {
 
     return (
       <Mutation
-        mutation={recipeIngredient ? ReparseIngredient : ParseIngredient}
+        mutation={recipeIngredient ? DoReparseIngredient : DoParseIngredient}
       >
         {parse => (
           <Formik

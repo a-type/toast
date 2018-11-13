@@ -3,7 +3,11 @@ import logger from 'logger';
 import Source from './Source';
 import { AuthenticationError } from 'errors';
 
-export default class Users extends Source {
+export interface User {
+  id: string;
+}
+
+export default class Users extends Source<User> {
   constructor(ctx, graph) {
     super(ctx, graph, 'User', ['id']);
   }
@@ -41,7 +45,7 @@ export default class Users extends Source {
 
   getMe = () => this.get(this.ctx.user.id);
 
-  update = async (userId, data) =>
+  update = async (userId: string, data: Partial<User>) =>
     this.ctx.writeTransaction(async tx => {
       const result = await tx.run(
         `
@@ -58,7 +62,7 @@ export default class Users extends Source {
       return this.hydrateOne(result, { throwIfNone: true });
     });
 
-  updateMe = async data => this.update(this.ctx.user.id, data);
+  updateMe = async (data: Partial<User>) => this.update(this.ctx.user.id, data);
 
   getRecipeAuthor = recipeId =>
     this.ctx.transaction(async tx => {

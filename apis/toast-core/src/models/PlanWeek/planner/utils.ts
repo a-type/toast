@@ -1,13 +1,13 @@
-import Plan, { PlanMeal } from 'models/Plan';
+import Schedule, { ScheduleMeal } from 'models/Schedule';
 import { PlanWeekData } from '../types';
 
 const MEALS_PER_DAY = 3;
 const DAYS_PER_WEEK = 7;
 
-export const mealsFromGroceryDay = (plan: Plan): PlanMeal[] => {
+export const mealsFromGroceryDay = (schedule: Schedule): ScheduleMeal[] => {
   return [
-    ...plan.meals.slice(plan.groceryDay * MEALS_PER_DAY),
-    ...plan.meals.slice(0, plan.groceryDay * MEALS_PER_DAY),
+    ...schedule.meals.slice(schedule.groceryDay * MEALS_PER_DAY),
+    ...schedule.meals.slice(0, schedule.groceryDay * MEALS_PER_DAY),
   ];
 };
 
@@ -16,13 +16,13 @@ const findCookedMeal = meal =>
   ['LONG', 'MEDIUM', 'SHORT'].includes(meal.availability);
 
 export const initializeWeek = (
-  plan: Plan,
+  schedule: Schedule,
   weekIndex: number,
-  findFirstMeal: (meal: PlanMeal) => boolean = findCookedMeal,
+  findFirstMeal: (meal: ScheduleMeal) => boolean = findCookedMeal,
 ) => {
   // skip breakfast for main planning
   // find first cook day after grocery day to use to initialize the week
-  const firstCookMeal = mealsFromGroceryDay(plan).find(findFirstMeal);
+  const firstCookMeal = mealsFromGroceryDay(schedule).find(findFirstMeal);
 
   if (!firstCookMeal) {
     throw new Error(
@@ -31,7 +31,7 @@ export const initializeWeek = (
   }
 
   const week: PlanWeekData = {
-    id: `${plan.id}_w_${weekIndex}`,
+    id: `${schedule.id}_w_${weekIndex}`,
     weekIndex,
     mealsPerDay: MEALS_PER_DAY,
     startDay: firstCookMeal.dayIndex,
@@ -39,7 +39,7 @@ export const initializeWeek = (
     meals: new Array(MEALS_PER_DAY * DAYS_PER_WEEK)
       .fill(null)
       .map((_, idx) => ({
-        id: `${plan.id}_w_${weekIndex}_m_${idx}`,
+        id: `${schedule.id}_w_${weekIndex}_m_${idx}`,
         weekIndex,
         // offsets meal index according to the meal the week starts on
         mealIndex: (firstCookMeal.mealIndex + idx) % MEALS_PER_DAY,
