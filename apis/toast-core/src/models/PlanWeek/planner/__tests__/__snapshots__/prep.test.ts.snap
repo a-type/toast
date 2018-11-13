@@ -23,6 +23,7 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -44,11 +45,13 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 1,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -62,6 +65,7 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -83,11 +87,13 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 2,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -101,6 +107,7 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -122,11 +129,13 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 3,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -140,6 +149,7 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -161,11 +171,13 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 4,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -179,6 +191,7 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -200,11 +213,13 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 5,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -218,6 +233,7 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -239,11 +255,13 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 6,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -265,6 +283,7 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -286,11 +305,13 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 0,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
   ],
   "mealsPerDay": 3,
@@ -323,11 +344,13 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 1,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -349,6 +372,7 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -370,11 +394,13 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 2,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -396,6 +422,7 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -417,11 +444,13 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 3,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -435,6 +464,7 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -447,11 +477,13 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 4,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -473,6 +505,7 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -494,11 +527,13 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 5,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -512,6 +547,7 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -533,11 +569,13 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 6,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -551,6 +589,7 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -572,11 +611,13 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 0,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -589,6 +630,7 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
   ],
   "mealsPerDay": 3,
@@ -621,6 +663,7 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -642,11 +685,13 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 1,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -659,21 +704,25 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 1,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 2,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 2,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -695,16 +744,19 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 3,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 3,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -717,16 +769,19 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 4,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 4,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -748,11 +803,13 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 5,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -766,6 +823,7 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -787,11 +845,13 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 6,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -805,6 +865,7 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -818,11 +879,13 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 0,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
   ],
   "mealsPerDay": 3,
@@ -855,6 +918,7 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -876,11 +940,13 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 1,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -893,6 +959,7 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -914,11 +981,13 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 2,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -940,6 +1009,7 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -961,11 +1031,13 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 3,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -979,6 +1051,7 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -991,11 +1064,13 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 4,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1009,6 +1084,7 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1030,11 +1106,13 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 5,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1056,6 +1134,7 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1077,11 +1156,13 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 6,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1095,6 +1176,7 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1116,11 +1198,13 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 0,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
   ],
   "mealsPerDay": 3,
@@ -1153,11 +1237,13 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 2,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1179,6 +1265,7 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1200,11 +1287,13 @@ Object {
       ],
       "dayIndex": 2,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 3,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1218,6 +1307,7 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1230,11 +1320,13 @@ Object {
       ],
       "dayIndex": 3,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 4,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1248,6 +1340,7 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1269,11 +1362,13 @@ Object {
       ],
       "dayIndex": 4,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 5,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1295,6 +1390,7 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1316,11 +1412,13 @@ Object {
       ],
       "dayIndex": 5,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 6,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1334,6 +1432,7 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1355,11 +1454,13 @@ Object {
       ],
       "dayIndex": 6,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 0,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1381,6 +1482,7 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1402,11 +1504,13 @@ Object {
       ],
       "dayIndex": 0,
       "mealIndex": 2,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [],
       "dayIndex": 1,
       "mealIndex": 0,
+      "weekIndex": 0,
     },
     Object {
       "actions": Array [
@@ -1419,6 +1523,7 @@ Object {
       ],
       "dayIndex": 1,
       "mealIndex": 1,
+      "weekIndex": 0,
     },
   ],
   "mealsPerDay": 3,

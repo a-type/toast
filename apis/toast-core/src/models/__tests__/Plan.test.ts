@@ -1,5 +1,5 @@
-import Plan from '../Plan';
-import createPlans from '../../services/planner/__tests__/createPlans';
+import Schedule from '../Schedule';
+import createPlans from '../PlanWeek/planner/__tests__/createPlans';
 const { variety } = createPlans();
 
 describe('the Plan class', () => {
@@ -7,7 +7,7 @@ describe('the Plan class', () => {
     let plan;
 
     beforeEach(() => {
-      plan = new Plan(variety.toJSON());
+      plan = new Schedule(variety.toJSON());
     });
 
     test('counts availability days', () => {
