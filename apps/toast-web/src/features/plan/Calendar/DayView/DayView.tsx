@@ -11,6 +11,7 @@ import { Redirect } from 'react-router';
 import Meals from './Meals';
 import GetWeekIndexQuery from '../GetWeekIndexQuery';
 import { addDays, differenceInDays } from 'date-fns';
+import LandingPage from 'features/plan/LandingPage';
 
 interface CalendarDayViewProps {
   weekIndex?: number;
@@ -78,7 +79,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
               }
 
               if (!data || !data.week) {
-                return <Redirect to="/plan/edit" />;
+                return <LandingPage />;
               }
 
               const week = pathOr(null, ['week'], data) as PlanWeek;

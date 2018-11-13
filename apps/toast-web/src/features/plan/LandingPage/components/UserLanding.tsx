@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bubbles } from 'components/graphics';
 import { H1, P, H2 } from 'components/typeset';
-import { Background, Button } from 'components/generic';
+import { Background, Button, Link } from 'components/generic';
 import styled from 'styled-components';
 import auth from 'services/auth';
 import { Content } from 'components/layouts';
@@ -12,18 +12,18 @@ const FullScreenBubbles = styled(Bubbles)`
 
 export default () => (
   <React.Fragment>
-    <Background backgroundKey="planAnonLanding">
+    <Background backgroundKey="planUserLanding">
       <FullScreenBubbles bubbleCount={8} />
     </Background>
     <Content mode="overlay">
       <H1>Bring order to your week</H1>
+      <P>Start planning your daily meals in advance the easy way.</P>
       <P>
-        Join Toast and start planning your daily meals in advance the easy way.
-      </P>
-      <P>
-        <Button.Positive onClick={() => auth.login()}>
-          Join or Log In
-        </Button.Positive>
+        <Link to="/plan/edit">
+          <Button.Positive onClick={() => auth.login()}>
+            Get started
+          </Button.Positive>
+        </Link>
       </P>
       <H2>All of the Internet's Recipes</H2>
       <P>
@@ -32,7 +32,7 @@ export default () => (
       </P>
       <H2>Instantly Fit Your Schedule with Toast Gold</H2>
       <P>
-        Upgrade your plan to make planning even easier with an AI-driven
+        Upgrade your account to make planning even easier with an AI-driven
         schedule.
       </P>
     </Content>
