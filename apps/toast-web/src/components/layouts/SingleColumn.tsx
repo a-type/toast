@@ -19,13 +19,14 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   }
 
   & .${CLASS_NAMES.CONTENT} {
-    margin: 0;
+    margin: 0 auto;
     transition: 0.2s ease all;
+    width: 100%;
     max-width: ${props => (props.wide ? 'auto' : '900px')};
-    margin-top: var(--spacing-xl);
-    margin-left: var(--spacing-md);
-    margin-right: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    padding-top: var(--spacing-xl);
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
   }
 
   & .${CLASS_NAMES.HERO_CONTENT} {
@@ -52,9 +53,9 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
 
   @media (min-width: 900px) {
     & .${CLASS_NAMES.CONTENT} {
-      margin-left: var(--spacing-xl);
-      margin-right: var(--spacing-xl);
-      margin-bottom: var(--spacing-lg);
+      padding-left: var(--spacing-xl);
+      padding-right: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
     }
 
     & .${CLASS_NAMES.HERO} {

@@ -14,7 +14,7 @@ const parseIntOrNil = maybeInt => {
 };
 
 export default () => (
-  <SingleColumn>
+  <SingleColumn wide>
     <Switch>
       <Route
         path="/plan/edit"
@@ -25,20 +25,10 @@ export default () => (
         )}
       />
       <Route
-        path="/plan/calendar/:weekIndex?"
-        render={({ match }) => (
-          <IsLoggedIn fallback={<Redirect to="/plan" />}>
-            <Calendar.WeekView
-              weekIndex={parseIntOrNil(path(['params', 'weekIndex'], match))}
-            />
-          </IsLoggedIn>
-        )}
-      />
-      <Route
         path="/plan/:weekIndex?/:dayIndex?"
         render={({ match }) => (
           <IsLoggedIn fallback={<LandingPage />}>
-            <Calendar.DayView
+            <Calendar
               weekIndex={parseIntOrNil(path(['params', 'weekIndex'], match))}
               dayIndex={parseIntOrNil(path(['params', 'dayIndex'], match))}
             />

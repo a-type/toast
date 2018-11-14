@@ -3,8 +3,8 @@ import IngredientPicker from 'features/ingredients/Picker';
 import IngredientEditor, { fragments } from './Editor';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { HelpText, Field } from 'components/generic';
-import { H3 } from 'components/typeset';
+import { Field } from 'components/generic';
+import { H3, HelpText } from 'components/typeset';
 
 export const RecipeCreateIngredientsFragment = gql`
   fragment RecipeCreateIngredients on Recipe {
