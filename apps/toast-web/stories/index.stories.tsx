@@ -1,29 +1,18 @@
-import React from 'react';
+import * as React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { linkTo } from '@storybook/addon-links';
 
 import '../public/stylesheets/icons.css';
 import '../public/stylesheets/food-icons.css';
 
 import { BrowserRouter } from 'react-router-dom';
 
-import theme from '../src/theme';
-
 import Grid from './components/Grid';
 
-import {
-  Button,
-  Input,
-  Pill,
-  Divider,
-  Checkbox,
-  Form,
-  SelectionEditor,
-} from 'components/generic';
-import { P, H1, H2, Link } from 'components/typeset';
-import { Logo } from 'components/brand';
+import { Button, Input, Checkbox, Form } from '../src/components/generic';
+import { P, H1, H2, Link } from '../src/components/typeset';
+import { Logo, BackdropArt } from '../src/components/brand';
 
 storiesOf('Button', module).add('demo', () => (
   <Grid>
@@ -38,11 +27,6 @@ storiesOf('Input', module)
   .add('demo', () => (
     <Grid>
       <Input />
-    </Grid>
-  ))
-  .add('H1', () => (
-    <Grid>
-      <Input.H1 />
     </Grid>
   ))
   .add('Block', () => (
@@ -60,34 +44,6 @@ storiesOf('Link', module).add('demo', () => (
       <Link.Clear to="#">Clear</Link.Clear>
     </Grid>
   </BrowserRouter>
-));
-
-storiesOf('Checkbox', module).add('demo', () => (
-  <Grid>
-    <Checkbox value="checkbox">Checkbox</Checkbox>
-  </Grid>
-));
-
-storiesOf('Form', module).add('demo', () => (
-  <div style={{ padding: '30px' }}>
-    <Form>
-      <Form.Field.Group>
-        <Form.Field label="Label" alignContent="stretch">
-          <Input />
-        </Form.Field>
-        <Form.Field label="Label">
-          <Input />
-        </Form.Field>
-        <Form.Field columnSpan={2}>
-          <Checkbox value="hello">Checkbox</Checkbox>
-        </Form.Field>
-        <Form.Field>
-          <Button>Button</Button>
-          <Button.Ghost>Button</Button.Ghost>
-        </Form.Field>
-      </Form.Field.Group>
-    </Form>
-  </div>
 ));
 
 storiesOf('Logo', module).add('demo', () => (
@@ -157,43 +113,12 @@ storiesOf('Vertical rhythm', module)
     >
       <Input value="Foo Bar Baz" />
       <div style={{ height: '24px' }} />
-      <Input.H1 value="Header style!" />
-      <div style={{ height: '24px' }} />
-      <Checkbox value="foo">A checkbox!</Checkbox>
-      <div style={{ height: '24px' }} />
       <Input.Block value="Block style!" />
     </div>
   ));
 
-class SelectionState extends React.Component {
-  state = {
-    selections: [
-      { name: 'value', text: '1/2', color: 'positive' },
-      { name: 'unit', text: 'cup', color: 'negative' },
-      { name: 'ingredient', text: 'flour' },
-    ],
-    value: '1/2 cup of enriched flour',
-  };
-
-  onSelectionChanged = (name, text) => {
-    this.setState(({ selections }) => {
-      selections.find(s => s.name === name).text = text;
-      return {
-        selections,
-      };
-    });
-  };
-
-  render() {
-    const { value, selections } = this.state;
-    return (
-      <SelectionEditor
-        value={value}
-        selections={selections}
-        onSelectionChanged={this.onSelectionChanged}
-      />
-    );
-  }
-}
-
-storiesOf('SelectionEditor', module).add('basic', () => <SelectionState />);
+storiesOf('BackdropArt', module).add('basic', () => (
+  <div style={{ width: '100vw', height: '100vh' }}>
+    <BackdropArt />
+  </div>
+));

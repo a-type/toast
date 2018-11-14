@@ -64,7 +64,7 @@ export const GlobalStyle = createGlobalStyle`
 
 
   --color-positive: #1ecbb4;
-  --color-positive-light: #91fbff;
+  --color-positive-light: #bff4ed;
   --color-positive-dark: #007985;
   --color-positive-highlighter: #adffef32;
 

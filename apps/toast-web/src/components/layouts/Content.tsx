@@ -19,10 +19,12 @@ const BaseContentStyles = styled<{ hasBackground: boolean }, 'div'>('div')`
  */
 const OverlayContentStyles = styled(BaseContentStyles)`
   --color-content-foreground: var(--color-white);
-  --color-content-background: #ab5f0f70;
+  --color-content-background: #7d746a70;
   --color-heading: var(--color-white);
   --color-field-background: var(--color-brand-dark);
   --color-field-foreground: var(--color-white);
+
+  backdrop-filter: blur(8px);
 `;
 
 export type Props = {

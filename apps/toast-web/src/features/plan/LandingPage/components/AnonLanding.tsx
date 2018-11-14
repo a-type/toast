@@ -1,19 +1,15 @@
 import React from 'react';
-import { Bubbles } from 'components/graphics';
+import { BackdropArt } from 'components/brand';
 import { H1, P, H2 } from 'components/typeset';
 import { Background, Button } from 'components/generic';
 import styled from 'styled-components';
 import auth from 'services/auth';
 import { Content } from 'components/layouts';
 
-const FullScreenBubbles = styled(Bubbles)`
-  height: 100%;
-`;
-
 export default () => (
   <React.Fragment>
     <Background backgroundKey="planAnonLanding">
-      <FullScreenBubbles bubbleCount={8} />
+      <BackdropArt />
     </Background>
     <Content mode="overlay">
       <H1>Bring order to your week</H1>

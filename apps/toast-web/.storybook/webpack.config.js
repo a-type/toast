@@ -10,6 +10,15 @@ const path = require('path');
 module.exports = {
   resolve: {
     modules: [path.resolve(__dirname, '..', 'src'), 'node_modules'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    alias: {
+      'styled-components': path.resolve(
+        __dirname,
+        '../node_modules/styled-components',
+      ),
+      react: path.resolve(__dirname, '../node_modules/react'),
+      'react-dom': path.resolve(__dirname, '../node_modules/react-dom'),
+    },
   },
   plugins: [
     // your custom plugins
@@ -24,6 +33,11 @@ module.exports = {
         },
       },
       {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: ['babel-loader', 'awesome-typescript-loader'],
+      },
+      {
         test: /\.css$/,
         use: [
           {
@@ -36,6 +50,11 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
       },
       {
         test: /\.(gif|png|jpe?g|svg|eot|woff2?|ttf)$/i,

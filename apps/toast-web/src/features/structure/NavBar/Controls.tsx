@@ -2,9 +2,10 @@ import styled from 'styled-components';
 
 export default styled.div`
   background: var(--color-popover-background);
-  border-radius: 25px;
+  border-radius: 27px;
   display: flex;
   flex-direction: row;
+  padding: 2px;
 
   & > *:not(:last-child) {
     margin-right: var(--spacing-md);
