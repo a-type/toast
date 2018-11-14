@@ -6,6 +6,11 @@ import CalendarMeal from './CalendarMeal';
 
 export const Document = gql`
   query CalendarPlan($weekIndex: Int!) {
+    schedule {
+      id
+      groceryDay
+    }
+
     week(weekIndex: $weekIndex) {
       startDate
       id

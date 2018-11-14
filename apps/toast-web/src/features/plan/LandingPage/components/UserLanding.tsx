@@ -4,7 +4,7 @@ import { H1, P, H2 } from 'components/typeset';
 import { Background, Button, Link } from 'components/generic';
 import styled from 'styled-components';
 import auth from 'services/auth';
-import { Content } from 'components/layouts';
+import Content from './OverlayContent';
 
 export default () => (
   <React.Fragment>

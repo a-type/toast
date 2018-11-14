@@ -3,9 +3,12 @@ import { path, mergeDeepRight } from 'ramda';
 import { NotFoundError } from 'errors';
 import getWeekIndex from './getWeekIndex';
 import logger from 'logger';
+import { addDays } from 'date-fns';
 
 import * as shoppingList from './shoppingList';
 import { Context } from 'context';
+import { PlanWeek } from 'models';
+import { PlanWeekMeal } from 'models/PlanWeek';
 
 export const typeDefs = () => [
   gql`
@@ -78,6 +81,7 @@ export const typeDefs = () => [
       weekIndex: Int!
       mealIndex: Int!
       dayIndex: Int!
+      date: Date!
       actions: [PlanAction!]!
     }
 
@@ -175,12 +179,12 @@ export const resolvers = [
     },
 
     Schedule: {
-      week: async (parent, args, ctx) => {
+      week: async (parent, args, ctx: Context) => {
         const week = await ctx.firestore.schedules.getWeek(
           parent.id,
           args.weekIndex,
         );
-        ctx.week = week;
+        ctx['week'] = week;
         return week;
       },
     },
@@ -188,6 +192,14 @@ export const resolvers = [
     PlanWeek: {
       startDate: parent => {
         return parent.startDate;
+      },
+    },
+
+    PlanWeekMeal: {
+      date: (parent: PlanWeekMeal, _args, ctx: Context) => {
+        const week: PlanWeek = ctx['week'];
+        const daysFromStart = (7 + parent.dayIndex - week.startDay) % 7;
+        return addDays(week.startDate, daysFromStart);
       },
     },
 

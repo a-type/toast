@@ -84,20 +84,14 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
 
               const week = pathOr(null, ['week'], data) as PlanWeek;
 
-              const date = addDays(week.startDate, dayIndex);
               const meals = week.meals
                 .filter(meal => meal.dayIndex === dayIndex)
                 .sort((a, b) => a.mealIndex - b.mealIndex);
 
+              const date = meals[0].date;
+
               return (
                 <React.Fragment>
-                  <Controls>
-                    <Link to={`/plan/calendar/${weekIndex}`}>
-                      <Button spaceBelow="lg">
-                        <Icon name="calendar" /> Calendar view
-                      </Button>
-                    </Link>
-                  </Controls>
                   <H1>{formatDay(date)}</H1>
                   <Meals
                     meals={meals}
@@ -111,6 +105,11 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
                       }`}
                     >
                       <Button spaceBelow="lg">Previous day</Button>
+                    </Link>
+                    <Link to={`/plan/calendar/${weekIndex}`}>
+                      <Button spaceBelow="lg">
+                        <Icon name="calendar" /> Week
+                      </Button>
                     </Link>
                     <Link
                       to={`/plan/${weekIndex + (dayIndex === 6 ? 1 : 0)}/${

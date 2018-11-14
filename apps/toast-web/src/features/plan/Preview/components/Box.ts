@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   background: var(--color-content-background);
-  color: var(--color-dark);
+  color: var(--color-white);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
 

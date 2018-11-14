@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-12T21:55:33-05:00 */
+/** Generated in 2018-11-13T22:13:00-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -261,6 +261,8 @@ export interface PlanWeekMeal {
   mealIndex: number;
 
   dayIndex: number;
+
+  date: Date;
 
   actions: PlanAction[];
 }
@@ -917,7 +919,17 @@ export namespace CalendarPlan {
   export type Query = {
     __typename?: 'Query';
 
+    schedule?: Schedule | null;
+
     week?: Week | null;
+  };
+
+  export type Schedule = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    groceryDay: number;
   };
 
   export type Week = {
@@ -973,10 +985,16 @@ export namespace PreviewWeek {
   export type Schedule = {
     __typename?: 'Schedule';
 
+    id: string;
+
     previewWeek: PreviewWeek;
   };
 
-  export type PreviewWeek = PlanPreview.Fragment;
+  export type PreviewWeek = {
+    __typename?: 'PlanWeek';
+
+    id: string;
+  } & PlanPreview.Fragment;
 }
 
 export namespace RecipeSuggestions {
@@ -1074,11 +1092,13 @@ export namespace ScheduleQuery {
     schedule?: Schedule | null;
   };
 
-  export type Schedule = {
-    __typename?: 'Schedule';
+  export type Schedule =
+    | {
+        __typename?: 'Schedule';
 
-    id: string;
-  };
+        id: string;
+      } & EditDetails.Fragment
+    | EditAvailability.Fragment;
 }
 
 export namespace SetMealDetails {
@@ -1403,6 +1423,8 @@ export namespace CalendarMeal {
 
     id: string;
 
+    date: Date;
+
     actions: Actions[];
   };
 
@@ -1473,6 +1495,8 @@ export namespace PlanPreviewMeal {
   export type PlanActionEatInlineFragment = {
     __typename?: 'PlanActionEat';
 
+    leftovers: boolean;
+
     cookAction?: CookAction | null;
   };
 
@@ -1482,26 +1506,6 @@ export namespace PlanPreviewMeal {
     id: string;
 
     dayIndex?: number | null;
-
-    recipe?: _Recipe | null;
-  };
-
-  export type _Recipe = {
-    __typename?: 'Recipe';
-
-    id: string;
-
-    title: string;
-
-    coverImage?: _CoverImage | null;
-  };
-
-  export type _CoverImage = {
-    __typename?: 'Image';
-
-    id: string;
-
-    url: string;
   };
 }
 

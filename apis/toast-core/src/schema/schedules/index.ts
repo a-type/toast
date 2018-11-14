@@ -121,8 +121,12 @@ export const resolvers = [
         defaultPlan.id = scheduleId;
         const schedule =
           (await ctx.firestore.schedules.get(scheduleId)) || defaultPlan;
-        schedule.defaultServings = details.defaultServings;
-        schedule.groceryDay = details.groceryDay;
+        if (details.defaultServings !== null) {
+          schedule.defaultServings = details.defaultServings;
+        }
+        if (details.groceryDay !== null) {
+          schedule.groceryDay = details.groceryDay;
+        }
         return ctx.firestore.schedules.set(scheduleId, schedule);
       },
 

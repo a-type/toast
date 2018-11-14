@@ -43,6 +43,7 @@ export default class CalendarMeal extends React.Component<
     meal: gql`
       fragment CalendarMeal on PlanWeekMeal {
         id
+        date
         actions {
           id
           type

@@ -2,8 +2,9 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Formik } from 'formik';
-import { Field, Input, Button, Form } from 'components/generic';
+import { Field, Input, Button, Form, Select } from 'components/generic';
 import { Schedule } from 'generated/schema';
+import { Day } from 'types/Day';
 
 const fragments = {
   schedule: gql`
@@ -33,9 +34,19 @@ const EditDetails = ({ schedule, onSave }) => (
   <Mutation mutation={SetScheduleDetails}>
     {mutate => (
       <Formik
-        initialValues={schedule}
+        initialValues={{
+          defaultServings: schedule.defaultServings,
+          groceryDay: schedule.groceryDay,
+        }}
         onSubmit={async values => {
-          await mutate({ variables: { details: values } });
+          await mutate({
+            variables: {
+              details: {
+                defaultServings: values.defaultServings,
+                groceryDay: parseInt(values.groceryDay, 10),
+              },
+            },
+          });
           onSave();
         }}
       >
@@ -47,6 +58,19 @@ const EditDetails = ({ schedule, onSave }) => (
                 name="defaultServings"
                 onChange={handleChange}
               />
+            </Field>
+            <Field label="What day can you normally buy groceries?" required>
+              <Select
+                value={values.groceryDay}
+                name="groceryDay"
+                onChange={handleChange}
+              >
+                {new Array(7).fill(null).map((_, idx) => (
+                  <option value={idx} key={idx}>
+                    {Day[idx]}
+                  </option>
+                ))}
+              </Select>
             </Field>
             <Field>
               <Button type="submit">{!!schedule ? 'Save' : 'Create'}</Button>
