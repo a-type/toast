@@ -165,13 +165,13 @@ export const resolvers = [
           throw new UserInputError("You haven't created a plan yet");
         }
 
-        const plan = await ctx.firestore.plans.getWeek(
+        const week = await ctx.firestore.plans.getWeek(
           group.planId,
           weekIndex,
           group.scheduleId,
         );
-        const action = plan.setActionRecipe(actionId, recipeId);
-        await ctx.firestore.plans.setWeek(group.planId, weekIndex);
+        const action = week.setActionRecipe(actionId, recipeId);
+        await ctx.firestore.plans.setWeek(group.planId, week);
         return action;
       },
     },

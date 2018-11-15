@@ -139,15 +139,22 @@ export default class PlanWeek {
    * For that reason it's probably easier to think of an action's id as its
    * coordinate "position", not an arbitrary identifier.
    */
-  createActionId = (mealIndex, actionIndex, actionType) =>
-    `${mealIndex}_${actionIndex}_${actionType}`;
+  createActionId = (dayIndex, mealIndex, actionIndex, actionType) =>
+    `${
+      this.data.weekIndex
+    }_${dayIndex}_${mealIndex}_${actionIndex}_${actionType}`;
 
   addAction = (dayIndex, mealIndex, actionData: PlanActionData) => {
     const meal = this.data.meals.find(
       m => m.dayIndex === dayIndex && m.mealIndex === mealIndex,
     );
     const actionIndex = meal.actions.length;
-    const id = this.createActionId(mealIndex, actionIndex, actionData.type);
+    const id = this.createActionId(
+      dayIndex,
+      mealIndex,
+      actionIndex,
+      actionData.type,
+    );
     const action: PlanAction = ({
       id,
       ...actionData,
