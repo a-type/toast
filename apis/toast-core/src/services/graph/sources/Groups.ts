@@ -3,12 +3,13 @@ import { id } from 'tools';
 
 export interface Group {
   id: string;
-  scheduleId: string;
+  scheduleId?: string;
+  planId?: string;
 }
 
 export default class Groups extends Source<Group> {
   constructor(ctx, graph) {
-    super(ctx, graph, 'Group', ['id', 'scheduleId']);
+    super(ctx, graph, 'Group', ['id', 'scheduleId', 'planId']);
   }
 
   get = (groupId: string) =>

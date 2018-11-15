@@ -132,9 +132,8 @@ export default class PlanWeek {
     return action;
   };
 
-  setActionRecipe = (mealIndex, actionId, recipeId) => {
-    const meal = this.data.meals[mealIndex];
-    const action = meal.actions.find(action => action.id === actionId);
+  setActionRecipe = (actionId, recipeId) => {
+    const action = this.actions[actionId];
     if (!action || action.type !== 'COOK') {
       throw new UserInputError(
         "You can't assign a recipe to a non-cooking action",

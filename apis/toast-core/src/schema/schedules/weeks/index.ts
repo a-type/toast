@@ -1,8 +1,6 @@
 import { gql, UserInputError } from 'apollo-server-express';
 import { path, mergeDeepRight } from 'ramda';
-import { NotFoundError } from 'errors';
 import getWeekIndex from './getWeekIndex';
-import logger from 'logger';
 import { addDays } from 'date-fns';
 
 import * as shoppingList from './shoppingList';
@@ -95,10 +93,6 @@ export const typeDefs = () => [
       meals: [PlanWeekMeal!]!
     }
 
-    extend type Schedule {
-      week(weekIndex: Int!): PlanWeek
-    }
-
     extend type Mutation {
       setWeekActionRecipe(
         weekIndex: Int!
@@ -114,7 +108,7 @@ export const typeDefs = () => [
       """
       planWeekIndex(year: Int!, month: Int!, date: Int!): Int!
       """
-      A shortcut for me.group.schedule.week
+      Gets a full week of a plan based on a week index
       """
       week(weekIndex: Int!): PlanWeek @authenticated
     }
@@ -122,11 +116,6 @@ export const typeDefs = () => [
 
   shoppingList.typeDefs,
 ];
-
-const getScheduleId = async ctx => {
-  const group = await ctx.graph.groups.getMine();
-  return path(['scheduleId'], group);
-};
 
 export const resolvers = [
   {
@@ -139,19 +128,21 @@ export const resolvers = [
           startDay: ctx.firestore.schedules.START_WEEK_DAY,
         }),
 
-      week: async (_parent, { weekIndex }, ctx) => {
-        const scheduleId = ctx['scheduleId'] || (await getScheduleId(ctx));
+      week: async (_parent, { weekIndex }, ctx: Context) => {
+        const group = await ctx.graph.groups.getMine();
 
-        if (!scheduleId) {
+        if (!group.planId) {
           return null;
         }
 
-        const week = await ctx.firestore.schedules.getWeek(
-          scheduleId,
+        const week = await ctx.firestore.plans.getWeek(
+          group.planId,
           weekIndex,
+          group.scheduleId,
         );
-        ctx.week = week;
-        ctx.scheduleId = scheduleId;
+        ctx['week'] = week;
+        // TODO: configurable schedule (temp?)
+        ctx['scheduleId'] = group.scheduleId;
         return week;
       },
     },
@@ -159,7 +150,7 @@ export const resolvers = [
     Mutation: {
       setWeekActionRecipe: async (
         _parent,
-        { weekIndex, dayIndex, mealIndex, actionId, recipeId },
+        { weekIndex, actionId, recipeId },
         ctx: Context,
       ) => {
         const group = await ctx.graph.groups.getMine();
@@ -168,24 +159,14 @@ export const resolvers = [
           throw new UserInputError("You haven't created a plan yet");
         }
 
-        const plan = await ctx.firestore.schedules.getWeek(
-          group.scheduleId,
+        const plan = await ctx.firestore.plans.getWeek(
+          group.planId,
           weekIndex,
+          group.scheduleId,
         );
-        const action = plan.setActionRecipe(mealIndex, actionId, recipeId);
-        await ctx.firestore.schedules.setWeek(group.scheduleId, weekIndex);
+        const action = plan.setActionRecipe(actionId, recipeId);
+        await ctx.firestore.plans.setWeek(group.planId, weekIndex);
         return action;
-      },
-    },
-
-    Schedule: {
-      week: async (parent, args, ctx: Context) => {
-        const week = await ctx.firestore.schedules.getWeek(
-          parent.id,
-          args.weekIndex,
-        );
-        ctx['week'] = week;
-        return week;
       },
     },
 

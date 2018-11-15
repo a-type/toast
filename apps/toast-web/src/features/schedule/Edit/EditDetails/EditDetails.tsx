@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { Field, Input, Button, Form, Select } from 'components/generic';
 import { Schedule } from 'generated/schema';
 import { Day } from 'types/Day';
+import { pathOr } from 'ramda';
 
 const fragments = {
   schedule: gql`
@@ -35,8 +36,8 @@ const EditDetails = ({ schedule, onSave }) => (
     {mutate => (
       <Formik
         initialValues={{
-          defaultServings: schedule.defaultServings,
-          groceryDay: schedule.groceryDay,
+          defaultServings: pathOr('', ['defaultServings'], schedule),
+          groceryDay: pathOr('', ['groceryDay'], schedule),
         }}
         onSubmit={async values => {
           await mutate({

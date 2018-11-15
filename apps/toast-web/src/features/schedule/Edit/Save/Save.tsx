@@ -40,25 +40,26 @@ const strategyDescriptions = {
 };
 
 const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
-  const [strategy, setStrategy] = React.useState(null);
+  const [strategy, setStrategy] = React.useState('BASIC');
 
   return (
     <Query query={GetSchedule}>
       {({ data, loading, error }) => {
         const schedule = path(['me', 'group', 'schedule'], data);
-        const defaultStrategy = pathOr(null, ['strategy'], schedule);
+        const defaultStrategy = pathOr(strategy, ['strategy'], schedule);
 
         return (
           <React.Fragment>
             <Field label="Plan strategy" required>
               <Select
-                onChange={ev => setStrategy(ev.target.value)}
+                onChange={ev => {
+                  setStrategy(ev.target.value);
+                }}
                 value={strategy || defaultStrategy}
                 name="strategy"
               >
                 <option value="BASIC">Basic</option>
                 <option value="PREP">Prep</option>
-                <option value="BIG_PREP">Big prep</option>
               </Select>
             </Field>
 
@@ -93,4 +94,4 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default cold(withRouter(ScheduleEditSave));
+export default withRouter(cold(ScheduleEditSave));
