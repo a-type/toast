@@ -1,3 +1,5 @@
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 export enum PlanActionType {
   Cook = 'COOK',
   Eat = 'EAT',
@@ -47,6 +49,8 @@ export type PlanAction =
   | PlanActionSkip
   | PlanActionEatOut
   | PlanActionReadyMade;
+
+export type PlanActionData = Omit<PlanAction, 'id'>;
 
 export interface PlanWeekMeal {
   id: string;

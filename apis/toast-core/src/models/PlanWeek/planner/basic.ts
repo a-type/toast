@@ -1,15 +1,9 @@
 import { Schedule, PlanWeek } from 'models';
-import {
-  PlanActionCook,
-  PlanActionType,
-  PlanActionEat,
-  PlanAction,
-} from '../types';
+import { PlanActionType } from '../types';
 import { initializeWeek } from './utils';
-import { id } from 'tools';
 
 export default (schedule: Schedule, weekIndex: number): PlanWeek => {
-  const week = initializeWeek(schedule, weekIndex, () => true);
+  const week = new PlanWeek(initializeWeek(schedule, weekIndex, () => true));
 
   week.meals.forEach(meal => {
     const ScheduleMeal = schedule.getMeal(meal.dayIndex, meal.mealIndex);
@@ -19,8 +13,7 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
       SHORT: 'QUICK',
     }[ScheduleMeal.availability];
     if (mealType) {
-      const cookAction: PlanActionCook = {
-        id: id('action'),
+      const cookActionData = {
         type: PlanActionType.Cook,
         mealType,
         weekIndex,
@@ -28,8 +21,14 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
         mealIndex: meal.mealIndex,
         servings: schedule.defaultServings,
       };
-      const eatAction: PlanActionEat = {
-        id: id('action'),
+
+      const cookAction = week.addAction(
+        meal.dayIndex,
+        meal.mealIndex,
+        cookActionData,
+      );
+
+      const eatAction = {
         type: PlanActionType.Eat,
         weekIndex,
         dayIndex: meal.dayIndex,
@@ -38,10 +37,9 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
         leftovers: false,
       };
 
-      meal.actions.push(cookAction, eatAction);
+      week.addAction(meal.dayIndex, meal.mealIndex, eatAction);
     } else {
-      meal.actions.push({
-        id: id('action'),
+      week.addAction(meal.dayIndex, meal.mealIndex, {
         weekIndex,
         dayIndex: meal.dayIndex,
         mealIndex: meal.mealIndex,
@@ -49,9 +47,9 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
           ScheduleMeal.availability === 'EAT_OUT'
             ? PlanActionType.EatOut
             : PlanActionType.Skip,
-      } as PlanAction);
+      });
     }
   });
 
-  return new PlanWeek(week);
+  return week;
 };

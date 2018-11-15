@@ -9,7 +9,7 @@ import {
   PlanActionEatOut,
 } from '../types';
 import { id } from 'tools';
-import { initializeWeek } from './utils';
+import { initializeWeek, MEALS_PER_DAY } from './utils';
 
 const prepMealType = (availability, totalServings) => {
   if (totalServings > 8) {
@@ -33,7 +33,7 @@ const alreadyPlanned = (meal: PlanWeekMeal): boolean =>
   );
 
 export default (schedule: Schedule, weekIndex: number): PlanWeek => {
-  const week = initializeWeek(schedule, weekIndex);
+  const week = new PlanWeek(initializeWeek(schedule, weekIndex));
 
   // FIXME: move this logic somewhere else...
   // const totalNones = mealList.filter(meal => meal.availability === 'NONE')
@@ -75,8 +75,7 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
       mealCountLeft -= countOfMealsToPrepFor;
 
       // add a cook action to cover all needed meals, plus eat for this meal.
-      const cookAction: PlanActionCook = {
-        id: id('action'),
+      const cookAction = {
         weekIndex: weekIndex,
         dayIndex: prepMeal.dayIndex,
         mealIndex: prepMeal.mealIndex,
@@ -87,31 +86,40 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
           (1 + countOfMealsToPrepFor) * schedule.defaultServings,
         ),
       };
-      const eatAction: PlanActionEat = {
-        id: id('action'),
+      const finalCookAction = week.addAction(
+        prepMeal.dayIndex,
+        prepMeal.mealIndex,
+        cookAction,
+      );
+
+      const eatAction = {
         weekIndex: weekIndex,
         dayIndex: prepMeal.dayIndex,
         mealIndex: prepMeal.mealIndex,
         type: PlanActionType.Eat,
-        cookActionId: cookAction.id,
+        cookActionId: finalCookAction.id,
         leftovers: false,
       };
+
       // add both actions to corresponding meal in week
-      prepMeal.actions.push(cookAction, eatAction);
+      week.addAction(prepMeal.dayIndex, prepMeal.mealIndex, eatAction);
 
       // grab the prepped meals from the list and apply them
       for (let i = 0; i < countOfMealsToPrepFor; i++) {
         const leftoverMeal = needPrepMeals.shift();
-        const leftoverAction: PlanActionEat = {
-          id: id('action'),
+        const leftoverAction = {
           weekIndex: weekIndex,
           dayIndex: leftoverMeal.dayIndex,
           mealIndex: leftoverMeal.mealIndex,
           type: PlanActionType.Eat,
-          cookActionId: cookAction.id,
+          cookActionId: finalCookAction.id,
           leftovers: true,
         };
-        leftoverMeal.actions.push(leftoverAction);
+        week.addAction(
+          leftoverMeal.dayIndex,
+          leftoverMeal.mealIndex,
+          leftoverAction,
+        );
       }
     });
 
@@ -158,40 +166,38 @@ export default (schedule: Schedule, weekIndex: number): PlanWeek => {
       !alreadyPlanned(currentMeal)
     ) {
       // short stuff just gets assigned like normal, no sense prepping on these meals
-      const cookAction: PlanActionCook = {
-        id: id('action'),
+      const cookActionData = {
         weekIndex,
-        dayIndex: currentMeal.dayIndex,
-        mealIndex: currentMeal.mealIndex,
+        dayIndex,
+        mealIndex,
         type: PlanActionType.Cook,
         mealType: 'QUICK',
         servings: schedule.defaultServings,
       };
-      const eatAction: PlanActionEat = {
-        id: id('action'),
+      const cookAction = week.addAction(dayIndex, mealIndex, cookActionData);
+      const eatAction = {
         weekIndex,
-        dayIndex: currentMeal.dayIndex,
-        mealIndex: currentMeal.mealIndex,
+        dayIndex,
+        mealIndex,
         type: PlanActionType.Eat,
         cookActionId: cookAction.id,
         leftovers: false,
       };
-      currentMeal.actions.push(cookAction, eatAction);
+      week.addAction(dayIndex, mealIndex, eatAction);
     } else if (!alreadyPlanned(currentMeal)) {
       // eat out is transparently copied over
-      const eatOutAction: PlanActionEatOut = {
-        id: id('action'),
+      const eatOutAction = {
         weekIndex,
-        dayIndex: currentMeal.dayIndex,
-        mealIndex: currentMeal.mealIndex,
+        dayIndex,
+        mealIndex,
         type: PlanActionType.EatOut,
       };
-      currentMeal.actions.push(eatOutAction);
+      week.addAction(dayIndex, mealIndex, eatOutAction);
     }
   }
 
   // add cooking to any trailing 'prep-ready' meals.
   flushPrepMeals();
 
-  return new PlanWeek(week);
+  return week;
 };

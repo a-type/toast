@@ -1,8 +1,8 @@
 import Schedule, { ScheduleMeal } from 'models/Schedule';
 import { PlanWeekData } from '../types';
 
-const MEALS_PER_DAY = 3;
-const DAYS_PER_WEEK = 7;
+export const MEALS_PER_DAY = 3;
+export const DAYS_PER_WEEK = 7;
 
 export const mealsFromGroceryDay = (schedule: Schedule): ScheduleMeal[] => {
   return [

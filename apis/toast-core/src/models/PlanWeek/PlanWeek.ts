@@ -2,7 +2,12 @@ import { id } from 'tools';
 import { UserInputError } from 'errors';
 import { addDays, addWeeks } from 'date-fns';
 import { START_WEEK_DAY } from '../../constants';
-import { PlanWeekData, PlanAction, PlanActionCook } from './types';
+import {
+  PlanWeekData,
+  PlanAction,
+  PlanActionCook,
+  PlanActionData,
+} from './types';
 import Schedule from '../Schedule';
 import planner from './planner';
 
@@ -112,26 +117,6 @@ export default class PlanWeek {
     );
   };
 
-  getActionDefaults = actionType => ({
-    id: this.generateId('action'),
-    type: actionType,
-    ...this.getTypedActionDefaults(actionType),
-  });
-
-  addAction = (day, meal, type, details = {}) => {
-    const action: PlanAction = {
-      dayIndex: day,
-      mealIndex: meal,
-      ...this.getActionDefaults(type),
-      ...details,
-    };
-
-    this.data.meals[meal].actions.push(action);
-    this.actions[action.id] = action;
-
-    return action;
-  };
-
   setActionRecipe = (actionId, recipeId) => {
     const action = this.actions[actionId];
     if (!action || action.type !== 'COOK') {
@@ -141,6 +126,35 @@ export default class PlanWeek {
     }
 
     (action as PlanActionCook).recipeId = recipeId;
+    return action;
+  };
+
+  /**
+   * It is important that every action ID is deterministic according
+   * to its position.
+   *
+   * This is because a week may be generated in an ephemeral form, but we
+   * want references to actions to remain consistent.
+   *
+   * For that reason it's probably easier to think of an action's id as its
+   * coordinate "position", not an arbitrary identifier.
+   */
+  createActionId = (mealIndex, actionIndex, actionType) =>
+    `${mealIndex}_${actionIndex}_${actionType}`;
+
+  addAction = (dayIndex, mealIndex, actionData: PlanActionData) => {
+    const meal = this.data.meals.find(
+      m => m.dayIndex === dayIndex && m.mealIndex === mealIndex,
+    );
+    const actionIndex = meal.actions.length;
+    const id = this.createActionId(mealIndex, actionIndex, actionData.type);
+    const action: PlanAction = ({
+      id,
+      ...actionData,
+    } as unknown) as PlanAction; // not sure how to get around this algebraic type thing...
+
+    meal.actions.push(action);
+    this.actions[id] = action;
     return action;
   };
 
