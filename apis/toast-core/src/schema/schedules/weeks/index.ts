@@ -1,12 +1,12 @@
 import { gql, UserInputError } from 'apollo-server-express';
-import { path, mergeDeepRight } from 'ramda';
+import { path, pathOr, mergeDeepRight } from 'ramda';
 import getWeekIndex from './getWeekIndex';
 import { addDays } from 'date-fns';
-
 import * as shoppingList from './shoppingList';
 import { Context } from 'context';
 import { PlanWeek } from 'models';
 import { PlanWeekMeal } from 'models/PlanWeek';
+import { id } from 'tools';
 
 export const typeDefs = () => [
   gql`
@@ -129,10 +129,12 @@ export const resolvers = [
         }),
 
       week: async (_parent, { weekIndex }, ctx: Context) => {
-        const group = await ctx.graph.groups.getMine();
+        let group = await ctx.graph.groups.getMine();
 
-        if (!group.planId) {
-          return null;
+        if (!path(['planId'], group)) {
+          const planId = id('plan');
+          const groupId = pathOr(id('group'), ['id'], group);
+          group = await ctx.graph.groups.mergeMine({ planId, id: groupId });
         }
 
         const week = await ctx.firestore.plans.getWeek(

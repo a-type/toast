@@ -1,6 +1,7 @@
 import { Firestore } from '@google-cloud/firestore';
 import { PlanWeek, Schedule, ShoppingList } from 'models';
 import Schedules from './Schedules';
+import Plan from 'models/Plan';
 
 const COLLECTION = 'plans';
 
@@ -12,6 +13,24 @@ export default class Plans {
     this.firestore = service.firestore;
     this.schedules = service.schedules;
   }
+
+  get = async planId => {
+    const document = this.firestore.doc(`${COLLECTION}/${planId}`);
+    const docRef = await document.get();
+
+    if (!docRef.exists) {
+      return null;
+    }
+
+    return Plan.fromJSON(docRef.data());
+  };
+
+  set = async (planId, plan: Plan) => {
+    const document = this.firestore.doc(`${COLLECTION}/${planId}`);
+
+    await document.set(plan.toJSON());
+    return plan;
+  };
 
   /**
    * Weeks - collections of meals
