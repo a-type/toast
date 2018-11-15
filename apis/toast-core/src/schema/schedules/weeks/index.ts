@@ -137,6 +137,10 @@ export const resolvers = [
           group = await ctx.graph.groups.mergeMine({ planId, id: groupId });
         }
 
+        if (!group.scheduleId) {
+          return null;
+        }
+
         const week = await ctx.firestore.plans.getWeek(
           group.planId,
           weekIndex,
