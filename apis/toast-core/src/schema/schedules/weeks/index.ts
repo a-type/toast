@@ -165,6 +165,8 @@ export const resolvers = [
           throw new UserInputError("You haven't created a plan yet");
         }
 
+        // TODO: update shopping list
+
         const week = await ctx.firestore.plans.getWeek(
           group.planId,
           weekIndex,
