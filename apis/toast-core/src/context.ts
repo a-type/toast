@@ -20,9 +20,9 @@ process.on('exit', () => {
 
 export type Context = {
   driver: typeof driver;
-  transaction: (txFunction: TransactionFunction) => Promise<{}>;
-  writeTransaction: (txFunction: TransactionFunction) => Promise<{}>;
-  readTransaction: (txFunction: TransactionFunction) => Promise<{}>;
+  transaction: (txFunction: TransactionFunction<any>) => Promise<{}>;
+  writeTransaction: (txFunction: TransactionFunction<any>) => Promise<{}>;
+  readTransaction: (txFunction: TransactionFunction<any>) => Promise<{}>;
   firestore: typeof firestore;
   graph: Graph;
   planner: typeof planner;

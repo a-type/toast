@@ -83,7 +83,7 @@ export const typeDefs = () => [
       schedule: Schedule @authenticated
     }
   `,
-  weeks.typeDefs,
+  ...weeks.typeDefs(),
 ];
 
 export const resolvers = [
