@@ -1,0 +1,261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic meal plan converts availability to meal types 1`] = `
+Array [
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "FANCY",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 1,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "EAT_OUT",
+      },
+    ],
+    "dateIndex": 1,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "NORMAL",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 1,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 2,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 2,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 2,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 3,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 3,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "EAT_OUT",
+      },
+    ],
+    "dateIndex": 3,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 4,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 4,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "NORMAL",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 4,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "FANCY",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 5,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 5,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "FANCY",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 5,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 6,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 6,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "mealType": "FANCY",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 6,
+    "mealIndex": 2,
+  },
+]
+`;

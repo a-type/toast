@@ -3,3 +3,5 @@ export { default as timestamp } from './timestamp';
 export { default as removeUndefined } from './removeUndefined';
 import * as quantities from './quantities';
 export { quantities };
+import * as dates from './dates';
+export { dates };
