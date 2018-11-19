@@ -1,24 +1,24 @@
 import {
-  PlanAction,
-  PlanActionCook,
-  PlanActionType,
-  PlanActionEat,
-  PlanActionEatOut,
-  PlanActionSkip,
-} from 'models/PlanWeek';
+  MealAction,
+  MealActionCook,
+  MealActionType,
+  MealActionEat,
+  MealActionEatOut,
+  MealActionSkip,
+} from 'models/Meal/Meal';
 
-export function isCookAction(action: PlanAction): action is PlanActionCook {
-  return action.type === PlanActionType.Cook;
+export function isCookAction(action: MealAction): action is MealActionCook {
+  return action.type === MealActionType.Cook;
 }
 
-export function isEatAction(action: PlanAction): action is PlanActionEat {
-  return action.type === PlanActionType.Eat;
+export function isEatAction(action: MealAction): action is MealActionEat {
+  return action.type === MealActionType.Eat;
 }
 
-export function isEatOutAction(action: PlanAction): action is PlanActionEatOut {
-  return action.type === PlanActionType.EatOut;
+export function isEatOutAction(action: MealAction): action is MealActionEatOut {
+  return action.type === MealActionType.EatOut;
 }
 
-export function isSkipAction(action: PlanAction): action is PlanActionSkip {
-  return action.type === PlanActionType.Skip;
+export function isSkipAction(action: MealAction): action is MealActionSkip {
+  return action.type === MealActionType.Skip;
 }

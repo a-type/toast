@@ -1,17 +1,16 @@
 import * as React from 'react';
 import CalendarPlanQuery from './CalendarPlanQuery';
-import GetWeekIndexQuery from './GetWeekIndexQuery';
 import { GlobalLoader } from 'components/generic/Loader';
 import { Disconnected } from 'components/generic';
-import { addDays, differenceInDays } from 'date-fns';
+import { addDays, differenceInDays, isSameDay } from 'date-fns';
 import logger from 'logger';
 import LandingPage from 'features/plan/LandingPage';
 import { pathOr } from 'ramda';
-import { PlanWeek } from 'generated/schema';
 import { Layout } from './components';
 import CalendarWeeklyView from './WeekView';
 import CalendarDayView from './DayView';
 import { useMedia } from 'react-use';
+import { PlanMeal } from 'generated/schema';
 import { cold } from 'react-hot-loader';
 
 const getDayIndex = (
@@ -24,93 +23,65 @@ const getDayIndex = (
 };
 
 interface CalendarProps {
-  weekIndex?: number;
-  dayIndex?: number;
+  date: Date;
 }
 
-const Calendar: React.SFC<CalendarProps> = ({ weekIndex, dayIndex }) => {
-  const today = new Date();
+const Calendar: React.SFC<CalendarProps> = ({ date }) => {
   const [activeSection, setActiveSection] = React.useState<'day' | 'calendar'>(
     'day',
   );
   const isWide = useMedia('(min-width: 1000px)');
 
   return (
-    <GetWeekIndexQuery
-      skip={!!weekIndex}
-      variables={{
-        year: today.getFullYear(),
-        month: today.getMonth(),
-        date: today.getDate(),
-      }}
+    <CalendarPlanQuery
+      variables={{ startDate: date, endDate: addDays(date, 7) }}
     >
-      {({ data: indexData, loading: indexLoading, error: indexError }) => {
-        if (indexLoading) {
+      {({ data, loading, error }) => {
+        if (loading) {
           return <GlobalLoader />;
         }
 
-        if (indexError) {
+        if (error) {
+          logger.fatal(error);
           return <Disconnected />;
         }
 
-        const finalWeekIndex =
-          weekIndex !== undefined ? weekIndex : indexData.planWeekIndex;
-        const finalDayIndex =
-          dayIndex !== undefined
-            ? dayIndex
-            : getDayIndex(
-                today,
-                indexData.scheduleStartWeekDate,
-                finalWeekIndex,
-              );
+        if (!data || !data.plan) {
+          return <LandingPage />;
+        }
+
+        const groceryDay = pathOr(
+          null,
+          ['plan', 'schedule', 'groceryDay'],
+          data,
+        );
+        const meals = pathOr(null, ['plan', 'meals'], data) as PlanMeal[];
+
+        const dayMeals = meals
+          .filter(meal => isSameDay(meal.date, date))
+          .sort((a, b) => a.mealIndex - b.mealIndex);
 
         return (
-          <CalendarPlanQuery variables={{ weekIndex: finalWeekIndex }}>
-            {({ data, loading, error }) => {
-              if (loading) {
-                return <GlobalLoader />;
-              }
-
-              if (error) {
-                logger.fatal(error);
-                return <Disconnected />;
-              }
-
-              if (!data || !data.week) {
-                return <LandingPage />;
-              }
-
-              const groceryDay = pathOr(null, ['schedule', 'groceryDay'], data);
-              const week = pathOr(null, ['week'], data) as PlanWeek;
-
-              return (
-                <Layout isWide={isWide}>
-                  {(isWide || activeSection === 'calendar') && (
-                    <CalendarWeeklyView
-                      setActiveSection={setActiveSection}
-                      week={week}
-                      groceryDay={groceryDay}
-                      weekIndex={finalWeekIndex}
-                      dayIndex={finalDayIndex}
-                      data-grid-area="calendar"
-                    />
-                  )}
-                  {(isWide || activeSection === 'day') && (
-                    <CalendarDayView
-                      setActiveSection={setActiveSection}
-                      week={week}
-                      weekIndex={finalWeekIndex}
-                      dayIndex={finalDayIndex}
-                      data-grid-area="day"
-                    />
-                  )}
-                </Layout>
-              );
-            }}
-          </CalendarPlanQuery>
+          <Layout isWide={isWide}>
+            {(isWide || activeSection === 'calendar') && (
+              <CalendarWeeklyView
+                setActiveSection={setActiveSection}
+                meals={meals}
+                groceryDay={groceryDay}
+                data-grid-area="calendar"
+              />
+            )}
+            {(isWide || activeSection === 'day') && (
+              <CalendarDayView
+                setActiveSection={setActiveSection}
+                meals={dayMeals}
+                data-grid-area="day"
+              />
+            )}
+          </Layout>
         );
       }}
-    </GetWeekIndexQuery>
+    </CalendarPlanQuery>
   );
 };
 

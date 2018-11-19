@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
-import { PlanWeekMeal, PlanWeek } from 'generated/schema';
+import { PlanMeal } from 'generated/schema';
 import CalendarDay from './CalendarDay';
 import { Content, Controls } from 'components/layouts';
 import { Link, Button } from 'components/generic';
 import { H3, HelpText } from 'components/typeset';
-import { formatDay } from 'formatters/date';
+import { formatDay, formatDateOnly } from 'formatters/date';
 import groupMeals from 'features/plan/groupMeals';
 import styled from 'styled-components';
+import { getDay, subDays, addDays } from 'date-fns';
 
 const PositiveText = styled(HelpText)`
   color: var(--color-positive);
@@ -15,56 +16,46 @@ const PositiveText = styled(HelpText)`
 `;
 
 interface CalendarWeeklyViewProps {
-  weekIndex: number;
-  dayIndex: number;
-  week: PlanWeek;
+  meals: PlanMeal[];
   groceryDay: number;
   setActiveSection(section: 'day' | 'calendar'): void;
 }
 
 const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
-  weekIndex,
-  dayIndex,
-  week,
+  meals,
   groceryDay,
   setActiveSection,
   ...rest
 }) => {
-  const meals = pathOr([], ['meals'], week) as PlanWeekMeal[];
   // group by day
-  const mealDays = groupMeals(meals, groceryDay);
+  const mealDays = groupMeals(meals);
 
   return (
     <Content {...rest}>
       {mealDays.map((dayMeals, index) => {
-        const dayIndex = dayMeals[0].dayIndex;
         const date = dayMeals[0].date;
         return (
           <div key={`day_${index}`}>
             <Link
-              to={`/plan/${weekIndex}/${dayIndex}`}
+              to={`/plan/${formatDateOnly(date)}`}
               onClick={() => setActiveSection('day')}
             >
               <H3 spaceBelow="sm">
                 {formatDay(date)}{' '}
-                {groceryDay === dayIndex && (
+                {groceryDay === getDay(date) && (
                   <PositiveText>Grocery Day</PositiveText>
                 )}
               </H3>
             </Link>
-            <CalendarDay
-              meals={dayMeals}
-              weekIndex={weekIndex}
-              dayIndex={dayIndex}
-            />
+            <CalendarDay meals={dayMeals} />
           </div>
         );
       })}
       <Controls>
-        <Link to={`/plan/${weekIndex - 1}/0`}>
+        <Link to={`/plan/${formatDateOnly(subDays(meals[0].date, 7))}/0`}>
           <Button>Previous</Button>
         </Link>
-        <Link to={`/plan/${weekIndex + 1}/0`}>
+        <Link to={`/plan/${formatDateOnly(addDays(meals[0].date, 7))}/0`}>
           <Button>Next</Button>
         </Link>
       </Controls>

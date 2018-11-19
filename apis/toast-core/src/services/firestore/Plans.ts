@@ -1,17 +1,13 @@
 import { Firestore } from '@google-cloud/firestore';
-import { PlanWeek, Schedule, ShoppingList } from 'models';
-import Schedules from './Schedules';
-import Plan from 'models/Plan';
+import { Schedule, ShoppingList, Meal, Plan } from 'models';
 
 const COLLECTION = 'plans';
 
 export default class Plans {
   firestore: Firestore;
-  schedules: Schedules;
 
-  constructor(service: { firestore: Firestore; schedules: Schedules }) {
+  constructor(service: { firestore: Firestore }) {
     this.firestore = service.firestore;
-    this.schedules = service.schedules;
   }
 
   get = async planId => {
@@ -19,7 +15,7 @@ export default class Plans {
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      return null;
+      return Plan.createEmpty(planId);
     }
 
     return Plan.fromJSON(docRef.data());
@@ -33,43 +29,126 @@ export default class Plans {
   };
 
   /**
-   * Weeks - collections of meals
+   * Schedules - represents user availability for cooking during a week.
    */
-  getWeek = async (planId, week, fallbackScheduleId?) => {
+
+  getSchedule = async (planId, scheduleId = 'default') => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/weeks/week_${week}`,
+      `${COLLECTION}/${planId}/schedules/${scheduleId}`,
     );
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      if (fallbackScheduleId) {
-        const schedule = await this.schedules.get(fallbackScheduleId);
-        if (!schedule) {
-          return null;
-        }
-        return PlanWeek.fromSchedule(schedule, week);
-      } else {
-        return null;
-      }
+      return Schedule.createEmpty(scheduleId);
     }
 
-    return PlanWeek.fromJSON(docRef.data());
+    return Schedule.fromJSON(docRef.data());
   };
 
-  setWeek = async (planId: string, weekData: PlanWeek) => {
+  setSchedule = async (planId, schedule: Schedule) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/weeks/week_${weekData.weekIndex}`,
+      `${COLLECTION}/${planId}/schedules/${schedule.id}`,
     );
-    await document.set(weekData.toJSON());
-    return weekData;
+
+    await document.set(schedule.toJSON());
+    return schedule;
+  };
+
+  /**
+   * Meals - individual meals which can be accessed by date
+   */
+
+  getMeal = async (planId, dateIndex, mealIndex: number) => {
+    const id = Meal.getId(dateIndex, mealIndex);
+    const document = this.firestore.doc(`${COLLECTION}/${planId}/meals/${id}`);
+    const docRef = await document.get();
+
+    if (!docRef.exists) {
+      const schedule = await this.getSchedule(planId); // TODO: custom schedule
+      return schedule.getPlanMeal(dateIndex, mealIndex);
+    }
+
+    return Meal.fromJSON(docRef.data());
+  };
+
+  setMeal = async (planId, meal: Meal) => {
+    const document = this.firestore.doc(
+      `${COLLECTION}/${planId}/meals/${meal.id}`,
+    );
+
+    await document.set(meal.toJSON());
+    return meal;
+  };
+
+  getMealsByDate = async (planId: string, dateIndex: number) => {
+    const collection = this.firestore.collection(
+      `${COLLECTION}/${planId}/meals`,
+    );
+    const query = collection.where('dateIndex', '==', dateIndex);
+    const snapshots = await query.get();
+    const meals = snapshots.docs.map(doc => Meal.fromJSON(doc.data()));
+    const sparseMealList = meals.reduce<Meal[]>((range, meal) => {
+      range[meal.mealIndex] = meal;
+      return range;
+    }, new Array(3).fill(null));
+
+    return this._fillMissingMealsFromPlan(planId, dateIndex, sparseMealList);
+  };
+
+  getMealRange = async (
+    planId: string,
+    startDateIndex: number,
+    endDateIndex: number,
+  ) => {
+    const collection = this.firestore.collection(
+      `${COLLECTION}/${planId}/meals`,
+    );
+    const query = collection
+      .where('dateIndex', '>=', startDateIndex)
+      .where('dateIndex', '<=', endDateIndex);
+    const snapshots = await query.get();
+    const meals = snapshots.docs.map(doc => Meal.fromJSON(doc.data()));
+    // enforce sparse array if there are missing meals
+    const sparseMealsList = meals.reduce<Meal[]>((range, meal) => {
+      range[(meal.dateIndex - startDateIndex) * 3 + meal.mealIndex] = meal;
+      return range;
+    }, new Array((endDateIndex - startDateIndex) * 3).fill(null));
+
+    return this._fillMissingMealsFromPlan(
+      planId,
+      startDateIndex,
+      sparseMealsList,
+    );
+  };
+
+  _fillMissingMealsFromPlan = async (
+    planId,
+    startDateIndex,
+    sparseMealsList,
+  ) => {
+    if (sparseMealsList.length !== sparseMealsList.filter(Boolean).length) {
+      const schedule = await this.getSchedule(planId); // TODO: non-default schedule
+      return sparseMealsList.map((meal, index) => {
+        if (meal) {
+          return meal;
+        }
+
+        const dateIndex = startDateIndex + Math.floor(index / 3);
+        const mealIndex = index % 3; // ASSUMPTION: meal range always starts with 0th meal index
+        const templateMeal = schedule.getPlanMeal(dateIndex, mealIndex);
+        return templateMeal;
+      });
+    } else {
+      return sparseMealsList;
+    }
   };
 
   /**
    * Shopping Lists - keeps track of what the user should buy each week
    */
-  getShoppingList = async (planId: string, weekId: string) => {
+  getShoppingList = async (planId: string, id: string) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/shoppingLists/${weekId}`,
+      `${COLLECTION}/${planId}/shoppingLists/${id}`,
     );
     const docRef = await document.get();
 
@@ -80,13 +159,9 @@ export default class Plans {
     return ShoppingList.fromJSON(docRef.data());
   };
 
-  setShoppingList = async (
-    planId: string,
-    weekId: string,
-    shoppingList: ShoppingList,
-  ) => {
+  setShoppingList = async (planId: string, shoppingList: ShoppingList) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/shoppingLists/${weekId}`,
+      `${COLLECTION}/${planId}/shoppingLists/${shoppingList.id}`,
     );
 
     await document.set(shoppingList.toJSON());

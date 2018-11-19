@@ -5,18 +5,17 @@ import { CalendarPlan } from 'generated/schema';
 import CalendarMeal from './CalendarMeal';
 
 export const Document = gql`
-  query CalendarPlan($weekIndex: Int!) {
-    schedule {
+  query CalendarPlan($startDate: Date!, $endDate: Date) {
+    plan {
       id
-      groceryDay
-    }
-
-    week(weekIndex: $weekIndex) {
-      startDate
-      id
-      meals {
+      schedule {
         id
-        weekIndex
+        groceryDay
+      }
+
+      meals(startDate: $startDate, endDate: $endDate) {
+        id
+        date
         dayIndex
         mealIndex
         ...CalendarMeal

@@ -5,12 +5,12 @@ import { PreviewWeek } from 'generated/schema';
 import PreviewCalendar from './PreviewCalendar';
 
 export const Document = gql`
-  query PreviewWeek($strategy: PlanStrategy!) {
+  query PreviewWeek($strategy: ScheduleStrategy!) {
     schedule {
       id
-      previewWeek(strategy: $strategy) {
+      templateWeek(strategy: $strategy) {
         id
-        ...PlanPreview
+        ...PlanPreviewMeal
       }
     }
   }

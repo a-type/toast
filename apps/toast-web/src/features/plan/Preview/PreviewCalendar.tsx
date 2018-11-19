@@ -2,12 +2,12 @@ import * as React from 'react';
 import Meal from './Meal';
 import gql from 'graphql-tag';
 import groupMeals from 'features/plan/groupMeals';
-import { PlanPreview, PlanPreviewMeal } from 'generated/schema';
+import { PlanPreviewMeal } from 'generated/schema';
 import { Layout } from './components';
 import { H3 } from 'components/typeset';
 
 export interface PlanPreviewProps {
-  week: PlanPreview.Fragment;
+  week: PlanPreviewMeal.Fragment[];
 }
 
 const DAYS = [
@@ -23,7 +23,7 @@ const DAYS = [
 const PlanPreviewCalendar: React.SFC<PlanPreviewProps> & {
   fragments: { week: any };
 } = ({ week }) => {
-  const grouped = groupMeals<PlanPreviewMeal.Fragment>(week.meals);
+  const grouped = groupMeals<PlanPreviewMeal.Fragment>(week);
 
   return (
     <div>
@@ -42,16 +42,7 @@ const PlanPreviewCalendar: React.SFC<PlanPreviewProps> & {
 };
 
 PlanPreviewCalendar.fragments = {
-  week: gql`
-    fragment PlanPreview on PlanWeek {
-      id
-      meals {
-        ...PlanPreviewMeal
-      }
-    }
-
-    ${Meal.fragments.meal}
-  `,
+  week: Meal.fragments.meal,
 };
 
 export default PlanPreviewCalendar;

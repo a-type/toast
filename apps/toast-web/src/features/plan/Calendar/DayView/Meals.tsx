@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PlanWeekMeal } from 'generated/schema';
+import { PlanMeal } from 'generated/schema';
 import gql from 'graphql-tag';
 import CalendarMeal from '../CalendarMeal';
 import styled from 'styled-components';
@@ -25,9 +25,7 @@ const Grid = styled.div`
 `;
 
 interface CalendarDayViewMealsProps {
-  meals: PlanWeekMeal[];
-  weekIndex: number;
-  dayIndex: number;
+  meals: PlanMeal[];
 }
 
 export default class CalendarDayViewMeals extends React.Component<
@@ -45,18 +43,12 @@ export default class CalendarDayViewMeals extends React.Component<
   };
 
   render() {
-    const { meals, weekIndex, dayIndex } = this.props;
+    const { meals } = this.props;
 
     return (
       <Grid>
-        {meals.map((meal, mealIndex) => (
-          <CalendarMeal
-            key={meal.id}
-            weekIndex={weekIndex}
-            dayIndex={dayIndex}
-            mealIndex={mealIndex}
-            meal={meal}
-          />
+        {meals.map(meal => (
+          <CalendarMeal key={meal.id} meal={meal} />
         ))}
       </Grid>
     );

@@ -1,14 +1,14 @@
-import { PlanActionType } from 'generated/schema';
+import { MealActionType } from 'generated/schema';
 
-export default (actionType: PlanActionType): string => {
+export default (actionType: MealActionType): string => {
   switch (actionType) {
-    case PlanActionType.COOK:
+    case MealActionType.COOK:
       return 'Cook';
-    case PlanActionType.EAT:
+    case MealActionType.EAT:
       return 'Eat';
-    case PlanActionType.EAT_OUT:
+    case MealActionType.EAT_OUT:
       return 'Eat out';
-    case PlanActionType.READY_MADE:
+    case MealActionType.READY_MADE:
       return 'Ready-made meal';
     default:
       return 'Skip';

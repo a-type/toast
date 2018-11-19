@@ -5,6 +5,7 @@ import { Calendar, LandingPage } from 'features/plan';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { path } from 'ramda';
 import { IsLoggedIn } from 'features/auth/gates';
+import { parse, startOfDay } from 'date-fns';
 
 const parseIntOrNil = maybeInt => {
   if (maybeInt !== undefined) {
@@ -25,15 +26,17 @@ export default () => (
         )}
       />
       <Route
-        path="/plan/:weekIndex?/:dayIndex?"
-        render={({ match }) => (
-          <IsLoggedIn fallback={<LandingPage />}>
-            <Calendar
-              weekIndex={parseIntOrNil(path(['params', 'weekIndex'], match))}
-              dayIndex={parseIntOrNil(path(['params', 'dayIndex'], match))}
-            />
-          </IsLoggedIn>
-        )}
+        path="/plan/:date?"
+        render={({ match }) => {
+          const dateParam = path<string>(['params', 'date'], match);
+
+          const date = dateParam ? parse(dateParam) : startOfDay(Date.now());
+          return (
+            <IsLoggedIn fallback={<LandingPage />}>
+              <Calendar date={date} />
+            </IsLoggedIn>
+          );
+        }}
       />
     </Switch>
   </SingleColumn>

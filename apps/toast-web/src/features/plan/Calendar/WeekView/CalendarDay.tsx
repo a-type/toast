@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { PlanWeekMeal } from 'generated/schema';
+import { PlanMeal } from 'generated/schema';
 import CalendarMeal from '../CalendarMeal';
 import MealRow from '../components/MealRow';
 
 type Props = {
-  meals: PlanWeekMeal[];
-  weekIndex: number;
-  dayIndex: number;
+  meals: PlanMeal[];
 };
 
 export default class CalendarDay extends React.Component<Props, any> {
@@ -15,18 +13,12 @@ export default class CalendarDay extends React.Component<Props, any> {
   };
 
   render() {
-    const { meals, weekIndex, dayIndex } = this.props;
+    const { meals } = this.props;
 
     return (
       <MealRow>
-        {meals.map((meal, mealIndex) => (
-          <CalendarMeal
-            key={meal.id}
-            weekIndex={weekIndex}
-            dayIndex={dayIndex}
-            mealIndex={mealIndex}
-            meal={meal}
-          />
+        {meals.map(meal => (
+          <CalendarMeal key={meal.id} meal={meal} />
         ))}
       </MealRow>
     );

@@ -8,6 +8,7 @@ import MarkPurchasedMutation from './MarkPurchasedMutation';
 import logger from 'logger';
 
 export interface ShoppingListIngredientProps {
+  shoppingListId: string;
   totalValue: number;
   unit?: string;
   ingredient: ShoppingListView.Ingredient;
@@ -19,13 +20,14 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
   unit,
   ingredient,
   purchasedValue,
+  shoppingListId,
 }) => {
   const [loading, setLoading] = React.useState(false);
 
   return (
     <MarkPurchasedMutation
       purchased={purchasedValue >= totalValue}
-      variables={{ ingredientId: ingredient.id }}
+      variables={{ ingredientId: ingredient.id, shoppingListId }}
     >
       {mutate => (
         <React.Fragment>

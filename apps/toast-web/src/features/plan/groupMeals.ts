@@ -1,17 +1,17 @@
-import { PlanWeekMeal } from 'generated/schema';
+import { PlanMeal } from 'generated/schema';
 
-export interface BasicPlanWeekMeal {
+export interface BasicPlanMeal {
   id: string;
   dayIndex: number;
   mealIndex: number;
 }
 
-function groupMeals(meals: PlanWeekMeal[], startDay?: number): PlanWeekMeal[][];
-function groupMeals<TMeal extends BasicPlanWeekMeal>(
+function groupMeals(meals: PlanMeal[], startDay?: number): PlanMeal[][];
+function groupMeals<TMeal extends BasicPlanMeal>(
   meals: TMeal[],
   startDay?: number,
 ): TMeal[][];
-function groupMeals<TMeal extends BasicPlanWeekMeal>(
+function groupMeals<TMeal extends BasicPlanMeal>(
   meals: TMeal[],
   startDay: number = 0,
 ): TMeal[][] {

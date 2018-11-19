@@ -1,41 +1,30 @@
 import * as React from 'react';
-import { PlanWeek } from 'generated/schema';
+import { PlanMeal } from 'generated/schema';
 import { Content, Controls } from 'components/layouts';
 import { Button, Link, Icon } from 'components/generic';
 import { H1 } from 'components/typeset';
-import { formatDay } from 'formatters/date';
+import { formatDay, formatDateOnly } from 'formatters/date';
 import Meals from './Meals';
+import { subDays, addDays } from 'date-fns';
 
 interface CalendarDayViewProps {
-  week: PlanWeek;
-  weekIndex: number;
-  dayIndex: number;
+  meals: PlanMeal[];
   setActiveSection(section: 'day' | 'calendar'): void;
 }
 
 const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
-  week,
-  dayIndex,
-  weekIndex,
+  meals,
   setActiveSection,
   ...rest
 }) => {
-  const meals = week.meals
-    .filter(meal => meal.dayIndex === dayIndex)
-    .sort((a, b) => a.mealIndex - b.mealIndex);
-
   const date = meals[0].date;
 
   return (
     <Content {...rest}>
       <H1>{formatDay(date)}</H1>
-      <Meals meals={meals} weekIndex={weekIndex} dayIndex={dayIndex} />
+      <Meals meals={meals} />
       <Controls>
-        <Link
-          to={`/plan/${weekIndex - (dayIndex === 0 ? 1 : 0)}/${
-            dayIndex === 0 ? 6 : dayIndex - 1
-          }`}
-        >
+        <Link to={`/plan/${formatDateOnly(subDays(date, 1))}`}>
           <Button spaceBelow="lg">Previous day</Button>
         </Link>
         <Link onClick={() => setActiveSection('calendar')}>
@@ -43,11 +32,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
             <Icon name="calendar" /> Week
           </Button>
         </Link>
-        <Link
-          to={`/plan/${weekIndex + (dayIndex === 6 ? 1 : 0)}/${
-            dayIndex === 6 ? 0 : dayIndex + 1
-          }`}
-        >
+        <Link to={`/plan/${formatDateOnly(addDays(date, 1))}`}>
           <Button spaceBelow="lg">Next day</Button>
         </Link>
       </Controls>

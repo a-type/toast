@@ -1,14 +1,14 @@
-import { PlanAction, PlanActionType, PlanWeekMeal } from 'generated/schema';
+import { MealAction, MealActionType, PlanMeal } from 'generated/schema';
 
-export default (meal: Partial<PlanWeekMeal>): PlanAction | null => {
+export default (meal: Partial<PlanMeal>): MealAction | null => {
   const { actions } = meal;
 
-  const proiritizedActionTypes: PlanActionType[] = [
-    PlanActionType.COOK,
-    PlanActionType.EAT,
-    PlanActionType.EAT_OUT,
-    PlanActionType.READY_MADE,
-    PlanActionType.SKIP,
+  const proiritizedActionTypes: MealActionType[] = [
+    MealActionType.COOK,
+    MealActionType.EAT,
+    MealActionType.EAT_OUT,
+    MealActionType.READY_MADE,
+    MealActionType.SKIP,
   ];
 
   for (let i in proiritizedActionTypes) {

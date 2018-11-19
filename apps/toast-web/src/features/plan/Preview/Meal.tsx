@@ -2,14 +2,14 @@ import * as React from 'react';
 import gql from 'graphql-tag';
 import {
   PlanPreviewMeal,
-  PlanActionType,
-  PlanActionCook,
+  MealActionType,
+  MealActionCook,
 } from 'generated/schema';
 import { Box } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
 import { Label, HelpText } from 'components/typeset';
 import { formatActionType } from 'formatters';
-import { planActionGuards } from 'guards';
+import { MealActionGuards } from 'guards';
 
 export interface PlanPreviewMealProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -43,9 +43,9 @@ const Meal: React.SFC<PlanPreviewMealProps> & { fragments: { meal: any } } = ({
   }
 
   let extraContent = null;
-  if (planActionGuards.isCookAction(primaryAction)) {
+  if (MealActionGuards.isCookAction(primaryAction)) {
     extraContent = <HelpText>{primaryAction.servings} servings</HelpText>;
-  } else if (planActionGuards.isEatAction(primaryAction)) {
+  } else if (MealActionGuards.isEatAction(primaryAction)) {
     extraContent = primaryAction.leftovers ? (
       <HelpText>
         Leftovers from {DAY_NAMES[primaryAction.cookAction.dayIndex]}
@@ -64,16 +64,16 @@ const Meal: React.SFC<PlanPreviewMealProps> & { fragments: { meal: any } } = ({
 
 Meal.fragments = {
   meal: gql`
-    fragment PlanPreviewMeal on PlanWeekMeal {
+    fragment PlanPreviewMeal on PlanMeal {
       id
       dayIndex
       mealIndex
       actions {
         id
         type
-        ... on PlanActionCook {
+        ... on MealActionCook {
           servings
-          mealType
+          recipeType
           recipe {
             id
             title
@@ -83,7 +83,7 @@ Meal.fragments = {
             }
           }
         }
-        ... on PlanActionEat {
+        ... on MealActionEat {
           leftovers
           cookAction {
             id

@@ -1,21 +1,15 @@
 import * as React from 'react';
 import { Card } from 'components/generic';
-import { PlanActionEatOut } from 'generated/schema';
+import { MealActionEatOut } from 'generated/schema';
 import { Span } from 'components/typeset';
 import { formatActionType } from 'formatters';
 
 interface CalendarEatActionProps {
-  action: PlanActionEatOut;
-  weekIndex: number;
-  dayIndex: number;
-  mealIndex: number;
+  action: MealActionEatOut;
 }
 
 const CalendarEatOutAction: React.SFC<CalendarEatActionProps> = ({
   action,
-  weekIndex,
-  dayIndex,
-  mealIndex,
 }) => {
   return (
     <Card>

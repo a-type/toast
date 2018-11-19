@@ -1,13 +1,13 @@
 import * as React from 'react';
 import gql from 'graphql-tag';
 import {
-  PlanWeekMeal,
-  PlanAction,
-  PlanActionType,
-  PlanActionCook,
-  PlanActionEat,
-  PlanActionEatOut,
-  PlanActionReadyMade,
+  PlanMeal,
+  MealAction,
+  MealActionType,
+  MealActionCook,
+  MealActionEat,
+  MealActionEatOut,
+  MealActionReadyMade,
 } from 'generated/schema';
 import {
   CookAction,
@@ -16,7 +16,6 @@ import {
   EatOutAction,
   ReadyMadeAction,
 } from 'features/plan/actions';
-import { pick } from 'ramda';
 import actionsFragment from 'features/plan/actions/fragment';
 import { Label } from 'components/typeset';
 import { MealStack } from './components';
@@ -25,10 +24,7 @@ import getPrimaryAction from 'features/plan/getPrimaryAction';
 const MEALS = ['Breakfast', 'Lunch', 'Dinner'];
 
 interface CalendarMealProps {
-  meal: PlanWeekMeal;
-  weekIndex: number;
-  dayIndex: number;
-  mealIndex: number;
+  meal: PlanMeal;
 }
 
 interface CalendarMealState {
@@ -41,13 +37,16 @@ export default class CalendarMeal extends React.Component<
 > {
   static fragments = {
     meal: gql`
-      fragment CalendarMeal on PlanWeekMeal {
+      fragment CalendarMeal on PlanMeal {
         id
         date
+        dayIndex
+        dateIndex
+        mealIndex
         actions {
           id
           type
-          ...CalendarPlanAction
+          ...CalendarMealAction
         }
       }
       ${actionsFragment}
@@ -59,45 +58,39 @@ export default class CalendarMeal extends React.Component<
   };
 
   renderAction() {
-    const passOnProps = pick(
-      ['weekIndex', 'dayIndex', 'mealIndex'],
-      this.props,
-    );
-    const action = getPrimaryAction(this.props.meal);
+    const { meal } = this.props;
+    const action = getPrimaryAction(meal);
 
     if (!action) {
       return <SkipAction />;
     }
 
     switch (action.type) {
-      case PlanActionType.COOK:
+      case MealActionType.COOK:
         return (
-          <CookAction {...passOnProps} action={action as PlanActionCook} />
-        );
-      case PlanActionType.EAT:
-        return <EatAction {...passOnProps} action={action as PlanActionEat} />;
-      case PlanActionType.EAT_OUT:
-        return (
-          <EatOutAction {...passOnProps} action={action as PlanActionEatOut} />
-        );
-      case PlanActionType.READY_MADE:
-        return (
-          <ReadyMadeAction
-            {...passOnProps}
-            action={action as PlanActionReadyMade}
+          <CookAction
+            dateIndex={meal.dateIndex}
+            mealIndex={meal.mealIndex}
+            action={action as MealActionCook}
           />
         );
+      case MealActionType.EAT:
+        return <EatAction action={action as MealActionEat} />;
+      case MealActionType.EAT_OUT:
+        return <EatOutAction action={action as MealActionEatOut} />;
+      case MealActionType.READY_MADE:
+        return <ReadyMadeAction action={action as MealActionReadyMade} />;
       default:
         return <SkipAction />;
     }
   }
 
   render() {
-    const { mealIndex } = this.props;
+    const { meal } = this.props;
 
     return (
       <MealStack>
-        <Label>{MEALS[mealIndex]}</Label>
+        <Label>{MEALS[meal.mealIndex]}</Label>
         {this.renderAction()}
       </MealStack>
     );
