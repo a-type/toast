@@ -1,6 +1,7 @@
 import { getDay } from 'date-fns';
-import { isCookAction } from 'guards/planActions';
+import { isCookAction, isEatAction } from 'guards/planActions';
 import { dates } from 'tools';
+import { mergeDeepRight } from 'ramda';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -92,8 +93,16 @@ export default class Meal {
     return getDay(this.date);
   }
 
+  get dateIndex() {
+    return this.data.dateIndex;
+  }
+
   get actions() {
     return this.data.actions;
+  }
+
+  get isPlanned() {
+    return !!this.data.actions.length;
   }
 
   getAction = actionId => this.actions.find(({ id }) => id === actionId);
@@ -142,6 +151,30 @@ export default class Meal {
     return action;
   };
 
+  clone = (overrides: Partial<MealData>) => {
+    return new Meal(mergeDeepRight(this.data, overrides));
+  };
+
+  /**
+   * Creates a clone of this meal moved a certain number of weeks backward or forward.
+   * Handles all relationships this meal may include to other meals (cook / eat, etc)
+   */
+  move = (moveWeeks: number) => {
+    const newDateIndex = this.dateIndex + moveWeeks * 7;
+    const clone = this.clone({
+      dateIndex: newDateIndex,
+      id: Meal.getId(newDateIndex, this.mealIndex),
+    });
+    // update eat action links
+    clone.data.actions.forEach(action => {
+      if (isEatAction(action)) {
+        action.cookActionId = Meal.moveActionId(action.cookActionId, moveWeeks);
+      }
+    });
+
+    return clone;
+  };
+
   toJSON() {
     return this.data;
   }
@@ -164,4 +197,25 @@ export default class Meal {
       actions: [],
     });
   }
+
+  /**
+   * Since an action ID functions like a coordinate, we can
+   * move them programatically...
+   */
+  static moveActionId = (actionId: string, moveWeeks: number) => {
+    return actionId.replace(
+      /^m_(\d+)/,
+      (_, dateIndex) => `m_${parseInt(dateIndex, 10) + moveWeeks * 7}`,
+    );
+  };
+
+  static getInfoFromActionId = (actionId: string) => {
+    const match = /^m_(\d+)_(\d+)_a_(\d+)_([A-Z]+)$/.exec(actionId);
+    return {
+      dateIndex: parseInt(match[1], 10),
+      mealIndex: parseInt(match[2], 10),
+      actionIndex: parseInt(match[3], 10),
+      type: match[4],
+    };
+  };
 }

@@ -1,12 +1,12 @@
 import gql from 'graphql-tag';
 
 const actionFragment = gql`
-  fragment CalendarPlanAction on PlanAction {
+  fragment CalendarMealAction on MealAction {
     id
     type
-    ... on PlanActionCook {
+    ... on MealActionCook {
       servings
-      mealType
+      recipeType
       recipe {
         id
         title
@@ -16,7 +16,7 @@ const actionFragment = gql`
         }
       }
     }
-    ... on PlanActionEat {
+    ... on MealActionEat {
       cookAction {
         id
         dayIndex

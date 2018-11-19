@@ -15,7 +15,7 @@ export default class Plans {
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      return null;
+      return Plan.createEmpty(planId);
     }
 
     return Plan.fromJSON(docRef.data());
@@ -39,7 +39,7 @@ export default class Plans {
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      return null;
+      return Schedule.createEmpty(scheduleId);
     }
 
     return Schedule.fromJSON(docRef.data());
@@ -64,9 +64,8 @@ export default class Plans {
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      const empty = Meal.createEmpty(dateIndex, mealIndex);
-      await document.set(empty);
-      return empty;
+      const schedule = await this.getSchedule(planId); // TODO: custom schedule
+      return schedule.getPlanMeal(dateIndex, mealIndex);
     }
 
     return Meal.fromJSON(docRef.data());
@@ -87,7 +86,13 @@ export default class Plans {
     );
     const query = collection.where('dateIndex', '==', dateIndex);
     const snapshots = await query.get();
-    return snapshots.docs.map(doc => Meal.fromJSON(doc.data()));
+    const meals = snapshots.docs.map(doc => Meal.fromJSON(doc.data()));
+    const sparseMealList = meals.reduce<Meal[]>((range, meal) => {
+      range[meal.mealIndex] = meal;
+      return range;
+    }, new Array(3).fill(null));
+
+    return this._fillMissingMealsFromPlan(planId, dateIndex, sparseMealList);
   };
 
   getMealRange = async (
@@ -102,7 +107,40 @@ export default class Plans {
       .where('dateIndex', '>=', startDateIndex)
       .where('dateIndex', '<=', endDateIndex);
     const snapshots = await query.get();
-    return snapshots.docs.map(doc => Meal.fromJSON(doc.data()));
+    const meals = snapshots.docs.map(doc => Meal.fromJSON(doc.data()));
+    // enforce sparse array if there are missing meals
+    const sparseMealsList = meals.reduce<Meal[]>((range, meal) => {
+      range[(meal.dateIndex - startDateIndex) * 3 + meal.mealIndex] = meal;
+      return range;
+    }, new Array((endDateIndex - startDateIndex) * 3).fill(null));
+
+    return this._fillMissingMealsFromPlan(
+      planId,
+      startDateIndex,
+      sparseMealsList,
+    );
+  };
+
+  _fillMissingMealsFromPlan = async (
+    planId,
+    startDateIndex,
+    sparseMealsList,
+  ) => {
+    if (sparseMealsList.length !== sparseMealsList.filter(Boolean).length) {
+      const schedule = await this.getSchedule(planId); // TODO: non-default schedule
+      return sparseMealsList.map((meal, index) => {
+        if (meal) {
+          return meal;
+        }
+
+        const dateIndex = startDateIndex + Math.floor(index / 3);
+        const mealIndex = index % 3; // ASSUMPTION: meal range always starts with 0th meal index
+        const templateMeal = schedule.getPlanMeal(dateIndex, mealIndex);
+        return templateMeal;
+      });
+    } else {
+      return sparseMealsList;
+    }
   };
 
   /**

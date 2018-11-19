@@ -1,6 +1,5 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
-import GetWeekIndexQuery from 'features/plan/Calendar/GetWeekIndexQuery';
 import Ingredient from './Ingredient';
 import { Content } from 'components/layouts';
 import { H1, HelpText, H3 } from 'components/typeset';
@@ -8,6 +7,8 @@ import { format, startOfWeek } from 'date-fns';
 import { Checkbox, Disconnected } from 'components/generic';
 import logger from 'logger';
 import { Redirect } from 'react-router-dom';
+import { path } from 'ramda';
+import { ShoppingList } from 'generated/schema';
 
 const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
 
@@ -25,67 +26,63 @@ const View: React.SFC<{}> = () => (
     <HelpText spaceBelow="lg">
       for the week starting {format(startOfWeek(new Date()), 'MMMM Do, YYYY')}
     </HelpText>
-    <GetWeekIndexQuery>
-      {({ data: indexData, loading: indexLoading, error: indexError }) => {
-        if (indexLoading || indexError) {
+    <GetShoppingListQuery>
+      {({ data, loading, error }) => {
+        if (loading) {
           return <Skeleton />;
         }
 
+        if (error) {
+          logger.fatal(error);
+          return <Disconnected />;
+        }
+
+        const shoppingList = path<ShoppingList>(['plan', 'shoppingList'], data);
+
+        if (!shoppingList) {
+          // TODO: splash screen for shopping list, then send to plan
+          return <Redirect to="/plan/edit" />;
+        }
+
+        const ingredients = shoppingList.ingredients.sort(sortByName);
+        const purchased = ingredients.filter(
+          ing => ing.purchasedValue >= ing.totalValue,
+        );
+        const unpurchased = ingredients.filter(
+          ing => ing.purchasedValue < ing.totalValue,
+        );
+
         return (
-          <GetShoppingListQuery
-            variables={{ weekIndex: indexData.planWeekIndex }}
-          >
-            {({ data, loading, error }) => {
-              if (loading) {
-                return <Skeleton />;
-              }
-
-              if (error) {
-                logger.fatal(error);
-                return <Disconnected />;
-              }
-
-              if (!data || !data.week) {
-                // TODO: splash screen for shopping list, then send to plan
-                return <Redirect to="/plan/edit" />;
-              }
-
-              const ingredients = data.week.shoppingList.ingredients.sort(
-                sortByName,
-              );
-              const purchased = ingredients.filter(
-                ing => ing.purchasedValue >= ing.totalValue,
-              );
-              const unpurchased = ingredients.filter(
-                ing => ing.purchasedValue < ing.totalValue,
-              );
-
-              return (
-                <React.Fragment>
-                  <div>
-                    {unpurchased.map(ing => (
-                      <Ingredient key={ing.ingredient.id} {...ing} />
-                    ))}
-                  </div>
-                  <H3>Purchased</H3>
-                  <div style={{ opacity: 0.5 }}>
-                    {!!purchased.length ? (
-                      purchased.map(ing => (
-                        <Ingredient key={ing.ingredient.id} {...ing} />
-                      ))
-                    ) : (
-                      <HelpText>
-                        Check items off the list and they will move here
-                      </HelpText>
-                    )}
-                  </div>
-                </React.Fragment>
-              );
-            }}
-          </GetShoppingListQuery>
+          <React.Fragment>
+            <div>
+              {unpurchased.map(ing => (
+                <Ingredient
+                  key={ing.ingredient.id}
+                  {...ing}
+                  shoppingListId={shoppingList.id}
+                />
+              ))}
+            </div>
+            <H3>Purchased</H3>
+            <div style={{ opacity: 0.5 }}>
+              {!!purchased.length ? (
+                purchased.map(ing => (
+                  <Ingredient
+                    key={ing.ingredient.id}
+                    {...ing}
+                    shoppingListId={shoppingList.id}
+                  />
+                ))
+              ) : (
+                <HelpText>
+                  Check items off the list and they will move here
+                </HelpText>
+              )}
+            </div>
+          </React.Fragment>
         );
       }}
-    </GetWeekIndexQuery>
+    </GetShoppingListQuery>
   </Content>
 );
 

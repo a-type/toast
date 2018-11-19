@@ -1,4 +1,6 @@
 import { id } from 'tools';
+import Meal, { MealData } from 'models/Meal/Meal';
+import planner from './planner';
 
 export enum ScheduleStrategy {
   Basic = 'BASIC',
@@ -13,16 +15,23 @@ export type ScheduleMeal = {
   servings?: number;
 };
 
-export type ScheduleData = {
+type BaseScheduleData = {
   id?: string;
   defaultServings: number;
   groceryDay?: number;
   startDay?: number;
   startMeal?: number;
   strategy?: ScheduleStrategy;
-
   meals: ScheduleMeal[];
   warnings: string[];
+};
+
+export type ScheduleData = BaseScheduleData & {
+  templateWeek?: MealData[];
+};
+
+type InternalScheduleData = BaseScheduleData & {
+  templateWeek?: Meal[];
 };
 
 const createEmpty = (scheduleId): ScheduleData => {
@@ -41,17 +50,23 @@ const createEmpty = (scheduleId): ScheduleData => {
       servings: 2,
     })),
 
+    templateWeek: [],
+
     warnings: [],
   };
 };
 
 export default class Schedule {
-  data: ScheduleData;
+  data: InternalScheduleData;
   generateId: (name: string) => string;
 
   constructor(data?: ScheduleData, { generateId = id } = {}) {
     this.generateId = generateId;
-    this.data = data || createEmpty(generateId('schedule'));
+    const incomingData = data || createEmpty(generateId('schedule'));
+    this.data = {
+      ...incomingData,
+      templateWeek: incomingData.templateWeek.map<Meal>(meal => new Meal(meal)),
+    };
   }
 
   get id() {
@@ -79,11 +94,15 @@ export default class Schedule {
   }
 
   get meals() {
-    return this.data.meals;
+    return [...this.data.meals];
   }
 
   get warnings() {
-    return this.data.warnings;
+    return [...this.data.warnings];
+  }
+
+  get templateWeek() {
+    return [...this.data.templateWeek];
   }
 
   set id(scheduleId) {
@@ -92,6 +111,7 @@ export default class Schedule {
 
   set defaultServings(defaultServings) {
     this.data.defaultServings = defaultServings || 2;
+    this.updateTemplateWeek();
   }
 
   set groceryDay(groceryDay) {
@@ -108,15 +128,30 @@ export default class Schedule {
 
   set strategy(strategy) {
     this.data.strategy = strategy;
+    this.updateTemplateWeek();
   }
 
-  getMeal = (day: number, meal: number): ScheduleMeal => {
+  getScheduleMeal = (day: number, meal: number): ScheduleMeal => {
     return this.meals[day * 3 + meal];
   };
 
-  setMealDetails = (dayIndex, mealIndex, details = {}) => {
+  setScheduleMealDetails = (dayIndex, mealIndex, details = {}) => {
     const meal = this.data.meals[dayIndex * 3 + mealIndex];
     Object.assign(meal, details);
+    this.updateTemplateWeek();
+  };
+
+  updateTemplateWeek = () => {
+    this.data.templateWeek = planner.run(this);
+  };
+
+  getPlanMeal = (dateIndex: number, mealIndex: number) => {
+    // copy basic data from template week and update date
+    const dayIndex = dateIndex % 7;
+    const templateMeal = this.data.templateWeek.find(
+      meal => meal.dayIndex === dayIndex && meal.mealIndex === mealIndex,
+    );
+    return templateMeal.move(Math.floor((dateIndex - dayIndex) / 7));
   };
 
   addWarning = warning => {
@@ -134,10 +169,39 @@ export default class Schedule {
   };
 
   toJSON() {
-    return this.data;
+    return {
+      ...this.data,
+      templateWeek: this.data.templateWeek.map(meal => meal.toJSON()),
+    };
   }
 
   static fromJSON(data) {
     return new Schedule(data);
+  }
+
+  static createEmpty(id: string) {
+    return new Schedule({
+      id,
+      defaultServings: 2,
+      groceryDay: 0,
+      startMeal: 2,
+      strategy: ScheduleStrategy.Basic,
+
+      meals: new Array(21).fill(null).map((__, mealIndex) => ({
+        id: `${id}_m_${mealIndex}`,
+        mealIndex,
+        dayIndex: Math.floor(mealIndex / 3),
+        availability: 'SKIP',
+        servings: 2,
+      })),
+
+      templateWeek: new Array(21)
+        .fill(null)
+        .map((_, mealIndex) =>
+          Meal.createEmpty(Math.floor(mealIndex / 3), mealIndex % 3),
+        ),
+
+      warnings: [],
+    });
   }
 }

@@ -30,7 +30,6 @@ const withDefaultSelectBehavior = withProps<
   onRecipeSelected:
     ownProps.onRecipeSelected ||
     function(recipe: Recipe) {
-      console.log(`nav to ${recipe.id}`);
       ownProps.history.push(`/recipes/${recipe.id}`);
     },
 }));

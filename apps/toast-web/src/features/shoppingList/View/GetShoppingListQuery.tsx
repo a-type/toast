@@ -5,10 +5,10 @@ import { GetShoppingList } from 'generated/schema';
 import { shoppingList } from './fragments';
 
 export const Document = gql`
-  query GetShoppingList($weekIndex: Int!) {
-    week(weekIndex: $weekIndex) {
+  query GetShoppingList($startDate: Date, $endDate: Date) {
+    plan {
       id
-      shoppingList {
+      shoppingList(startDate: $startDate, endDate: $endDate) {
         ...ShoppingListView
       }
     }

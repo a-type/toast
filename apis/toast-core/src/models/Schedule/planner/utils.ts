@@ -17,25 +17,21 @@ const findCookedMeal = meal =>
 
 export const initializeWeek = (
   schedule: Schedule,
-  startDateIndex: number,
-  endDateIndex: number,
   findFirstMeal: (meal: ScheduleMeal) => boolean = findCookedMeal,
 ): Meal[] => {
   // skip breakfast for main planning
   // find first cook day after grocery day to use to initialize the week
-  const firstCookMeal = mealsFromGroceryDay(schedule).find(findFirstMeal);
+  const fromGroceryDay = mealsFromGroceryDay(schedule);
+  const firstCookMeal = fromGroceryDay.find(findFirstMeal) || fromGroceryDay[0];
 
-  if (!firstCookMeal) {
-    throw new Error(
-      "Sorry, we couldn't figure out where to start this plan based on your schedule.",
-    );
-  }
-
-  const meals = new Array(1 + endDateIndex - startDateIndex)
+  const meals = new Array(DAYS_PER_WEEK)
     .fill(null)
     .map((_, dayIndex) =>
-      new Array(MEALS_PER_DAY).fill(null).map((__, mealIndex) => {
-        return Meal.createEmpty(startDateIndex + dayIndex, mealIndex);
+      new Array(MEALS_PER_DAY).fill(null).map((__, baseMealIndex) => {
+        const dateIndex = (dayIndex + firstCookMeal.dayIndex) % 7;
+        const mealIndex = (baseMealIndex + firstCookMeal.mealIndex) % 3;
+
+        return Meal.createEmpty(dateIndex, mealIndex);
       }),
     )
     .reduce((allMeals, dayMeals) => allMeals.concat(dayMeals), []);

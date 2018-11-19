@@ -1,2 +1,2 @@
-import * as planActionGuards from './planAction';
-export { planActionGuards };
+import * as MealActionGuards from './mealAction';
+export { MealActionGuards };

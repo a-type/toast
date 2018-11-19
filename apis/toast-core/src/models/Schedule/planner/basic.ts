@@ -3,16 +3,24 @@ import { MealActionType } from 'models/Meal/Meal';
 
 export default (schedule: Schedule, meals: Meal[]): Meal[] => {
   meals.forEach(meal => {
-    const ScheduleMeal = schedule.getMeal(meal.dayIndex, meal.mealIndex);
-    const mealType = {
+    const scheduleMeal = schedule.getScheduleMeal(
+      meal.dayIndex,
+      meal.mealIndex,
+    );
+
+    if (!scheduleMeal) {
+      return;
+    }
+
+    const recipeType = {
       LONG: 'FANCY',
       MEDIUM: 'NORMAL',
       SHORT: 'QUICK',
-    }[ScheduleMeal.availability];
-    if (mealType) {
+    }[scheduleMeal.availability];
+    if (recipeType) {
       const cookActionData = {
         type: MealActionType.Cook,
-        mealType,
+        recipeType,
         servings: schedule.defaultServings,
       };
 
@@ -28,7 +36,7 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
     } else {
       meal.addAction({
         type:
-          ScheduleMeal.availability === 'EAT_OUT'
+          scheduleMeal.availability === 'EAT_OUT'
             ? MealActionType.EatOut
             : MealActionType.Skip,
       });

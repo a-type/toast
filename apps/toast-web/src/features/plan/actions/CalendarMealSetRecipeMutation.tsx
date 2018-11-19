@@ -6,17 +6,19 @@ import fragment from './fragment';
 
 export const Document = gql`
   mutation CalendarMealSetRecipe(
-    $weekIndex: Int!
+    $dateIndex: Int!
+    $mealIndex: Int!
     $actionId: ID!
     $recipeId: ID!
   ) {
-    setWeekActionRecipe(
-      weekIndex: $weekIndex
+    setPlanMealRecipe(
+      dateIndex: $dateIndex
+      mealIndex: $mealIndex
       actionId: $actionId
       recipeId: $recipeId
     ) {
       id
-      ...CalendarPlanAction
+      ...CalendarMealAction
     }
   }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CalendarMealSetRecipeMutation from './CalendarMealSetRecipeMutation';
 import { RecipeSelector } from 'features/plan';
-import { PlanActionCook } from 'generated/schema';
+import { MealActionCook } from 'generated/schema';
 import { Card, Icon } from 'components/generic';
 import CardBox from 'components/generic/Card/Box';
 import logger from 'logger';
@@ -9,10 +9,9 @@ import { pathOr } from 'ramda';
 import styled from 'styled-components';
 
 interface CalendarCookActionProps {
-  action: PlanActionCook;
-  weekIndex: number;
-  dayIndex: number;
+  dateIndex: number;
   mealIndex: number;
+  action: MealActionCook;
 }
 
 interface CalendarCookActionState {
@@ -75,7 +74,7 @@ export default class CalendarCookAction extends React.Component<
 
   render() {
     const { showRecipeSelector } = this.state;
-    const { weekIndex, action } = this.props;
+    const { action, dateIndex, mealIndex } = this.props;
 
     return (
       <React.Fragment>
@@ -91,7 +90,8 @@ export default class CalendarCookAction extends React.Component<
                   try {
                     await mutate({
                       variables: {
-                        weekIndex,
+                        dateIndex,
+                        mealIndex,
                         actionId: action.id,
                         recipeId: recipe.id,
                       },

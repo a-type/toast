@@ -33,7 +33,7 @@ export const typeDefs = gql`
     meals: [ScheduleMeal!]!
     groceryDay: Int!
     warnings: [String!]!
-    strategy: PlanStrategy
+    strategy: ScheduleStrategy
   }
 
   input ScheduleSetDetailsInput {
@@ -46,19 +46,21 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    setScheduleDetails(scheduleId: ID, details: ScheduleSetDetailsInput!): Schedule!
-      @hasScope(scope: "update:plan")
+    setScheduleDetails(
+      scheduleId: ID
+      details: ScheduleSetDetailsInput!
+    ): Schedule! @hasScope(scope: "update:plan")
     setScheduleMealDetails(
       scheduleId: ID
       dayIndex: Int!
       mealIndex: Int!
       details: ScheduleSetMealDetailsInput!
     ): Schedule! @hasScope(scope: "update:plan")
-    setScheduleStrategy(scheduleId: ID, strategy: PlanStrategy): Schedule!
+    setScheduleStrategy(scheduleId: ID, strategy: ScheduleStrategy): Schedule!
   }
 
   extend type Plan {
-    schedule($scheduleId: ID): Schedule @authenticated
+    schedule(scheduleId: ID): Schedule @authenticated
   }
 
   extend type Query {
@@ -66,7 +68,7 @@ export const typeDefs = gql`
     A shortcut for getting a schedule from your plan. Pass a schedule ID
     to get a non-default scheule, or omit it to get the default one
     """
-    schedule($scheduleId: ID): Schedule @authenticated
+    schedule(scheduleId: ID): Schedule @authenticated
   }
 `;
 
@@ -135,7 +137,7 @@ export const resolvers = {
         scheduleId,
       );
 
-      schedule.setMealDetails(dayIndex, mealIndex, details);
+      schedule.setScheduleMealDetails(dayIndex, mealIndex, details);
       await ctx.firestore.plans.setSchedule(planId, schedule);
       return schedule;
     },

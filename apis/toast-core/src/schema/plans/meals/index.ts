@@ -1,12 +1,12 @@
 import { gql } from 'apollo-server-express';
 import { Schedule, Plan, Meal } from 'models';
+import { MealActionEat, MealActionCook } from 'models/Meal/Meal';
 import { Context } from 'context';
 import { path } from 'ramda';
 import { UserInputError } from 'errors';
-import planner from 'models/Meal/planner';
 
 export const typeDefs = gql`
-  enum PlanMealActionType {
+  enum MealActionType {
     EAT_OUT
     COOK
     EAT
@@ -14,58 +14,58 @@ export const typeDefs = gql`
     SKIP
   }
 
-  enum PlanMealRecipeType {
+  enum MealRecipeType {
     QUICK
     BIG
     FANCY
     NORMAL
   }
 
-  interface PlanAction {
+  interface MealAction {
     id: ID!
-    type: PlanActionType!
+    type: MealActionType!
     dayIndex: Int
     mealIndex: Int
   }
 
-  type PlanActionEatOut implements PlanAction {
+  type MealActionEatOut implements MealAction {
     id: ID!
-    type: PlanActionType!
+    type: MealActionType!
     dayIndex: Int
     mealIndex: Int
     note: String
   }
 
-  type PlanActionCook implements PlanAction {
+  type MealActionCook implements MealAction {
     id: ID!
-    type: PlanActionType!
+    type: MealActionType!
     dayIndex: Int
     mealIndex: Int
     servings: Int!
-    mealType: ScheduleMealType!
+    recipeType: MealRecipeType!
     recipe: Recipe
   }
 
-  type PlanActionEat implements PlanAction {
+  type MealActionEat implements MealAction {
     id: ID!
-    type: PlanActionType!
+    type: MealActionType!
     dayIndex: Int
     mealIndex: Int
     leftovers: Boolean!
-    cookAction: PlanActionCook
+    cookAction: MealActionCook
   }
 
-  type PlanActionReadyMade implements PlanAction {
+  type MealActionReadyMade implements MealAction {
     id: ID!
-    type: PlanActionType!
+    type: MealActionType!
     dayIndex: Int
     mealIndex: Int
     note: String
   }
 
-  type PlanActionSkip implements PlanAction {
+  type MealActionSkip implements MealAction {
     id: ID!
-    type: PlanActionType!
+    type: MealActionType!
     dayIndex: Int
     mealIndex: Int
   }
@@ -74,8 +74,9 @@ export const typeDefs = gql`
     id: ID!
     mealIndex: Int!
     dateIndex: Int!
+    dayIndex: Int!
     date: Date!
-    actions: [PlanAction!]!
+    actions: [MealAction!]!
   }
 
   extend type Mutation {
@@ -84,7 +85,7 @@ export const typeDefs = gql`
       mealIndex: Int!
       actionId: ID!
       recipeId: ID!
-    ): PlanAction!
+    ): MealAction!
   }
 
   extend type Plan {
@@ -96,7 +97,7 @@ export const typeDefs = gql`
     """
     Lets the user preview how a week would look with a particular strategy (even if they don't have access to the strategy)
     """
-    previewWeek(strategy: PlanStrategy!): [PlanMeal!]!
+    templateWeek(strategy: ScheduleStrategy!): [PlanMeal!]!
   }
 `;
 
@@ -116,11 +117,12 @@ export const resolvers = {
         );
       }
 
-      const meal = await ctx.firestore.plans.getMeal(
+      let meal = await ctx.firestore.plans.getMeal(
         planId,
         dateIndex,
         mealIndex,
       );
+
       const action = meal.setActionRecipe(actionId, recipeId);
       await ctx.firestore.plans.setMeal(planId, meal);
       return action;
@@ -133,44 +135,76 @@ export const resolvers = {
 
       const dateIndex = Meal.getDateIndex(date);
 
-      const meal = await ctx.firestore.plans.getMeal(
+      let meal = await ctx.firestore.plans.getMeal(
         planId,
         dateIndex,
         mealIndex,
       );
+
       return meal;
     },
 
     meals: async (parent: Plan, { startDate, endDate }, ctx: Context) => {
       const { id: planId } = parent;
+      let meals;
+      const startIndex = Meal.getDateIndex(startDate);
 
       if (startDate && endDate) {
-        const startIndex = Meal.getDateIndex(startDate);
         const endIndex = Meal.getDateIndex(endDate);
 
-        const meals = await ctx.firestore.plans.getMealRange(
+        meals = await ctx.firestore.plans.getMealRange(
           planId,
           startIndex,
           endIndex,
         );
-        return meals;
       } else if (startDate) {
-        const startIndex = Meal.getDateIndex(startDate);
-        const meals = await ctx.firestore.plans.getMealsByDate(
-          planId,
-          startIndex,
-        );
-        return meals;
+        meals = await ctx.firestore.plans.getMealsByDate(planId, startIndex);
+      }
+
+      return meals;
+    },
+  },
+
+  MealAction: {
+    __resolveType: obj => {
+      switch (obj.type) {
+        case 'COOK':
+          return 'MealActionCook';
+        case 'EAT':
+          return 'MealActionEat';
+        case 'EAT_OUT':
+          return 'MealActionEatOut';
+        case 'READY_MADE':
+          return 'MealActionReadyMade';
+        case 'SKIP':
+          return 'MealActionSkip';
       }
     },
   },
 
-  Schedule: {
-    previewWeek: (parent: Schedule, { strategy }, ctx: Context) => {
-      const scheduleCopy = Schedule.fromJSON(parent.toJSON());
-      scheduleCopy.strategy = strategy;
-      const week = planner.run(scheduleCopy, 0, 7);
-      return week;
+  MealActionEat: {
+    cookAction: async (parent: MealActionEat, _args, ctx: Context) => {
+      const info = Meal.getInfoFromActionId(parent.cookActionId);
+
+      const group = await ctx.graph.groups.getMine();
+      const planId = path<string>(['planId'], group);
+
+      let meal = await ctx.firestore.plans.getMeal(
+        planId,
+        info.dateIndex,
+        info.mealIndex,
+      );
+
+      return meal.getAction(parent.cookActionId);
+    },
+  },
+
+  MealActionCook: {
+    recipe: (parent: MealActionCook, _args, ctx: Context) => {
+      if (parent.recipeId) {
+        return ctx.graph.recipes.get(parent.recipeId);
+      }
+      return null;
     },
   },
 };

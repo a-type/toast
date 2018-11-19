@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { Card } from 'components/generic';
-import { PlanActionEat } from 'generated/schema';
+import { MealActionEat } from 'generated/schema';
 import { pathOr } from 'ramda';
 import { Span, HelpText } from 'components/typeset';
 
 interface CalendarEatActionProps {
-  action: PlanActionEat;
-  weekIndex: number;
-  dayIndex: number;
-  mealIndex: number;
+  action: MealActionEat;
 }
 
 const DAYS = [

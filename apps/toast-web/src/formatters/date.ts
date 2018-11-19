@@ -9,3 +9,8 @@ export const formatDay = (dateStr: string | Date) => {
   }
   return format(date, 'dddd, MMM Do');
 };
+
+export const formatDateOnly = (dateStr: string | Date) => {
+  const date = new Date(dateStr);
+  return format(date, 'YYYY-MM-DD');
+};

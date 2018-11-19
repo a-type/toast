@@ -5,6 +5,7 @@ import { id } from 'tools';
 
 import * as meals from './meals';
 import * as schedules from './schedules';
+import * as shoppingList from './shoppingList';
 
 export const typeDefs = () => [
   gql`
@@ -18,6 +19,7 @@ export const typeDefs = () => [
   `,
   meals.typeDefs,
   schedules.typeDefs,
+  shoppingList.typeDefs,
 ];
 
 export const resolvers = [
@@ -40,4 +42,5 @@ export const resolvers = [
   },
   meals.resolvers,
   schedules.resolvers,
+  shoppingList.resolvers,
 ].reduce(mergeDeepRight, {});

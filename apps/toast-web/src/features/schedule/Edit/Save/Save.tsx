@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 
 const ProcessSchedule = gql`
-  mutation ProcessSchedule($strategy: PlanStrategy!) {
+  mutation ProcessSchedule($strategy: ScheduleStrategy!) {
     setScheduleStrategy(strategy: $strategy) {
       id
       strategy
@@ -20,13 +20,9 @@ const ProcessSchedule = gql`
 
 const GetSchedule = gql`
   query GetSchedule {
-    me {
-      group {
-        schedule {
-          id
-          strategy
-        }
-      }
+    schedule {
+      id
+      strategy
     }
   }
 `;
@@ -45,7 +41,7 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
   return (
     <Query query={GetSchedule}>
       {({ data, loading, error }) => {
-        const schedule = path(['me', 'group', 'schedule'], data);
+        const schedule = path(['schedule'], data);
         const defaultStrategy = pathOr(strategy, ['strategy'], schedule);
 
         return (
@@ -94,4 +90,4 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default withRouter(cold(ScheduleEditSave));
+export default cold(withRouter(ScheduleEditSave));

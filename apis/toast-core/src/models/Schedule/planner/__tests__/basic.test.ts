@@ -7,8 +7,6 @@ const { variety } = plans();
 describe('basic meal plan', () => {
   test('converts availability to meal types', () => {
     variety.strategy = ScheduleStrategy.Basic;
-    expect(
-      ignoreIds(plan.run(variety, 0, 6).map(m => m.toJSON())),
-    ).toMatchSnapshot();
+    expect(ignoreIds(plan.run(variety).map(m => m.toJSON()))).toMatchSnapshot();
   });
 });

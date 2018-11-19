@@ -33,7 +33,7 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
 
     // iterate through 'prep-ready' meals we have collected so far
     prepMeals.forEach(prepMeal => {
-      const prepScheduleMeal = schedule.getMeal(
+      const prepScheduleMeal = schedule.getScheduleMeal(
         prepMeal.dayIndex,
         prepMeal.mealIndex,
       );
@@ -47,7 +47,7 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
       const cookAction = {
         type: MealActionType.Cook,
         servings: schedule.defaultServings * (1 + countOfMealsToPrepFor),
-        mealType: prepMealType(
+        recipeType: prepMealType(
           prepScheduleMeal.availability,
           (1 + countOfMealsToPrepFor) * schedule.defaultServings,
         ),
@@ -92,11 +92,15 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
       continue;
     }
 
-    const ScheduleMeal = schedule.getMeal(dayIndex, mealIndex);
+    const scheduleMeal = schedule.getScheduleMeal(dayIndex, mealIndex);
+
+    if (!scheduleMeal) {
+      continue;
+    }
 
     // L / M meals count as 'prep-ready'; i.e. we can increase their portions by decreasing
     // the complexity of the recipe so we can distribute portions to later "N" meals
-    if (['LONG', 'MEDIUM'].includes(ScheduleMeal.availability)) {
+    if (['LONG', 'MEDIUM'].includes(scheduleMeal.availability)) {
       // if we already are tracking some prep candidates AND we already have meals which
       // need prepping, trigger the 'flush' behavior that goes ahead and correlates
       // prep meals to prepped meals
@@ -108,7 +112,7 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
         prepMeals.push(currentMeal);
       }
     } else if (
-      ScheduleMeal.availability === 'NONE' &&
+      scheduleMeal.availability === 'NONE' &&
       !alreadyPlanned(currentMeal)
     ) {
       // note: if we don't have any prep meals ready, we can catch this on the next round
@@ -116,13 +120,13 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
         needPrepMeals.push(currentMeal);
       }
     } else if (
-      ScheduleMeal.availability === 'SHORT' &&
+      scheduleMeal.availability === 'SHORT' &&
       !alreadyPlanned(currentMeal)
     ) {
       // short stuff just gets assigned like normal, no sense prepping on these meals
       const cookActionData = {
         type: MealActionType.Cook,
-        mealType: 'QUICK',
+        recipeType: 'QUICK',
         servings: schedule.defaultServings,
       };
       const cookAction = currentMeal.addAction(cookActionData);

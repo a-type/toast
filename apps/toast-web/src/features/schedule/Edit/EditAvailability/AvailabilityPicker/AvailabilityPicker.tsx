@@ -68,11 +68,11 @@ export default class AvailabilityPicker extends React.Component<
   };
 
   render() {
-    const { value } = this.props;
+    const { value, onChange, ...rest } = this.props;
     const { loading } = this.state;
 
     return (
-      <Wrapper value={value}>
+      <Wrapper value={value} {...rest}>
         {loading ? <Loader size="24px" /> : <Icon value={value} />}
         <Caret value={value} />
         <BaseSelect value={value} onChange={this.handleChange}>

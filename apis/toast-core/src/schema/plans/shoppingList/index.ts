@@ -5,6 +5,7 @@ import { ShoppingList } from 'models';
 import compileShoppingList from './compileShoppingList';
 import { Context } from 'context';
 import { dates } from 'tools';
+import { setDay, getDay } from 'date-fns';
 
 export const typeDefs = gql`
   type ShoppingListIngredient {
@@ -22,7 +23,11 @@ export const typeDefs = gql`
   }
 
   extend type Plan {
-    shoppingList(startDate: Date!, endDate: Date!): ShoppingList!
+    """
+    Compiles or fetches a cached shopping list for a group of meals by date.
+    Omit date parameters and it will fetch the upcoming week
+    """
+    shoppingList(startDate: Date, endDate: Date): ShoppingList!
   }
 
   extend type Mutation {
@@ -36,8 +41,26 @@ export const resolvers = {
     shoppingList: async (parent, { startDate, endDate }, ctx: Context) => {
       const { id: planId } = parent;
 
-      const startDateIndex = dates.getDateIndex(startDate);
-      const endDateIndex = dates.getDateIndex(endDate);
+      let startDateIndex, endDateIndex;
+
+      if (!startDate || !endDate) {
+        // TODO: support different schedules? not sure how that will work.
+        const schedule = await ctx.firestore.plans.getSchedule(planId);
+        const groceryDay = schedule.groceryDay;
+        const today = getDay(Date.now());
+        if (today <= groceryDay) {
+          startDateIndex =
+            dates.getDateIndex(new Date()) + (groceryDay - today);
+          endDateIndex = startDateIndex + 7;
+        } else {
+          startDateIndex =
+            dates.getDateIndex(new Date()) + (7 - (today - groceryDay));
+          endDateIndex = startDateIndex + 7;
+        }
+      } else {
+        startDateIndex = dates.getDateIndex(startDate);
+        endDateIndex = dates.getDateIndex(endDate);
+      }
       const shoppingListId = ShoppingList.getId(startDateIndex, endDateIndex);
 
       let shoppingList: ShoppingList = await ctx.firestore.plans.getShoppingList(

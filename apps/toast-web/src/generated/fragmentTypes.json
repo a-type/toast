@@ -3,13 +3,13 @@
     "types": [
       {
         "kind": "INTERFACE",
-        "name": "PlanAction",
+        "name": "MealAction",
         "possibleTypes": [
-          { "name": "PlanActionEatOut" },
-          { "name": "PlanActionCook" },
-          { "name": "PlanActionEat" },
-          { "name": "PlanActionReadyMade" },
-          { "name": "PlanActionSkip" }
+          { "name": "MealActionEatOut" },
+          { "name": "MealActionCook" },
+          { "name": "MealActionEat" },
+          { "name": "MealActionReadyMade" },
+          { "name": "MealActionSkip" }
         ]
       }
     ]

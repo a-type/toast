@@ -20,4 +20,8 @@ export default class Plan {
   static fromJSON(data) {
     return new Plan(data);
   }
+
+  static createEmpty(id: string) {
+    return new Plan({ id });
+  }
 }
