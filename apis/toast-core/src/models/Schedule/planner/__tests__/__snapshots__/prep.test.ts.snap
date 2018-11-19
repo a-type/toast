@@ -5,7 +5,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 4,
         "type": "COOK",
       },
@@ -20,7 +20,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 2,
         "type": "COOK",
       },
@@ -52,7 +52,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 4,
         "type": "COOK",
       },
@@ -84,7 +84,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 4,
         "type": "COOK",
       },
@@ -116,7 +116,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 6,
         "type": "COOK",
       },
@@ -148,7 +148,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -180,7 +180,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -200,7 +200,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 2,
         "type": "COOK",
       },
@@ -215,7 +215,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 2,
         "type": "COOK",
       },
@@ -240,7 +240,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "BIG",
+        "recipeType": "BIG",
         "servings": 12,
         "type": "COOK",
       },
@@ -269,7 +269,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 6,
         "type": "COOK",
       },
@@ -289,7 +289,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 6,
         "type": "COOK",
       },
@@ -304,7 +304,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 6,
         "type": "COOK",
       },
@@ -324,7 +324,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 6,
         "type": "COOK",
       },
@@ -365,7 +365,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "BIG",
+        "recipeType": "BIG",
         "servings": 12,
         "type": "COOK",
       },
@@ -385,7 +385,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 6,
         "type": "COOK",
       },
@@ -400,7 +400,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 6,
         "type": "COOK",
       },
@@ -432,7 +432,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "BIG",
+        "recipeType": "BIG",
         "servings": 12,
         "type": "COOK",
       },
@@ -469,7 +469,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -484,7 +484,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -528,7 +528,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -572,7 +572,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 8,
         "type": "COOK",
       },
@@ -604,7 +604,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -658,7 +658,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -673,7 +673,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 4,
         "type": "COOK",
       },
@@ -702,7 +702,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 4,
         "type": "COOK",
       },
@@ -722,7 +722,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -737,7 +737,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -795,7 +795,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 4,
         "type": "COOK",
       },
@@ -815,7 +815,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -830,7 +830,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 2,
         "type": "COOK",
       },
@@ -862,7 +862,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 2,
         "type": "COOK",
       },
@@ -887,7 +887,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 4,
         "type": "COOK",
       },
@@ -919,7 +919,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 4,
         "type": "COOK",
       },
@@ -939,7 +939,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -954,7 +954,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 2,
         "type": "COOK",
       },
@@ -986,7 +986,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "FANCY",
+        "recipeType": "FANCY",
         "servings": 4,
         "type": "COOK",
       },
@@ -1006,7 +1006,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -1021,7 +1021,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "NORMAL",
+        "recipeType": "NORMAL",
         "servings": 2,
         "type": "COOK",
       },
@@ -1050,7 +1050,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -1070,7 +1070,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "mealType": "QUICK",
+        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
