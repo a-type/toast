@@ -204,13 +204,13 @@ export default class Meal {
    */
   static moveActionId = (actionId: string, moveWeeks: number) => {
     return actionId.replace(
-      /^m_(\d+)/,
+      /^m_(-?\d+)/,
       (_, dateIndex) => `m_${parseInt(dateIndex, 10) + moveWeeks * 7}`,
     );
   };
 
   static getInfoFromActionId = (actionId: string) => {
-    const match = /^m_(\d+)_(\d+)_a_(\d+)_([A-Z]+)$/.exec(actionId);
+    const match = /^m_(-?\d+)_(-?\d+)_a_(-?\d+)_([A-Z]+)$/.exec(actionId);
     return {
       dateIndex: parseInt(match[1], 10),
       mealIndex: parseInt(match[2], 10),

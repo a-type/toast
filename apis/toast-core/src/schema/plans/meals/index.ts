@@ -125,6 +125,9 @@ export const resolvers = {
 
       const action = meal.setActionRecipe(actionId, recipeId);
       await ctx.firestore.plans.setMeal(planId, meal);
+
+      // TODO: invalidate shopping list!
+
       return action;
     },
   },

@@ -52,38 +52,6 @@ export default () => {
   ]);
   variety.defaultServings = 2;
 
-  const midweekGrocery = fromAvailability([
-    'NONE',
-    'SHORT',
-    'LONG',
-
-    'NONE',
-    'EAT_OUT',
-    'MEDIUM',
-
-    'SHORT',
-    'SHORT',
-    'SHORT',
-
-    'NONE',
-    'NONE',
-    'EAT_OUT',
-
-    'NONE',
-    'NONE',
-    'MEDIUM',
-
-    'LONG',
-    'SHORT',
-    'LONG',
-
-    'NONE',
-    'NONE',
-    'LONG',
-  ]);
-  midweekGrocery.groceryDay = 3;
-  midweekGrocery.defaultServings = 2;
-
   const basic = fromAvailability([
     'SHORT',
     'MEDIUM',
@@ -177,6 +145,36 @@ export default () => {
   ]);
   largeFamily.defaultServings = 6;
 
+  const weekSpanning = fromAvailability([
+    'NONE',
+    'NONE',
+    'NONE',
+
+    'NONE',
+    'MEDIUM',
+    'LONG',
+
+    'SHORT',
+    'SHORT',
+    'LONG',
+
+    'NONE',
+    'SHORT',
+    'MEDIUM',
+
+    'EAT_OUT',
+    'EAT_OUT',
+    'LONG',
+
+    'NONE',
+    'EAT_OUT',
+    'SHORT',
+
+    'NONE',
+    'SHORT',
+    'LONG',
+  ]);
+
   const nefarious = {
     noTime: fromAvailability(new Array(21).fill('NONE')),
     eatOut: fromAvailability(new Array(21).fill('EAT_OUT')),
@@ -184,10 +182,10 @@ export default () => {
 
   return {
     variety,
-    midweekGrocery,
     busy,
     largeFamily,
     nefarious,
     basic,
+    weekSpanning,
   };
 };

@@ -23,9 +23,17 @@ const alreadyPlanned = (meal: Meal): boolean =>
     ['EAT', 'EAT_OUT', 'READY_MADE', 'SKIP'].includes(action.type),
   );
 
-export default (schedule: Schedule, meals: Meal[]): Meal[] => {
+export default (schedule: Schedule, baseMeals: Meal[]): Meal[] => {
   let prepMeals: Meal[] = [];
   let needPrepMeals: Meal[] = [];
+
+  const indexOfFirstCook = schedule.meals.findIndex(sm =>
+    ['LONG', 'MEDIUM'].includes(sm.availability),
+  );
+  const meals = [
+    ...baseMeals.slice(indexOfFirstCook),
+    ...baseMeals.slice(0, indexOfFirstCook),
+  ];
 
   const flushPrepMeals = () => {
     // keep track of how many meals we still need to schedule
@@ -66,11 +74,17 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
       // grab the prepped meals from the list and apply them
       for (let i = 0; i < countOfMealsToPrepFor; i++) {
         const leftoverMeal = needPrepMeals.shift();
+        // accomodate crossing the week boundary: meals which come before the meals
+        // that cook for them should reference cook meals one week prior
+        let cookActionId = finalCookAction.id;
+        if (leftoverMeal.dayIndex < prepMeal.dayIndex) {
+          cookActionId = Meal.moveActionId(cookActionId, -1);
+        }
         const leftoverAction = {
           dayIndex: leftoverMeal.dayIndex,
           mealIndex: leftoverMeal.mealIndex,
           type: MealActionType.Eat,
-          cookActionId: finalCookAction.id,
+          cookActionId,
           leftovers: true,
         };
         leftoverMeal.addAction(leftoverAction);
@@ -106,6 +120,9 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
       // prep meals to prepped meals
       if (prepMeals.length > 0 && needPrepMeals.length > 0) {
         flushPrepMeals();
+      } else if (needPrepMeals.length > 0 && prepMeals.length === 0) {
+        // if we have no prep-ready meals but we do have a list of meals that need prep,
+        // those meals will need to be prepped by
       }
 
       if (!alreadyPlanned(currentMeal)) {
@@ -148,5 +165,9 @@ export default (schedule: Schedule, meals: Meal[]): Meal[] => {
   // add cooking to any trailing 'prep-ready' meals.
   flushPrepMeals();
 
-  return meals;
+  // return to default week ordering
+  const firstMealIndex = meals.findIndex(
+    meal => meal.mealIndex === 0 && meal.dayIndex === 0,
+  );
+  return [...meals.slice(firstMealIndex), ...meals.slice(0, firstMealIndex)];
 };
