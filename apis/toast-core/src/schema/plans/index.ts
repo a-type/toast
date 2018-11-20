@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql, UserInputError } from 'apollo-server-express';
 import { Context } from 'context';
 import { path, mergeDeepRight } from 'ramda';
 import { id } from 'tools';
@@ -11,10 +11,15 @@ export const typeDefs = () => [
   gql`
     type Plan {
       id: ID!
+      groceryDay: Int!
     }
 
     extend type Query {
       plan: Plan
+    }
+
+    extend type Mutation {
+      setGroceryDay(groceryDay: Int!): Plan!
     }
   `,
   meals.typeDefs,
@@ -37,6 +42,23 @@ export const resolvers = [
         const plan = await ctx.firestore.plans.get(planId);
 
         return plan;
+      },
+    },
+
+    Mutation: {
+      setGroceryDay: async (_parent, { groceryDay }, ctx: Context) => {
+        const group = await ctx.graph.groups.getMine();
+        const planId = path<string>(['planId'], group);
+
+        if (!planId) {
+          throw new UserInputError(
+            'You must create a plan before setting your grocery day',
+          );
+        }
+
+        const plan = await ctx.firestore.plans.get(planId);
+        plan.groceryDay = groceryDay;
+        return ctx.firestore.plans.set(plan);
       },
     },
   },

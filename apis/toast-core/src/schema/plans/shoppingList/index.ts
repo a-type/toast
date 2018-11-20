@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 import { UserInputError, NotFoundError } from 'errors';
 import { path } from 'ramda';
-import { ShoppingList } from 'models';
+import { ShoppingList, Plan } from 'models';
 import compileShoppingList from './compileShoppingList';
 import { Context } from 'context';
 import { dates } from 'tools';
@@ -38,23 +38,26 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Plan: {
-    shoppingList: async (parent, { startDate, endDate }, ctx: Context) => {
-      const { id: planId } = parent;
+    shoppingList: async (
+      parent: Plan,
+      { startDate, endDate },
+      ctx: Context,
+    ) => {
+      const { id: planId, groceryDay } = parent;
 
       let startDateIndex, endDateIndex;
 
       if (!startDate || !endDate) {
-        // TODO: support different schedules? not sure how that will work.
-        const schedule = await ctx.firestore.plans.getSchedule(planId);
-        const groceryDay = schedule.groceryDay;
         const today = getDay(Date.now());
+        const startCookingDay = groceryDay + 1; // buying groceries the day before we start cooking
+        // TODO: deterimine if there's a better way to do this...
         if (today <= groceryDay) {
           startDateIndex =
-            dates.getDateIndex(new Date()) + (groceryDay - today);
+            dates.getDateIndex(new Date()) + (startCookingDay - today);
           endDateIndex = startDateIndex + 7;
         } else {
           startDateIndex =
-            dates.getDateIndex(new Date()) + (7 - (today - groceryDay));
+            dates.getDateIndex(new Date()) + (7 - (today - startCookingDay));
           endDateIndex = startDateIndex + 7;
         }
       } else {

@@ -3,7 +3,7 @@ import GetShoppingListQuery from './GetShoppingListQuery';
 import Ingredient from './Ingredient';
 import { Content } from 'components/layouts';
 import { H1, HelpText, H3 } from 'components/typeset';
-import { format, startOfWeek } from 'date-fns';
+import { format, getDay, setDay, addWeeks } from 'date-fns';
 import { Checkbox, Disconnected } from 'components/generic';
 import logger from 'logger';
 import { Redirect } from 'react-router-dom';
@@ -23,9 +23,6 @@ const Skeleton = () => (
 const View: React.SFC<{}> = () => (
   <Content>
     <H1 spaceBelow="sm">Shopping List</H1>
-    <HelpText spaceBelow="lg">
-      for the week starting {format(startOfWeek(new Date()), 'MMMM Do, YYYY')}
-    </HelpText>
     <GetShoppingListQuery>
       {({ data, loading, error }) => {
         if (loading) {
@@ -52,8 +49,18 @@ const View: React.SFC<{}> = () => (
           ing => ing.purchasedValue < ing.totalValue,
         );
 
+        const today = new Date();
+        const groceryDay = path<number>(['plan', 'groceryDay'], data);
+        const groceryDate =
+          getDay(today) < groceryDay
+            ? setDay(today, groceryDay)
+            : addWeeks(setDay(today, groceryDay), 1);
+
         return (
           <React.Fragment>
+            <HelpText spaceBelow="lg">
+              your grocery day is {format(groceryDate, 'MMMM Do, YYYY')}
+            </HelpText>
             <div>
               {unpurchased.map(ing => (
                 <Ingredient

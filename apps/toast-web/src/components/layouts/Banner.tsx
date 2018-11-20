@@ -3,11 +3,14 @@ import styled from 'styled-components';
 import classnames from 'classnames';
 import { CLASS_NAMES } from './constants';
 import { Icon } from 'components/generic';
+import { BackdropArt } from 'components/brand';
 
 const BannerStyles = styled.div`
-  background: var(--color-brand);
+  background: transparent;
   color: var(--color-dark);
   padding: var(--spacing-md);
+  position: relative;
+  height: auto;
 
   display: flex;
   flex-direction: row;
@@ -50,10 +53,7 @@ const Banner: React.SFC<BannerProps> = ({
   onDismiss,
   ...rest
 }) => (
-  <BannerStyles
-    className={classnames(CLASS_NAMES.BANNER, CLASS_NAMES.CONTENT, className)}
-    {...rest}
-  >
+  <BannerStyles className={classnames(CLASS_NAMES.BANNER, className)} {...rest}>
     {children}
     <Icon
       size="24px"
@@ -61,6 +61,7 @@ const Banner: React.SFC<BannerProps> = ({
       onClick={onDismiss}
       className="banner-dismiss"
     />
+    <BackdropArt />
   </BannerStyles>
 );
 

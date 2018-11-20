@@ -12,6 +12,7 @@ import CalendarDayView from './DayView';
 import { useMedia } from 'react-use';
 import { PlanMeal } from 'generated/schema';
 import { cold } from 'react-hot-loader';
+import GroceryDayBanner from '../GroceryDayBanner';
 
 const getDayIndex = (
   today: Date,
@@ -50,11 +51,7 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
           return <LandingPage />;
         }
 
-        const groceryDay = pathOr(
-          null,
-          ['plan', 'schedule', 'groceryDay'],
-          data,
-        );
+        const groceryDay = pathOr(0, ['plan', 'groceryDay'], data);
         const meals = pathOr(null, ['plan', 'meals'], data) as PlanMeal[];
 
         const dayMeals = meals
@@ -62,23 +59,26 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
           .sort((a, b) => a.mealIndex - b.mealIndex);
 
         return (
-          <Layout isWide={isWide}>
-            {(isWide || activeSection === 'calendar') && (
-              <CalendarWeeklyView
-                setActiveSection={setActiveSection}
-                meals={meals}
-                groceryDay={groceryDay}
-                data-grid-area="calendar"
-              />
-            )}
-            {(isWide || activeSection === 'day') && (
-              <CalendarDayView
-                setActiveSection={setActiveSection}
-                meals={dayMeals}
-                data-grid-area="day"
-              />
-            )}
-          </Layout>
+          <React.Fragment>
+            <GroceryDayBanner groceryDay={groceryDay} />
+            <Layout isWide={isWide}>
+              {(isWide || activeSection === 'calendar') && (
+                <CalendarWeeklyView
+                  setActiveSection={setActiveSection}
+                  meals={meals}
+                  groceryDay={groceryDay}
+                  data-grid-area="calendar"
+                />
+              )}
+              {(isWide || activeSection === 'day') && (
+                <CalendarDayView
+                  setActiveSection={setActiveSection}
+                  meals={dayMeals}
+                  data-grid-area="day"
+                />
+              )}
+            </Layout>
+          </React.Fragment>
         );
       }}
     </CalendarPlanQuery>

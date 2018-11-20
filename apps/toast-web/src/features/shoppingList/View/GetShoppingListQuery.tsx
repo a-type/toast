@@ -8,6 +8,7 @@ export const Document = gql`
   query GetShoppingList($startDate: Date, $endDate: Date) {
     plan {
       id
+      groceryDay
       shoppingList(startDate: $startDate, endDate: $endDate) {
         ...ShoppingListView
       }

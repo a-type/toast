@@ -1,5 +1,6 @@
 export interface PlanData {
   id: string;
+  groceryDay: number;
 }
 
 export default class Plan {
@@ -13,6 +14,14 @@ export default class Plan {
     return this.data.id;
   }
 
+  get groceryDay() {
+    return this.data.groceryDay;
+  }
+
+  set groceryDay(day: number) {
+    this.data.groceryDay = day;
+  }
+
   toJSON() {
     return this.data;
   }
@@ -22,6 +31,6 @@ export default class Plan {
   }
 
   static createEmpty(id: string) {
-    return new Plan({ id });
+    return new Plan({ id, groceryDay: 0 });
   }
 }

@@ -31,14 +31,12 @@ export const typeDefs = gql`
     id: ID!
     defaultServings: Int!
     meals: [ScheduleMeal!]!
-    groceryDay: Int!
     warnings: [String!]!
     strategy: ScheduleStrategy
   }
 
   input ScheduleSetDetailsInput {
     defaultServings: Int
-    groceryDay: Int
   }
 
   input ScheduleSetMealDetailsInput {
@@ -110,9 +108,6 @@ export const resolvers = {
         defaultSchedule;
       if (details.defaultServings !== null) {
         schedule.defaultServings = details.defaultServings;
-      }
-      if (details.groceryDay !== null) {
-        schedule.groceryDay = details.groceryDay;
       }
       return ctx.firestore.plans.setSchedule(planId, schedule);
     },

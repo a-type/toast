@@ -1,5 +1,6 @@
 import { Firestore } from '@google-cloud/firestore';
 import { Schedule, ShoppingList, Meal, Plan } from 'models';
+import { PlanData } from 'models/Plan/Plan';
 
 const COLLECTION = 'plans';
 
@@ -21,8 +22,8 @@ export default class Plans {
     return Plan.fromJSON(docRef.data());
   };
 
-  set = async (planId, plan: Plan) => {
-    const document = this.firestore.doc(`${COLLECTION}/${planId}`);
+  set = async (plan: Plan) => {
+    const document = this.firestore.doc(`${COLLECTION}/${plan.id}`);
 
     await document.set(plan.toJSON());
     return plan;

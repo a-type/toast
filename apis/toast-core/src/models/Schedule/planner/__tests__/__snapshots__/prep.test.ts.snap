@@ -3,6 +3,11 @@
 exports[`prep meal plan a basic plan 1`] = `
 Array [
   Object {
+    "actions": Array [],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
+  Object {
     "actions": Array [
       Object {
         "recipeType": "NORMAL",
@@ -34,7 +39,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 0,
+    "dateIndex": 1,
     "mealIndex": 0,
   },
   Object {
@@ -66,7 +71,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 1,
+    "dateIndex": 2,
     "mealIndex": 0,
   },
   Object {
@@ -98,7 +103,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 2,
+    "dateIndex": 3,
     "mealIndex": 0,
   },
   Object {
@@ -130,7 +135,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 3,
+    "dateIndex": 4,
     "mealIndex": 0,
   },
   Object {
@@ -162,7 +167,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 4,
+    "dateIndex": 5,
     "mealIndex": 0,
   },
   Object {
@@ -194,7 +199,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 5,
+    "dateIndex": 6,
     "mealIndex": 0,
   },
   Object {
@@ -227,16 +232,25 @@ Array [
     "dateIndex": 6,
     "mealIndex": 2,
   },
-  Object {
-    "actions": Array [],
-    "dateIndex": 6,
-    "mealIndex": 0,
-  },
 ]
 `;
 
 exports[`prep meal plan for a large family plan 1`] = `
 Array [
+  Object {
+    "actions": Array [],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "EAT_OUT",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 1,
+  },
   Object {
     "actions": Array [
       Object {
@@ -254,16 +268,22 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 0,
+    "dateIndex": 1,
     "mealIndex": 0,
   },
   Object {
     "actions": Array [
       Object {
-        "type": "EAT_OUT",
+        "recipeType": "QUICK",
+        "servings": 6,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
       },
     ],
-    "dateIndex": 0,
+    "dateIndex": 1,
     "mealIndex": 1,
   },
   Object {
@@ -283,41 +303,6 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 1,
-    "mealIndex": 0,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "recipeType": "QUICK",
-        "servings": 6,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 1,
-    "mealIndex": 1,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "recipeType": "QUICK",
-        "servings": 6,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 2,
-    "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [],
     "dateIndex": 2,
     "mealIndex": 0,
   },
@@ -339,10 +324,16 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "type": "EAT_OUT",
+        "recipeType": "QUICK",
+        "servings": 6,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
       },
     ],
-    "dateIndex": 3,
+    "dateIndex": 2,
     "mealIndex": 2,
   },
   Object {
@@ -365,16 +356,10 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "recipeType": "BIG",
-        "servings": 12,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
+        "type": "EAT_OUT",
       },
     ],
-    "dateIndex": 4,
+    "dateIndex": 3,
     "mealIndex": 2,
   },
   Object {
@@ -400,8 +385,8 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "recipeType": "NORMAL",
-        "servings": 6,
+        "recipeType": "BIG",
+        "servings": 12,
         "type": "COOK",
       },
       Object {
@@ -409,7 +394,7 @@ Array [
         "type": "EAT",
       },
     ],
-    "dateIndex": 5,
+    "dateIndex": 4,
     "mealIndex": 2,
   },
   Object {
@@ -441,7 +426,7 @@ Array [
         "type": "EAT",
       },
     ],
-    "dateIndex": 6,
+    "dateIndex": 5,
     "mealIndex": 2,
   },
   Object {
@@ -461,12 +446,32 @@ Array [
     "dateIndex": 6,
     "mealIndex": 1,
   },
+  Object {
+    "actions": Array [
+      Object {
+        "recipeType": "FANCY",
+        "servings": 6,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 6,
+    "mealIndex": 2,
+  },
 ]
 `;
 
 exports[`prep meal plan for a really busy person 1`] = `
 Array [
   Object {
+    "actions": Array [],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
+  Object {
     "actions": Array [
       Object {
         "recipeType": "QUICK",
@@ -498,7 +503,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 0,
+    "dateIndex": 1,
     "mealIndex": 0,
   },
   Object {
@@ -517,7 +522,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 1,
+    "dateIndex": 2,
     "mealIndex": 0,
   },
   Object {
@@ -542,7 +547,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 2,
+    "dateIndex": 3,
     "mealIndex": 0,
   },
   Object {
@@ -561,7 +566,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 3,
+    "dateIndex": 4,
     "mealIndex": 0,
   },
   Object {
@@ -586,7 +591,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 4,
+    "dateIndex": 5,
     "mealIndex": 0,
   },
   Object {
@@ -618,7 +623,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 5,
+    "dateIndex": 6,
     "mealIndex": 0,
   },
   Object {
@@ -645,16 +650,16 @@ Array [
     "dateIndex": 6,
     "mealIndex": 2,
   },
-  Object {
-    "actions": Array [],
-    "dateIndex": 6,
-    "mealIndex": 0,
-  },
 ]
 `;
 
 exports[`prep meal plan for a variety plan 1`] = `
 Array [
+  Object {
+    "actions": Array [],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
   Object {
     "actions": Array [
       Object {
@@ -687,7 +692,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 0,
+    "dateIndex": 1,
     "mealIndex": 0,
   },
   Object {
@@ -716,7 +721,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 1,
+    "dateIndex": 2,
     "mealIndex": 0,
   },
   Object {
@@ -751,7 +756,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 2,
+    "dateIndex": 3,
     "mealIndex": 0,
   },
   Object {
@@ -777,7 +782,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 3,
+    "dateIndex": 4,
     "mealIndex": 0,
   },
   Object {
@@ -809,7 +814,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 4,
+    "dateIndex": 5,
     "mealIndex": 0,
   },
   Object {
@@ -844,7 +849,7 @@ Array [
   },
   Object {
     "actions": Array [],
-    "dateIndex": 5,
+    "dateIndex": 6,
     "mealIndex": 0,
   },
   Object {
@@ -873,11 +878,6 @@ Array [
     ],
     "dateIndex": 6,
     "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [],
-    "dateIndex": 6,
-    "mealIndex": 0,
   },
 ]
 `;
@@ -885,6 +885,55 @@ Array [
 exports[`prep meal plan for midweek grocery day 1`] = `
 Array [
   Object {
+    "actions": Array [],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "recipeType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "recipeType": "FANCY",
+        "servings": 4,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [],
+    "dateIndex": 1,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "EAT_OUT",
+      },
+    ],
+    "dateIndex": 1,
+    "mealIndex": 1,
+  },
+  Object {
     "actions": Array [
       Object {
         "recipeType": "NORMAL",
@@ -896,7 +945,68 @@ Array [
         "type": "EAT",
       },
     ],
-    "dateIndex": 4,
+    "dateIndex": 1,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [],
+    "dateIndex": 2,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "recipeType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 2,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "recipeType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 2,
+    "mealIndex": 2,
+  },
+  Object {
+    "actions": Array [],
+    "dateIndex": 3,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "dayIndex": 3,
+        "leftovers": true,
+        "mealIndex": 1,
+        "type": "EAT",
+      },
+    ],
+    "dateIndex": 3,
+    "mealIndex": 1,
+  },
+  Object {
+    "actions": Array [
+      Object {
+        "type": "EAT_OUT",
+      },
+    ],
+    "dateIndex": 3,
     "mealIndex": 2,
   },
   Object {
@@ -919,7 +1029,7 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "recipeType": "FANCY",
+        "recipeType": "NORMAL",
         "servings": 4,
         "type": "COOK",
       },
@@ -928,7 +1038,7 @@ Array [
         "type": "EAT",
       },
     ],
-    "dateIndex": 5,
+    "dateIndex": 4,
     "mealIndex": 2,
   },
   Object {
@@ -963,7 +1073,7 @@ Array [
         "type": "EAT",
       },
     ],
-    "dateIndex": 6,
+    "dateIndex": 5,
     "mealIndex": 2,
   },
   Object {
@@ -987,26 +1097,6 @@ Array [
     "actions": Array [
       Object {
         "recipeType": "FANCY",
-        "servings": 4,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 0,
-    "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [],
-    "dateIndex": 0,
-    "mealIndex": 0,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
       },
@@ -1015,98 +1105,8 @@ Array [
         "type": "EAT",
       },
     ],
-    "dateIndex": 0,
-    "mealIndex": 1,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "recipeType": "NORMAL",
-        "servings": 2,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 1,
+    "dateIndex": 6,
     "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [],
-    "dateIndex": 1,
-    "mealIndex": 0,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "type": "EAT_OUT",
-      },
-    ],
-    "dateIndex": 1,
-    "mealIndex": 1,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "recipeType": "QUICK",
-        "servings": 2,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 2,
-    "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [],
-    "dateIndex": 2,
-    "mealIndex": 0,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "recipeType": "QUICK",
-        "servings": 2,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 2,
-    "mealIndex": 1,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "type": "EAT_OUT",
-      },
-    ],
-    "dateIndex": 3,
-    "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [],
-    "dateIndex": 3,
-    "mealIndex": 0,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "dayIndex": 3,
-        "leftovers": true,
-        "mealIndex": 1,
-        "type": "EAT",
-      },
-    ],
-    "dateIndex": 3,
-    "mealIndex": 1,
   },
 ]
 `;

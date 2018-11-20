@@ -6,7 +6,7 @@ import { initializeWeek } from './utils';
 
 export default {
   run: (schedule: Schedule): Meal[] => {
-    const meals = initializeWeek(schedule);
+    const meals = initializeWeek();
 
     switch (schedule.strategy) {
       case ScheduleStrategy.Prep:

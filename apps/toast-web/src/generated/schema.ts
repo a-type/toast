@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-18T18:20:18-05:00 */
+/** Generated in 2018-11-19T18:40:04-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -212,6 +212,8 @@ export interface IngredientSearchResponse {
 export interface Plan {
   id: string;
 
+  groceryDay: number;
+
   meal: PlanMeal;
 
   meals: PlanMeal[];
@@ -241,8 +243,6 @@ export interface Schedule {
   defaultServings: number;
 
   meals: ScheduleMeal[];
-
-  groceryDay: number;
 
   warnings: string[];
 
@@ -343,6 +343,8 @@ export interface Mutation {
   unlikeRecipe: Recipe;
 
   mergeUser?: User | null;
+
+  setGroceryDay: Plan;
 
   setPlanMealRecipe: MealAction;
 
@@ -589,8 +591,6 @@ export interface RecipeStepCreateInput {
 
 export interface ScheduleSetDetailsInput {
   defaultServings?: number | null;
-
-  groceryDay?: number | null;
 }
 
 export interface ScheduleSetMealDetailsInput {
@@ -747,6 +747,9 @@ export interface LikeRecipeMutationArgs {
 }
 export interface UnlikeRecipeMutationArgs {
   id: string;
+}
+export interface SetGroceryDayMutationArgs {
+  groceryDay: number;
 }
 export interface SetPlanMealRecipeMutationArgs {
   dateIndex: number;
@@ -937,6 +940,8 @@ export namespace CalendarPlan {
 
     id: string;
 
+    groceryDay: number;
+
     schedule?: Schedule | null;
 
     meals: Meals[];
@@ -946,8 +951,6 @@ export namespace CalendarPlan {
     __typename?: 'Schedule';
 
     id: string;
-
-    groceryDay: number;
   };
 
   export type Meals = {
@@ -961,6 +964,26 @@ export namespace CalendarPlan {
 
     mealIndex: number;
   } & CalendarMeal.Fragment;
+}
+
+export namespace SetGroceryDay {
+  export type Variables = {
+    groceryDay: number;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setGroceryDay: SetGroceryDay;
+  };
+
+  export type SetGroceryDay = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    groceryDay: number;
+  };
 }
 
 export namespace PreviewWeek {
@@ -1234,6 +1257,8 @@ export namespace GetShoppingList {
 
     id: string;
 
+    groceryDay: number;
+
     shoppingList: ShoppingList;
   };
 
@@ -1409,6 +1434,8 @@ export namespace CalendarMeal {
     date: Date;
 
     dayIndex: number;
+
+    dateIndex: number;
 
     mealIndex: number;
 

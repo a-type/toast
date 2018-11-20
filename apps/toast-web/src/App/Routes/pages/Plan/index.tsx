@@ -7,37 +7,38 @@ import { path } from 'ramda';
 import { IsLoggedIn } from 'features/auth/gates';
 import { parse, startOfDay } from 'date-fns';
 
-const parseIntOrNil = maybeInt => {
-  if (maybeInt !== undefined) {
-    return parseInt(maybeInt);
-  }
-  return maybeInt;
-};
-
 export default () => (
-  <SingleColumn wide>
-    <Switch>
-      <Route
-        path="/plan/edit"
-        render={props => (
-          <IsLoggedIn fallback={<Redirect to="/plan" />}>
+  <Switch>
+    <Route
+      path="/plan/edit"
+      render={props => (
+        <IsLoggedIn fallback={<Redirect to="/plan" />}>
+          <SingleColumn>
             <Edit {...props} />
-          </IsLoggedIn>
-        )}
-      />
-      <Route
-        path="/plan/:date?"
-        render={({ match }) => {
-          const dateParam = path<string>(['params', 'date'], match);
+          </SingleColumn>
+        </IsLoggedIn>
+      )}
+    />
+    <Route
+      path="/plan/:date?"
+      render={({ match }) => {
+        const dateParam = path<string>(['params', 'date'], match);
 
-          const date = dateParam ? parse(dateParam) : startOfDay(Date.now());
-          return (
-            <IsLoggedIn fallback={<LandingPage />}>
+        const date = dateParam ? parse(dateParam) : startOfDay(Date.now());
+        return (
+          <IsLoggedIn
+            fallback={
+              <SingleColumn>
+                <LandingPage />
+              </SingleColumn>
+            }
+          >
+            <SingleColumn wide>
               <Calendar date={date} />
-            </IsLoggedIn>
-          );
-        }}
-      />
-    </Switch>
-  </SingleColumn>
+            </SingleColumn>
+          </IsLoggedIn>
+        );
+      }}
+    />
+  </Switch>
 );

@@ -14,7 +14,15 @@ const BackdropArt = () => {
         width: '100%',
         height: '100%',
         background: 'var(--color-positive-light)',
+        overflowY: 'hidden',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: -1,
       }}
+      preserveAspectRatio="xMidYMid slice"
     >
       {colors.map((color, idx) => (
         <Wave

@@ -5,6 +5,15 @@ Array [
   Object {
     "actions": Array [
       Object {
+        "type": "SKIP",
+      },
+    ],
+    "dateIndex": 0,
+    "mealIndex": 0,
+  },
+  Object {
+    "actions": Array [
+      Object {
         "recipeType": "QUICK",
         "servings": 2,
         "type": "COOK",
@@ -38,7 +47,7 @@ Array [
         "type": "SKIP",
       },
     ],
-    "dateIndex": 0,
+    "dateIndex": 1,
     "mealIndex": 0,
   },
   Object {
@@ -68,10 +77,16 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "type": "SKIP",
+        "recipeType": "QUICK",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
       },
     ],
-    "dateIndex": 1,
+    "dateIndex": 2,
     "mealIndex": 0,
   },
   Object {
@@ -107,16 +122,10 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "recipeType": "QUICK",
-        "servings": 2,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
+        "type": "SKIP",
       },
     ],
-    "dateIndex": 2,
+    "dateIndex": 3,
     "mealIndex": 0,
   },
   Object {
@@ -143,7 +152,7 @@ Array [
         "type": "SKIP",
       },
     ],
-    "dateIndex": 3,
+    "dateIndex": 4,
     "mealIndex": 0,
   },
   Object {
@@ -173,10 +182,16 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "type": "SKIP",
+        "recipeType": "FANCY",
+        "servings": 2,
+        "type": "COOK",
+      },
+      Object {
+        "leftovers": false,
+        "type": "EAT",
       },
     ],
-    "dateIndex": 4,
+    "dateIndex": 5,
     "mealIndex": 0,
   },
   Object {
@@ -212,16 +227,10 @@ Array [
   Object {
     "actions": Array [
       Object {
-        "recipeType": "FANCY",
-        "servings": 2,
-        "type": "COOK",
-      },
-      Object {
-        "leftovers": false,
-        "type": "EAT",
+        "type": "SKIP",
       },
     ],
-    "dateIndex": 5,
+    "dateIndex": 6,
     "mealIndex": 0,
   },
   Object {
@@ -247,15 +256,6 @@ Array [
     ],
     "dateIndex": 6,
     "mealIndex": 2,
-  },
-  Object {
-    "actions": Array [
-      Object {
-        "type": "SKIP",
-      },
-    ],
-    "dateIndex": 6,
-    "mealIndex": 0,
   },
 ]
 `;

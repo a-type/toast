@@ -8,9 +8,9 @@ export const Document = gql`
   query CalendarPlan($startDate: Date!, $endDate: Date) {
     plan {
       id
+      groceryDay
       schedule {
         id
-        groceryDay
       }
 
       meals(startDate: $startDate, endDate: $endDate) {

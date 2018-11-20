@@ -18,9 +18,6 @@ export type ScheduleMeal = {
 type BaseScheduleData = {
   id?: string;
   defaultServings: number;
-  groceryDay?: number;
-  startDay?: number;
-  startMeal?: number;
   strategy?: ScheduleStrategy;
   meals: ScheduleMeal[];
   warnings: string[];
@@ -38,8 +35,6 @@ const createEmpty = (scheduleId): ScheduleData => {
   return {
     id: scheduleId,
     defaultServings: 2,
-    groceryDay: 0,
-    startMeal: 2,
     strategy: ScheduleStrategy.Basic,
 
     meals: new Array(21).fill(null).map((__, mealIndex) => ({
@@ -81,18 +76,6 @@ export default class Schedule {
     return this.data.defaultServings;
   }
 
-  get groceryDay() {
-    return this.data.groceryDay;
-  }
-
-  get startDay() {
-    return this.data.startDay;
-  }
-
-  get startMeal() {
-    return this.data.startMeal;
-  }
-
   get meals() {
     return [...this.data.meals];
   }
@@ -112,18 +95,6 @@ export default class Schedule {
   set defaultServings(defaultServings) {
     this.data.defaultServings = defaultServings || 2;
     this.updateTemplateWeek();
-  }
-
-  set groceryDay(groceryDay) {
-    this.data.groceryDay = groceryDay || null;
-  }
-
-  set startDay(startDay) {
-    this.data.startDay = startDay || null;
-  }
-
-  set startMeal(startMeal) {
-    this.data.startMeal = startMeal || null;
   }
 
   set strategy(strategy) {
@@ -183,8 +154,6 @@ export default class Schedule {
     return new Schedule({
       id,
       defaultServings: 2,
-      groceryDay: 0,
-      startMeal: 2,
       strategy: ScheduleStrategy.Basic,
 
       meals: new Array(21).fill(null).map((__, mealIndex) => ({
