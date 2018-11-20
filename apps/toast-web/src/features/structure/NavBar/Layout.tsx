@@ -26,7 +26,6 @@ export default styled.div`
     width: auto;
     height: calc(var(--rhythm) * 2);
     padding: 0 var(--spacing-lg);
-    width: 900px;
     grid-gap: var(--spacing-lg);
   }
 
@@ -34,7 +33,5 @@ export default styled.div`
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-
-    max-width: 1200px;
   }
 `;

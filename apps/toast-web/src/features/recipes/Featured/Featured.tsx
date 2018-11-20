@@ -4,10 +4,9 @@ import { Query } from 'react-apollo';
 import { Content } from 'components/layouts';
 import { Disconnected } from 'components/generic';
 import { RecipeCards } from 'features/recipes';
-import Spotlight from './SpotlightRecipe';
+import { Spotlight } from 'features/recipes/components';
 import { pathOr } from 'ramda';
 import { H2 } from 'components/typeset';
-import { PrioritizedPromotion } from '../../promotions';
 
 const FeaturedRecipes = gql`
   query FeaturedRecipes($count: Int!) {
@@ -26,25 +25,26 @@ const FeaturedRecipes = gql`
   ${Spotlight.fragments.recipe}
 `;
 
-export default () => (
+export default props => (
+  <Content {...props}>
   <Query query={FeaturedRecipes} variables={{ count: 10 }}>
     {({ data, loading, error }) => {
       if (loading) {
         return (
-          <Content>
+          <React.Fragment>
             <Spotlight.Skeleton />
             <H2>Popular Recipes</H2>
             <RecipeCards.Skeleton />
-          </Content>
+          </React.Fragment>
         );
       }
 
       if (error) {
         return (
-          <Content>
+          <React.Fragment>
             <Spotlight.Skeleton />
             <Disconnected />
-          </Content>
+          </React.Fragment>
         );
       }
 
@@ -52,14 +52,12 @@ export default () => (
 
       return (
         <React.Fragment>
-          <PrioritizedPromotion />
-          <Content>
-            <Spotlight recipe={recipes[0]} />
-            <H2>Popular Recipes</H2>
-            <RecipeCards recipes={recipes.slice(1)} />
-          </Content>
+          <Spotlight recipe={recipes[0]} />
+          <H2>Popular Recipes</H2>
+          <RecipeCards recipes={recipes.slice(1)} />
         </React.Fragment>
       );
     }}
   </Query>
+  </Content>
 );

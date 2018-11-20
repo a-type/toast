@@ -6,7 +6,7 @@ import styled from 'styled-components';
  */
 export default styled(Content)`
   --color-content-foreground: var(--color-white);
-  --color-content-background: #7d746a70;
+  --color-content-background: #7d6a6a9c;
   --color-heading: var(--color-white);
   --color-field-background: var(--color-brand-dark);
   --color-field-foreground: var(--color-white);

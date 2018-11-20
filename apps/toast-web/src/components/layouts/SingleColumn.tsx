@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
 
-const TOP_SPACE = '65px';
-
 const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   width: 100%;
   display: flex;
@@ -12,7 +10,6 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   position: relative;
   z-index: 1;
   pointer-events: none;
-  margin-top: ${TOP_SPACE};
 
   & > * {
     pointer-events: initial;
@@ -39,9 +36,8 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
 
   & .${CLASS_NAMES.HERO} {
     width: 100%;
-    margin-top: -${TOP_SPACE};
     justify-content: flex-end;
-    padding-top: ${TOP_SPACE};
+    padding-top: var(--spacing-xl);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
     padding-bottom: var(--spacing-lg);

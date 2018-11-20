@@ -31,7 +31,7 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
   const mealDays = groupMeals(meals);
 
   return (
-    <Content {...rest}>
+    <div {...rest}>
       {mealDays.map((dayMeals, index) => {
         const date = dayMeals[0].date;
         return (
@@ -59,7 +59,7 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
           <Button>Next</Button>
         </Link>
       </Controls>
-    </Content>
+    </div>
   );
 };
 
