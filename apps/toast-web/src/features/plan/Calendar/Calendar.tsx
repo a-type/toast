@@ -14,15 +14,6 @@ import { PlanMeal } from 'generated/schema';
 import { cold } from 'react-hot-loader';
 import GroceryDayBanner from '../GroceryDayBanner';
 
-const getDayIndex = (
-  today: Date,
-  planStartWeekDate: number,
-  planWeekIndex: number,
-) => {
-  const startDate = addDays(new Date(planStartWeekDate), planWeekIndex * 7);
-  return Math.max(0, Math.min(6, differenceInDays(today, startDate)));
-};
-
 interface CalendarProps {
   date: Date;
 }

@@ -6,6 +6,7 @@
   "scripts": {
     "dev:run": "node --inspect=9229 -r ts-node/register src/server.ts",
     "dev": "cross-env NODE_PATH=src nodemon",
+    "dev:mock": "cross-env NODE_PATH=src nodemon --config nodemon-mock.json",
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "node ./db/indexes.js",
     "db-init": "run-s db:*",
@@ -20,7 +21,7 @@
     "containerize:clean": "rimraf client",
     "containerize": "run-s containerize:*",
     "start": "cross-env NODE_PATH=build node build/server.js",
-    "mock": "npm run dev -- --mock"
+    "mock": "npm run dev:mock"
   },
   "repository": {
     "type": "git",

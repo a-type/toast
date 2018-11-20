@@ -1,10 +1,10 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Content, Hero } from 'components/layouts';
+import { Content } from 'components/layouts';
 import { Disconnected } from 'components/generic';
 import { RecipeCards } from 'features/recipes';
-import Spotlight from './Spotlight';
+import Spotlight from './SpotlightRecipe';
 import { pathOr } from 'ramda';
 import { H2 } from 'components/typeset';
 import { PrioritizedPromotion } from '../../promotions';
@@ -31,28 +31,20 @@ export default () => (
     {({ data, loading, error }) => {
       if (loading) {
         return (
-          <React.Fragment>
-            <Hero loading>
-              <Spotlight.Skeleton />
-            </Hero>
-            <Content>
-              <H2>Popular Recipes</H2>
-              <RecipeCards.Skeleton />
-            </Content>
-          </React.Fragment>
+          <Content>
+            <Spotlight.Skeleton />
+            <H2>Popular Recipes</H2>
+            <RecipeCards.Skeleton />
+          </Content>
         );
       }
 
       if (error) {
         return (
-          <React.Fragment>
-            <Hero loading>
-              <Spotlight.Skeleton />
-            </Hero>
-            <Content>
-              <Disconnected />
-            </Content>
-          </React.Fragment>
+          <Content>
+            <Spotlight.Skeleton />
+            <Disconnected />
+          </Content>
         );
       }
 
@@ -60,11 +52,9 @@ export default () => (
 
       return (
         <React.Fragment>
-          <Hero image={pathOr(null, ['coverImage'], recipes[0])}>
-            <Spotlight recipe={recipes[0]} />
-          </Hero>
           <PrioritizedPromotion />
           <Content>
+            <Spotlight recipe={recipes[0]} />
             <H2>Popular Recipes</H2>
             <RecipeCards recipes={recipes.slice(1)} />
           </Content>

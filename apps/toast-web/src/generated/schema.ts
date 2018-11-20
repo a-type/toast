@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-19T18:40:04-05:00 */
+/** Generated in 2018-11-20T11:09:12-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -1462,6 +1462,8 @@ export namespace PlanPreviewMeal {
     id: string;
 
     dayIndex: number;
+
+    dateIndex: number;
 
     mealIndex: number;
 
