@@ -20,7 +20,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
   const date = meals[0].date;
 
   return (
-    <Content {...rest}>
+    <div {...rest}>
       <H1>{formatDay(date)}</H1>
       <Meals meals={meals} />
       <Controls>
@@ -41,7 +41,7 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
           <Button.Ghost spaceBelow="lg">Edit your Plan</Button.Ghost>
         </Link>
       </Controls>
-    </Content>
+    </div>
   );
 };
 

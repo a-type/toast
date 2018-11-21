@@ -24,9 +24,7 @@ export default styled.div`
 
   @media (min-width: 1000px) {
     width: auto;
-    height: calc(var(--rhythm) * 2);
-    padding: 0 var(--spacing-lg);
-    width: 900px;
+    padding: var(--spacing-md) var(--spacing-lg);
     grid-gap: var(--spacing-lg);
   }
 
@@ -34,7 +32,5 @@ export default styled.div`
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-
-    max-width: 1200px;
   }
 `;

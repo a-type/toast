@@ -67,6 +67,7 @@ Meal.fragments = {
     fragment PlanPreviewMeal on PlanMeal {
       id
       dayIndex
+      dateIndex
       mealIndex
       actions {
         id

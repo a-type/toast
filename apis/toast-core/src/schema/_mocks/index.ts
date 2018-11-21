@@ -12,8 +12,6 @@ export default {
     title: casual.title,
     description: () => casual.sentences(casual.integer(0, 2)),
     published: () => true,
-    ingredients: () => new MockList([2, 8]),
-    steps: () => new MockList([4, 12]),
     coverImage: () => {
       if (casual.integer(0, 10) < 5) {
         return {
@@ -71,4 +69,6 @@ export default {
   Image: () => ({
     url: (casual as any).image,
   }),
+
+  Date: () => new Date(casual.date()),
 };

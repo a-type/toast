@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { AnonLanding, UserLanding } from './components';
-import { IsLoggedIn } from 'features/auth/gates';
+import { UserLanding } from './components';
 
-const LandingPage = () => (
-  <IsLoggedIn fallback={<AnonLanding />}>
-    <UserLanding />
-  </IsLoggedIn>
-);
+const LandingPage = () => <UserLanding />;
 
 export default LandingPage;

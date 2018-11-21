@@ -9,7 +9,7 @@ export default ({ authorId, recipeId, displayType }) => {
   return (
     <Gate
       condition={({ user, scopes }) =>
-        (user.id === authorId && scopes.includes(`update:${scopeType}`)) ||
+        (user && user.id === authorId && scopes.includes(`update:${scopeType}`)) ||
         scopes.includes(`update:any:${scopeType}`)
       }
     >

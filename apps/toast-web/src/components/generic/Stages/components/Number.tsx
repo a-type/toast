@@ -14,22 +14,23 @@ const chooseBorderStyle = props =>
 
 const chooseBorderColor = props => {
   if (props.active) {
-    return 'var(--color-brand)';
+    return 'var(--color-control-background)';
   }
   if (props.complete) {
     return 'var(--color-positive)';
   }
   if (props.available) {
-    return 'var(--color-brand)';
+    return 'var(--color-control-background)';
   }
   return 'var(--color-gray-light)';
 };
 
-const chooseColor = props => (props.active ? 'var(--color-white)' : 'inherit');
+const chooseColor = props =>
+  props.active ? 'var(--color-control-foreground)' : 'inherit';
 
 const chooseBackground = props => {
   if (props.active) {
-    return 'var(--color-brand)';
+    return 'var(--color-control-background)';
   }
   return 'transparent';
 };

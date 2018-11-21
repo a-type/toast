@@ -5,9 +5,9 @@ export const getColor = value => {
     case 'NONE':
       return 'var(--color-negative)';
     case 'SHORT':
-      return 'var(--color-brand)';
+      return 'var(--color-brand-light)';
     case 'MEDIUM':
-      return 'var(--color-brand)';
+      return 'var(--color-brand-light)';
     case 'LONG':
       return 'var(--color-positive)';
     case 'SKIP':
@@ -79,9 +79,9 @@ export const getIconColor = value => {
     case 'NONE':
       return 'var(--color-negative-light)';
     case 'SHORT':
-      return 'var(--color-brand-light)';
+      return 'var(--color-brand)';
     case 'MEDIUM':
-      return 'var(--color-brand-light)';
+      return 'var(--color-brand)';
     case 'LONG':
       return 'var(--color-positive-light)';
     case 'SKIP':

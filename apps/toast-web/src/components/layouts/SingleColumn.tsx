@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
-
-const TOP_SPACE = '65px';
+import Context from './layoutContext';
+import { ContentArea } from './types';
 
 const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   width: 100%;
@@ -12,7 +12,6 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   position: relative;
   z-index: 1;
   pointer-events: none;
-  margin-top: ${TOP_SPACE};
 
   & > * {
     pointer-events: initial;
@@ -39,9 +38,8 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
 
   & .${CLASS_NAMES.HERO} {
     width: 100%;
-    margin-top: -${TOP_SPACE};
     justify-content: flex-end;
-    padding-top: ${TOP_SPACE};
+    padding-top: var(--spacing-xl);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
@@ -94,19 +92,27 @@ export interface SingleColumnLayoutProps {
   children: React.ReactNode;
 }
 
+// single column just uses a static context.
+const context = {
+  activeContents: new Set<ContentArea>(['main', 'secondary']),
+  setActiveContent: () => {},
+};
+
 const SingleColumnLayout: React.SFC<SingleColumnLayoutProps> = ({
   children,
   wide,
   className,
   ...rest
 }) => (
-  <Layout
-    wide={wide}
-    className={classnames(className, CLASS_NAMES.LAYOUT)}
-    {...rest}
-  >
-    {children}
-  </Layout>
+  <Context.Provider value={context}>
+    <Layout
+      wide={wide}
+      className={classnames(className, CLASS_NAMES.LAYOUT)}
+      {...rest}
+    >
+      {children}
+    </Layout>
+  </Context.Provider>
 );
 
 export default SingleColumnLayout;
