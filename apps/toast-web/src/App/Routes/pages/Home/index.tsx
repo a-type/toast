@@ -1,11 +1,17 @@
 import React from 'react';
-import Featured from 'features/recipes/Featured';
-import { TwoColumn } from 'components/layouts';
-import { QuickView } from 'features/plan/Calendar';
+import { SingleColumn } from 'components/layouts';
+import { IsLoggedIn } from 'features/auth/gates';
+import AnonLanding from './AnonLanding';
+import { Redirect } from 'react-router-dom';
 
 export default () => (
-  <TwoColumn>
-    <QuickView data-grid-area="secondary" />
-    <Featured data-grid-area="main" />
-  </TwoColumn>
+  <IsLoggedIn
+    fallback={
+      <SingleColumn>
+        <AnonLanding />
+      </SingleColumn>
+    }
+  >
+    <Redirect to="/plan" />
+  </IsLoggedIn>
 );

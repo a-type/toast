@@ -6,6 +6,7 @@ import auth from 'services/auth';
 import { Consumer } from 'features/auth/TokenContext';
 import { path } from 'ramda';
 import LoginButton from './LoginButton';
+import { IsLoggedIn } from 'features/auth/gates';
 
 interface InnerSelfLinkProps {
   user: {
@@ -23,6 +24,11 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
     auth.logout();
   };
 
+  renderAvatar = () => {
+    const { user } = this.props;
+    return <Avatar avatarUrl={path(['picture'], user)} />;
+  };
+
   renderTipContent = () => {
     const { user } = this.props;
 
@@ -32,7 +38,7 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
 
     return (
       <LinkStack>
-        <Avatar avatarUrl={path(['picture'], user)} />
+        {this.renderAvatar()}
         <Link.Clear to={`/users/${user.sub}`}>
           <Button.Ghost>Profile</Button.Ghost>
         </Link.Clear>
@@ -45,7 +51,17 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
     return (
       <Tip.Toggle tipContent={this.renderTipContent()}>
         {({ ref, onClick }) => (
-          <Button.Icon name="three-dots-symbol" ref={ref} onClick={onClick} />
+          <IsLoggedIn
+            fallback={
+              <Button.Icon
+                name="three-dots-symbol"
+                ref={ref}
+                onClick={onClick}
+              />
+            }
+          >
+            {this.renderAvatar()}
+          </IsLoggedIn>
         )}
       </Tip.Toggle>
     );

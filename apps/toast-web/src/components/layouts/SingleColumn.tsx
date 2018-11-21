@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { CLASS_NAMES } from './constants';
 import classnames from 'classnames';
+import Context from './layoutContext';
+import { ContentArea } from './types';
 
 const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   width: 100%;
@@ -90,19 +92,27 @@ export interface SingleColumnLayoutProps {
   children: React.ReactNode;
 }
 
+// single column just uses a static context.
+const context = {
+  activeContents: new Set<ContentArea>(['main', 'secondary']),
+  setActiveContent: () => {},
+};
+
 const SingleColumnLayout: React.SFC<SingleColumnLayoutProps> = ({
   children,
   wide,
   className,
   ...rest
 }) => (
-  <Layout
-    wide={wide}
-    className={classnames(className, CLASS_NAMES.LAYOUT)}
-    {...rest}
-  >
-    {children}
-  </Layout>
+  <Context.Provider value={context}>
+    <Layout
+      wide={wide}
+      className={classnames(className, CLASS_NAMES.LAYOUT)}
+      {...rest}
+    >
+      {children}
+    </Layout>
+  </Context.Provider>
 );
 
 export default SingleColumnLayout;

@@ -15,11 +15,11 @@ const NavBar = () => {
         <Logo />
       </Link>
       <Controls data-grid-area="controls">
+        <PlanButton />
+        <ShoppingListButton />
         <Link nav to="/search" tabIndex={-1}>
           <Button.Icon name="search" />
         </Link>
-        <PlanButton />
-        <ShoppingListButton />
         <ProfileButton />
       </Controls>
     </Layout>

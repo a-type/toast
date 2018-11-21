@@ -24,8 +24,7 @@ export default styled.div`
 
   @media (min-width: 1000px) {
     width: auto;
-    height: calc(var(--rhythm) * 2);
-    padding: 0 var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
     grid-gap: var(--spacing-lg);
   }
 

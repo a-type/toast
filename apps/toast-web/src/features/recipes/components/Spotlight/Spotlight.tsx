@@ -1,15 +1,15 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Link } from 'components/typeset';
-import { H1, P, Span, H2, Aside } from 'components/typeset';
-import { LikeButton } from 'features/recipes';
+import { H1, P, Span, Aside } from 'components/typeset';
+import LikeButton from 'features/recipes/LikeButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
 
 const Spotlight = ({ recipe }) =>
   recipe ? (
     <Layout>
-      <Image src={path(['coverImage', 'src'], recipe)} data-grid-area="image" />
+      <Image src={path(['coverImage', 'url'], recipe)} data-grid-area="image" />
       <div data-grid-area="details">
         <Link to={`/recipes/${recipe.id}`}>
           <H1>{recipe.title}</H1>

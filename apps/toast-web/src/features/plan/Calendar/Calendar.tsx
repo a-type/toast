@@ -2,14 +2,13 @@ import * as React from 'react';
 import CalendarPlanQuery from './CalendarPlanQuery';
 import { GlobalLoader } from 'components/generic/Loader';
 import { Disconnected } from 'components/generic';
+import { Content } from 'components/layouts';
 import { addDays, differenceInDays, isSameDay } from 'date-fns';
 import logger from 'logger';
 import LandingPage from 'features/plan/LandingPage';
 import { pathOr } from 'ramda';
-import { Layout } from './components';
 import CalendarWeeklyView from './WeekView';
 import CalendarDayView from './DayView';
-import { useMedia } from 'react-use';
 import { PlanMeal } from 'generated/schema';
 import { cold } from 'react-hot-loader';
 import GroceryDayBanner from '../GroceryDayBanner';
@@ -19,11 +18,6 @@ interface CalendarProps {
 }
 
 const Calendar: React.SFC<CalendarProps> = ({ date }) => {
-  const [activeSection, setActiveSection] = React.useState<'day' | 'calendar'>(
-    'day',
-  );
-  const isWide = useMedia('(min-width: 1000px)');
-
   return (
     <CalendarPlanQuery
       variables={{ startDate: date, endDate: addDays(date, 7) }}
@@ -52,23 +46,16 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
         return (
           <React.Fragment>
             <GroceryDayBanner groceryDay={groceryDay} />
-            <Layout isWide={isWide}>
-              {(isWide || activeSection === 'calendar') && (
-                <CalendarWeeklyView
-                  setActiveSection={setActiveSection}
-                  meals={meals}
-                  groceryDay={groceryDay}
-                  data-grid-area="calendar"
-                />
-              )}
-              {(isWide || activeSection === 'day') && (
-                <CalendarDayView
-                  setActiveSection={setActiveSection}
-                  meals={dayMeals}
-                  data-grid-area="day"
-                />
-              )}
-            </Layout>
+            <Content contentArea="secondary">
+              <CalendarWeeklyView
+                setActiveSection={() => {}}
+                meals={meals}
+                groceryDay={groceryDay}
+              />
+            </Content>
+            <Content contentArea="main">
+              <CalendarDayView setActiveSection={() => {}} meals={dayMeals} />
+            </Content>
           </React.Fragment>
         );
       }}
