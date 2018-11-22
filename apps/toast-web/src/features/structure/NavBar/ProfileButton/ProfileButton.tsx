@@ -24,11 +24,6 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
     auth.logout();
   };
 
-  renderAvatar = () => {
-    const { user } = this.props;
-    return <Avatar avatarUrl={path(['picture'], user)} />;
-  };
-
   renderTipContent = () => {
     const { user } = this.props;
 
@@ -38,7 +33,7 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
 
     return (
       <LinkStack>
-        {this.renderAvatar()}
+        <Avatar avatarUrl={path(['picture'], user)} />
         <Link.Clear to={`/users/${user.sub}`}>
           <Button.Ghost>Profile</Button.Ghost>
         </Link.Clear>
@@ -48,6 +43,8 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
   };
 
   render() {
+    const { user } = this.props;
+
     return (
       <Tip.Toggle tipContent={this.renderTipContent()}>
         {({ ref, onClick }) => (
@@ -60,7 +57,11 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
               />
             }
           >
-            {this.renderAvatar()}
+            <Avatar
+              avatarUrl={path(['picture'], user)}
+              ref={ref}
+              onClick={onClick}
+            />
           </IsLoggedIn>
         )}
       </Tip.Toggle>

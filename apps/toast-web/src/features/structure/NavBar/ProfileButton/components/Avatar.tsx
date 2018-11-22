@@ -24,10 +24,12 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   avatarUrl: string;
 }
 
-const Avatar: React.SFC<AvatarProps> = ({ onClick, avatarUrl, ...rest }) => (
-  <Circle avatarUrl={avatarUrl} onClick={onClick} {...rest}>
-    {!avatarUrl && <Icon name="profile-picture" />}
-  </Circle>
+const Avatar = React.forwardRef(
+  ({ onClick, avatarUrl, ...rest }: AvatarProps, ref) => (
+    <Circle avatarUrl={avatarUrl} onClick={onClick} ref={ref as any} {...rest}>
+      {!avatarUrl && <Icon name="profile-picture" />}
+    </Circle>
+  ),
 );
 
 export default Avatar;

@@ -166,11 +166,16 @@ export default class Meal {
       id: Meal.getId(newDateIndex, this.mealIndex),
     });
     // update eat action links
-    clone.data.actions.forEach(action => {
-      if (isEatAction(action)) {
-        action.cookActionId = Meal.moveActionId(action.cookActionId, moveWeeks);
-      }
-    });
+    if (clone.data.actions) {
+      clone.data.actions.forEach(action => {
+        if (isEatAction(action)) {
+          action.cookActionId = Meal.moveActionId(
+            action.cookActionId,
+            moveWeeks,
+          );
+        }
+      });
+    }
 
     return clone;
   };
