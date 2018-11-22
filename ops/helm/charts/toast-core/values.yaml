@@ -52,6 +52,9 @@ application:
   storage:
     bucketNameSecretName: media-bucket-prod
     projectIdSecretName: project-id
+  service:
+    serviceAccountSecretName: toast-core-service-account
+    serviceAccountSecretKey: key.json
 
 auth0:
   domain: toastcooking.auth0.com

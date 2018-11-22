@@ -27,6 +27,9 @@ spec:
             - name: https
               containerPort: {{ .Values.application.port }}
               protocol: TCP
+          volumeMounts:
+            - name: service-account-secret
+              mountPath: /var/secrets/service-account
           env:
             - name: NEO4J_USERNAME
               valueFrom:
@@ -57,6 +60,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.application.storage.projectIdSecretName }}
                   key: id
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/service-account/key.json
             - name: AUTH0_DOMAIN
               value: '{{ .Values.auth0.domain }}'
             - name: AUTH0_CLIENTID
@@ -82,3 +87,6 @@ spec:
         - name: tls-secret
           secret:
             secretName: {{ .Values.ingress.tls.secretName }}
+        - name: service-account-secret
+          secret:
+            secretName: {{ .Values.application.service.serviceAccountSecretName }}
