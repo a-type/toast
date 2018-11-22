@@ -60,7 +60,12 @@ export default class Schedule {
     const incomingData = data || createEmpty(generateId('schedule'));
     this.data = {
       ...incomingData,
-      templateWeek: incomingData.templateWeek.map<Meal>(meal => new Meal(meal)),
+      templateWeek: incomingData.templateWeek.map<Meal>(meal => {
+        if (meal instanceof Meal) {
+          return meal;
+        }
+        return new Meal(meal);
+      }),
     };
   }
 

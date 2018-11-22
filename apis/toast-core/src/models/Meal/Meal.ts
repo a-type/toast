@@ -152,7 +152,7 @@ export default class Meal {
   };
 
   clone = (overrides: Partial<MealData>) => {
-    return new Meal(mergeDeepRight(this.data, overrides));
+    return new Meal({ ...this.data, ...overrides });
   };
 
   /**

@@ -60,9 +60,13 @@ export class Auth extends EventEmitter {
     localStorage.removeItem(ID_TOKEN_KEY);
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(EXPIRES_AT_KEY);
+    localStorage.removeItem(SCOPES_KEY);
     clearTimeout(this.renewalTimeout);
     this.emit(this.eventTypes.tokenStored);
     mixpanel.track('logout');
+    this.auth0.logout({
+      returnTo: window.location.origin + '/',
+    });
     history.replace('/');
   };
 

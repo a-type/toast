@@ -1,11 +1,14 @@
 import React from 'react';
 import { Button, Link } from 'components/generic';
+import { IsLoggedIn } from 'features/auth/gates';
 
 const PlanButton = props => {
   return (
-    <Link nav to="/plan" tabIndex={-1} {...props}>
-      <Button.Icon name="calendar" />
-    </Link>
+    <IsLoggedIn>
+      <Link nav to="/plan" tabIndex={-1} {...props}>
+        <Button.Icon name="calendar" />
+      </Link>
+    </IsLoggedIn>
   );
 };
 
