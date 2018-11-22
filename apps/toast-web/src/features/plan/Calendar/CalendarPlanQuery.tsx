@@ -6,19 +6,21 @@ import CalendarMeal from './CalendarMeal';
 
 export const Document = gql`
   query CalendarPlan($startDate: Date!, $endDate: Date) {
-    plan {
-      id
-      groceryDay
-      schedule {
+    group {
+      plan {
         id
-      }
+        groceryDay
+        schedule {
+          id
+        }
 
-      meals(startDate: $startDate, endDate: $endDate) {
-        id
-        date
-        dayIndex
-        mealIndex
-        ...CalendarMeal
+        meals(startDate: $startDate, endDate: $endDate) {
+          id
+          date
+          dayIndex
+          mealIndex
+          ...CalendarMeal
+        }
       }
     }
   }

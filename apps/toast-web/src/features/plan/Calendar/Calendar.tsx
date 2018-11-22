@@ -3,14 +3,14 @@ import CalendarPlanQuery from './CalendarPlanQuery';
 import { GlobalLoader } from 'components/generic/Loader';
 import { Disconnected } from 'components/generic';
 import { Content } from 'components/layouts';
-import { addDays, differenceInDays, isSameDay } from 'date-fns';
+import { addDays, isSameDay } from 'date-fns';
 import logger from 'logger';
-import LandingPage from 'features/plan/LandingPage';
 import { pathOr } from 'ramda';
 import CalendarWeeklyView from './WeekView';
 import CalendarDayView from './DayView';
 import { PlanMeal } from 'generated/schema';
 import { cold } from 'react-hot-loader';
+import { Redirect } from 'react-router-dom';
 import GroceryDayBanner from '../GroceryDayBanner';
 
 interface CalendarProps {
@@ -32,12 +32,16 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
           return <Disconnected />;
         }
 
-        if (!data || !data.plan) {
-          return <LandingPage />;
+        if (!data || !data.group) {
+          return <Redirect to="/plan/setup" />;
         }
 
-        const groceryDay = pathOr(0, ['plan', 'groceryDay'], data);
-        const meals = pathOr(null, ['plan', 'meals'], data) as PlanMeal[];
+        const groceryDay = pathOr(0, ['group', 'plan', 'groceryDay'], data);
+        const meals = pathOr(
+          null,
+          ['group', 'plan', 'meals'],
+          data,
+        ) as PlanMeal[];
 
         const dayMeals = meals
           .filter(meal => isSameDay(meal.date, date))

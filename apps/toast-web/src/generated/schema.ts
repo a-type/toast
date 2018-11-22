@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-20T11:09:12-05:00 */
+/** Generated in 2018-11-22T11:43:05-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -49,6 +49,8 @@ export interface Query {
   me?: User | null;
 
   user?: User | null;
+
+  group?: Group | null;
 
   plan?: Plan | null;
 
@@ -199,14 +201,8 @@ export interface Group {
   id: string;
 
   members: User[];
-}
 
-export interface RecipeSearchResponse {
-  items: (Recipe | null)[];
-}
-
-export interface IngredientSearchResponse {
-  items: (Ingredient | null)[];
+  plan?: Plan | null;
 }
 
 export interface Plan {
@@ -281,6 +277,14 @@ export interface ShoppingListIngredient {
   unit?: string | null;
 }
 
+export interface RecipeSearchResponse {
+  items: (Recipe | null)[];
+}
+
+export interface IngredientSearchResponse {
+  items: (Ingredient | null)[];
+}
+
 export interface Message {
   id: string;
 
@@ -343,6 +347,8 @@ export interface Mutation {
   unlikeRecipe: Recipe;
 
   mergeUser?: User | null;
+
+  createPlan: Plan;
 
   setGroceryDay: Plan;
 
@@ -932,6 +938,12 @@ export namespace CalendarPlan {
   export type Query = {
     __typename?: 'Query';
 
+    group?: Group | null;
+  };
+
+  export type Group = {
+    __typename?: 'Group';
+
     plan?: Plan | null;
   };
 
@@ -1038,6 +1050,22 @@ export namespace RecipeSuggestions {
   export type DiscoveredRecipes = RecipeCard.Fragment;
 
   export type LikedRecipes = RecipeCard.Fragment;
+}
+
+export namespace CreatePlan {
+  export type Variables = {};
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    createPlan: CreatePlan;
+  };
+
+  export type CreatePlan = {
+    __typename?: 'Plan';
+
+    id: string;
+  };
 }
 
 export namespace FeaturedRecipes {
@@ -1534,6 +1562,8 @@ export namespace RecipeSpotlight {
     attribution?: string | null;
 
     author?: Author | null;
+
+    coverImage?: CoverImage | null;
   } & LikeButton.Fragment;
 
   export type Author = {
@@ -1542,6 +1572,14 @@ export namespace RecipeSpotlight {
     id: string;
 
     name?: string | null;
+  };
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
   };
 }
 

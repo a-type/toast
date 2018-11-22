@@ -1,10 +1,9 @@
 import React from 'react';
 import { TwoColumn, SingleColumn } from 'components/layouts';
 import { Edit } from 'features/schedule';
-import { Calendar, LandingPage } from 'features/plan';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Calendar, Setup } from 'features/plan';
+import { Switch, Route } from 'react-router-dom';
 import { path } from 'ramda';
-import { IsLoggedIn } from 'features/auth/gates';
 import { parse, startOfDay } from 'date-fns';
 
 export default () => (
@@ -12,11 +11,17 @@ export default () => (
     <Route
       path="/plan/edit"
       render={props => (
-        <IsLoggedIn fallback={<Redirect to="/plan" />}>
-          <SingleColumn>
-            <Edit {...props} />
-          </SingleColumn>
-        </IsLoggedIn>
+        <SingleColumn>
+          <Edit {...props} />
+        </SingleColumn>
+      )}
+    />
+    <Route
+      path="/plan/setup"
+      render={() => (
+        <SingleColumn>
+          <Setup />
+        </SingleColumn>
       )}
     />
     <Route
@@ -26,17 +31,9 @@ export default () => (
 
         const date = dateParam ? parse(dateParam) : startOfDay(Date.now());
         return (
-          <IsLoggedIn
-            fallback={
-              <SingleColumn>
-                <LandingPage />
-              </SingleColumn>
-            }
-          >
-            <TwoColumn tabNames={['Day', 'Week']}>
-              <Calendar date={date} />
-            </TwoColumn>
-          </IsLoggedIn>
+          <TwoColumn tabNames={['Day', 'Week']}>
+            <Calendar date={date} />
+          </TwoColumn>
         );
       }}
     />

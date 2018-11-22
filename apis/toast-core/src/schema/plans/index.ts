@@ -6,6 +6,7 @@ import { id } from 'tools';
 import * as meals from './meals';
 import * as schedules from './schedules';
 import * as shoppingList from './shoppingList';
+import { Plan } from 'models';
 
 export const typeDefs = () => [
   gql`
@@ -18,7 +19,12 @@ export const typeDefs = () => [
       plan: Plan
     }
 
+    extend type Group {
+      plan: Plan
+    }
+
     extend type Mutation {
+      createPlan: Plan!
       setGroceryDay(groceryDay: Int!): Plan!
     }
   `,
@@ -35,8 +41,7 @@ export const resolvers = [
         let planId = path<string>(['planId'], group);
 
         if (!planId) {
-          planId = id('plan');
-          await ctx.graph.groups.mergeMine({ planId });
+          return null;
         }
 
         const plan = await ctx.firestore.plans.get(planId);
@@ -45,7 +50,24 @@ export const resolvers = [
       },
     },
 
+    Group: {
+      plan: async (parent, _args, ctx: Context) => {
+        if (parent.planId) {
+          return ctx.firestore.plans.get(parent.planId);
+        }
+        return null;
+      },
+    },
+
     Mutation: {
+      createPlan: async (_parent, args, ctx: Context) => {
+        const planId = id('plan');
+        await ctx.graph.groups.mergeMine({ planId });
+        const plan = Plan.createEmpty(planId);
+        await ctx.firestore.plans.set(plan);
+        return plan;
+      },
+
       setGroceryDay: async (_parent, { groceryDay }, ctx: Context) => {
         const group = await ctx.graph.groups.getMine();
         const planId = path<string>(['planId'], group);

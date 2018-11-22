@@ -16,7 +16,7 @@ export default class Plans {
     const docRef = await document.get();
 
     if (!docRef.exists) {
-      return Plan.createEmpty(planId);
+      return null;
     }
 
     return Plan.fromJSON(docRef.data());

@@ -6,18 +6,14 @@ const Circle = styled<{ avatarUrl: string }, 'div'>('div')`
   border-radius: 100%;
   background: var(--color-white);
   display: flex;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   font-size: 18px;
   cursor: pointer;
 
   background-image: url(${props => props.avatarUrl});
   background-position: center;
   background-size: cover;
-
-  & > * {
-    margin: auto;
-  }
 `;
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {

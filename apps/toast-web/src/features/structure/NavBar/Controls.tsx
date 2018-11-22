@@ -7,6 +7,11 @@ export default styled.div`
   flex-direction: row;
   padding: 2px;
 
+  & > * {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
   & > *:not(:last-child) {
     margin-right: var(--spacing-md);
   }
