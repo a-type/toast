@@ -108,7 +108,7 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
         className={classnames(className, CLASS_NAMES.LAYOUT)}
         {...rest}
       >
-        {!isNarrow && (
+        {isNarrow && (
           <Tabs
             tabNames={tabNames}
             activeTab={activeTab}

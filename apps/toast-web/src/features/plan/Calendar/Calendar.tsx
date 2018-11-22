@@ -17,6 +17,37 @@ interface CalendarProps {
   date: Date;
 }
 
+interface CalendarViewProps {
+  meals: PlanMeal[];
+  groceryDay: number;
+}
+
+const CalendarView: React.SFC<CalendarViewProps> = cold(
+  ({ meals, groceryDay }) => {
+    const [dateIndex, setDateIndex] = React.useState(meals[0].dateIndex);
+
+    const dayMeals = meals
+      .filter(meal => meal.dateIndex === dateIndex)
+      .sort((a, b) => a.mealIndex - b.mealIndex);
+
+    return (
+      <React.Fragment>
+        <GroceryDayBanner groceryDay={groceryDay} />
+        <Content contentArea="secondary">
+          <CalendarWeeklyView
+            setActiveDateIndex={setDateIndex}
+            meals={meals}
+            groceryDay={groceryDay}
+          />
+        </Content>
+        <Content contentArea="main">
+          <CalendarDayView meals={dayMeals} />
+        </Content>
+      </React.Fragment>
+    );
+  },
+);
+
 const Calendar: React.SFC<CalendarProps> = ({ date }) => {
   return (
     <CalendarPlanQuery
@@ -43,25 +74,7 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
           data,
         ) as PlanMeal[];
 
-        const dayMeals = meals
-          .filter(meal => isSameDay(meal.date, date))
-          .sort((a, b) => a.mealIndex - b.mealIndex);
-
-        return (
-          <React.Fragment>
-            <GroceryDayBanner groceryDay={groceryDay} />
-            <Content contentArea="secondary">
-              <CalendarWeeklyView
-                setActiveSection={() => {}}
-                meals={meals}
-                groceryDay={groceryDay}
-              />
-            </Content>
-            <Content contentArea="main">
-              <CalendarDayView setActiveSection={() => {}} meals={dayMeals} />
-            </Content>
-          </React.Fragment>
-        );
+        return <CalendarView meals={meals} groceryDay={groceryDay} />;
       }}
     </CalendarPlanQuery>
   );

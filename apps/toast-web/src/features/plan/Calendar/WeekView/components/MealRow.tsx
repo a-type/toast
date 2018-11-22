@@ -7,6 +7,7 @@ export default styled<{ past?: boolean }, 'div'>('div')`
   grid-template-areas: 'dinner lunch' 'dinner breakfast';
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-lg);
+  pointer-events: none;
 
   opacity: ${props => (props.past ? '0.5' : '1')};
 
