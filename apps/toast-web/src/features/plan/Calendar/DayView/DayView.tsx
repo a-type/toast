@@ -12,6 +12,10 @@ const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
   meals,
   ...rest
 }) => {
+  if (!meals.length) {
+    return null;
+  }
+
   const date = meals[0].date;
 
   return (

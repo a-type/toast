@@ -69,7 +69,7 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
 
         const groceryDay = pathOr(0, ['group', 'plan', 'groceryDay'], data);
         const meals = pathOr(
-          null,
+          [],
           ['group', 'plan', 'meals'],
           data,
         ) as PlanMeal[];
