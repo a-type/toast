@@ -20,10 +20,11 @@ interface CalendarProps {
 interface CalendarViewProps {
   meals: PlanMeal[];
   groceryDay: number;
+  loadNextWeek(): void;
 }
 
 const CalendarView: React.SFC<CalendarViewProps> = cold(
-  ({ meals, groceryDay }) => {
+  ({ meals, groceryDay, loadNextWeek }) => {
     const [dateIndex, setDateIndex] = React.useState(meals[0].dateIndex);
 
     const dayMeals = meals
@@ -33,12 +34,18 @@ const CalendarView: React.SFC<CalendarViewProps> = cold(
     return (
       <React.Fragment>
         <GroceryDayBanner groceryDay={groceryDay} />
-        <Content contentArea="secondary">
-          <CalendarWeeklyView
-            setActiveDateIndex={setDateIndex}
-            meals={meals}
-            groceryDay={groceryDay}
-          />
+        <Content contentArea="secondary" scroll>
+          {({ setActiveContent }) => (
+            <CalendarWeeklyView
+              setActiveDateIndex={dateIndex => {
+                setDateIndex(dateIndex);
+                setActiveContent('main');
+              }}
+              meals={meals}
+              groceryDay={groceryDay}
+              loadNextWeek={loadNextWeek}
+            />
+          )}
         </Content>
         <Content contentArea="main">
           <CalendarDayView meals={dayMeals} />
@@ -52,8 +59,9 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
   return (
     <CalendarPlanQuery
       variables={{ startDate: date, endDate: addDays(date, 7) }}
+      options={{ fetchPolicy: 'cache-and-network' }}
     >
-      {({ data, loading, error }) => {
+      {({ data, loading, error, fetchMore, refetch }) => {
         if (loading) {
           return <GlobalLoader />;
         }
@@ -79,7 +87,43 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
           data,
         ) as PlanMeal[];
 
-        return <CalendarView meals={meals} groceryDay={groceryDay} />;
+        const lastDay = meals[meals.length - 1].date;
+        const loadNextWeek = async () => {
+          await fetchMore({
+            variables: {
+              startDate: addDays(lastDay, 1),
+              endDate: addDays(lastDay, 8),
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) {
+                return prev;
+              }
+              const updated = {
+                ...prev,
+                group: {
+                  ...prev.group,
+                  plan: {
+                    ...prev.group.plan,
+                    meals: [
+                      ...prev.group.plan.meals,
+                      ...fetchMoreResult.group.plan.meals,
+                    ],
+                  },
+                },
+              };
+
+              return updated;
+            },
+          });
+        };
+
+        return (
+          <CalendarView
+            meals={meals}
+            groceryDay={groceryDay}
+            loadNextWeek={loadNextWeek}
+          />
+        );
       }}
     </CalendarPlanQuery>
   );

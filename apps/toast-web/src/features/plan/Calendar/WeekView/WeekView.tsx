@@ -11,12 +11,14 @@ interface CalendarWeeklyViewProps {
   meals: PlanMeal[];
   groceryDay: number;
   setActiveDateIndex(dateIndex: number): void;
+  loadNextWeek(): void;
 }
 
 const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
   meals,
   groceryDay,
   setActiveDateIndex,
+  loadNextWeek,
   ...rest
 }) => {
   // group by day
@@ -33,12 +35,7 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
         />
       ))}
       <Controls>
-        <Link to={`/plan/${formatDateOnly(subDays(meals[0].date, 7))}/0`}>
-          <Button>Previous</Button>
-        </Link>
-        <Link to={`/plan/${formatDateOnly(addDays(meals[0].date, 7))}/0`}>
-          <Button>Next</Button>
-        </Link>
+        <Button onClick={loadNextWeek}>Next</Button>
       </Controls>
     </div>
   );

@@ -55,12 +55,14 @@ const Banner: React.SFC<BannerProps> = ({
 }) => (
   <BannerStyles className={classnames(CLASS_NAMES.BANNER, className)} {...rest}>
     {children}
-    <Icon
-      size="24px"
-      name="delete-button"
-      onClick={onDismiss}
-      className="banner-dismiss"
-    />
+    {onDismiss && (
+      <Icon
+        size="24px"
+        name="delete-button"
+        onClick={onDismiss}
+        className="banner-dismiss"
+      />
+    )}
     <BackdropArt />
   </BannerStyles>
 );

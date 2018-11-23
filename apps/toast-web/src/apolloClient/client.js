@@ -71,6 +71,7 @@ const link = ApolloLink.from(
 const client = new ApolloClient({
   cache,
   link,
+  fragmentMatcher,
 });
 
 export default client;

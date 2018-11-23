@@ -1,33 +1,8 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
-const childProcess = require('child_process');
 const path = require('path');
 
 (async () => {
-  childProcess.execSync('npm run build', {
-    cwd: path.resolve(__dirname, '../apis/toast-core'),
-    stdio: 'inherit',
-  });
-
-  const server = childProcess.exec('npm start', {
-    cwd: path.resolve(__dirname, '../apis/toast-core'),
-  });
-
-  process.on('exit', () => {
-    server.kill();
-  });
-
-  await new Promise(resolve => {
-    server.stdout.on('data', data => {
-      console.info(`SERVER> ${data.toString()}`);
-      if (data.toString().includes('Server ready')) {
-        resolve();
-      }
-    });
-
-    server.stderr.pipe(process.stderr);
-  });
-
   const result = await fetch(`http://localhost:4000/api`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -58,10 +33,7 @@ const path = require('path');
 
   await new Promise((resolve, reject) => {
     fs.writeFile(
-      path.resolve(
-        __dirname,
-        '../apps/toast-web/src/generated/fragmentTypes.json',
-      ),
+      path.resolve(__dirname, '../src/generated/fragmentTypes.json'),
       JSON.stringify(json.data),
       err => {
         if (err) {
@@ -76,7 +48,6 @@ const path = require('path');
   });
 
   console.info('Done');
-  server.kill();
   process.exit(0);
 })().catch(err => {
   process.kill(-1);

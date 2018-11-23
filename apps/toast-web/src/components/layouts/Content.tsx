@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import { CLASS_NAMES } from './constants';
 import styled from 'styled-components';
@@ -6,10 +7,12 @@ import context from './layoutContext';
 import { ContentArea } from './types';
 import { cold } from 'react-hot-loader';
 
-const BaseContentStyles = styled<{}, 'div'>('div')`
+const BaseContentStyles = styled<{ scroll?: boolean }, 'div'>('div')`
   background: var(--color-content-background);
   color: var(--color-content-foreground);
   padding: 0;
+  overflow-y: ${props => (props.scroll ? 'auto' : 'hidden')};
+  overflow-y: ${props => (props.scroll ? 'overlay' : 'hidden')};
 
   @media (min-width: 900px) {
     padding: 0;
@@ -36,11 +39,13 @@ const OverlayContentStyles = styled(BaseContentStyles)`
 export type ContentRenderFunc = (
   contentRenderProps: { setActiveContent(activeContent: ContentArea): void },
 ) => React.ReactNode;
-export type Props = {
+
+export type ContentProps = {
   className?: string;
   mode?: 'default' | 'overlay';
   contentArea?: ContentArea;
   children: React.ReactNode | ContentRenderFunc;
+  scroll?: boolean;
 };
 
 const renderFunctionGuard = (
@@ -54,8 +59,9 @@ const Content = ({
   mode = 'default',
   contentArea = 'main',
   children,
+  scroll,
   ...rest
-}: Props) => {
+}: ContentProps) => {
   const { activeContents, setActiveContent } = React.useContext(context);
 
   if (!activeContents.has(contentArea)) {
@@ -69,10 +75,29 @@ const Content = ({
     ? children({ setActiveContent })
     : children;
 
+  const targetElement = document.querySelector(
+    `[data-content-portal-target=${contentArea}]`,
+  );
+
+  if (targetElement) {
+    return ReactDOM.createPortal(
+      <ContentStyles
+        className={classnames(className, CLASS_NAMES.CONTENT)}
+        data-grid-area={contentArea}
+        scroll={scroll}
+        {...rest}
+      >
+        {renderedChildren}
+      </ContentStyles>,
+      targetElement,
+    );
+  }
+
   return (
     <ContentStyles
       className={classnames(className, CLASS_NAMES.CONTENT)}
       data-grid-area={contentArea}
+      scroll={scroll}
       {...rest}
     >
       {renderedChildren}

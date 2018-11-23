@@ -22,7 +22,12 @@ const CalendarDay: CalendarDayComponent = ({ meals, onSelect, groceryDay }) => {
   const past = isPast(endOfDay(date));
 
   return (
-    <Link onClick={onSelect}>
+    <Link
+      onClick={ev => {
+        ev.preventDefault();
+        onSelect();
+      }}
+    >
       <H3 spaceBelow="sm">
         {formatDay(date)}{' '}
         {groceryDay === getDay(date) && (

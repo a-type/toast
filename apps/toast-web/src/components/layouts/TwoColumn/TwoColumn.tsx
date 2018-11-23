@@ -8,6 +8,9 @@ import { useMedia } from 'react-use';
 import Context from '../layoutContext';
 import { ContentArea } from '../types';
 import Tabs from './Tabs';
+import Tab from './Tab';
+import { Icon } from 'components/generic';
+import Shelf from './Shelf';
 
 const BREAK_POINT = 1200;
 
@@ -39,6 +42,7 @@ const Layout = styled<{ visibleContentAreas: ContentArea[] }, 'div'>('div')`
 
   & .${CLASS_NAMES.CONTENT} {
     padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
     border-radius: var(--border-radius-md);
   }
 
@@ -71,16 +75,19 @@ export interface TwoColumnLayoutProps
   extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   tabNames: string[];
+  tabIcons: string[];
   flipped?: boolean;
 }
 
 const CONTENT_ORDER: ContentArea[] = ['main', 'secondary'];
 const DEFAULT_TAB_NAMES = ['Main', 'Secondary'];
+const DEFAULT_TAB_ICONS = ['three-dots-symbol', 'three-dots-symbol'];
 
 const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
   children,
   className,
   tabNames = DEFAULT_TAB_NAMES,
+  tabIcons = DEFAULT_TAB_ICONS,
   flipped = false,
   ...rest
 }) => {
@@ -97,7 +104,8 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
     (a, b) => CONTENT_ORDER.indexOf(a) - CONTENT_ORDER.indexOf(b),
   );
 
-  const activeTab = tabNames[CONTENT_ORDER.indexOf(activeContentArea)];
+  const contentAreaIndex = CONTENT_ORDER.indexOf(activeContentArea);
+  const activeTab = tabNames[contentAreaIndex];
   const onTabChange = (_, tabIndex) =>
     setActiveContent(CONTENT_ORDER[tabIndex]);
 
@@ -108,14 +116,27 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
         className={classnames(className, CLASS_NAMES.LAYOUT)}
         {...rest}
       >
+        {children}
         {isNarrow && (
-          <Tabs
-            tabNames={tabNames}
-            activeTab={activeTab}
-            onTabChange={onTabChange}
+          <Tab
+            onClick={() =>
+              setActiveContent(
+                activeContentArea === 'main' ? 'secondary' : 'main',
+              )
+            }
+          >
+            <Icon
+              name={activeContentArea === 'main' ? tabIcons[1] : 'next-page'}
+            />{' '}
+            {activeContentArea === 'main' ? tabNames[1] : 'Back'}
+          </Tab>
+        )}
+        {isNarrow && (
+          <Shelf
+            expanded={activeContentArea === 'secondary'}
+            data-content-portal-target="secondary"
           />
         )}
-        {children}
       </Layout>
     </Context.Provider>
   );

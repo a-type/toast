@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Query, QueryResult } from 'react-apollo';
+import { Query, QueryResult, QueryOpts } from 'react-apollo';
 import gql from 'graphql-tag';
 import { CalendarPlan } from 'generated/schema';
 import CalendarMeal from './CalendarMeal';
@@ -30,6 +30,7 @@ export const Document = gql`
 
 interface CalendarPlanQueryProps {
   variables?: CalendarPlan.Variables;
+  options?: QueryOpts;
   skip?: boolean;
   children(
     result: QueryResult<CalendarPlan.Query, CalendarPlan.Variables>,
