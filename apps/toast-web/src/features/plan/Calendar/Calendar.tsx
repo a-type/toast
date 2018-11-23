@@ -63,7 +63,12 @@ const Calendar: React.SFC<CalendarProps> = ({ date }) => {
           return <Disconnected />;
         }
 
-        if (!data || !data.group) {
+        if (
+          !data ||
+          !data.group ||
+          !data.group.plan ||
+          !data.group.plan.meals.length
+        ) {
           return <Redirect to="/plan/setup" />;
         }
 
