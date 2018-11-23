@@ -2,11 +2,12 @@ import * as React from 'react';
 import CalendarMealSetRecipeMutation from './CalendarMealSetRecipeMutation';
 import { RecipeSelector } from 'features/plan';
 import { MealActionCook } from 'generated/schema';
-import { Card, Icon } from 'components/generic';
+import { Card, Icon, Button } from 'components/generic';
 import CardBox from 'components/generic/Card/Box';
 import logger from 'logger';
 import { pathOr } from 'ramda';
 import styled from 'styled-components';
+import { Span } from 'components/typeset';
 
 interface CalendarCookActionProps {
   dateIndex: number;
@@ -58,7 +59,12 @@ export default class CalendarCookAction extends React.Component<
     const recipe = action.recipe || null;
 
     if (recipe) {
-      return <Card imageSrc={this.getCardImage()}>{recipe.title}</Card>;
+      return (
+        <Card imageSrc={this.getCardImage()}>
+          <Span>{recipe.title}</Span>
+          <Button onClick={this.showRecipeSelector}>Change</Button>
+        </Card>
+      );
     }
 
     if (loading) {

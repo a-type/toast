@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-22T21:39:41-05:00 */
+/** Generated in 2018-11-23T13:55:15-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -661,11 +661,6 @@ export interface MealsPlanArgs {
 export interface SchedulePlanArgs {
   scheduleId?: string | null;
 }
-export interface ShoppingListPlanArgs {
-  startDate?: Date | null;
-
-  endDate?: Date | null;
-}
 export interface TemplateWeekScheduleArgs {
   strategy: ScheduleStrategy;
 }
@@ -786,13 +781,9 @@ export interface SetScheduleStrategyMutationArgs {
   strategy?: ScheduleStrategy | null;
 }
 export interface MarkPurchasedMutationArgs {
-  shoppingListId: string;
-
   ingredientId: string;
 }
 export interface MarkUnpurchasedMutationArgs {
-  shoppingListId: string;
-
   ingredientId: string;
 }
 export interface ShowMessageMutationArgs {
@@ -1269,10 +1260,7 @@ export namespace SearchRecipes {
 }
 
 export namespace GetShoppingList {
-  export type Variables = {
-    startDate?: Date | null;
-    endDate?: Date | null;
-  };
+  export type Variables = {};
 
   export type Query = {
     __typename?: 'Query';
@@ -1295,7 +1283,6 @@ export namespace GetShoppingList {
 
 export namespace MarkPurchased {
   export type Variables = {
-    shoppingListId: string;
     ingredientId: string;
   };
 
@@ -1310,7 +1297,6 @@ export namespace MarkPurchased {
 
 export namespace MarkUnpurchased {
   export type Variables = {
-    shoppingListId: string;
     ingredientId: string;
   };
 
@@ -1381,16 +1367,8 @@ export namespace MergeUser {
   };
 }
 
-export namespace CalendarMealAction {
+export namespace CalendarMealCookAction {
   export type Fragment = {
-    __typename?: 'MealAction';
-
-    id: string;
-
-    type: MealActionType;
-  } & (MealActionCookInlineFragment | MealActionEatInlineFragment);
-
-  export type MealActionCookInlineFragment = {
     __typename?: 'MealActionCook';
 
     servings: number;
@@ -1417,8 +1395,10 @@ export namespace CalendarMealAction {
 
     url: string;
   };
+}
 
-  export type MealActionEatInlineFragment = {
+export namespace CalendarMealEatAction {
+  export type Fragment = {
     __typename?: 'MealActionEat';
 
     cookAction?: CookAction | null;
@@ -1431,26 +1411,38 @@ export namespace CalendarMealAction {
 
     dayIndex?: number | null;
 
-    recipe?: _Recipe | null;
+    recipe?: Recipe | null;
   };
 
-  export type _Recipe = {
+  export type Recipe = {
     __typename?: 'Recipe';
 
     id: string;
 
     title: string;
 
-    coverImage?: _CoverImage | null;
+    coverImage?: CoverImage | null;
   };
 
-  export type _CoverImage = {
+  export type CoverImage = {
     __typename?: 'Image';
 
     id: string;
 
     url: string;
   };
+}
+
+export namespace CalendarMealAction {
+  export type Fragment =
+    | {
+        __typename?: 'MealAction';
+
+        id: string;
+
+        type: MealActionType;
+      } & CalendarMealCookAction.Fragment
+    | CalendarMealEatAction.Fragment;
 }
 
 export namespace CalendarMeal {

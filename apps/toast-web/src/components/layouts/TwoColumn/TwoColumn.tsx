@@ -74,8 +74,8 @@ const Layout = styled<{ visibleContentAreas: ContentArea[] }, 'div'>('div')`
 export interface TwoColumnLayoutProps
   extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  tabNames: string[];
-  tabIcons: string[];
+  tabNames?: string[];
+  tabIcons?: string[];
   flipped?: boolean;
 }
 

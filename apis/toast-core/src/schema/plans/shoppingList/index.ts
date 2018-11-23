@@ -24,56 +24,38 @@ export const typeDefs = gql`
 
   extend type Plan {
     """
-    Compiles or fetches a cached shopping list for a group of meals by date.
-    Omit date parameters and it will fetch the upcoming week
+    Compiles or fetches a cached shopping list for the upcoming week.
     """
-    shoppingList(startDate: Date, endDate: Date): ShoppingList!
+    shoppingList: ShoppingList!
   }
 
   extend type Mutation {
-    markPurchased(shoppingListId: ID!, ingredientId: ID!): ShoppingList!
-    markUnpurchased(shoppingListId: ID!, ingredientId: ID!): ShoppingList!
+    markPurchased(ingredientId: ID!): ShoppingList!
+    markUnpurchased(ingredientId: ID!): ShoppingList!
   }
 `;
 
 export const resolvers = {
   Plan: {
-    shoppingList: async (
-      parent: Plan,
-      { startDate, endDate },
-      ctx: Context,
-    ) => {
+    shoppingList: async (parent: Plan, _args, ctx: Context) => {
       const { id: planId, groceryDay } = parent;
 
-      let startDateIndex, endDateIndex;
-
-      if (!startDate || !endDate) {
-        const today = getDay(Date.now());
-        const startCookingDay = groceryDay + 1; // buying groceries the day before we start cooking
-        // TODO: deterimine if there's a better way to do this...
-        if (today <= groceryDay) {
-          startDateIndex =
-            dates.getDateIndex(new Date()) + (startCookingDay - today);
-          endDateIndex = startDateIndex + 7;
-        } else {
-          startDateIndex =
-            dates.getDateIndex(new Date()) + (7 - (today - startCookingDay));
-          endDateIndex = startDateIndex + 7;
-        }
-      } else {
-        startDateIndex = dates.getDateIndex(startDate);
-        endDateIndex = dates.getDateIndex(endDate);
-      }
-      const shoppingListId = ShoppingList.getId(startDateIndex, endDateIndex);
-
+      const [startDateIndex, endDateIndex] = ShoppingList.getCurrentRange(
+        groceryDay,
+      );
       let shoppingList: ShoppingList = await ctx.firestore.plans.getShoppingList(
         planId,
-        shoppingListId,
       );
 
-      if (shoppingList) {
+      // if shopping list is the current one...
+      if (
+        shoppingList &&
+        shoppingList.startDateIndex === startDateIndex &&
+        shoppingList.endDateIndex === endDateIndex
+      ) {
         return shoppingList;
       } else {
+        // otherwise we compile a new one
         shoppingList = await compileShoppingList(
           planId,
           startDateIndex,
@@ -87,11 +69,7 @@ export const resolvers = {
   },
 
   Mutation: {
-    markPurchased: async (
-      _parent,
-      { shoppingListId, ingredientId },
-      ctx: Context,
-    ) => {
+    markPurchased: async (_parent, { ingredientId }, ctx: Context) => {
       const group = await ctx.graph.groups.getMine();
 
       if (!group || !group.planId) {
@@ -100,17 +78,12 @@ export const resolvers = {
 
       const shoppingList = await ctx.firestore.plans.getShoppingList(
         group.planId,
-        shoppingListId,
       );
       shoppingList.purchase(ingredientId);
       return ctx.firestore.plans.setShoppingList(group.planId, shoppingList);
     },
 
-    markUnpurchased: async (
-      _parent,
-      { shoppingListId, ingredientId },
-      ctx: Context,
-    ) => {
+    markUnpurchased: async (_parent, { ingredientId }, ctx: Context) => {
       const group = await ctx.graph.groups.getMine();
 
       if (!group || !group.planId) {
@@ -119,7 +92,6 @@ export const resolvers = {
 
       const shoppingList = await ctx.firestore.plans.getShoppingList(
         group.planId,
-        shoppingListId,
       );
       shoppingList.unpurchase(ingredientId);
       return ctx.firestore.plans.setShoppingList(group.planId, shoppingList);

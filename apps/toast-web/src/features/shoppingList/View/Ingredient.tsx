@@ -20,14 +20,13 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
   unit,
   ingredient,
   purchasedValue,
-  shoppingListId,
 }) => {
   const [loading, setLoading] = React.useState(false);
 
   return (
     <MarkPurchasedMutation
       purchased={purchasedValue >= totalValue}
-      variables={{ ingredientId: ingredient.id, shoppingListId }}
+      variables={{ ingredientId: ingredient.id }}
     >
       {mutate => (
         <React.Fragment>

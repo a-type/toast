@@ -23,7 +23,7 @@ const Skeleton = () => (
 const View: React.SFC<{}> = () => (
   <Content>
     <H1 spaceBelow="sm">Shopping List</H1>
-    <GetShoppingListQuery>
+    <GetShoppingListQuery options={{ fetchPolicy: 'no-cache' }}>
       {({ data, loading, error }) => {
         if (loading) {
           return <Skeleton />;

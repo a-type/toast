@@ -137,6 +137,17 @@ export default class Meal {
     return action;
   };
 
+  getActionRecipe = actionId => {
+    const action = this.data.actions.find(({ id }) => id === actionId);
+    if (!action) {
+      return null;
+    }
+    if (isCookAction(action)) {
+      return action.recipeId;
+    }
+    return null;
+  };
+
   setActionRecipe = (actionId, recipeId) => {
     const action = this.data.actions.find(({ id }) => id === actionId);
     if (!action) {

@@ -1721,29 +1721,8 @@
           },
           {
             "name": "shoppingList",
-            "description": "Compiles or fetches a cached shopping list for a group of meals by date.\nOmit date parameters and it will fetch the upcoming week",
-            "args": [
-              {
-                "name": "startDate",
-                "description": "",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Date",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "endDate",
-                "description": "",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Date",
-                  "ofType": null
-                },
-                "defaultValue": null
-              }
-            ],
+            "description": "Compiles or fetches a cached shopping list for the upcoming week.",
+            "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -3719,20 +3698,6 @@
             "description": "",
             "args": [
               {
-                "name": "shoppingListId",
-                "description": "",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              },
-              {
                 "name": "ingredientId",
                 "description": "",
                 "type": {
@@ -3763,20 +3728,6 @@
             "name": "markUnpurchased",
             "description": "",
             "args": [
-              {
-                "name": "shoppingListId",
-                "description": "",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              },
               {
                 "name": "ingredientId",
                 "description": "",

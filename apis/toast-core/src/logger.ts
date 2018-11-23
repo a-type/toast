@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+const DEBUG = process.env.NODE_ENV !== 'production';
+
 const keyBlacklist = ['password', 'secret'];
 const convert = item => {
   if (typeof item === 'object') {
@@ -33,10 +35,13 @@ export const fatal = (...items) =>
     chalk.whiteBright.bgRed.bold('\n', ...items.map(convert), '\n'),
   );
 
-export const debug = (...items) =>
-  console.debug(
-    chalk.black.bgWhiteBright.bold('\n', ...items.map(convert), '\n'),
-  );
+export const debug = (...items) => {
+  if (DEBUG) {
+    console.debug(
+      chalk.black.bgWhiteBright.bold('\n', ...items.map(convert), '\n'),
+    );
+  }
+};
 
 export default {
   info,

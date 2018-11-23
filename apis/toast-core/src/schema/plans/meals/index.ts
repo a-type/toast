@@ -1,9 +1,10 @@
 import { gql } from 'apollo-server-express';
-import { Schedule, Plan, Meal } from 'models';
+import { Schedule, Plan, Meal, ShoppingList } from 'models';
 import { MealActionEat, MealActionCook } from 'models/Meal/Meal';
 import { Context } from 'context';
 import { path } from 'ramda';
 import { UserInputError } from 'errors';
+import logger from 'logger';
 
 export const typeDefs = gql`
   enum MealActionType {
@@ -109,7 +110,7 @@ export const resolvers = {
       ctx: Context,
     ) => {
       const group = await ctx.graph.groups.getMine();
-      const planId = path(['planId'], group);
+      const planId = path<string>(['planId'], group);
 
       if (!planId) {
         throw new UserInputError(
@@ -123,10 +124,46 @@ export const resolvers = {
         mealIndex,
       );
 
+      const previousRecipeId = meal.getActionRecipe(actionId);
       const action = meal.setActionRecipe(actionId, recipeId);
-      await ctx.firestore.plans.setMeal(planId, meal);
 
-      // TODO: invalidate shopping list!
+      const shoppingList = await ctx.firestore.plans.getShoppingList(planId);
+      // we only need to update the shopping list if this meal falls within its range
+      if (
+        shoppingList &&
+        shoppingList.startDateIndex <= meal.dateIndex &&
+        meal.dateIndex <= shoppingList.endDateIndex &&
+        previousRecipeId !== recipeId
+      ) {
+        const { servings } = action;
+        // update with changes
+        if (recipeId && !previousRecipeId) {
+          const [recipe] = await ctx.graph.recipes.getAllWithIngredients([
+            recipeId,
+          ]);
+          shoppingList.addRecipe(recipe, servings);
+        } else if (recipeId && previousRecipeId) {
+          const recipes = await ctx.graph.recipes.getAllWithIngredients([
+            recipeId,
+            previousRecipeId,
+          ]);
+          const recipe = recipes.find(({ id }) => id === recipeId);
+          const previousRecipe = recipes.find(
+            ({ id }) => id === previousRecipeId,
+          );
+          shoppingList.removeRecipe(previousRecipe, servings);
+          shoppingList.addRecipe(recipe, servings);
+        } else if (previousRecipeId) {
+          const [
+            previousRecipe,
+          ] = await ctx.graph.recipes.getAllWithIngredients([previousRecipeId]);
+          shoppingList.removeRecipe(previousRecipe, servings);
+        }
+
+        await ctx.firestore.plans.setShoppingList(planId, shoppingList);
+        logger.debug(`Updated shopping list`);
+      }
+      await ctx.firestore.plans.setMeal(planId, meal);
 
       return action;
     },

@@ -3,6 +3,8 @@ import { omit, pick } from 'ramda';
 import Source from './Source';
 // TODO; migrate
 import { parseRecipeIngredient_withTransaction } from 'schema/recipes/recipeIngredients/service';
+import { RecipeIngredient } from './RecipeIngredients';
+import { Ingredient } from './Ingredients';
 
 export interface Recipe {
   id: string;
@@ -20,6 +22,13 @@ export interface Recipe {
   cookTime: number;
   prepTime: number;
   unattendedTime: number;
+}
+
+export interface RecipeIngredientWithIngredient extends RecipeIngredient {
+  ingredient: Ingredient;
+}
+export interface RecipeWithIngredients extends Recipe {
+  ingredients: RecipeIngredientWithIngredient[];
 }
 
 export default class Recipes extends Source<Recipe> {
@@ -55,7 +64,9 @@ export default class Recipes extends Source<Recipe> {
       return this.hydrateOne(result);
     });
 
-  getAllWithIngredients = recipeIds =>
+  getAllWithIngredients = (
+    recipeIds: string[],
+  ): Promise<RecipeWithIngredients[]> =>
     this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
@@ -69,7 +80,7 @@ export default class Recipes extends Source<Recipe> {
       );
 
       if (result.records.length) {
-        return result.records.map(record => {
+        return result.records.map<RecipeWithIngredients>(record => {
           const recipe = record.get('recipe');
           const recipeIngredients = record
             .get('recipeIngredients')

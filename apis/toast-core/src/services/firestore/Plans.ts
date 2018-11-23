@@ -147,7 +147,7 @@ export default class Plans {
   /**
    * Shopping Lists - keeps track of what the user should buy each week
    */
-  getShoppingList = async (planId: string, id: string) => {
+  getShoppingList = async (planId: string, id: string = 'current') => {
     const document = this.firestore.doc(
       `${COLLECTION}/${planId}/shoppingLists/${id}`,
     );
@@ -162,7 +162,7 @@ export default class Plans {
 
   setShoppingList = async (planId: string, shoppingList: ShoppingList) => {
     const document = this.firestore.doc(
-      `${COLLECTION}/${planId}/shoppingLists/${shoppingList.id}`,
+      `${COLLECTION}/${planId}/shoppingLists/current`, // TODO: shopping list history?
     );
 
     await document.set(shoppingList.toJSON());

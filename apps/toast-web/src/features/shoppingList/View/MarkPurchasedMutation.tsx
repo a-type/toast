@@ -5,11 +5,8 @@ import { MarkPurchased } from 'generated/schema';
 import { shoppingList } from './fragments';
 
 export const PurchaseDocument = gql`
-  mutation MarkPurchased($shoppingListId: ID!, $ingredientId: ID!) {
-    markPurchased(
-      shoppingListId: $shoppingListId
-      ingredientId: $ingredientId
-    ) {
+  mutation MarkPurchased($ingredientId: ID!) {
+    markPurchased(ingredientId: $ingredientId) {
       ...ShoppingListView
     }
   }
@@ -18,11 +15,8 @@ export const PurchaseDocument = gql`
 `;
 
 export const UnpurchaseDocument = gql`
-  mutation MarkUnpurchased($shoppingListId: ID!, $ingredientId: ID!) {
-    markUnpurchased(
-      shoppingListId: $shoppingListId
-      ingredientId: $ingredientId
-    ) {
+  mutation MarkUnpurchased($ingredientId: ID!) {
+    markUnpurchased(ingredientId: $ingredientId) {
       ...ShoppingListView
     }
   }
