@@ -44,7 +44,8 @@ export default class CalendarEatAction extends React.Component<
     }
     return (
       <HelpText>
-        Leftovers from {cookDay === null ? '...' : DAYS[cookDay]}
+        Leftovers
+        {cookDay === null ? '' : ` from ${DAYS[cookDay]}`}
       </HelpText>
     );
   };

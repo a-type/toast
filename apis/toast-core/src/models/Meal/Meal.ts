@@ -179,6 +179,7 @@ export default class Meal {
     // update eat action links
     if (clone.data.actions) {
       clone.data.actions.forEach(action => {
+        action.id = Meal.moveActionId(action.id, moveWeeks);
         if (isEatAction(action)) {
           action.cookActionId = Meal.moveActionId(
             action.cookActionId,
