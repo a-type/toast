@@ -21,7 +21,6 @@ function test() {
 
 function build() {
   docker login -u _json_key -p "$(cat ${HOME}/gcloud-service-key.json)" https://us.gcr.io
-  npm run introspect
   pushd ${DIR}/../../apis/toast-core
   npm run containerize
   docker tag toast-core $IMAGE_REPO_SOURCE
