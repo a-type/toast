@@ -12,6 +12,7 @@ const Layout = styled<{ wide?: boolean }, 'div'>('div')`
   position: relative;
   z-index: 1;
   pointer-events: none;
+  padding: var(--spacing-sm);
 
   & > * {
     pointer-events: initial;
