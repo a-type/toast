@@ -9,13 +9,13 @@ export interface AuthGateProps {
     isLoggedIn: boolean;
   }): boolean;
   children: React.ReactNode;
-  fallback: React.ReactNode;
+  fallback?: React.ReactNode;
 }
 
 const AuthGate: React.SFC<AuthGateProps> = ({
   condition,
   children,
-  fallback,
+  fallback = null,
 }) => <Consumer>{state => (condition(state) ? children : fallback)}</Consumer>;
 
 export default AuthGate;

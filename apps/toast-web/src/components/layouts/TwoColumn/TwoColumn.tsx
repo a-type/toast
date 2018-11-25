@@ -7,33 +7,32 @@ import { cold } from 'react-hot-loader';
 import { useMedia } from 'react-use';
 import Context from '../layoutContext';
 import { ContentArea } from '../types';
-import Tabs from './Tabs';
 import Tab from './Tab';
 import { Icon } from 'components/generic';
 import Shelf from './Shelf';
+import BaseLayout, { BaseLayoutProps } from '../components/BaseLayout';
 
 const BREAK_POINT = 1200;
 
 const contentAsRows = ({ visibleContentAreas }) =>
-  `'banner' 'tabs' ${visibleContentAreas.map(area => `'${area}'`).join(' ')}`;
+  `'navigation' 'banner' 'tabs' ${visibleContentAreas
+    .map(area => `'${area}'`)
+    .join(' ')}`;
 const makeRow = (name, repeat) => `'${new Array(repeat).fill(name).join(' ')}'`;
 const contentAsColumns = ({ visibleContentAreas }) =>
-  `${makeRow('banner', visibleContentAreas.length)} '${visibleContentAreas.join(
-    ' ',
-  )}'`;
+  `${makeRow('navigation', visibleContentAreas.length)} ${makeRow(
+    'banner',
+    visibleContentAreas.length,
+  )} '${visibleContentAreas.join(' ')}'`;
 
-const Layout = styled<{ visibleContentAreas: ContentArea[] }, 'div'>('div')`
-  width: 100%;
-  display: grid;
+const Layout = styled<BaseLayoutProps & { visibleContentAreas: ContentArea[] }>(
+  ({ visibleContentAreas, ...rest }) => <BaseLayout {...rest} />,
+)`
   grid-template-areas: ${contentAsRows};
-  grid-template-rows: auto auto auto;
-  position: relative;
-  z-index: 1;
+  grid-template-rows: repeat(3, auto) 1fr;
 
   & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.CONTROLS} {
     margin: 0 auto;
-    transition: 0.2s ease all;
-    width: 100%;
     padding-top: var(--spacing-md);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
@@ -46,11 +45,6 @@ const Layout = styled<{ visibleContentAreas: ContentArea[] }, 'div'>('div')`
     border-radius: var(--border-radius-md);
   }
 
-  & .${CLASS_NAMES.BANNER} {
-    grid-area: banner;
-    width: 100%;
-  }
-
   @media (min-width: ${BREAK_POINT}px) {
     grid-template-areas: ${contentAsColumns};
     grid-template-columns: 2fr 1fr;
@@ -60,12 +54,6 @@ const Layout = styled<{ visibleContentAreas: ContentArea[] }, 'div'>('div')`
       padding-right: var(--spacing-xl);
       padding-bottom: var(--spacing-lg);
     }
-  }
-
-  @media (min-width: 1600px) {
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
   ${gridAreas(['banner', 'secondary', 'main'])};

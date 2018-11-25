@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-serve",
+    "start:cert": "devcert generate localhost",
+    "start:run": "webpack-serve",
+    "start": "run-s start:*",
     "build": "node scripts/build.js",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
@@ -58,6 +60,7 @@
     "config": "^2.0.1",
     "connect-history-api-fallback": "^1.5.0",
     "css-loader": "^1.0.1",
+    "devcert-cli": "^1.0.0",
     "error-overlay-webpack-plugin": "^0.1.4",
     "file-loader": "^2.0.0",
     "flow-bin": "^0.74.0",

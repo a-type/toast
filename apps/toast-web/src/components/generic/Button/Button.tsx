@@ -16,17 +16,18 @@ export type IconButtonProps = ButtonProps & {
   ref?: React.Ref<HTMLButtonElement>;
 };
 
-interface ButtonWithVariants extends StyledComponentClass<ButtonProps, {}> {
-  Positive: StyledComponentClass<ButtonProps, {}>;
-  PositiveLight: StyledComponentClass<ButtonProps, {}>;
-  Negative: StyledComponentClass<ButtonProps, {}>;
-  NegativeLight: StyledComponentClass<ButtonProps, {}>;
-  Ghost: StyledComponentClass<ButtonProps, {}>;
-  Icon: React.ComponentType<IconButtonProps>;
-  Group: StyledComponentClass<{}, {}>;
+interface ButtonWithVariants
+  extends StyledComponentClass<ButtonProps, 'button'> {
+  Positive?: StyledComponentClass<ButtonProps, {}>;
+  PositiveLight?: StyledComponentClass<ButtonProps, {}>;
+  Negative?: StyledComponentClass<ButtonProps, {}>;
+  NegativeLight?: StyledComponentClass<ButtonProps, {}>;
+  Ghost?: StyledComponentClass<ButtonProps, {}>;
+  Icon?: React.ComponentType<IconButtonProps>;
+  Group?: StyledComponentClass<{}, {}>;
 }
 
-const Button = (styled<ButtonProps, 'button'>('button')`
+const Button: ButtonWithVariants = styled<ButtonProps, 'button'>('button')`
   border: 2px solid var(--color-control-background);
   color: var(--color-control-foreground);
   cursor: pointer;
@@ -69,7 +70,7 @@ const Button = (styled<ButtonProps, 'button'>('button')`
   & + & {
     margin-left: var(--spacing-md);
   }
-` as unknown) as ButtonWithVariants;
+`;
 
 Button.Positive = styled(Button)`
   --color-control-background: var(--color-positive);

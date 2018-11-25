@@ -116,11 +116,11 @@ html, body {
 }
 
 html, body, #main {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 body {
-  overflow-y: auto;
+  overflow-y: hidden;
   position: relative;
 }
 

@@ -1,16 +1,7 @@
 import React from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
 import { loading, focusShadow } from 'components/effects';
-
-type InputProps = React.HTMLAttributes<HTMLInputElement> & {
-  loading?: boolean;
-  focused?: boolean;
-  invalid?: boolean;
-  value?: string;
-  onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
-  name?: string;
-  type?: string;
-};
+import { InputProps } from './types';
 
 export interface InputWithVariants
   extends StyledComponentClass<InputProps, 'input'> {

@@ -1,8 +1,9 @@
 import React from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
 import Input from './Input';
-import Button from '../Button';
+import Button, { ButtonProps } from '../Button';
 import { focusShadow } from 'components/effects';
+import { InputProps } from './types';
 
 const Container = styled<{ hasChildren: boolean }, 'div'>('div')`
   display: inline-flex;
@@ -74,7 +75,7 @@ const GroupedContent = styled.div`
 `;
 
 interface GroupButtonWithVariants
-  extends StyledComponentClass<{}, typeof Button> {
+  extends StyledComponentClass<ButtonProps, typeof Button> {
   Negative?: React.SFC<{}>;
   Positive?: React.SFC<{}>;
 }
@@ -90,7 +91,20 @@ ModifiedButton.Positive = props => (
   <ModifiedButton as={Button.Positive} {...props} />
 );
 
-const InputGroup = ({ children, groupProps, ...inputProps }) => (
+export interface InputGroupProps extends InputProps {
+  children?: React.ReactNode;
+  groupProps?: React.HTMLAttributes<HTMLDivElement>;
+}
+
+export interface InputGroupWithButton extends React.SFC<InputGroupProps> {
+  Button?: GroupButtonWithVariants;
+}
+
+const InputGroup: InputGroupWithButton = ({
+  children,
+  groupProps,
+  ...inputProps
+}) => (
   <Container hasChildren={!!children} {...groupProps}>
     <Input {...inputProps} />
     {children && <GroupedContent>{children}</GroupedContent>}

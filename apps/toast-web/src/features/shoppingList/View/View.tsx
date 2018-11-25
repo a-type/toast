@@ -1,7 +1,6 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
 import Ingredient from './Ingredient';
-import { Content } from 'components/layouts';
 import { H1, HelpText, H3 } from 'components/typeset';
 import { format, getDay, setDay, addWeeks } from 'date-fns';
 import { Checkbox, Disconnected } from 'components/generic';
@@ -21,7 +20,7 @@ const Skeleton = () => (
 );
 
 const View: React.SFC<{}> = () => (
-  <Content>
+  <React.Fragment>
     <H1 spaceBelow="sm">Shopping List</H1>
     <GetShoppingListQuery options={{ fetchPolicy: 'no-cache' }}>
       {({ data, loading, error }) => {
@@ -90,7 +89,7 @@ const View: React.SFC<{}> = () => (
         );
       }}
     </GetShoppingListQuery>
-  </Content>
+  </React.Fragment>
 );
 
 export default View;

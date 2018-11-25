@@ -45,10 +45,10 @@ export default class extends React.Component<UserSummaryProps> {
     }
 
     return (
-      <Content>
+      <React.Fragment>
         <H2>{title}</H2>
         <RecipeCards recipes={recipes} />
-      </Content>
+      </React.Fragment>
     );
   };
 
@@ -73,9 +73,8 @@ export default class extends React.Component<UserSummaryProps> {
 
           return (
             <React.Fragment>
-              <Content>
-                <H1>{nickname || 'Anonymous'}</H1>
-              </Content>
+              <H1>{nickname || 'Anonymous'}</H1>
+
               {this.renderRecipes('Your Likes', likedRecipes)}
               {this.renderRecipes('Your Drafts', draftRecipes)}
               {this.renderRecipes('Your Recipes', recipes)}

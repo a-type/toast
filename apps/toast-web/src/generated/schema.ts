@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-23T13:55:15-05:00 */
+/** Generated in 2018-11-25T15:37:06-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -1117,6 +1117,152 @@ export namespace UnlikeRecipe {
   export type UnlikeRecipe = LikeButton.Fragment;
 }
 
+export namespace GetPreferredServings {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    preferredServings?: number | null;
+  };
+}
+
+export namespace SetPreferredServings {
+  export type Variables = {
+    servings: number;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setPreferredServings: number;
+  };
+}
+
+export namespace FullRecipe {
+  export type Variables = {
+    recipeId: string;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    recipe?: Recipe | null;
+
+    me?: Me | null;
+  };
+
+  export type Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    published: boolean;
+
+    displayType?: RecipeDisplayType | null;
+
+    ingredients: Ingredients[];
+
+    steps: Steps[];
+
+    coverImage?: CoverImage | null;
+  } & RecipeDetails.Fragment;
+
+  export type Ingredients = {
+    __typename?: 'RecipeIngredient';
+
+    id: string;
+
+    unit?: string | null;
+
+    unitTextMatch?: string | null;
+
+    value: number;
+
+    valueTextMatch?: string | null;
+
+    text: string;
+
+    ingredientTextMatch?: string | null;
+
+    index: number;
+
+    ingredient: Ingredient;
+  };
+
+  export type Ingredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
+
+  export type Steps = {
+    __typename?: 'RecipeStep';
+
+    id: string;
+
+    index: number;
+
+    step: Step;
+  };
+
+  export type Step = {
+    __typename?: 'Step';
+
+    id: string;
+
+    text: string;
+  };
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
+
+    attribution?: string | null;
+  };
+
+  export type Me = {
+    __typename?: 'User';
+
+    id: string;
+  };
+}
+
+export namespace IngredientGetPreferredServings {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    preferredServings?: number | null;
+  };
+}
+
+export namespace RecordView {
+  export type Variables = {
+    recipeId: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    recordRecipeView?: RecordRecipeView | null;
+  };
+
+  export type RecordRecipeView = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    views: number;
+  };
+}
+
 export namespace ScheduleQuery {
   export type Variables = {};
 
@@ -1610,6 +1756,40 @@ export namespace RecipeCard {
     id: string;
 
     url: string;
+  };
+}
+
+export namespace RecipeDetails {
+  export type Fragment = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    description?: string | null;
+
+    attribution?: string | null;
+
+    sourceUrl?: string | null;
+
+    servings: number;
+
+    cookTime?: number | null;
+
+    prepTime?: number | null;
+
+    unattendedTime?: number | null;
+
+    author?: Author | null;
+  };
+
+  export type Author = {
+    __typename?: 'User';
+
+    id: string;
+
+    name?: string | null;
   };
 }
 

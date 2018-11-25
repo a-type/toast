@@ -1,7 +1,6 @@
 import React from 'react';
 import { RecipeCards } from 'features/recipes';
 import { H1, P, H2, Span } from 'components/typeset';
-import { Content } from 'components/layouts';
 import { sentence } from 'change-case';
 import ManageSection from './ManageSection';
 import { Disconnected } from 'components/generic';
@@ -12,21 +11,17 @@ export default ({ ingredientId }) => (
     {({ data, loading, error }) => {
       if (loading) {
         return (
-          <Content>
+          <React.Fragment>
             <H1>
               <Span.Skeleton />
             </H1>
             <P.Skeleton />
-          </Content>
+          </React.Fragment>
         );
       }
 
       if (error) {
-        return (
-          <Content>
-            <Disconnected />
-          </Content>
-        );
+        return <Disconnected />;
       }
 
       const {
@@ -38,7 +33,7 @@ export default ({ ingredientId }) => (
       } = data.ingredient;
 
       return (
-        <Content>
+        <React.Fragment>
           <H1>{sentence(name)}</H1>
           {alternateNames.length > 0 && (
             <P>
@@ -57,7 +52,7 @@ export default ({ ingredientId }) => (
           <ManageSection ingredient={data.ingredient} />
           <H2>Recipes</H2>
           <RecipeCards recipes={recipes} />
-        </Content>
+        </React.Fragment>
       );
     }}
   </IngredientDetailsQuery>

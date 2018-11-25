@@ -5,4 +5,5 @@ export const CLASS_NAMES = {
   HERO_CONTENT: 'layout-hero-content',
   BANNER: 'layout-banner',
   CONTROLS: 'layout-controls',
+  NAVIGATION: 'layout-navigation',
 };

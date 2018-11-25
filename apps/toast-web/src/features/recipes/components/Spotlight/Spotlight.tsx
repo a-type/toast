@@ -6,8 +6,8 @@ import LikeButton from 'features/recipes/LikeButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
 
-const Spotlight = ({ recipe }) =>
-  recipe ? (
+const Spotlight = ({ recipe }) => {
+  return recipe ? (
     <Layout>
       <Image src={path(['coverImage', 'url'], recipe)} data-grid-area="image" />
       <div data-grid-area="details">
@@ -20,6 +20,7 @@ const Spotlight = ({ recipe }) =>
       </div>
     </Layout>
   ) : null;
+};
 
 Spotlight.Skeleton = () => (
   <Layout>

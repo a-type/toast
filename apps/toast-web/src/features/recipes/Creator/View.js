@@ -7,7 +7,7 @@ import Publish, { RecipeCreatePublishFragment } from './Publish';
 import { Stages } from 'components/generic';
 import { H1, Link } from 'components/typeset';
 import { PublishedTag } from './components';
-import { Content, Hero } from 'components/layouts';
+import { Content } from 'components/layouts';
 import { pick, path, mergeDeepLeft } from 'ramda';
 import gql from 'graphql-tag';
 
@@ -172,77 +172,74 @@ export default class RecipeCreator extends React.PureComponent {
 
     return (
       <React.Fragment>
-        <Hero loading={loading} image={path(['coverImage'], recipe)} />
-        <Content>
-          {this.renderTitle()}
-          <Stages
-            stage={this.state.stage}
-            onStageChanged={this.handleStageChanged}
-            completedStage={this.getCompletedStage()}
+        {this.renderTitle()}
+        <Stages
+          stage={this.state.stage}
+          onStageChanged={this.handleStageChanged}
+          completedStage={this.getCompletedStage()}
+        >
+          <Stages.Stage
+            stageIndex={0}
+            title="Basic Details"
+            summary={this.detailSummary()}
           >
-            <Stages.Stage
-              stageIndex={0}
-              title="Basic Details"
-              summary={this.detailSummary()}
-            >
-              <Details
-                recipeId={recipeId}
-                onSave={this.handleDetailsSave}
-                initialValues={pick(
-                  [
-                    'title',
-                    'description',
-                    'attribution',
-                    'sourceUrl',
-                    'displayType',
-                    'servings',
-                    'cookTime',
-                    'prepTime',
-                    'unattendedTime',
-                  ],
-                  recipe || {},
-                )}
-              />
-            </Stages.Stage>
-            <Stages.Stage
-              stageIndex={1}
-              title="Ingredients &amp; Prep"
-              summary={this.ingredientSummary()}
-            >
-              <Ingredients
-                recipeId={recipeId}
-                ingredients={path(['ingredients'], recipe)}
-              />
-            </Stages.Stage>
-            <Stages.Stage
-              stageIndex={2}
-              title="Steps &amp; Procedure"
-              summary={this.stepSummary()}
-            >
-              <Steps recipeId={recipeId} steps={path(['steps'], recipe)} />
-            </Stages.Stage>
-            <Stages.Stage
-              stageIndex={3}
-              title="Images"
-              summary={this.imagesSummary()}
-            >
-              <Images
-                recipeId={recipeId}
-                coverImage={path(['coverImage'], recipe)}
-              />
-            </Stages.Stage>
-            <Stages.Stage
-              stageIndex={4}
-              title="Publish"
-              summary={this.publishSummary()}
-            >
-              <Publish
-                recipeId={recipeId}
-                published={path(['published'], recipe)}
-              />
-            </Stages.Stage>
-          </Stages>
-        </Content>
+            <Details
+              recipeId={recipeId}
+              onSave={this.handleDetailsSave}
+              initialValues={pick(
+                [
+                  'title',
+                  'description',
+                  'attribution',
+                  'sourceUrl',
+                  'displayType',
+                  'servings',
+                  'cookTime',
+                  'prepTime',
+                  'unattendedTime',
+                ],
+                recipe || {},
+              )}
+            />
+          </Stages.Stage>
+          <Stages.Stage
+            stageIndex={1}
+            title="Ingredients &amp; Prep"
+            summary={this.ingredientSummary()}
+          >
+            <Ingredients
+              recipeId={recipeId}
+              ingredients={path(['ingredients'], recipe)}
+            />
+          </Stages.Stage>
+          <Stages.Stage
+            stageIndex={2}
+            title="Steps &amp; Procedure"
+            summary={this.stepSummary()}
+          >
+            <Steps recipeId={recipeId} steps={path(['steps'], recipe)} />
+          </Stages.Stage>
+          <Stages.Stage
+            stageIndex={3}
+            title="Images"
+            summary={this.imagesSummary()}
+          >
+            <Images
+              recipeId={recipeId}
+              coverImage={path(['coverImage'], recipe)}
+            />
+          </Stages.Stage>
+          <Stages.Stage
+            stageIndex={4}
+            title="Publish"
+            summary={this.publishSummary()}
+          >
+            <Publish
+              recipeId={recipeId}
+              published={path(['published'], recipe)}
+            />
+          </Stages.Stage>
+        </Stages>
       </React.Fragment>
     );
   }

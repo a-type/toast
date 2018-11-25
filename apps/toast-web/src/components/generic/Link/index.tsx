@@ -5,7 +5,7 @@ import { getSize } from 'theme';
 
 type InnerLinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
   to?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   forceRemote?: boolean;
   newTab?: boolean;
   className?: string;

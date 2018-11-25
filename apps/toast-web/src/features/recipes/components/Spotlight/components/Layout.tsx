@@ -9,11 +9,16 @@ export default styled<{}, 'div'>('div')`
 
   margin-bottom: var(--spacing-xl);
 
-  ${gridAreas(['image', 'details'])}
-
-  @media(min-width: 768px) {
+  @media (min-width: 500px) {
     grid-template-areas: 'image details';
     grid-template-rows: 1fr;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: auto 1fr;
+  }
+
+  ${gridAreas(['image', 'details'])};
+
+  & > *[data-grid-area='image'] {
+    height: 15vh;
+    width: 15vh;
   }
 `;
