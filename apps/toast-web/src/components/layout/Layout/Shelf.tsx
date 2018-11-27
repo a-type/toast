@@ -15,4 +15,5 @@ export default styled<{ expanded?: boolean }, 'div'>('div')`
     props.expanded
       ? '-10px 0 0 18px var(--color-shadow)'
       : '0 0 0 0 transparent'};
+  padding-bottom: calc(60px + var(--spacing-lg));
 `;

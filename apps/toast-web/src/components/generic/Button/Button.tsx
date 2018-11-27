@@ -151,8 +151,8 @@ const ClearIconButton = styled(Button)`
   color: var(--color-gray);
 
   &:hover {
-    background-color: var(--color-gray-lightest);
-    border-color: var(--color-gray-lightest);
+    background-color: var(--color-brand-light);
+    border-color: var(--color-brand-light);
   }
 
   &:focus {
@@ -173,10 +173,19 @@ const ClearIconButton = styled(Button)`
 `;
 
 Button.Icon = React.forwardRef(
-  ({ name, iconProps, as: asProp, ...others }: IconButtonProps, ref) => {
+  (
+    {
+      name,
+      iconProps,
+      as: asProp,
+      spaceBelow = 'auto',
+      ...others
+    }: IconButtonProps,
+    ref,
+  ) => {
     const IconButton = asProp || ClearIconButton;
     return (
-      <IconButton {...others} ref={ref as any}>
+      <IconButton {...others} spaceBelow={spaceBelow} ref={ref as any}>
         <Icon name={name} {...iconProps} />
       </IconButton>
     );

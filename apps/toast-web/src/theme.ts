@@ -24,7 +24,7 @@ export const spaceSizes = {
   xl: 48,
 };
 
-export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'auto' | '0';
 
 export const getSize = (sizeName: Size | string = '0px'): string =>
   spaceSizes[sizeName] ? `${spaceSizes[sizeName]}px` : sizeName;

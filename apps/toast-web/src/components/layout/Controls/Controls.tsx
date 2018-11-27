@@ -1,32 +1,22 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { cold } from 'react-hot-loader';
 import Context from '../layoutContext';
-import * as Components from './components';
-import { Button } from 'components/generic';
 
 const Controls: React.SFC<{}> = ({ children }) => {
-  return (
-    <Context.Consumer>
-      {({
-        hasSecondaryContent,
-        toggleSecondaryContent,
-        secondaryContentIcon,
-        isNarrow,
-      }) => {
-        return (
-          <Components.FloatingContainer>
-            <Components.ContentRow>{children}</Components.ContentRow>
-            {hasSecondaryContent &&
-              isNarrow && (
-                <Button.Icon
-                  name={secondaryContentIcon}
-                  onClick={toggleSecondaryContent}
-                />
-              )}
-          </Components.FloatingContainer>
-        );
-      }}
-    </Context.Consumer>
-  );
+  const context = React.useContext(Context);
+  React.useEffect(() => {
+    const uniqueName = `${Math.random()}`;
+    context.registerControl(uniqueName, true);
+
+    return () => context.registerControl(uniqueName, false);
+  }, []);
+
+  if (context.controlsElement) {
+    return ReactDOM.createPortal(children, context.controlsElement);
+  }
+
+  return null;
 };
 
-export default Controls;
+export default cold(Controls);

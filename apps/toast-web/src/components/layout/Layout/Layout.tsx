@@ -69,6 +69,8 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
 
   & > .${CLASS_NAMES.SECONDARY_CONTENT} {
     grid-area: secondaryContent;
+    overflow-y: auto;
+    overflow-y: overlay;
   }
 
   & > .${CLASS_NAMES.CONTROLS} {
@@ -101,9 +103,17 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
   }
 
   @media (min-width: 768px) {
-    & .${CLASS_NAMES.CONTENT} {
+    & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.NAVIGATION} {
       padding-left: var(--spacing-xl);
       padding-right: var(--spacing-xl);
+    }
+
+    & .${CLASS_NAMES.BANNER} {
+      padding-left: calc(var(--spacing-sm) + var(--spacing-xl));
+      padding-right: calc(var(--spacing-sm) + var(--spacing-xl));
+    }
+
+    & .${CLASS_NAMES.CONTENT} {
       padding-bottom: var(--spacing-lg);
     }
   }
@@ -153,11 +163,26 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
     stateSecondaryContentHidden,
     setSecondaryContentHidden,
   ] = React.useState(true);
+  const [registeredControls, setRegisteredControls] = React.useState(
+    new Set<string>(),
+  );
+  const [controlsElement, setControlsElement] = React.useState(null);
 
   const secondaryContentHidden = isNarrow && stateSecondaryContentHidden;
   const toggleSecondaryContent = () =>
     setSecondaryContentHidden(wasHidden => !wasHidden);
   const hasSecondaryContent = !!renderSecondaryContent;
+
+  const registerControl = (controlName: string, present: boolean) => {
+    setRegisteredControls(oldSet => {
+      if (present) {
+        oldSet.add(controlName);
+      } else {
+        oldSet.delete(controlName);
+      }
+      return oldSet;
+    });
+  };
 
   return (
     <Context.Provider
@@ -167,6 +192,9 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
         hasSecondaryContent,
         secondaryContentIcon,
         isNarrow,
+        registerControl,
+        hasControls: registeredControls.size > 0,
+        controlsElement,
       }}
     >
       <React.Fragment>
@@ -205,6 +233,8 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
                 })}
               </Areas.Content>
             ))}
+
+          <Areas.Controls ref={setControlsElement} />
         </Layout>
       </React.Fragment>
     </Context.Provider>

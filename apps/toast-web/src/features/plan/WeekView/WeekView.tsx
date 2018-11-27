@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PlanMeal } from 'generated/schema';
 import CalendarDay from './CalendarDay';
-import { Controls } from 'components/layout';
 import { Button } from 'components/generic';
 import groupMeals from 'features/plan/groupMeals';
 
@@ -32,9 +31,7 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
           onSelect={() => setActiveDateIndex(dayMeals[0].dateIndex)}
         />
       ))}
-      <Controls>
-        <Button onClick={loadNextWeek}>Next</Button>
-      </Controls>
+      <Button onClick={loadNextWeek}>Next</Button>
     </div>
   );
 };

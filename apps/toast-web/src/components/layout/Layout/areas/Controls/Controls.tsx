@@ -3,7 +3,7 @@ import Context from '../../../layoutContext';
 import * as Components from './components';
 import { Button } from 'components/generic';
 
-const Controls: React.SFC<{}> = ({ children }) => {
+const Controls = React.forwardRef(({}, ref) => {
   return (
     <Context.Consumer>
       {({
@@ -11,10 +11,19 @@ const Controls: React.SFC<{}> = ({ children }) => {
         toggleSecondaryContent,
         secondaryContentIcon,
         isNarrow,
+        hasControls,
       }) => {
+        if (!hasControls && !(hasSecondaryContent && isNarrow)) {
+          return null;
+        }
+
         return (
           <Components.FloatingContainer>
-            <Components.ContentRow data-controls-portal />
+            <Components.ContentRow
+              data-controls-portal
+              ref={ref as any}
+              hasControls={hasControls}
+            />
             {hasSecondaryContent &&
               isNarrow && (
                 <Button.Icon
@@ -27,6 +36,6 @@ const Controls: React.SFC<{}> = ({ children }) => {
       }}
     </Context.Consumer>
   );
-};
+});
 
 export default Controls;

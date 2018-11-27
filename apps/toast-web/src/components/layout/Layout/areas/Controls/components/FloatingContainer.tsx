@@ -20,6 +20,8 @@ const FloatingContainer = styled.div`
   box-shadow: 0 -4px 8px 0 var(--color-shadow);
   border-radius: var(--border-radius-md);
 
+  z-index: 100000;
+
   transition: 0.2s ease all;
 
   & > * {

@@ -2,7 +2,13 @@
  * TODO: does this need to be somewhere else?
  */
 import * as React from 'react';
-import { Queries, GroceryDayBanner, DayView, WeekView } from 'features/plan';
+import {
+  Queries,
+  GroceryDayBanner,
+  DayView,
+  WeekView,
+  Controls,
+} from 'features/plan';
 import { GlobalLoader } from 'components/generic/Loader';
 import { Disconnected } from 'components/generic';
 import { addDays } from 'date-fns';
@@ -47,6 +53,7 @@ const CalendarPageView: React.SFC<CalendarViewProps> = cold(
         )}
       >
         <DayView meals={dayMeals} />
+        <Controls />
       </Layout>
     );
   },
