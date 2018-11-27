@@ -35,7 +35,7 @@ const FloatingContainer = styled.div`
 
   @media (min-width: 768px) {
     left: auto;
-    right: var(--spacing-lg);
+    right: var(--spacing-xl);
     bottom: var(--spacing-lg);
     width: auto;
     box-shadow: 0 4px 8px 0 var(--color-shadow);

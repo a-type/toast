@@ -58,7 +58,10 @@ export default class SearchRecipeResults extends React.Component {
     const { items } = data.searchIngredients;
 
     return (
-      <div {...this.props}>
+      <div
+        style={{ overflow: 'hidden', marginBottom: 'var(--spacing-lg)' }}
+        {...this.props}
+      >
         <H1>Ingredients</H1>
         <Layout>
           <Mutation mutation={AddFilter}>

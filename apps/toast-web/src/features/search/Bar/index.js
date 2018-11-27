@@ -6,6 +6,16 @@ import { compose } from 'recompose';
 import gql from 'graphql-tag';
 import { parse } from 'query-string';
 import debounce from 'lodash.debounce';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  width: 100%;
+  margin-bottom: var(--spacing-lg);
+
+  & > * {
+    width: 100%;
+  }
+`;
 
 const AddMatchFilter = gql`
   mutation AddMatchFilter($value: String!) {
@@ -86,24 +96,26 @@ class SearchBar extends React.Component {
     const { inputValue } = this.state;
 
     return (
-      <Input.Group
-        value={inputValue}
-        onChange={this.handleInputChanged}
-        placeholder="Search recipes or ingredients..."
-        onKeyDown={this.handleKeyDown}
-        groupProps={rest}
-      >
-        {inputValue.length > 0 && (
-          <React.Fragment>
-            <Input.Group.Button onClick={this.commitSearch}>
-              Match "{inputValue}"
-            </Input.Group.Button>
-            <Input.Group.Button.Negative onClick={this.reset}>
-              &times;
-            </Input.Group.Button.Negative>
-          </React.Fragment>
-        )}
-      </Input.Group>
+      <Container>
+        <Input.Group
+          value={inputValue}
+          onChange={this.handleInputChanged}
+          placeholder="Search recipes or ingredients..."
+          onKeyDown={this.handleKeyDown}
+          groupProps={rest}
+        >
+          {inputValue.length > 0 && (
+            <React.Fragment>
+              <Input.Group.Button onClick={this.commitSearch}>
+                Match "{inputValue}"
+              </Input.Group.Button>
+              <Input.Group.Button.Negative onClick={this.reset}>
+                &times;
+              </Input.Group.Button.Negative>
+            </React.Fragment>
+          )}
+        </Input.Group>
+      </Container>
     );
   }
 }
