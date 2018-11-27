@@ -3,7 +3,7 @@ import Ingredients from './Ingredients';
 import Details from './Details/Details';
 import { pathOr, path } from 'ramda';
 import { Redirect } from 'react-router-dom';
-import { Controls } from 'components/layouts';
+import { Controls } from 'components/layout';
 import { H2 } from 'components/typeset';
 import ViewSpy from './ViewSpy';
 import FullRecipeQuery from '../queries/FullRecipeQuery';

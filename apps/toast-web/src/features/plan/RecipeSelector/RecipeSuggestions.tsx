@@ -3,7 +3,6 @@ import { Recipe } from 'generated/schema';
 import RecipeSuggestionsQuery from './RecipeSuggestionsQuery';
 import { RecipeCards } from 'features/recipes';
 import { H3, HelpText, Link } from 'components/typeset';
-import { Content } from 'components/layouts';
 
 interface RecipeSuggestionsProps {
   onRecipeSelected(recipe: Recipe): void;
@@ -16,10 +15,10 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
     {({ data, loading }) => {
       if (loading) {
         return (
-          <Content>
+          <React.Fragment>
             <H3.Skeleton />
             <RecipeCards.Skeleton />
-          </Content>
+          </React.Fragment>
         );
       }
 
@@ -28,7 +27,7 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
       } = data;
 
       return (
-        <Content>
+        <React.Fragment>
           {recipes.length && (
             <React.Fragment>
               <H3>Your Recipes</H3>
@@ -59,7 +58,7 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
               from around the web!
             </HelpText>
           )}
-        </Content>
+        </React.Fragment>
       );
     }}
   </RecipeSuggestionsQuery>

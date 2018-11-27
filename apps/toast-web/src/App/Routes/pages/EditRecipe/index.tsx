@@ -1,8 +1,7 @@
 import React from 'react';
 import Editor from 'features/recipes/Creator';
-import { SingleColumn, Content } from 'components/layouts';
+import { Layout } from 'components/layout';
 import queryString from 'query-string';
-import { Navigation } from 'features/structure';
 import { RouteComponentProps } from 'react-router-dom';
 
 export default class EditRecipePage extends React.PureComponent<
@@ -23,16 +22,13 @@ export default class EditRecipePage extends React.PureComponent<
     const query = queryString.parse(location.search);
 
     return (
-      <SingleColumn>
-        <Navigation />
-        <Content>
-          <Editor
-            recipeId={params.recipeId}
-            onCreate={this.redirectOnCreate}
-            externalParams={query}
-          />
-        </Content>
-      </SingleColumn>
+      <Layout>
+        <Editor
+          recipeId={params.recipeId}
+          onCreate={this.redirectOnCreate}
+          externalParams={query}
+        />
+      </Layout>
     );
   }
 }

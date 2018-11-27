@@ -2,7 +2,6 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Loader } from 'components/generic';
-import { Content } from 'components/layouts';
 import { Card } from 'features/ingredients';
 
 const GetRecentIngredients = gql`

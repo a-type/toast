@@ -1,10 +1,4 @@
 import React from 'react';
-import { Content, SingleColumn } from 'components/layouts';
-import { Navigation } from 'features/structure';
+import { Layout } from 'components/layout';
 
-export default () => (
-  <SingleColumn>
-    <Navigation />
-    <Content>Not found</Content>
-  </SingleColumn>
-);
+export default () => <Layout>Not found</Layout>;

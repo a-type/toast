@@ -1,13 +1,9 @@
 import * as React from 'react';
-import { SingleColumn, Content } from 'components/layouts';
+import { Layout } from 'components/layout';
 import { View } from 'features/shoppingList';
-import { Navigation } from 'features/structure';
 
 export default () => (
-  <SingleColumn>
-    <Navigation />
-    <Content>
-      <View />
-    </Content>
-  </SingleColumn>
+  <Layout>
+    <View />
+  </Layout>
 );

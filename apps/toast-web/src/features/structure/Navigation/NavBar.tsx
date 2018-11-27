@@ -3,14 +3,13 @@ import Logo from 'components/brand/Logo';
 import { Link } from 'components/generic';
 import ProfileButton from './ProfileButton';
 import { Button } from 'components/generic';
-import { Navigation } from 'components/layouts';
 import PlanButton from './PlanButton';
 import ShoppingListButton from './ShoppingListButton';
 import Controls from './Controls';
 
 const NavBar = () => {
   return (
-    <Navigation>
+    <React.Fragment>
       <Link nav to="/" data-grid-area="logo">
         <Logo />
       </Link>
@@ -22,7 +21,7 @@ const NavBar = () => {
         </Link>
         <ProfileButton />
       </Controls>
-    </Navigation>
+    </React.Fragment>
   );
 };
 

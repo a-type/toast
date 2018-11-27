@@ -1,26 +1,19 @@
 import React from 'react';
 import Recipe from 'features/recipes/View';
 import Steps from 'features/recipes/Steps';
-import { SingleColumn, Content } from 'components/layouts';
+import { Layout } from 'components/layout';
 import { Route, Switch } from 'react-router-dom';
-import { Navigation } from 'features/structure';
 
 const RecipePage = ({ match: { params } }) => (
-  <SingleColumn>
-    <Navigation />
-    <Content>
-      <Recipe recipeId={params.recipeId} />
-    </Content>
-  </SingleColumn>
+  <Layout>
+    <Recipe recipeId={params.recipeId} />
+  </Layout>
 );
 
 const RecipeStepsPage = ({ match: { params } }) => (
-  <SingleColumn noScroll>
-    <Navigation />
-    <Content>
-      <Steps recipeId={params.recipeId} />
-    </Content>
-  </SingleColumn>
+  <Layout noScroll>
+    <Steps recipeId={params.recipeId} />
+  </Layout>
 );
 
 export default () => (

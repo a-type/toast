@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { DURATION } from '../constants';
-import { CLASS_NAMES } from 'components/layouts/constants';
 
 export default styled.div`
   background: var(--color-popover-background);
@@ -33,18 +32,10 @@ export default styled.div`
     bottom: -80vh;
   }
 
-  & > .${CLASS_NAMES.CONTENT} {
+  & > * {
     padding: var(--spacing-md);
     flex: 1 1 auto;
     overflow-y: auto;
-  }
-
-  & > .${CLASS_NAMES.CONTROLS} {
-    position: relative;
-    flex: 0 0 auto;
-    box-shadow: 0px -8px 8px 8px var(--color-popover-background);
-    padding: var(--spacing-md);
-    padding-bottom: var(--spacing-lg);
   }
 
   @media (min-width: 700px) {

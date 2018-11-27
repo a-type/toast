@@ -7,7 +7,6 @@ import Publish, { RecipeCreatePublishFragment } from './Publish';
 import { Stages } from 'components/generic';
 import { H1, Link } from 'components/typeset';
 import { PublishedTag } from './components';
-import { Content } from 'components/layouts';
 import { pick, path, mergeDeepLeft } from 'ramda';
 import gql from 'graphql-tag';
 

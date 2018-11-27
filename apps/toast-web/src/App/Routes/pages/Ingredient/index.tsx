@@ -1,13 +1,9 @@
 import React from 'react';
-import { SingleColumn, Content } from 'components/layouts';
+import { Layout } from 'components/layout';
 import Details from 'features/ingredients/Details';
-import { Navigation } from 'features/structure';
 
 export default ({ match: { params } }) => (
-  <SingleColumn>
-    <Navigation />
-    <Content>
-      <Details ingredientId={params.ingredientId} />
-    </Content>
-  </SingleColumn>
+  <Layout>
+    <Details ingredientId={params.ingredientId} />
+  </Layout>
 );

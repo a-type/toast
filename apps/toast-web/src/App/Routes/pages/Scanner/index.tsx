@@ -1,13 +1,9 @@
 import React from 'react';
-import { SingleColumn, Content } from 'components/layouts';
+import { Layout, LayoutTypes } from 'components/layout';
 import Promo from 'features/scanner/Promo';
-import { Navigation } from 'features/structure';
 
 export default () => (
-  <SingleColumn>
-    <Navigation />
-    <Content>
-      <Promo />
-    </Content>
-  </SingleColumn>
+  <Layout backgroundStyle={LayoutTypes.BackgroundStyle.Art}>
+    <Promo />
+  </Layout>
 );

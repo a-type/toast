@@ -1,7 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { LayoutTypes } from 'components/layouts';
 import { Disconnected } from 'components/generic';
 import { RecipeCards } from 'features/recipes';
 import { Spotlight } from 'features/recipes/components';

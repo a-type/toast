@@ -6,7 +6,6 @@ import EditAvailability from './EditAvailability';
 import Save from './Save';
 import { pathOr } from 'ramda';
 import { Stages } from 'components/generic';
-import { Content } from 'components/layouts';
 import { Background } from 'components/generic';
 
 const ScheduleQuery = gql`
