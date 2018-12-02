@@ -59,7 +59,7 @@ export default class CalendarMeal extends React.Component<
 
   renderAction() {
     const { meal } = this.props;
-    const action = getPrimaryAction(meal);
+    const action = getPrimaryAction([meal]);
 
     if (!action) {
       return <SkipAction />;

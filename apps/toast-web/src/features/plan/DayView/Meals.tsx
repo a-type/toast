@@ -6,8 +6,10 @@ import styled from 'styled-components';
 
 const Grid = styled.div`
   display: grid;
-  grid-template-areas: 'dinner dinner' 'lunch breakfast';
-  height: 50vh;
+  grid-template-areas: 'breakfast dinner' 'lunch dinner';
+  height: 33vh;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 
@@ -28,20 +30,20 @@ interface CalendarDayViewMealsProps {
   meals: PlanMeal[];
 }
 
+export const fragments = {
+  meals: gql`
+    fragment CalendarDayViewMealsMeal on PlanMeal {
+      ...CalendarMeal
+    }
+
+    ${CalendarMeal.fragments.meal}
+  `,
+};
+
 export default class CalendarDayViewMeals extends React.Component<
   CalendarDayViewMealsProps,
   any
 > {
-  static fragments = {
-    day: gql`
-      fragment CalendarDayViewMeals on ScheduleMeal {
-        ...CalendarMeal
-      }
-
-      ${CalendarMeal.fragments.meal}
-    `,
-  };
-
   render() {
     const { meals } = this.props;
 

@@ -3,10 +3,10 @@ import { createGlobalStyle } from 'styled-components';
 export const rhythmHeight = 24;
 
 export const fontSizes = {
-  sm: 14,
-  md: 18,
-  lg: 24,
-  xl: 36,
+  sm: 12,
+  md: 16,
+  lg: 20,
+  xl: 24,
 };
 
 export const capHeights = {

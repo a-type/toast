@@ -3,7 +3,6 @@ import Ingredients from './Ingredients';
 import Details from './Details/Details';
 import { pathOr, path } from 'ramda';
 import { Redirect } from 'react-router-dom';
-import { Controls } from 'components/layout';
 import { H2 } from 'components/typeset';
 import ViewSpy from './ViewSpy';
 import FullRecipeQuery from '../queries/FullRecipeQuery';
@@ -21,7 +20,12 @@ export default class RecipeView extends React.Component<RecipeViewProps> {
     return (
       <FullRecipeQuery variables={{ recipeId }}>
         {({ loading, data, error }) => {
-          if (!loading && data && data.recipe && !data.recipe.published) {
+          if (
+            !loading &&
+            data &&
+            data.recipe &&
+            !(data.recipe as any).published
+          ) {
             if (
               pathOr('none', ['recipe', 'author', 'id'], data) ===
               path(['me', 'id'], data)
@@ -46,9 +50,7 @@ export default class RecipeView extends React.Component<RecipeViewProps> {
                 servings={path(['servings'], recipe)}
                 ingredients={pathOr([], ['ingredients'], recipe)}
               />
-              <Controls>
-                <StepsLink recipeId={recipeId} />
-              </Controls>
+              <StepsLink recipeId={recipeId} />
               <ViewSpy recipeId={recipeId} />
             </React.Fragment>
           );

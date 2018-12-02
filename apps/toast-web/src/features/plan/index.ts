@@ -5,7 +5,6 @@ export { default as GroceryDayBanner } from './GroceryDayBanner';
 export { default as Setup } from './Setup';
 export { default as DayView } from './DayView';
 export { default as WeekView } from './WeekView';
-export { default as Controls } from './Controls';
 
 import * as Queries from './queries';
 export { Queries };

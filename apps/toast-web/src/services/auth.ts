@@ -56,13 +56,17 @@ export class Auth extends EventEmitter {
     mixpanel.track('login');
   };
 
-  logout = () => {
+  clear = () => {
     localStorage.removeItem(ID_TOKEN_KEY);
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(EXPIRES_AT_KEY);
     localStorage.removeItem(SCOPES_KEY);
     clearTimeout(this.renewalTimeout);
     this.emit(this.eventTypes.tokenStored);
+  };
+
+  logout = () => {
+    this.clear();
     mixpanel.track('logout');
     this.auth0.logout({
       returnTo: window.location.origin + '/',
@@ -126,6 +130,7 @@ export class Auth extends EventEmitter {
         this.renewToken();
       }, delay);
     } else {
+      this.clear();
       this.emit(this.eventTypes.tokenExpired);
     }
   };

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Popup, Button } from 'components/generic';
 import { Recipe } from 'generated/schema';
 import RecipeSuggestions from './RecipeSuggestions';
-import { Controls } from 'components/layout';
 
 interface RecipeSelectorProps {
   onCancel(): void;
@@ -22,9 +21,7 @@ const RecipeSelector: React.SFC<RecipeSelectorProps> = ({
             handleClose();
           }}
         />
-        <Controls>
-          <Button onClick={handleClose}>Cancel</Button>
-        </Controls>
+        <Button onClick={handleClose}>Cancel</Button>
       </React.Fragment>
     )}
   </Popup>

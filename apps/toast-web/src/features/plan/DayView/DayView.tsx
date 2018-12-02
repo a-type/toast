@@ -3,27 +3,34 @@ import { PlanMeal } from 'generated/schema';
 import { H1 } from 'components/typeset';
 import { formatDay } from 'formatters/date';
 import Meals from './Meals';
+import { cold } from 'react-hot-loader';
+import DayViewQuery from './DayViewQuery';
+import { startOfDay } from 'date-fns';
+import Calendar from '../Calendar';
+import { pathOr } from 'ramda';
 
-interface CalendarDayViewProps {
-  meals: PlanMeal[];
-}
-
-const CalendarDayView: React.SFC<CalendarDayViewProps> = ({
-  meals,
-  ...rest
-}) => {
-  if (!meals.length) {
-    return null;
-  }
-
-  const date = meals[0].date;
+const CalendarDayView: React.SFC<{}> = ({ ...rest }) => {
+  const [date, setDate] = React.useState(startOfDay(new Date()));
 
   return (
-    <div {...rest}>
-      <H1>{formatDay(date)}</H1>
-      <Meals meals={meals} />
-    </div>
+    <DayViewQuery variables={{ date }}>
+      {({ data, loading, error }) => {
+        if (loading || error) {
+          return null;
+        }
+
+        const meals = pathOr<PlanMeal[]>([], ['group', 'plan', 'meals'], data);
+
+        return (
+          <React.Fragment>
+            <H1>{formatDay(date)}</H1>
+            <Meals meals={meals} {...rest} />
+            <Calendar onDatePick={setDate} selectedDate={date} />
+          </React.Fragment>
+        );
+      }}
+    </DayViewQuery>
   );
 };
 
-export default CalendarDayView;
+export default cold(CalendarDayView);
