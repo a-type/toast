@@ -23,3 +23,5 @@ export { default as Bubble } from './Bubble';
 export { default as Select } from './Select';
 export { default as Link } from './Link';
 export { default as Popup } from './Popup';
+export { default as Calendar } from './Calendar';
+export { default as CrossFade } from './CrossFade';
