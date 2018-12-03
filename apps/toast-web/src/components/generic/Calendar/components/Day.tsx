@@ -2,9 +2,18 @@ import styled, { keyframes } from 'styled-components';
 import { DAY_SIZE } from '../constants';
 import { focusShadow } from 'components/effects';
 
-const Day = styled<{ faded?: boolean }, 'button'>('button')`
-  border: 2px solid var(--color-gray-lightest);
-  background: var(--color-gray-lightest);
+export interface DayProps {
+  faded?: boolean;
+  selected?: boolean;
+}
+
+const Day = styled<DayProps, 'button'>('button')`
+  cursor: pointer;
+  border: 2px solid
+    ${props =>
+      props.selected ? 'var(--color-brand)' : 'var(--color-gray-lightest)'};
+  background: ${props =>
+    props.selected ? 'var(--color-brand)' : 'transparent'};
   border-radius: 100%;
   width: ${DAY_SIZE}px;
   height: ${DAY_SIZE}px;

@@ -8,6 +8,7 @@ import {
   getMonth,
   addMonths,
   startOfMonth,
+  isSameDay,
 } from 'date-fns';
 import { H3 } from 'components/typeset';
 import { MONTH_NAMES } from './constants';
@@ -24,36 +25,47 @@ export interface DateProps {
 export interface DateRenderParams {
   date: Date;
   otherMonth: boolean;
+  selected: boolean;
   props: DateProps;
 }
 
-export type CalendarProps = React.HTMLAttributes<HTMLDivElement> & {
+export type CalendarProps = {
   value: Date;
   onChange(date: Date): void;
   renderDate?: (params: DateRenderParams) => React.ReactNode;
+  onMonthChange?: (firstDay: Date) => void;
 };
 
-const defaultRenderDate = ({ date, props, otherMonth }: DateRenderParams) => (
-  <Day {...props} faded={otherMonth}>
+const defaultRenderDate = ({
+  date,
+  props,
+  selected,
+  otherMonth,
+}: DateRenderParams) => (
+  <Day {...props} selected={selected} faded={otherMonth}>
     {getDate(date)}
   </Day>
 );
 
-type ExtraGridViewProps = {
+type GridViewProps = {
   rowCount: number;
   startDate: Date;
   month: number;
   position: GridPosition;
   transitionName: CalendarTransition;
   prepForMove: boolean;
+  renderDate?: (params: DateRenderParams) => React.ReactNode;
+  onChange(date: Date): void;
+  value: Date;
 };
 
-const GridView: React.SFC<CalendarProps & ExtraGridViewProps> = ({
+const GridView: React.SFC<GridViewProps> = ({
   rowCount,
   startDate,
   month,
   renderDate = defaultRenderDate,
   onChange,
+  value,
   ...rest
 }) => {
   return (
@@ -62,11 +74,13 @@ const GridView: React.SFC<CalendarProps & ExtraGridViewProps> = ({
         const date = addDays(startDate, idx);
         const title = date.toString();
         const otherMonth = date.getMonth() !== month;
+        const selected = isSameDay(date, value);
         return renderDate({
           date,
           otherMonth,
+          selected,
           props: {
-            value: date.getDate(),
+            value: date.getTime(),
             title,
             onClick: () => onChange(date),
           },
@@ -90,7 +104,11 @@ const useMonthTransition = (): [
   return [transitionName, timeoutSet];
 };
 
-const Calendar: React.SFC<CalendarProps> = ({ ...rest }) => {
+type CalendarComponent = React.SFC<CalendarProps> & {
+  Day?: typeof Day;
+};
+
+const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
   const [expanded, setExpanded] = React.useState(false);
   const toggleExpanded = () => setExpanded(current => !current);
   const [internalStartDate, setStartDate] = React.useState(
@@ -111,10 +129,12 @@ const Calendar: React.SFC<CalendarProps> = ({ ...rest }) => {
   const goToNextMonth = () => {
     setTransitionName(CalendarTransition.Backwards);
     setStartDate(nextMonth);
+    onMonthChange(nextMonth);
   };
   const goToPreviousMonth = () => {
     setTransitionName(CalendarTransition.Forwards);
     setStartDate(previousMonth);
+    onMonthChange(previousMonth);
   };
 
   const onButtonHover = () => setIsHoveringButton(true);
@@ -160,5 +180,7 @@ const Calendar: React.SFC<CalendarProps> = ({ ...rest }) => {
     </div>
   );
 };
+
+Calendar.Day = Day;
 
 export default cold(Calendar);

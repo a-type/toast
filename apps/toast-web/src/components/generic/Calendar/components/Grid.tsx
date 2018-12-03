@@ -51,6 +51,7 @@ const Grid = styled<GridProps, 'div'>('div')`
   justify-items: center;
   row-gap: ${ROW_SPACING}px;
   margin-bottom: var(--spacing-md);
+  overflow: hidden;
 
   transition: 0.2s ease all;
 

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { MealActionType, PlanMeal } from 'generated/schema';
+import { MealActionType } from 'generated/schema';
 import { focusShadow } from 'components/effects';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
 import { getDate } from 'date-fns';
 import { ITEM_SIZE } from '../constants';
+import { Day } from 'components/generic/Calendar/components';
 
 export interface DayItemButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
@@ -40,49 +41,33 @@ const getBorder = (props: DayItemButtonProps) => {
   }
 };
 
-export const DayItemButton = styled<DayItemButtonProps, 'button'>('button')`
+export const DayItemButton = styled<DayItemButtonProps>(
+  ({ actionType, selected, ...rest }) => <Day {...rest} />,
+)`
   border: ${getBorder};
   background: ${getBackground};
   color: ${getColor};
-  display: flex;
-  width: ${ITEM_SIZE}px;
-  height: ${ITEM_SIZE}px;
-  border-radius: var(--border-radius-md);
-  font-family: var(--font-default);
-  font-size: var(--font-size-md);
 
   &:focus {
     outline: 0;
     box-shadow: ${focusShadow.default};
   }
-
-  & > * {
-    margin: auto;
-  }
 `;
 
 export interface DayItemProps extends React.HTMLAttributes<HTMLButtonElement> {
-  meals: PlanMeal[];
+  actionType: MealActionType;
   date: Date;
-  onSelected(): void;
   selected: boolean;
 }
 
 const DayItem: React.SFC<DayItemProps> = ({
   date,
-  meals,
-  onSelected,
+  actionType,
   selected,
   ...rest
 }) => {
-  const action = getPrimaryAction(meals);
   return (
-    <DayItemButton
-      actionType={action.type}
-      onClick={onSelected}
-      selected={selected}
-      {...rest}
-    >
+    <DayItemButton actionType={actionType} selected={selected} {...rest}>
       <span>{getDate(date)}</span>
     </DayItemButton>
   );
