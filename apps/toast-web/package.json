@@ -140,6 +140,7 @@
     "react-collapse": "^4.0.3",
     "react-css-transition-replace": "^3.0.3",
     "react-dom": "^16.7.0-alpha.0",
+    "react-flip-toolkit": "^6.3.0",
     "react-intersection-visible-hook": "^1.4.2",
     "react-motion": "^0.5.2",
     "react-outside-click-handler": "^1.2.2",
