@@ -5,7 +5,7 @@ export default styled.h1`
   margin-bottom: -3px;
   padding: 0;
   font-family: var(--font-logo);
-  font-size: var(--font-size-lg);
+  font-size: 24px;
   font-weight: var(--normal);
   color: var(--color-white);
   position: relative;

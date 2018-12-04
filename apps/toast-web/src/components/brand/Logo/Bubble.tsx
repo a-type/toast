@@ -7,6 +7,8 @@ const colors = [
 ];
 
 export default ({ show }) => {
+  const colorIdx = Math.floor(Math.random() * 3);
+
   if (!show) {
     return (
       <div
@@ -25,7 +27,6 @@ export default ({ show }) => {
     );
   }
 
-  const colorIdx = Math.floor(Math.random() * 3);
   const size = Math.random() * 2 + 4;
   const x = Math.random() * 100;
   const y = Math.random() * 100;
