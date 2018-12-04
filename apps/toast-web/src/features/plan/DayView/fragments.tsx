@@ -4,6 +4,7 @@ import CalendarMeal from '../MealView';
 export default {
   meals: gql`
     fragment CalendarDayViewMeals on PlanMeal {
+      id
       ...CalendarMeal
     }
 

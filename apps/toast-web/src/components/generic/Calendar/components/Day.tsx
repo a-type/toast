@@ -17,6 +17,7 @@ const Day = styled<DayProps, 'button'>('button')`
   border-radius: 100%;
   width: ${DAY_SIZE}px;
   height: ${DAY_SIZE}px;
+  font-family: var(--font-default);
 
   opacity: ${props => (props.faded ? '0.5' : '1')};
   transition: 0.2s ease all;

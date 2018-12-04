@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Grid, Day, ExpandButton, MonthContainer } from './components';
+import {
+  Grid,
+  Day,
+  ExpandButton,
+  MonthContainer,
+  WeekdayRow,
+} from './components';
 import { cold } from 'react-hot-loader';
 import {
   startOfWeek,
@@ -9,9 +15,10 @@ import {
   addMonths,
   startOfMonth,
   isSameDay,
+  endOfWeek,
 } from 'date-fns';
-import { H3 } from 'components/typeset';
-import { MONTH_NAMES } from './constants';
+import { H3, Label } from 'components/typeset';
+import { MONTH_NAMES, WEEKDAY_ABBREVIATIONS } from './constants';
 import { CrossFade } from 'components/generic';
 import Button from '../Button';
 import { CalendarTransition, GridPosition } from './types';
@@ -20,6 +27,7 @@ export interface DateProps {
   title: string;
   value: number;
   onClick(): void;
+  key: string;
 }
 
 export interface DateRenderParams {
@@ -83,6 +91,7 @@ const GridView: React.SFC<GridViewProps> = ({
             value: date.getTime(),
             title,
             onClick: () => onChange(date),
+            key: `${date.getTime()}`,
           },
         });
       })}
@@ -111,29 +120,33 @@ type CalendarComponent = React.SFC<CalendarProps> & {
 const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
   const [expanded, setExpanded] = React.useState(false);
   const toggleExpanded = () => setExpanded(current => !current);
-  const [internalStartDate, setStartDate] = React.useState(
-    startOfWeek(new Date()),
+  const [firstDayOfCurrentPage, setFirstDayOfCurrentPage] = React.useState(
+    startOfWeek(startOfMonth(rest.value)),
   );
   const [transitionName, setTransitionName] = useMonthTransition();
   const [isHoveringButton, setIsHoveringButton] = React.useState(false);
 
   const rowCount = expanded ? 6 : 2;
-  const month = getMonth(internalStartDate);
+  const month = getMonth(endOfWeek(firstDayOfCurrentPage));
 
-  const startDate = expanded
-    ? startOfWeek(startOfMonth(internalStartDate))
-    : internalStartDate;
+  const startDate = expanded ? firstDayOfCurrentPage : startOfWeek(rest.value);
 
-  const nextMonth = addMonths(startOfMonth(internalStartDate), 1);
-  const previousMonth = addMonths(startOfMonth(internalStartDate), -1);
+  const nextMonth = addMonths(
+    startOfMonth(endOfWeek(firstDayOfCurrentPage)),
+    1,
+  );
+  const previousMonth = addMonths(
+    startOfMonth(endOfWeek(firstDayOfCurrentPage)),
+    -1,
+  );
   const goToNextMonth = () => {
     setTransitionName(CalendarTransition.Backwards);
-    setStartDate(nextMonth);
+    setFirstDayOfCurrentPage(startOfWeek(nextMonth));
     onMonthChange(nextMonth);
   };
   const goToPreviousMonth = () => {
     setTransitionName(CalendarTransition.Forwards);
-    setStartDate(previousMonth);
+    setFirstDayOfCurrentPage(startOfWeek(previousMonth));
     onMonthChange(previousMonth);
   };
 
@@ -167,6 +180,13 @@ const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
           </MonthContainer>
         ) : null}
       </CrossFade>
+      <WeekdayRow>
+        {new Array(7)
+          .fill(null)
+          .map((_, idx) => (
+            <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
+          ))}
+      </WeekdayRow>
       <GridView
         rowCount={rowCount}
         startDate={startDate}

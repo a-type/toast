@@ -1,1 +1,1 @@
-export { default } from './MealView';
+export { default, Skeleton } from './MealView';

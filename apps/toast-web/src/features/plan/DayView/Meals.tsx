@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PlanMeal } from 'generated/schema';
 import gql from 'graphql-tag';
-import CalendarMeal from '../MealView';
+import CalendarMeal, { Skeleton as MealViewSkeleton } from '../MealView';
 import styled from 'styled-components';
 
 const Grid = styled.div`
@@ -40,6 +40,10 @@ export const fragments = {
   `,
 };
 
+export const Skeleton = () => (
+  <Grid>{new Array(3).fill(null).map((_, idx) => <MealViewSkeleton />)}</Grid>
+);
+
 export default class CalendarDayViewMeals extends React.Component<
   CalendarDayViewMealsProps,
   any
@@ -49,9 +53,7 @@ export default class CalendarDayViewMeals extends React.Component<
 
     return (
       <Grid>
-        {meals.map(meal => (
-          <CalendarMeal key={meal.id} meal={meal} />
-        ))}
+        {meals.map(meal => <CalendarMeal key={meal.id} meal={meal} />)}
       </Grid>
     );
   }

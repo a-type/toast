@@ -5,6 +5,7 @@ import { Span } from 'components/typeset';
 import { Day } from 'types/Day';
 import { Link, Button } from 'components/generic';
 import GroceryDayQuery from './GroceryDayQuery';
+import { pathOr } from 'ramda';
 
 const GroceryDayBanner: React.SFC<{}> = ({}) => {
   const [isEditMode, setEditMode] = React.useState(false);
@@ -16,7 +17,7 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
           return null;
         }
 
-        const groceryDay = data.group.plan.groceryDay;
+        const groceryDay = pathOr(0, ['group', 'plan', 'groceryDay'], data);
 
         return isEditMode ? (
           <EditForm

@@ -13,7 +13,7 @@ const CalendarPage: React.SFC<{}> = ({}) => {
   return (
     <Layout
       renderBanner={() => <GroceryDayBanner />}
-      renderSecondaryContent={() => <div>TODO</div>}
+      renderSecondaryContent={() => <div>{/* TODO */}</div>}
     >
       <DayView />
     </Layout>

@@ -13,5 +13,7 @@ export const MONTH_NAMES = [
   'December',
 ];
 
+export const WEEKDAY_ABBREVIATIONS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
 export const DAY_SIZE = 32;
 export const ROW_SPACING = 12;

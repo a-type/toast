@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { MealActionType } from 'generated/schema';
 import { focusShadow } from 'components/effects';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
-import { getDate } from 'date-fns';
+import { getDate, isToday } from 'date-fns';
 import { ITEM_SIZE } from '../constants';
 import { Day } from 'components/generic/Calendar/components';
 
@@ -11,33 +11,35 @@ export interface DayItemButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   actionType: MealActionType;
   selected: boolean;
+  date: Date;
 }
 
 const getBackground = (props: DayItemButtonProps) => {
-  if (!props.selected) {
-    return 'var(--color-white)';
+  if (props.selected) {
+    return 'var(--color-brand)';
   }
 
-  switch (props.actionType) {
-    case MealActionType.COOK:
-      return 'var(--color-brand-light)';
-    default:
-      return 'var(--color-white)';
-  }
+  return 'var(--color-white)';
 };
 
-const getColor = () => {
-  return 'var(--color-dark)';
+const getColor = (props: DayItemButtonProps) => {
+  return `var(--color-dark)`;
 };
 
 const getBorder = (props: DayItemButtonProps) => {
+  if (props.selected) {
+    return `2px solid var(--color-brand)`;
+  }
+
   switch (props.actionType) {
     case MealActionType.SKIP:
     case undefined:
     case null:
       return `2px dashed var(--color-gray-light)`;
+    case MealActionType.COOK:
+      return `2px solid var(--color-brand)`;
     default:
-      return `2px solid ${getBackground({ ...props, selected: true })}`;
+      return `2px solid var(--color-gray-light)`;
   }
 };
 
@@ -47,6 +49,7 @@ export const DayItemButton = styled<DayItemButtonProps>(
   border: ${getBorder};
   background: ${getBackground};
   color: ${getColor};
+  font-weight: ${props => (isToday(props.date) ? 'bold' : 'normal')};
 
   &:focus {
     outline: 0;
@@ -67,7 +70,12 @@ const DayItem: React.SFC<DayItemProps> = ({
   ...rest
 }) => {
   return (
-    <DayItemButton actionType={actionType} selected={selected} {...rest}>
+    <DayItemButton
+      actionType={actionType}
+      date={date}
+      selected={selected}
+      {...rest}
+    >
       <span>{getDate(date)}</span>
     </DayItemButton>
   );

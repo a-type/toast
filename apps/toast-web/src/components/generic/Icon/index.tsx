@@ -18,10 +18,9 @@ export type IconProps = IconStyleProps & {
 
 const Svg = styled.svg`
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  width: 100%;
+  height: 100%;
   fill: currentColor;
-  vertical-align: -0.1em;
 `;
 
 const Icon = styled<IconStyleProps, 'i'>('i')`
@@ -29,11 +28,12 @@ const Icon = styled<IconStyleProps, 'i'>('i')`
   transform: ${props =>
     props.rotation ? `rotate(${props.rotation}deg)` : 'none'};
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  width: ${props => (props.size ? props.size : '1em')};
+  height: ${props => (props.size ? props.size : '1em')};
   fill: currentColor;
   vertical-align: -0.1em;
   transition: 0.2s ease transform;
+  position: relative;
 `;
 
 export default ({ name, className, ...rest }: IconProps) => (

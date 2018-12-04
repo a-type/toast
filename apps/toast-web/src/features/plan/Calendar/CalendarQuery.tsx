@@ -7,12 +7,14 @@ import fragments from './fragments';
 export const Document = gql`
   query Calendar($startDate: Date!, $endDate: Date!) {
     group {
+      id
       plan {
         id
 
         ...CalendarPlan
 
         meals(startDate: $startDate, endDate: $endDate) {
+          id
           ...CalendarMeals
         }
       }
@@ -32,7 +34,7 @@ interface CalendarQueryProps {
 }
 
 const CalendarQuery: React.SFC<CalendarQueryProps> = props => (
-  <Query<Calendar.Query, Calendar.Variables> query={Document} {...props} />
+  <Query<Calendar.Query, Calendar.Variables> query={Document} fetchPolicy="no-cache" {...props} />
 );
 
 export default CalendarQuery;

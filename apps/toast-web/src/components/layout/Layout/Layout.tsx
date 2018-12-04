@@ -83,15 +83,13 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
 
   & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.CONTROLS} {
     margin: 0 auto;
-    padding-top: var(--spacing-md);
+    padding-top: var(--spacing-lg);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xl);
   }
 
   & .${CLASS_NAMES.CONTENT} {
-    padding-top: var(--spacing-xl);
-    padding-bottom: var(--spacing-xl);
     border-radius: var(--border-radius-md);
   }
 

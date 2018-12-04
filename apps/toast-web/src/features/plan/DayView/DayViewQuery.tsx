@@ -7,10 +7,12 @@ import fragments from './fragments';
 export const Document = gql`
   query DayView($date: Date!) {
     group {
+      id
       plan {
         id
 
         meals(startDate: $date) {
+          id
           ...CalendarDayViewMeals
         }
       }
@@ -29,7 +31,7 @@ interface DayViewQueryProps {
 }
 
 const DayViewQuery: React.SFC<DayViewQueryProps> = props => (
-  <Query<DayView.Query, DayView.Variables> query={Document} {...props} />
+  <Query<DayView.Query, DayView.Variables> query={Document} partialRefetch fetchPolicy="cache-first" {...props} />
 );
 
 export default DayViewQuery;

@@ -13,11 +13,14 @@
     "build-storybook": "build-storybook",
     "test": "echo 'No tests!'",
     "bookmarklet": "webpack-serve ./bookmarklet/webpack.config.js --port 9001",
-    "gen:schema:server": "apollo schema:download ./src/generated/schema.json --endpoint=http://localhost:4000/api",
-    "gen:schema:client": "apollo schema:download ./src/generated/clientSchema.json --endpoint=./src/apolloClient/resolvers/clientSchema.graphql",
+    "gen:schema:server":
+      "apollo schema:download ./src/generated/schema.json --endpoint=http://localhost:4000/api",
+    "gen:schema:client":
+      "apollo schema:download ./src/generated/clientSchema.json --endpoint=./src/apolloClient/resolvers/clientSchema.graphql",
     "gen:schema": "run-p gen:schema:*",
     "gen:interfaces": "node scripts/interfaceIntrospection.js",
-    "gen:types": "gql-gen --require ts-node/register/transpile-only --template=graphql-codegen-typescript-template --clientSchema=./src/generated/clientSchema.json --schema=./src/generated/schema.json --out ./src/generated/schema.ts \"./src/**/*.{tsx,ts}\"",
+    "gen:types":
+      "gql-gen --require ts-node/register/transpile-only --template=graphql-codegen-typescript-template --clientSchema=./src/generated/clientSchema.json --schema=./src/generated/schema.json --out ./src/generated/schema.ts \"./src/**/*.{tsx,ts}\"",
     "gen": "run-s gen:*"
   },
   "lint-staged": {

@@ -50,7 +50,6 @@ const Grid = styled<GridProps, 'div'>('div')`
   justify-content: space-between;
   justify-items: center;
   row-gap: ${ROW_SPACING}px;
-  margin-bottom: var(--spacing-md);
   overflow: hidden;
 
   transition: 0.2s ease all;
@@ -58,6 +57,10 @@ const Grid = styled<GridProps, 'div'>('div')`
   height: ${props => props.rows * DAY_SIZE + (props.rows - 1) * ROW_SPACING}px;
 
   will-change: ${props => (props.prepForMove ? 'transform' : 'none')};
+
+  @media (min-width: 768px) {
+    align-content: space-around;
+  }
 
   ${animation};
 `;

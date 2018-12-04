@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PlanMeal, MealActionType } from 'generated/schema';
 import { DayItem } from './components';
-import { startOfMonth, endOfMonth, getMonth } from 'date-fns';
+import { endOfMonth, isSameDay, startOfMonth } from 'date-fns';
 import CalendarQuery from './CalendarQuery';
 import { pathOr } from 'ramda';
 import Calendar from 'components/generic/Calendar';
@@ -12,19 +12,36 @@ export interface CalendarProps {
   selectedDate: Date;
 }
 
+const INITIAL_START_DATE = startOfMonth(new Date());
+const INITIAL_END_DATE = endOfMonth(INITIAL_START_DATE);
+
 const PlanCalendar: React.SFC<CalendarProps> = ({
   onDatePick,
   selectedDate,
 }) => {
-  const [startDate, setMonth] = React.useState(new Date());
-  const endDate = endOfMonth(startDate);
-
   return (
-    <CalendarQuery variables={{ startDate, endDate }}>
-      {({ data, loading, error }) => {
-        if (loading || error) {
-          return null;
-        }
+    <CalendarQuery
+      variables={{ startDate: INITIAL_START_DATE, endDate: INITIAL_END_DATE }}
+    >
+      {({ data, error, fetchMore, networkStatus }) => {
+        const handleMonthChange = newMonthStartDay => {
+          const newEndDay = endOfMonth(newMonthStartDay);
+          fetchMore({
+            variables: {
+              startDate: newMonthStartDay,
+              endDate: newEndDay,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) {
+                return prev;
+              }
+
+              const clone = { ...prev };
+              clone.group.plan.meals.push(...fetchMoreResult.group.plan.meals);
+              return clone;
+            },
+          });
+        };
 
         const meals = pathOr<PlanMeal[]>(
           [],
@@ -34,12 +51,12 @@ const PlanCalendar: React.SFC<CalendarProps> = ({
 
         return (
           <Calendar
-            onMonthChange={setMonth}
+            onMonthChange={handleMonthChange}
             onChange={onDatePick}
             value={selectedDate}
             renderDate={({ date, props, selected }) => {
               const dayMeals = meals
-                .filter(meal => meal.date === date)
+                .filter(meal => isSameDay(meal.date, date))
                 .sort((a, b) => a.mealIndex - b.mealIndex);
 
               if (!dayMeals.length) {
