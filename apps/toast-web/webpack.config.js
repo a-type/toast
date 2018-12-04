@@ -14,6 +14,19 @@ const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const publicPath = '/';
 const publicUrl = '';
 
+const createHttpsConfig = () => {
+  if (fs.existsSync(path.resolve(__dirname, 'localhost.cert'))) {
+    const key = fs.readFileSync(path.resolve(__dirname, 'localhost.key'));
+    const cert = fs.readFileSync(path.resolve(__dirname, 'localhost.cert'));
+    return {
+      key,
+      cert,
+    };
+  }
+
+  return false;
+};
+
 module.exports = {
   mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
 
@@ -142,9 +155,6 @@ module.exports = {
       );
       app.use(convert(history()));
     },
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'localhost.key')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'localhost.cert')),
-    },
+    https: createHttpsConfig(),
   },
 };
