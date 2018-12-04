@@ -32,7 +32,7 @@ export default () => (
         const dateParam = path<string>(['params', 'date'], match);
 
         const date = dateParam ? parse(dateParam) : startOfDay(Date.now());
-        return <CalendarPage date={date} />;
+        return <CalendarPage />;
       }}
     />
   </Switch>

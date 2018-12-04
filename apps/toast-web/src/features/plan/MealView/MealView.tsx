@@ -20,6 +20,7 @@ import actionsFragment from 'features/plan/actions/fragment';
 import { Label } from 'components/typeset';
 import { MealStack } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
+import { Card } from 'components/generic';
 
 const MEALS = ['Breakfast', 'Lunch', 'Dinner'];
 
@@ -30,6 +31,13 @@ interface CalendarMealProps {
 interface CalendarMealState {
   showRecipeSelector: boolean;
 }
+
+export const Skeleton = () => (
+  <MealStack>
+    <Label>...</Label>
+    <Card.Skeleton />
+  </MealStack>
+);
 
 export default class CalendarMeal extends React.Component<
   CalendarMealProps,
@@ -59,7 +67,7 @@ export default class CalendarMeal extends React.Component<
 
   renderAction() {
     const { meal } = this.props;
-    const action = getPrimaryAction(meal);
+    const action = getPrimaryAction([meal]);
 
     if (!action) {
       return <SkipAction />;

@@ -31,7 +31,7 @@ const Meal: React.SFC<PlanPreviewMealProps> & { fragments: { meal: any } } = ({
   meal,
   ...rest
 }) => {
-  const primaryAction = getPrimaryAction(meal);
+  const primaryAction = getPrimaryAction([meal]);
 
   if (!primaryAction) {
     return (

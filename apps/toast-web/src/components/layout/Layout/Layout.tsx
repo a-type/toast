@@ -4,10 +4,7 @@ import { CLASS_NAMES, BREAK_POINT } from '../constants';
 import classnames from 'classnames';
 import { gridAreas } from 'components/effects';
 import { cold } from 'react-hot-loader';
-import { useMedia } from 'react-use';
-import Context from '../layoutContext';
 import { BackgroundStyle } from '../types';
-import Shelf from './Shelf';
 import * as Areas from './areas';
 import { BackdropArt } from 'components/brand';
 import { Background } from 'components/generic';
@@ -37,8 +34,9 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
   display: grid;
   padding: var(--spacing-sm);
 
-  grid-template-areas: 'navigation' 'banner' 'content';
+  grid-template-areas: 'navigation' 'banner' 'content' 'secondaryContent';
   grid-template-rows: auto auto 1fr auto;
+  grid-template-columns: 100%;
 
   background: ${props =>
     props.backgroundStyle === BackgroundStyle.Brand
@@ -85,15 +83,13 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
 
   & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.CONTROLS} {
     margin: 0 auto;
-    padding-top: var(--spacing-md);
+    padding-top: var(--spacing-lg);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xl);
   }
 
   & .${CLASS_NAMES.CONTENT} {
-    padding-top: var(--spacing-xl);
-    padding-bottom: var(--spacing-xl);
     border-radius: var(--border-radius-md);
   }
 
@@ -118,7 +114,7 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
     }
   }
 
-  ${gridAreas(['banner', 'secondary', 'main'])};
+  ${gridAreas(['navigation', 'banner', 'content', 'secondaryContent'])};
   ${props => {
     switch (props.backgroundStyle) {
       case BackgroundStyle.Brand:
@@ -131,10 +127,7 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
 
 export type NavigationRenderFn = () => React.ReactNode;
 export type BannerRenderFn = () => React.ReactNode;
-type SecondaryContentToggleFn = () => void;
-export type SecondaryContentRenderFn = (
-  { hidden: boolean, toggle: SecondaryContentToggleFn },
-) => React.ReactNode;
+export type SecondaryContentRenderFn = () => React.ReactNode;
 
 export interface TwoColumnLayoutProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -158,86 +151,34 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
   renderSecondaryContent,
   ...rest
 }) => {
-  const isNarrow = useMedia(`(max-width: ${BREAK_POINT - 1}px)`);
-  const [
-    stateSecondaryContentHidden,
-    setSecondaryContentHidden,
-  ] = React.useState(true);
-  const [registeredControls, setRegisteredControls] = React.useState(
-    new Set<string>(),
-  );
-  const [controlsElement, setControlsElement] = React.useState(null);
-
-  const secondaryContentHidden = isNarrow && stateSecondaryContentHidden;
-  const toggleSecondaryContent = () =>
-    setSecondaryContentHidden(wasHidden => !wasHidden);
   const hasSecondaryContent = !!renderSecondaryContent;
 
-  const registerControl = (controlName: string, present: boolean) => {
-    setRegisteredControls(oldSet => {
-      if (present) {
-        oldSet.add(controlName);
-      } else {
-        oldSet.delete(controlName);
-      }
-      return oldSet;
-    });
-  };
-
   return (
-    <Context.Provider
-      value={{
-        secondaryContentHidden,
-        toggleSecondaryContent,
-        hasSecondaryContent,
-        secondaryContentIcon,
-        isNarrow,
-        registerControl,
-        hasControls: registeredControls.size > 0,
-        controlsElement,
-      }}
-    >
-      <React.Fragment>
-        {backgroundStyle === BackgroundStyle.Art && (
-          <Background backgroundKey="layout">
-            <BackdropArt />
-          </Background>
+    <React.Fragment>
+      {backgroundStyle === BackgroundStyle.Art && (
+        <Background backgroundKey="layout">
+          <BackdropArt />
+        </Background>
+      )}
+      <Layout
+        className={classnames(className, CLASS_NAMES.LAYOUT)}
+        backgroundStyle={backgroundStyle}
+        {...rest}
+      >
+        {!!renderNavigation && (
+          <Areas.Navigation>{renderNavigation()}</Areas.Navigation>
         )}
-        <Layout
-          className={classnames(className, CLASS_NAMES.LAYOUT)}
-          backgroundStyle={backgroundStyle}
-          {...rest}
-        >
-          {!!renderNavigation && (
-            <Areas.Navigation>{renderNavigation()}</Areas.Navigation>
-          )}
-          {!!renderBanner && <Areas.Banner>{renderBanner()}</Areas.Banner>}
+        {!!renderBanner && <Areas.Banner>{renderBanner()}</Areas.Banner>}
 
-          <Areas.Content>{children}</Areas.Content>
+        <Areas.Content>{children}</Areas.Content>
 
-          {hasSecondaryContent &&
-            (isNarrow ? (
-              <Shelf expanded={!secondaryContentHidden}>
-                <Areas.Content className={CLASS_NAMES.SECONDARY_CONTENT}>
-                  {renderSecondaryContent({
-                    hidden: secondaryContentHidden,
-                    toggle: toggleSecondaryContent,
-                  })}
-                </Areas.Content>
-              </Shelf>
-            ) : (
-              <Areas.Content className={CLASS_NAMES.SECONDARY_CONTENT}>
-                {renderSecondaryContent({
-                  hidden: secondaryContentHidden,
-                  toggle: toggleSecondaryContent,
-                })}
-              </Areas.Content>
-            ))}
-
-          <Areas.Controls ref={setControlsElement} />
-        </Layout>
-      </React.Fragment>
-    </Context.Provider>
+        {hasSecondaryContent && (
+          <Areas.Content className={CLASS_NAMES.SECONDARY_CONTENT}>
+            {renderSecondaryContent()}
+          </Areas.Content>
+        )}
+      </Layout>
+    </React.Fragment>
   );
 };
 

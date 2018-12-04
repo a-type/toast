@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-11-25T15:37:06-05:00 */
+/** Generated in 2018-12-01T15:25:18-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -920,6 +920,133 @@ export namespace CalendarMealSetRecipe {
   } & CalendarMealAction.Fragment;
 }
 
+export namespace Calendar {
+  export type Variables = {
+    startDate: Date;
+    endDate: Date;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    group?: Group | null;
+  };
+
+  export type Group = {
+    __typename?: 'Group';
+
+    plan?: Plan | null;
+  };
+
+  export type Plan = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    meals: Meals[];
+  } & CalendarPlan.Fragment;
+
+  export type Meals = CalendarMeals.Fragment;
+}
+
+export namespace DayView {
+  export type Variables = {
+    date: Date;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    group?: Group | null;
+  };
+
+  export type Group = {
+    __typename?: 'Group';
+
+    plan?: Plan | null;
+  };
+
+  export type Plan = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    meals: Meals[];
+  };
+
+  export type Meals = CalendarDayViewMeals.Fragment;
+}
+
+export namespace GroceryDay {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    group?: Group | null;
+  };
+
+  export type Group = {
+    __typename?: 'Group';
+
+    plan?: Plan | null;
+  };
+
+  export type Plan = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    groceryDay: number;
+  };
+}
+
+export namespace SetGroceryDay {
+  export type Variables = {
+    groceryDay: number;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setGroceryDay: SetGroceryDay;
+  };
+
+  export type SetGroceryDay = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    groceryDay: number;
+  };
+}
+
+export namespace PreviewWeek {
+  export type Variables = {
+    strategy: ScheduleStrategy;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    schedule?: Schedule | null;
+  };
+
+  export type Schedule = {
+    __typename?: 'Schedule';
+
+    id: string;
+
+    templateWeek: TemplateWeek[];
+  };
+
+  export type TemplateWeek = {
+    __typename?: 'PlanMeal';
+
+    id: string;
+  } & PlanPreviewMeal.Fragment;
+}
+
 export namespace CalendarPlan {
   export type Variables = {
     startDate: Date;
@@ -967,52 +1094,6 @@ export namespace CalendarPlan {
 
     mealIndex: number;
   } & CalendarMeal.Fragment;
-}
-
-export namespace SetGroceryDay {
-  export type Variables = {
-    groceryDay: number;
-  };
-
-  export type Mutation = {
-    __typename?: 'Mutation';
-
-    setGroceryDay: SetGroceryDay;
-  };
-
-  export type SetGroceryDay = {
-    __typename?: 'Plan';
-
-    id: string;
-
-    groceryDay: number;
-  };
-}
-
-export namespace PreviewWeek {
-  export type Variables = {
-    strategy: ScheduleStrategy;
-  };
-
-  export type Query = {
-    __typename?: 'Query';
-
-    schedule?: Schedule | null;
-  };
-
-  export type Schedule = {
-    __typename?: 'Schedule';
-
-    id: string;
-
-    templateWeek: TemplateWeek[];
-  };
-
-  export type TemplateWeek = {
-    __typename?: 'PlanMeal';
-
-    id: string;
-  } & PlanPreviewMeal.Fragment;
 }
 
 export namespace RecipeSuggestions {
@@ -1117,25 +1198,52 @@ export namespace UnlikeRecipe {
   export type UnlikeRecipe = LikeButton.Fragment;
 }
 
-export namespace GetPreferredServings {
-  export type Variables = {};
-
-  export type Query = {
-    __typename?: 'Query';
-
-    preferredServings?: number | null;
-  };
-}
-
-export namespace SetPreferredServings {
+export namespace LinkRecipe {
   export type Variables = {
-    servings: number;
+    input: RecipeLinkInput;
   };
 
   export type Mutation = {
     __typename?: 'Mutation';
 
-    setPreferredServings: number;
+    linkRecipe: LinkRecipe;
+  };
+
+  export type LinkRecipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+  };
+}
+
+export namespace SetImage {
+  export type Variables = {
+    id: string;
+    input: ImageCreateInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    updateRecipeCoverImage: UpdateRecipeCoverImage;
+  };
+
+  export type UpdateRecipeCoverImage = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    coverImage?: CoverImage | null;
+  };
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
+
+    attribution?: string | null;
   };
 }
 
@@ -1152,21 +1260,23 @@ export namespace FullRecipe {
     me?: Me | null;
   };
 
-  export type Recipe = {
-    __typename?: 'Recipe';
+  export type Recipe =
+    | {
+        __typename?: 'Recipe';
 
-    id: string;
+        id: string;
 
-    published: boolean;
+        published: boolean;
 
-    displayType?: RecipeDisplayType | null;
+        displayType?: RecipeDisplayType | null;
 
-    ingredients: Ingredients[];
+        ingredients: Ingredients[];
 
-    steps: Steps[];
+        steps: Steps[];
 
-    coverImage?: CoverImage | null;
-  } & RecipeDetails.Fragment;
+        coverImage?: CoverImage | null;
+      } & RecipeDetails.Fragment
+    | RecipeSpotlight.Fragment;
 
   export type Ingredients = {
     __typename?: 'RecipeIngredient';
@@ -1230,6 +1340,28 @@ export namespace FullRecipe {
     __typename?: 'User';
 
     id: string;
+  };
+}
+
+export namespace GetPreferredServings {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    preferredServings?: number | null;
+  };
+}
+
+export namespace SetPreferredServings {
+  export type Variables = {
+    servings: number;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    setPreferredServings: number;
   };
 }
 
@@ -1493,6 +1625,26 @@ export namespace UserInfo {
   export type LikedRecipes = RecipeCard.Fragment;
 }
 
+export namespace ShowMessage {
+  export type Variables = {
+    contents: (string | null)[];
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    showMessage?: ShowMessage | null;
+  };
+
+  export type ShowMessage = {
+    __typename?: 'Message';
+
+    id: string;
+
+    contents: (string | null)[];
+  };
+}
+
 export namespace MergeUser {
   export type Variables = {};
 
@@ -1591,6 +1743,46 @@ export namespace CalendarMealAction {
     | CalendarMealEatAction.Fragment;
 }
 
+export namespace CalendarPlan {
+  export type Fragment = {
+    __typename?: 'Plan';
+
+    id: string;
+
+    groceryDay: number;
+  };
+}
+
+export namespace CalendarMeals {
+  export type Fragment = {
+    __typename?: 'PlanMeal';
+
+    id: string;
+
+    date: Date;
+
+    dateIndex: number;
+
+    actions: Actions[];
+  };
+
+  export type Actions = {
+    __typename?: 'MealAction';
+
+    id: string;
+
+    type: MealActionType;
+  };
+}
+
+export namespace CalendarDayViewMeals {
+  export type Fragment = CalendarDayViewMealsMeal.Fragment;
+}
+
+export namespace CalendarDayViewMealsMeal {
+  export type Fragment = CalendarMeal.Fragment;
+}
+
 export namespace CalendarMeal {
   export type Fragment = {
     __typename?: 'PlanMeal';
@@ -1615,10 +1807,6 @@ export namespace CalendarMeal {
 
     type: MealActionType;
   } & CalendarMealAction.Fragment;
-}
-
-export namespace CalendarDayViewMeals {
-  export type Fragment = CalendarMeal.Fragment;
 }
 
 export namespace PlanPreviewMeal {

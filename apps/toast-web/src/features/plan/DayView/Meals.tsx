@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { PlanMeal } from 'generated/schema';
 import gql from 'graphql-tag';
-import CalendarMeal from '../MealView';
+import CalendarMeal, { Skeleton as MealViewSkeleton } from '../MealView';
 import styled from 'styled-components';
 
 const Grid = styled.div`
   display: grid;
-  grid-template-areas: 'dinner dinner' 'lunch breakfast';
-  height: 50vh;
+  grid-template-areas: 'breakfast dinner' 'lunch dinner';
+  height: 33vh;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 
@@ -28,28 +30,30 @@ interface CalendarDayViewMealsProps {
   meals: PlanMeal[];
 }
 
+export const fragments = {
+  meals: gql`
+    fragment CalendarDayViewMealsMeal on PlanMeal {
+      ...CalendarMeal
+    }
+
+    ${CalendarMeal.fragments.meal}
+  `,
+};
+
+export const Skeleton = () => (
+  <Grid>{new Array(3).fill(null).map((_, idx) => <MealViewSkeleton />)}</Grid>
+);
+
 export default class CalendarDayViewMeals extends React.Component<
   CalendarDayViewMealsProps,
   any
 > {
-  static fragments = {
-    day: gql`
-      fragment CalendarDayViewMeals on ScheduleMeal {
-        ...CalendarMeal
-      }
-
-      ${CalendarMeal.fragments.meal}
-    `,
-  };
-
   render() {
     const { meals } = this.props;
 
     return (
       <Grid>
-        {meals.map(meal => (
-          <CalendarMeal key={meal.id} meal={meal} />
-        ))}
+        {meals.map(meal => <CalendarMeal key={meal.id} meal={meal} />)}
       </Grid>
     );
   }

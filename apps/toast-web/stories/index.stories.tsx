@@ -10,7 +10,13 @@ import { BrowserRouter } from 'react-router-dom';
 
 import Grid from './components/Grid';
 
-import { Button, Input, Checkbox, Form } from '../src/components/generic';
+import {
+  Button,
+  Input,
+  Checkbox,
+  Form,
+  Calendar,
+} from '../src/components/generic';
 import { P, H1, H2, Link } from '../src/components/typeset';
 import { Logo, BackdropArt } from '../src/components/brand';
 
@@ -121,4 +127,8 @@ storiesOf('BackdropArt', module).add('basic', () => (
   <div style={{ width: '100vw', height: '100vh' }}>
     <BackdropArt />
   </div>
+));
+
+storiesOf('Calendar', module).add('basic', () => (
+  <Calendar value={new Date()} onChange={action} />
 ));

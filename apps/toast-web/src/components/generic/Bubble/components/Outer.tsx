@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { Bubbles } from 'components/graphics';
 
-export default styled(Bubbles)`
+export default styled.div`
+  position: relative;
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
+  overflow: hidden;
+  padding: var(--spacing-sm);
 `;

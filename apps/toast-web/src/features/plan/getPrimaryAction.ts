@@ -1,7 +1,10 @@
 import { MealAction, MealActionType, PlanMeal } from 'generated/schema';
 
-export default (meal: Partial<PlanMeal>): MealAction | null => {
-  const { actions } = meal;
+export default (meals: Partial<PlanMeal>[]): MealAction | null => {
+  const actions = meals.reduce(
+    (allActions, meal) => [...allActions, ...meal.actions],
+    [],
+  );
 
   const proiritizedActionTypes: MealActionType[] = [
     MealActionType.COOK,
