@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-12-01T15:25:18-05:00 */
+/** Generated in 2018-12-05T21:27:00-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -395,6 +395,8 @@ export interface MealActionCook extends MealAction {
   recipeType: MealRecipeType;
 
   recipe?: Recipe | null;
+
+  recipeId?: string | null;
 }
 
 export interface MealActionEat extends MealAction {
@@ -920,6 +922,36 @@ export namespace CalendarMealSetRecipe {
   } & CalendarMealAction.Fragment;
 }
 
+export namespace RecipeCookActionPreview {
+  export type Variables = {
+    recipeId: string;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    recipe?: Recipe | null;
+  };
+
+  export type Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    title: string;
+
+    coverImage?: CoverImage | null;
+  };
+
+  export type CoverImage = {
+    __typename?: 'Image';
+
+    id: string;
+
+    url: string;
+  };
+}
+
 export namespace Calendar {
   export type Variables = {
     startDate: Date;
@@ -935,6 +967,8 @@ export namespace Calendar {
   export type Group = {
     __typename?: 'Group';
 
+    id: string;
+
     plan?: Plan | null;
   };
 
@@ -946,12 +980,17 @@ export namespace Calendar {
     meals: Meals[];
   } & CalendarPlan.Fragment;
 
-  export type Meals = CalendarMeals.Fragment;
+  export type Meals = {
+    __typename?: 'PlanMeal';
+
+    id: string;
+  } & CalendarMeals.Fragment;
 }
 
 export namespace DayView {
   export type Variables = {
-    date: Date;
+    startDate: Date;
+    endDate: Date;
   };
 
   export type Query = {
@@ -963,6 +1002,8 @@ export namespace DayView {
   export type Group = {
     __typename?: 'Group';
 
+    id: string;
+
     plan?: Plan | null;
   };
 
@@ -972,9 +1013,15 @@ export namespace DayView {
     id: string;
 
     meals: Meals[];
-  };
+  } & CalendarPlan.Fragment;
 
-  export type Meals = CalendarDayViewMeals.Fragment;
+  export type Meals =
+    | {
+        __typename?: 'PlanMeal';
+
+        id: string;
+      } & CalendarMeals.Fragment
+    | CalendarDayViewMeals.Fragment;
 }
 
 export namespace GroceryDay {
@@ -1343,6 +1390,24 @@ export namespace FullRecipe {
   };
 }
 
+export namespace RecipeCard {
+  export type Variables = {
+    recipeId: string;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    recipe?: Recipe | null;
+  };
+
+  export type Recipe = {
+    __typename?: 'Recipe';
+
+    id: string;
+  } & RecipeCard.Fragment;
+}
+
 export namespace GetPreferredServings {
   export type Variables = {};
 
@@ -1673,25 +1738,7 @@ export namespace CalendarMealCookAction {
 
     recipeType: MealRecipeType;
 
-    recipe?: Recipe | null;
-  };
-
-  export type Recipe = {
-    __typename?: 'Recipe';
-
-    id: string;
-
-    title: string;
-
-    coverImage?: CoverImage | null;
-  };
-
-  export type CoverImage = {
-    __typename?: 'Image';
-
-    id: string;
-
-    url: string;
+    recipeId?: string | null;
   };
 }
 
@@ -1776,7 +1823,11 @@ export namespace CalendarMeals {
 }
 
 export namespace CalendarDayViewMeals {
-  export type Fragment = CalendarDayViewMealsMeal.Fragment;
+  export type Fragment = {
+    __typename?: 'PlanMeal';
+
+    id: string;
+  } & CalendarMeal.Fragment;
 }
 
 export namespace CalendarDayViewMealsMeal {

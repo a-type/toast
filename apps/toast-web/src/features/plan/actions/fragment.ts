@@ -4,14 +4,7 @@ const cookActionFragment = gql`
   fragment CalendarMealCookAction on MealActionCook {
     servings
     recipeType
-    recipe {
-      id
-      title
-      coverImage {
-        id
-        url
-      }
-    }
+    recipeId
   }
 `;
 

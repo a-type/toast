@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CalendarMealSetRecipeMutation from './CalendarMealSetRecipeMutation';
+import CalendarMealSetRecipeMutation from '../CalendarMealSetRecipeMutation';
 import { RecipeSelector } from 'features/plan';
 import { MealActionCook } from 'generated/schema';
 import { Card, Icon, Button } from 'components/generic';
@@ -8,6 +8,7 @@ import logger from 'logger';
 import { pathOr } from 'ramda';
 import styled from 'styled-components';
 import { Span } from 'components/typeset';
+import RecipePreviewQuery from './RecipePreviewQuery';
 
 interface CalendarCookActionProps {
   dateIndex: number;
@@ -47,23 +48,35 @@ export default class CalendarCookAction extends React.Component<
   showRecipeSelector = () => this.setState({ showRecipeSelector: true });
   hideRecipeSelector = () => this.setState({ showRecipeSelector: false });
 
-  getCardImage = () => {
-    const { action } = this.props;
-    const url = pathOr(null, ['recipe', 'coverImage', 'url'], action);
-    return url;
-  };
-
   renderCard = () => {
     const { action } = this.props;
     const { loading } = this.state;
-    const recipe = action.recipe || null;
+    const recipeId = action.recipeId || null;
 
-    if (recipe) {
+    if (recipeId) {
       return (
-        <Card imageSrc={this.getCardImage()}>
-          <Span>{recipe.title}</Span>
-          <Button onClick={this.showRecipeSelector}>Change</Button>
-        </Card>
+        <RecipePreviewQuery variables={{ recipeId }}>
+          {({ data, networkStatus, error }) => {
+            if (networkStatus < 7) {
+              return <Card.Skeleton />;
+            }
+
+            if (error) {
+              logger.fatal(error);
+              return <EmptyCard />;
+            }
+
+            const recipe = pathOr({}, ['recipe'], data);
+            const image = pathOr(null, ['recipe', 'coverImage', 'url'], data);
+
+            return (
+              <Card imageSrc={image}>
+                <Span>{recipe.title}</Span>
+                <Button onClick={this.showRecipeSelector}>Change</Button>
+              </Card>
+            );
+          }}
+        </RecipePreviewQuery>
       );
     }
 

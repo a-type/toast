@@ -45,6 +45,10 @@ export const typeDefs = gql`
     servings: Int!
     recipeType: MealRecipeType!
     recipe: Recipe
+    """
+    A raw recipe ID. This can be useful to avoid fetching the whole recipe.
+    """
+    recipeId: String
   }
 
   type MealActionEat implements MealAction {

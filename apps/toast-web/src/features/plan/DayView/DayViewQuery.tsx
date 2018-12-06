@@ -3,16 +3,19 @@ import { Query, QueryResult } from 'react-apollo';
 import gql from 'graphql-tag';
 import { DayView } from 'generated/schema';
 import fragments from './fragments';
+import calendarFragments from 'features/plan/Calendar/fragments';
 
 export const Document = gql`
-  query DayView($date: Date!) {
+  query DayView($startDate: Date!, $endDate: Date!) {
     group {
       id
       plan {
         id
+        ...CalendarPlan
 
-        meals(startDate: $date) {
+        meals(startDate: $startDate, endDate: $endDate) {
           id
+          ...CalendarMeals
           ...CalendarDayViewMeals
         }
       }
@@ -20,6 +23,8 @@ export const Document = gql`
   }
 
   ${fragments.meals}
+  ${calendarFragments.plan}
+  ${calendarFragments.meals}
 `;
 
 interface DayViewQueryProps {
@@ -31,7 +36,12 @@ interface DayViewQueryProps {
 }
 
 const DayViewQuery: React.SFC<DayViewQueryProps> = props => (
-  <Query<DayView.Query, DayView.Variables> query={Document} partialRefetch fetchPolicy="cache-first" {...props} />
+  <Query<DayView.Query, DayView.Variables>
+    query={Document}
+    partialRefetch
+    fetchPolicy="cache-first"
+    {...props}
+  />
 );
 
 export default DayViewQuery;
