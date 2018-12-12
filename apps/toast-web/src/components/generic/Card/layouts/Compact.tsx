@@ -20,10 +20,7 @@ const Border = styled.div`
 const CompactCard = React.forwardRef<any, ShapedCardProps>(
   ({ imageSrc, children, className, shape }, ref) => (
     <Border ref={ref} className={className} data-card-shape={shape}>
-      <Content>
-        <div data-grid-area="content">{children}</div>
-        <div data-grid-area="controls" />
-      </Content>
+      <Content>{children}</Content>
     </Border>
   ),
 );

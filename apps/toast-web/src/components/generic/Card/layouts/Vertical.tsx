@@ -32,10 +32,7 @@ const VerticalCard = React.forwardRef<any, ShapedCardProps>(
       className={className}
       data-card-shape={shape}
     >
-      <Content>
-        <div data-grid-area="content">{children}</div>
-        <div data-grid-area="controls" />
-      </Content>
+      <Content>{children}</Content>
     </Wrapper>
   ),
 );
