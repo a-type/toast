@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { Background } from './components';
-import { Foreground } from 'components/generic';
+import { Background, ScrollArea, Controls } from './components';
+import { Foreground, Button } from 'components/generic';
 import { DURATION } from './constants';
 import OutsideClickHandler from 'react-outside-click-handler';
 
@@ -70,7 +70,12 @@ export default class Popup extends React.PureComponent<PopupProps, PopupState> {
             in={!closing}
             unmountOnExit
           >
-            <Background key="popup">{this.renderContent()}</Background>
+            <Background key="popup">
+              <ScrollArea>{this.renderContent()}</ScrollArea>
+              <Controls>
+                <Button onClick={this.handleClose}>Close</Button>
+              </Controls>
+            </Background>
           </CSSTransition>
         </OutsideClickHandler>
       </Foreground>

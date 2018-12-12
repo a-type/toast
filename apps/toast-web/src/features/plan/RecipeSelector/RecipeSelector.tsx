@@ -14,15 +14,12 @@ const RecipeSelector: React.SFC<RecipeSelectorProps> = ({
 }) => (
   <Popup onClose={onCancel}>
     {({ handleClose }) => (
-      <React.Fragment>
-        <RecipeSuggestions
-          onRecipeSelected={recipe => {
-            onChange(recipe);
-            handleClose();
-          }}
-        />
-        <Button onClick={handleClose}>Cancel</Button>
-      </React.Fragment>
+      <RecipeSuggestions
+        onRecipeSelected={recipe => {
+          onChange(recipe);
+          handleClose();
+        }}
+      />
     )}
   </Popup>
 );

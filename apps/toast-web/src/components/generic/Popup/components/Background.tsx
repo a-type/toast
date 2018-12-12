@@ -15,7 +15,7 @@ export default styled.div`
   box-shadow: 0 -4px 8px 0 #280f3420;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
   border: 2px solid var(--color-gray-lightest);
 
   &.appear-appear {
@@ -35,7 +35,6 @@ export default styled.div`
   & > * {
     padding: var(--spacing-md);
     flex: 1 1 auto;
-    overflow-y: auto;
   }
 
   @media (min-width: 700px) {

@@ -15,11 +15,13 @@ const Image = styled<{ src: string }, 'div'>('div')`
 const Border = styled.div`
   border: 2px solid var(--color-gray-lightest);
   border-radius: var(--border-radius-lg);
+
+  cursor: ${props => (props.onClick ? 'pointer' : 'default')};
 `;
 
 const CompactCard = React.forwardRef<any, ShapedCardProps>(
-  ({ imageSrc, children, className, shape }, ref) => (
-    <Border ref={ref} className={className} data-card-shape={shape}>
+  ({ imageSrc, children, className, shape, ...rest }, ref) => (
+    <Border ref={ref} className={className} {...rest} data-card-shape={shape}>
       <Content>{children}</Content>
     </Border>
   ),

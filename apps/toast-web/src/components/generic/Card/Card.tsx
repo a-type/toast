@@ -30,8 +30,8 @@ const useCardLayout = (): [any, LayoutMode] => {
   const ref = React.useRef(null);
   const { width, height } = useComponentSize(ref);
   let layout;
-  if (width > 300) {
-    if (height >= width) {
+  if (width >= 250) {
+    if (height >= 250) {
       layout = LayoutMode.Vertical;
     } else {
       layout = LayoutMode.Horizontal;
