@@ -2,11 +2,9 @@ import * as React from 'react';
 import CalendarMealSetRecipeMutation from '../CalendarMealSetRecipeMutation';
 import { RecipeSelector } from 'features/plan';
 import { MealActionCook } from 'generated/schema';
-import { Card, Icon, Button } from 'components/generic';
-import CardBox from 'components/generic/Card/Box';
+import { Card, Button } from 'components/generic';
 import logger from 'logger';
 import { pathOr } from 'ramda';
-import styled from 'styled-components';
 import { Span } from 'components/typeset';
 import RecipePreviewQuery from './RecipePreviewQuery';
 
@@ -21,19 +19,6 @@ interface CalendarCookActionState {
   loading: boolean;
   error: Error | null;
 }
-
-const EmptyCard = styled(CardBox)`
-  background: var(--color-gray-lightest);
-  border-color: var(--color-gray-lightest);
-  display: flex;
-  height: 100%;
-  color: var(--color-gray);
-  cursor: pointer;
-
-  & > * {
-    margin: auto;
-  }
-`;
 
 export default class CalendarCookAction extends React.Component<
   CalendarCookActionProps,
@@ -63,7 +48,7 @@ export default class CalendarCookAction extends React.Component<
 
             if (error) {
               logger.fatal(error);
-              return <EmptyCard />;
+              return <Card.Skeleton />;
             }
 
             const recipe = pathOr({}, ['recipe'], data);
@@ -84,11 +69,7 @@ export default class CalendarCookAction extends React.Component<
       return <Card.Skeleton />;
     }
 
-    return (
-      <EmptyCard onClick={this.showRecipeSelector}>
-        <Icon name="add" size="60px" />
-      </EmptyCard>
-    );
+    return <Card onClick={this.showRecipeSelector}>No recipe selected</Card>;
   };
 
   render() {

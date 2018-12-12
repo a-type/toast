@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'components/generic';
+import Card, { CardShape } from 'components/generic/Card';
 import gql from 'graphql-tag';
 import { path } from 'ramda';
 import styled from 'styled-components';
@@ -15,22 +15,22 @@ const Row = styled.div`
   }
 `;
 
-const getClassName = recipe => {
+const getShape = recipe => {
   if (recipe.coverImage) {
-    return 'large';
+    return CardShape.Large;
   }
 
   if (recipe.title.length > 32) {
-    return 'wide';
+    return CardShape.Wide;
   }
 
-  return 'normal';
+  return CardShape.Normal;
 };
 
 const RecipeCard = ({ recipe, onClick }) => (
   <Card
     imageSrc={path(['coverImage', 'url'], recipe)}
-    shape={getClassName(recipe)}
+    shape={getShape(recipe)}
     onClick={onClick}
   >
     <Row>

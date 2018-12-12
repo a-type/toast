@@ -20,12 +20,12 @@ export default styled<{ loading?: boolean }, 'div'>('div')`
     height: 100%;
   }
 
-  & > *.large {
+  & > *[data-card-shape='large'] {
     grid-column-end: span 2;
     grid-row-end: span 2;
   }
 
-  & > *.wide {
+  & > *[data-card-shape='wide'] {
     grid-column-end: span 2;
   }
 `;

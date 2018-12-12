@@ -13,6 +13,9 @@ const Grid = styled.div`
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 
+  justify-content: stretch;
+  align-items: stretch;
+
   & > *:first-child {
     grid-area: breakfast;
   }
@@ -41,7 +44,11 @@ export const fragments = {
 };
 
 export const Skeleton = () => (
-  <Grid>{new Array(3).fill(null).map((_, idx) => <MealViewSkeleton />)}</Grid>
+  <Grid>
+    {new Array(3).fill(null).map((_, idx) => (
+      <MealViewSkeleton />
+    ))}
+  </Grid>
 );
 
 export default class CalendarDayViewMeals extends React.Component<
@@ -53,7 +60,9 @@ export default class CalendarDayViewMeals extends React.Component<
 
     return (
       <Grid>
-        {meals.map(meal => <CalendarMeal key={meal.id} meal={meal} />)}
+        {meals.map(meal => (
+          <CalendarMeal key={meal.id} meal={meal} />
+        ))}
       </Grid>
     );
   }
