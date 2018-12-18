@@ -45,7 +45,7 @@ export default VerticalCard;
 export const Skeleton = React.forwardRef<any, ShapedCardSkeletonProps>(
   ({ shape }, ref) => (
     <VerticalCard shape={shape} ref={ref}>
-      <P.Skeleton />
+      <P.Skeleton maxWords={3} />
     </VerticalCard>
   ),
 );

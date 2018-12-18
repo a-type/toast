@@ -6,6 +6,9 @@ import graph, { Graph } from 'services/graph';
 import planner from 'models/Schedule/planner';
 import logger from './logger';
 import { TransactionFunction } from 'types';
+import recipeScraper from 'services/recipeScraper';
+import gcloudStorage from 'services/gcloudStorage';
+import ingredientParser from 'services/ingredientParser';
 
 logger.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 
@@ -26,6 +29,9 @@ export type Context = {
   firestore: typeof firestore;
   graph: Graph;
   planner: typeof planner;
+  recipeScraper: typeof recipeScraper;
+  gcloudStorage: typeof gcloudStorage;
+  ingredientParser: typeof ingredientParser;
   user: { id: string };
   scopes: string[];
 };
@@ -59,6 +65,9 @@ export const createContext = async (req): Promise<Context> => {
     firestore,
     graph: graph({ writeMode: isMutation, user, scopes }),
     planner,
+    recipeScraper,
+    gcloudStorage,
+    ingredientParser,
 
     user,
     scopes,

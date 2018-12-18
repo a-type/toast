@@ -1,6 +1,7 @@
 import { pick, omit } from 'ramda';
 import { NotFoundError } from 'errors';
 import { GraphContext } from '../types';
+import { camel } from 'change-case';
 
 export default class Source<T> {
   ctx: GraphContext;
@@ -26,7 +27,7 @@ export default class Source<T> {
 
   hydrateOne = (
     result,
-    { key = this.resourceName.toLowerCase(), throwIfNone = false } = {},
+    { key = camel(this.resourceName), throwIfNone = false } = {},
   ): T => {
     if (!result.records.length) {
       if (throwIfNone) {
@@ -39,7 +40,7 @@ export default class Source<T> {
 
   hydrateList = (
     result,
-    { key = this.resourceName.toLowerCase(), throwIfNone = false } = {},
+    { key = camel(this.resourceName), throwIfNone = false } = {},
   ): T[] => {
     if (!result.records.length) {
       if (throwIfNone) {

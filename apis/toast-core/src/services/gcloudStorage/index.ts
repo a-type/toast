@@ -2,6 +2,7 @@ import Storage from '@google-cloud/storage';
 import config from 'config';
 import uuid from 'uuid';
 import logger from 'logger';
+import { File } from 'types';
 
 logger.info('GCloud Project ID: ', config.gcloud.projectId);
 logger.info('GCloud Media Bucket: ', config.gcloud.storage.bucket);
@@ -17,8 +18,10 @@ export interface UploadResult {
   url: string;
 }
 
+export type MediaType = 'images';
+
 export default {
-  upload: async (file, mediaType): Promise<UploadResult> => {
+  upload: async (file: File, mediaType: MediaType): Promise<UploadResult> => {
     const id = uuid();
     const { stream, mimetype } = file;
 

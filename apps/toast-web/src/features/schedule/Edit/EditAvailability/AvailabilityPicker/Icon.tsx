@@ -1,14 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Icon } from 'components/generic';
 import { getIcon, getIconColor, getForeground } from '../../common';
 import { withProps } from 'recompose';
+import Icon, { IconName } from 'components/generic/Icon';
 
 const SIZE = 48;
 
 interface CircleIconProps {
   value: string;
-  name: string;
+  name: IconName;
 }
 
 const CircleIcon = styled<CircleIconProps>(({ value, ...rest }) => (

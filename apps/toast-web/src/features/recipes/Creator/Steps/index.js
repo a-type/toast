@@ -10,7 +10,7 @@ export const RecipeCreateStepsFragment = gql`
   fragment RecipeCreateSteps on Recipe {
     id
     steps {
-      ...RecipeCreateSteps
+      ...RecipeCreateStep
     }
   }
 

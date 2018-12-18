@@ -202,6 +202,10 @@ export default class SelectionEditor extends React.Component {
 
     selections.forEach(selection => {
       let text = selection.text;
+      if (!text) {
+        return;
+      }
+
       if (
         selection.name === this.state.activeSelection &&
         this.state.hypotheticalRange

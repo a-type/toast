@@ -4,6 +4,11 @@ const DEBUG = process.env.NODE_ENV !== 'production';
 
 const keyBlacklist = ['password', 'secret'];
 const convert = item => {
+  if (item instanceof Error) {
+    return `${item.name}: ${item.message}
+    ${item.stack}
+    `;
+  }
   if (typeof item === 'object') {
     return JSON.stringify(
       item,

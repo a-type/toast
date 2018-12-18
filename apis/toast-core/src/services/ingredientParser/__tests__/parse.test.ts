@@ -1,4 +1,4 @@
-import parse from '../index';
+import parse from '../parse';
 
 describe('ingredient parser', () => {
   test('1 cup of oats', () => {

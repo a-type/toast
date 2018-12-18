@@ -61,3 +61,6 @@ auth0:
   issuer: https://toastcooking.auth0.com/
   audience: https://toastcooking.app
   configSecretName: auth0-config
+
+services:
+  recipeScraperSecretName: recipe-scraper-secret

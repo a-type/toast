@@ -83,6 +83,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.auth0.configSecretName }}
                   key: apiClientSecret
+            - name: RECIPE_SCRAPER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.services.recipeScraperSecretName }}
+                  key: secret
       volumes:
         - name: tls-secret
           secret:

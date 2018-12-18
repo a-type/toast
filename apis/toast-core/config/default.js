@@ -40,7 +40,8 @@ module.exports = {
       },
     },
   },
-  imageService: {
-    host: 'http://localhost:9000',
+  recipeScraper: {
+    endpoint: process.env.RECIPE_SCRAPER_API_ENDPOINT,
+    secret: process.env.RECIPE_SCRAPER_API_SECRET,
   },
 };

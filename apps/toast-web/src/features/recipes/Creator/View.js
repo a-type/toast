@@ -166,7 +166,7 @@ export default class RecipeCreator extends React.PureComponent {
     const { queryData } = this.state;
 
     if (loading) {
-      return <Hero loading />;
+      return null;
     }
 
     return (

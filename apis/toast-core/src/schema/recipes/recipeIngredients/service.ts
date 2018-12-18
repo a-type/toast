@@ -199,7 +199,7 @@ export const parseRecipeIngredient_withTransaction = async (
         ingredientTextMatch: $ingredientTextMatch,
         text: $text
       })<-[:USED_IN]-(ingredient)
-      RETURN recipe {${ctx.graph.recipes.dbFields}}
+      RETURN recipe {${ctx.recipes.dbFields}}
       `,
     {
       text: input.text,

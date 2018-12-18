@@ -21,4 +21,9 @@ module.exports = {
       },
     },
   },
+  recipeScraper: {
+    endpoint:
+      'https://us-central1-toast-cooking-0.cloudfunctions.net/scrapeRecipe',
+    secret: process.env.RECIPE_SCRAPER_SECRET,
+  },
 };

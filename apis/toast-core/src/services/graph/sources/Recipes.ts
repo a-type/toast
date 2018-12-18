@@ -5,6 +5,8 @@ import Source from './Source';
 import { parseRecipeIngredient_withTransaction } from 'schema/recipes/recipeIngredients/service';
 import { RecipeIngredient } from './RecipeIngredients';
 import { Ingredient } from './Ingredients';
+import { Image } from './Images';
+import { File } from 'types';
 
 export interface Recipe {
   id: string;
@@ -22,6 +24,9 @@ export interface Recipe {
   cookTime: number;
   prepTime: number;
   unattendedTime: number;
+
+  coverImage?: Image;
+  ingredients?: RecipeIngredient[];
 }
 
 export interface RecipeIngredientWithIngredient extends RecipeIngredient {
@@ -234,7 +239,7 @@ export default class Recipes extends Source<Recipe> {
       return this.hydrateOne(result);
     });
 
-  link = (input: Partial<Recipe> & { ingredientStrings: string[] }) =>
+  link = (input: Partial<Recipe>) =>
     this.ctx.transaction(async tx => {
       const user = this.ctx.user;
       const time = timestamp();
@@ -284,17 +289,6 @@ export default class Recipes extends Source<Recipe> {
         RETURN r
         `,
         { recipeId: recipe.id, userId: user.id },
-      );
-
-      await Promise.all(
-        input.ingredientStrings.map(ingredientString => {
-          return parseRecipeIngredient_withTransaction(
-            recipe.id,
-            { text: ingredientString },
-            tx,
-            this.ctx,
-          );
-        }),
       );
 
       return recipe;
@@ -365,5 +359,30 @@ export default class Recipes extends Source<Recipe> {
       );
 
       return this.hydrateOne(result);
+    });
+
+  updateCoverImage = (
+    recipeId: string,
+    input: { url: string; attribution: string; id?: string },
+  ) =>
+    this.ctx.transaction(async tx => {
+      const result = await tx.run(
+        `
+        MATCH (recipe:Recipe { id: $recipeId })
+        MERGE (recipe)-[:COVER_IMAGE]->(image:Image { id: $imageId, url: $imageSrc, attribution: $attribution })
+        RETURN recipe {${this.dbFields}}, image {${this.graph.images.dbFields}}
+        `,
+        {
+          recipeId,
+          imageSrc: input.url,
+          attribution: input.attribution,
+          imageId: input.id || id('image'),
+        },
+      );
+
+      const recipe = this.hydrateOne(result);
+      recipe.coverImage = this.graph.images.hydrateOne(result);
+
+      return recipe;
     });
 }

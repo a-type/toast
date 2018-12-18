@@ -46,7 +46,7 @@ export default ({ servings }) => (
                 >
                   {displayServings !== servings && (
                     <Input.Group.Button onClick={() => setServings(servings)}>
-                      <Icon name="delete" />
+                      <Icon name="delete-button" />
                     </Input.Group.Button>
                   )}
                 </Input.Group>

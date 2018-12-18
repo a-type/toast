@@ -3,13 +3,16 @@ import styled, { StyledComponentClass } from 'styled-components';
 import { getSize, Size } from 'theme';
 import Span from './Span';
 
-interface PProps {
+export interface PProps {
   spaceBelow?: Size | string;
   textSize?: Size;
 }
+export interface PSkeletonProps {
+  maxWords?: number;
+}
 
 interface PWithSkeleton extends StyledComponentClass<PProps, {}> {
-  Skeleton?: React.ComponentClass<{}>;
+  Skeleton?: React.ComponentClass<PSkeletonProps>;
 }
 
 const P = styled<PProps, 'p'>('p')`
@@ -23,8 +26,20 @@ const P = styled<PProps, 'p'>('p')`
   }
 ` as PWithSkeleton;
 
-P.Skeleton = class PSkeleton extends React.PureComponent {
-  wordCount = Math.floor(Math.random() * 8) + 4;
+P.Skeleton = class PSkeleton extends React.PureComponent<PSkeletonProps> {
+  static defaultProps = {
+    maxWords: 8,
+  };
+
+  wordCount: number;
+
+  constructor(props) {
+    super(props);
+    const { maxWords = 8 } = props;
+    this.wordCount =
+      Math.floor(Math.random() * (maxWords * (3 / 4))) +
+      Math.max(1, Math.floor(maxWords / 4));
+  }
 
   render() {
     return (

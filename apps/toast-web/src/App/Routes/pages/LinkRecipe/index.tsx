@@ -7,22 +7,10 @@ import { LayoutTypes, Layout } from 'components/layout';
 export default class LinkRecipePage extends React.PureComponent<
   RouteComponentProps
 > {
-  redirectOnDone = recipe => {
-    this.props.history.push(`/recipes/${recipe.id}`);
-  };
-
   render() {
-    const { location } = this.props;
-
-    const query = queryString.parse(location.search);
-
     return (
-      <Layout
-        noScroll
-        backgroundStyle={LayoutTypes.BackgroundStyle.Art}
-        renderNavigation={() => null}
-      >
-        <Linker onDone={this.redirectOnDone} externalParams={query} />
+      <Layout backgroundStyle={LayoutTypes.BackgroundStyle.Art}>
+        <Linker />
       </Layout>
     );
   }

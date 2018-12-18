@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-12-05T21:27:00-05:00 */
+/** Generated in 2018-12-17T19:57:07-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -316,7 +316,7 @@ export interface Mutation {
 
   createRecipe: Recipe;
 
-  linkRecipe: Recipe;
+  linkRecipe: RecipeLinkResult;
 
   updateRecipeDetails?: Recipe | null;
 
@@ -379,6 +379,12 @@ export interface Mutation {
   removeSearchFilter?: SearchFilter | null;
 
   resetSearch?: number | null;
+}
+
+export interface RecipeLinkResult {
+  recipe: Recipe;
+
+  problems: RecipeLinkProblem[];
 }
 
 export interface MealActionCook extends MealAction {
@@ -526,23 +532,7 @@ export interface RecipeCreateInput {
 }
 
 export interface RecipeLinkInput {
-  title: string;
-
-  description?: string | null;
-
-  attribution: string;
-
-  sourceUrl: string;
-
-  ingredientStrings: string[];
-
-  cookTime?: number | null;
-
-  prepTime?: number | null;
-
-  unattendedTime?: number | null;
-
-  servings?: number | null;
+  url: string;
 }
 
 export interface RecipeDetailsUpdateInput {
@@ -849,6 +839,13 @@ export enum ScheduleStrategy {
   BASIC = 'BASIC',
   PREP = 'PREP',
   BIG_PREP = 'BIG_PREP',
+}
+
+export enum RecipeLinkProblem {
+  FailedIngredients = 'FailedIngredients',
+  IncompleteIngredients = 'IncompleteIngredients',
+  FailedImage = 'FailedImage',
+  FailedAll = 'FailedAll',
 }
 
 export enum CacheControlScope {
@@ -1247,7 +1244,7 @@ export namespace UnlikeRecipe {
 
 export namespace LinkRecipe {
   export type Variables = {
-    input: RecipeLinkInput;
+    url: string;
   };
 
   export type Mutation = {
@@ -1257,40 +1254,17 @@ export namespace LinkRecipe {
   };
 
   export type LinkRecipe = {
+    __typename?: 'RecipeLinkResult';
+
+    recipe: Recipe;
+
+    problems: RecipeLinkProblem[];
+  };
+
+  export type Recipe = {
     __typename?: 'Recipe';
 
     id: string;
-  };
-}
-
-export namespace SetImage {
-  export type Variables = {
-    id: string;
-    input: ImageCreateInput;
-  };
-
-  export type Mutation = {
-    __typename?: 'Mutation';
-
-    updateRecipeCoverImage: UpdateRecipeCoverImage;
-  };
-
-  export type UpdateRecipeCoverImage = {
-    __typename?: 'Recipe';
-
-    id: string;
-
-    coverImage?: CoverImage | null;
-  };
-
-  export type CoverImage = {
-    __typename?: 'Image';
-
-    id: string;
-
-    url: string;
-
-    attribution?: string | null;
   };
 }
 

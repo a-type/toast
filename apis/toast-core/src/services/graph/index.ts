@@ -8,6 +8,7 @@ import {
   Recipes,
   Ingredients,
   RecipeIngredients,
+  Images,
 } from './sources';
 
 const driver = neo4j.driver(
@@ -21,6 +22,7 @@ export type Graph = {
   recipes: Recipes;
   ingredients: Ingredients;
   recipeIngredients: RecipeIngredients;
+  images: Images;
 };
 
 export default (
@@ -58,6 +60,7 @@ export default (
     recipes: new Recipes(ctx, graph),
     ingredients: new Ingredients(ctx, graph),
     recipeIngredients: new RecipeIngredients(ctx, graph),
+    images: new Images(ctx, graph),
   });
 
   return graph as Graph;

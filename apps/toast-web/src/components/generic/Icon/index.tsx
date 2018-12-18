@@ -3,6 +3,45 @@ import styled from 'styled-components';
 import classnames from 'classnames';
 import icons from './Toast2.min.svg';
 
+export type IconName =
+  | 'beach'
+  | 'calendar-delete'
+  | 'calendar-plus'
+  | 'calendar'
+  | 'check-list'
+  | 'chef-toque'
+  | 'copybook'
+  | 'delete-button'
+  | 'draft'
+  | 'edit'
+  | 'expand-arrow'
+  | 'green-check-mark'
+  | 'heart-outline'
+  | 'heart'
+  | 'image'
+  | 'index'
+  | 'link'
+  | 'list-view'
+  | 'login'
+  | 'microwave'
+  | 'more'
+  | 'next-page'
+  | 'plus-math'
+  | 'profile-picture'
+  | 'run'
+  | 'sand-timer'
+  | 'search'
+  | 'skip-this-track'
+  | 'star'
+  | 'three-dots-symbol'
+  | 'timer-2'
+  | 'timer'
+  | 'unavailable-cloud'
+  | 'view-more'
+  | 'waiter'
+  | 'walk'
+  | 'warn';
+
 export type IconStyleProps = {
   iconGroup?: 'Toast2' | 'Food';
   size?: string;
@@ -12,7 +51,7 @@ export type IconStyleProps = {
 };
 
 export type IconProps = IconStyleProps & {
-  name: string;
+  name: IconName;
   className?: string;
 };
 
@@ -20,7 +59,6 @@ const Svg = styled.svg`
   display: inline-block;
   width: 100%;
   height: 100%;
-  fill: currentColor;
 `;
 
 const Icon = styled<IconStyleProps, 'i'>('i')`

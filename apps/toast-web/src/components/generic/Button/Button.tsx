@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
-import Icon from '../Icon';
+import Icon, { IconName } from '../Icon';
 import { focusShadow } from 'components/effects';
 import { Size, getSize } from 'theme';
 
@@ -10,7 +10,7 @@ export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   disabled?: boolean;
 };
 export type IconButtonProps = ButtonProps & {
-  name: string;
+  name: IconName;
   iconProps?: {};
   as?: StyledComponentClass<ButtonProps, {}>;
   ref?: React.Ref<HTMLButtonElement>;

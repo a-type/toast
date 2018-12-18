@@ -6,6 +6,7 @@ const Content = styled.div`
   height: 100%;
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
+  overflow: hidden;
 `;
 
 export default Content;

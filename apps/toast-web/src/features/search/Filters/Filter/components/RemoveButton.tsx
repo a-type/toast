@@ -13,7 +13,7 @@ interface RemoveButtonProps {
 
 const RemoveButton: React.SFC<RemoveButtonProps> = ({ onClick }) => (
   <ButtonStyle onClick={onClick}>
-    <Icon name="x-button" />
+    <Icon name="delete-button" />
   </ButtonStyle>
 );
 

@@ -26,20 +26,7 @@ export const getRecipeCoverImage = async (id, ctx) => {
 export const updateRecipeCoverImage = async (id, input, ctx) => {
   let file = await input.file;
   if (!file && input.url) {
-    const response = await fetch(input.url);
-    const filename = input.url.split('/').pop();
-    const fileExt = filename.split('.').pop();
-    const buffer = await response.buffer();
-    const stream = new Readable();
-    stream._read = () => {};
-    stream.push(buffer);
-    stream.push(null);
-
-    file = {
-      stream,
-      filename,
-      mimetype: mime.lookup(fileExt),
-    };
+    file = await ctx.recipeScraper.getImagePseudoFile(input.url);
   }
 
   if (file) {

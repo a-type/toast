@@ -32,7 +32,7 @@ export default CompactCard;
 export const Skeleton = React.forwardRef<any, ShapedCardSkeletonProps>(
   ({ shape }, ref) => (
     <CompactCard shape={shape} ref={ref}>
-      <P.Skeleton />
+      <P.Skeleton maxWords={3} />
     </CompactCard>
   ),
 );
