@@ -1,31 +1,38 @@
-import React, { createContext } from 'react';
+import * as React from 'react';
 import auth from 'services/auth';
+import { AuthUser, AuthEventType } from 'services/auth/types';
 
-const ctx = createContext();
+interface AuthContext {
+  user: AuthUser;
+  isLoggedIn: boolean;
+  hasScope(scope: string): boolean;
+}
+
+const ctx = React.createContext<AuthContext>(null);
 const InternalProvider = ctx.Provider;
 
 class TokenProvider extends React.Component {
   state = {
     user: auth.user,
     isLoggedIn: auth.isLoggedIn,
-    scopes: auth.scopes,
+    hasScope: auth.hasScope,
   };
 
   componentDidMount() {
-    auth.addListener(auth.eventTypes.tokenStored, this.onTokenChanged);
-    auth.addListener(auth.eventTypes.tokenExpired, this.onTokenChanged);
+    auth.addListener(AuthEventType.TokenStored, this.onTokenChanged);
+    auth.addListener(AuthEventType.TokenExpired, this.onTokenChanged);
   }
 
   componentWillUnmount() {
-    auth.removeListener(auth.eventTypes.tokenStored, this.onTokenChanged);
-    auth.removeListener(auth.eventTypes.tokenExpired, this.onTokenChanged);
+    auth.removeListener(AuthEventType.TokenStored, this.onTokenChanged);
+    auth.removeListener(AuthEventType.TokenExpired, this.onTokenChanged);
   }
 
   onTokenChanged = () => {
     this.setState({
       user: auth.user,
       isLoggedIn: auth.isLoggedIn,
-      scopes: auth.scopes,
+      hasScope: auth.hasScope,
     });
   };
 

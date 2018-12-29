@@ -1,14 +1,16 @@
 import auth0 from 'auth0-js';
 import EventEmitter from 'events';
-import history from '../browserHistory';
+import history from '../../browserHistory';
 import jwt from 'jwt-decode';
 import apolloClient from 'apolloClient';
 import gql from 'graphql-tag';
-
-export const ACCESS_TOKEN_KEY = 'toast_access_token';
-export const ID_TOKEN_KEY = 'toast_id_token';
-export const EXPIRES_AT_KEY = 'toast_expires_at';
-export const SCOPES_KEY = 'toast_scopes';
+import { AuthService, AuthUser, AuthToken, AuthEventType } from './types';
+import {
+  ACCESS_TOKEN_KEY,
+  ID_TOKEN_KEY,
+  EXPIRES_AT_KEY,
+  SCOPES_KEY,
+} from './constants';
 
 const MergeUser = gql`
   mutation MergeUser {
@@ -20,15 +22,7 @@ const MergeUser = gql`
   }
 `;
 
-interface AuthToken {
-  sub: string;
-}
-
-export interface AuthUser extends AuthToken {
-  id: string;
-}
-
-export class Auth extends EventEmitter {
+export default class Auth0Service extends EventEmitter implements AuthService {
   auth0 = new auth0.WebAuth({
     domain: CONFIG.auth0.domain,
     clientID: CONFIG.auth0.clientId,
@@ -37,11 +31,6 @@ export class Auth extends EventEmitter {
     scope: 'openid profile email ' + CONFIG.auth0.requestedScopes.join(' '),
     audience: CONFIG.auth0.audience,
   });
-
-  eventTypes = {
-    tokenStored: 'AUTH_TOKEN_STORED',
-    tokenExpired: 'AUTH_TOKEN_EXPIRED',
-  };
 
   renewalTimeout = null;
 
@@ -62,7 +51,7 @@ export class Auth extends EventEmitter {
     localStorage.removeItem(EXPIRES_AT_KEY);
     localStorage.removeItem(SCOPES_KEY);
     clearTimeout(this.renewalTimeout);
-    this.emit(this.eventTypes.tokenStored);
+    this.emit(AuthEventType.TokenStored);
   };
 
   logout = () => {
@@ -93,7 +82,7 @@ export class Auth extends EventEmitter {
     });
   };
 
-  setSession = authResult => {
+  private setSession = authResult => {
     console.log(authResult);
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime(),
@@ -108,10 +97,10 @@ export class Auth extends EventEmitter {
 
     this.scheduleRenewal();
 
-    this.emit(this.eventTypes.tokenStored);
+    this.emit(AuthEventType.TokenStored);
   };
 
-  renewToken = () => {
+  private renewToken = () => {
     this.auth0.checkSession({}, (err, result) => {
       if (err) {
         console.error(err);
@@ -122,7 +111,7 @@ export class Auth extends EventEmitter {
     });
   };
 
-  scheduleRenewal = () => {
+  private scheduleRenewal = () => {
     const expiresAt = JSON.parse(localStorage.getItem(EXPIRES_AT_KEY));
     const delay = expiresAt - Date.now();
     if (delay > 0) {
@@ -131,7 +120,7 @@ export class Auth extends EventEmitter {
       }, delay);
     } else {
       this.clear();
-      this.emit(this.eventTypes.tokenExpired);
+      this.emit(AuthEventType.TokenExpired);
     }
   };
 
@@ -168,8 +157,8 @@ export class Auth extends EventEmitter {
     }
     return [];
   }
+
+  hasScope = (scope: string) => {
+    return this.scopes.includes(scope);
+  };
 }
-
-const auth = new Auth();
-
-export default auth;

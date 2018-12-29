@@ -8,9 +8,9 @@ export default ({ authorId, recipeId, displayType }) => {
 
   return (
     <Gate
-      condition={({ user, scopes }) =>
-        (user && user.id === authorId && scopes.includes(`update:${scopeType}`)) ||
-        scopes.includes(`update:any:${scopeType}`)
+      condition={({ user, hasScope }) =>
+        (user && user.id === authorId && hasScope(`update:${scopeType}`)) ||
+        hasScope(`update:any:${scopeType}`)
       }
     >
       <Link to={`${recipeId}/edit`}>

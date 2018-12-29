@@ -6,6 +6,7 @@ declare var CONFIG: {
     audience: string;
   };
   origin: string;
+  mock: boolean;
 };
 
 declare var mixpanel: any;

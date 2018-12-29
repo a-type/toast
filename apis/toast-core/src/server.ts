@@ -1,7 +1,5 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import { ApolloServer, ApolloError } from 'apollo-server-express';
-import playground from 'graphql-playground-middleware-express';
+import { ApolloServer } from 'apollo-server-express';
 import config from 'config';
 import { typeDefs, resolvers, mocks, directives } from './schema';
 import { createContext } from './context';
@@ -12,6 +10,7 @@ import cors from 'cors';
 import { path as get } from 'ramda';
 import jwt from 'express-jwt';
 import jwks from 'jwks-rsa';
+import mockAuthMiddleware from 'mocks/mockAuthMiddleware';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -21,20 +20,24 @@ if (argv.mock) {
 
 const app = express();
 
-const auth = jwt({
-  secret: jwks.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: `${config.auth0.issuer}.well-known/jwks.json`,
-  }),
-  audience: config.auth0.audience,
-  issuer: config.auth0.issuer,
-  algorithms: ['RS256'],
-  credentialsRequired: false,
-});
+if (argv.mock) {
+  app.use('/api', mockAuthMiddleware);
+} else {
+  const auth = jwt({
+    secret: jwks.expressJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: `${config.auth0.issuer}.well-known/jwks.json`,
+    }),
+    audience: config.auth0.audience,
+    issuer: config.auth0.issuer,
+    algorithms: ['RS256'],
+    credentialsRequired: false,
+  });
 
-app.use('/api', auth);
+  app.use('/api', auth);
+}
 
 const apollo = new ApolloServer({
   typeDefs,

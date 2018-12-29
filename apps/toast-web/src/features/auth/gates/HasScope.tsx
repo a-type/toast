@@ -13,7 +13,7 @@ const HasScope: React.SFC<HasScopeProps> = ({
   fallback = null,
 }) => (
   <Consumer>
-    {token => (token && token.scopes.includes(scope) ? children : fallback)}
+    {token => (token && token.hasScope(scope) ? children : fallback)}
   </Consumer>
 );
 

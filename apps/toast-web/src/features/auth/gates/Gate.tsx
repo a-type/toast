@@ -1,11 +1,11 @@
 import { Consumer } from '../TokenContext';
 import React from 'react';
-import { AuthUser } from 'services/auth';
+import { AuthUser } from 'services/auth/types';
 
 export interface AuthGateProps {
   condition(props: {
     user: AuthUser;
-    scopes: string[];
+    hasScope(scope: string): boolean;
     isLoggedIn: boolean;
   }): boolean;
   children: React.ReactNode;

@@ -20,7 +20,7 @@ const HasUserIdAndScope: React.SFC<HasUserIdAndScopeProps> = ({
         !state &&
         !!state.user &&
         state.user.id === userId &&
-        state.scopes.includes(scope)
+        state.hasScope(scope)
       )
         ? children
         : fallback
