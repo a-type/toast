@@ -1,16 +1,17 @@
 import EventEmitter from 'events';
 import history from '../../browserHistory';
-import { AuthService } from './types';
+import { AuthService, AuthEventType } from './types';
+
+const STORAGE_KEY = 'toast_mock_loggedin';
 
 export default class MockAuth extends EventEmitter implements AuthService {
-  private _isLoggedIn: boolean;
-
   login = () => {
     this.handleAuthentication();
   };
 
   clear = () => {
-    this._isLoggedIn = false;
+    sessionStorage.setItem(STORAGE_KEY, 'false');
+    this.emit(AuthEventType.TokenStored);
   };
 
   logout = () => {
@@ -19,8 +20,9 @@ export default class MockAuth extends EventEmitter implements AuthService {
   };
 
   handleAuthentication = () => {
-    this._isLoggedIn = true;
+    sessionStorage.setItem(STORAGE_KEY, 'true');
     history.replace('/');
+    this.emit(AuthEventType.TokenStored);
   };
 
   hasScope = (scope: string) => {
@@ -28,7 +30,8 @@ export default class MockAuth extends EventEmitter implements AuthService {
   };
 
   get isLoggedIn() {
-    return this._isLoggedIn;
+    const val = sessionStorage.getItem(STORAGE_KEY);
+    return val && val === 'true';
   }
 
   get idToken() {

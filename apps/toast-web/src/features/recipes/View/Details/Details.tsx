@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from './Layout';
-import { P, Link } from 'components/typeset';
 import Servings from './Servings';
 import gql from 'graphql-tag';
 import Time from './Time';
@@ -10,32 +9,10 @@ const RecipeDetails = ({ recipe }) => {
     return null;
   }
 
-  const {
-    author,
-    attribution,
-    sourceUrl,
-    description,
-    title,
-    servings,
-    cookTime,
-    prepTime,
-    unattendedTime,
-  } = recipe;
+  const { servings, cookTime, prepTime, unattendedTime } = recipe;
 
   return (
     <Layout>
-      {author && (
-        <P>
-          by{' '}
-          <Link to={`/users/${author.id}`}>{author.name || 'Anonymous'}</Link>
-        </P>
-      )}
-      {attribution && (
-        <P>
-          from <Link to={sourceUrl}>{attribution}</Link>
-        </P>
-      )}
-      {description && <P>{description}</P>}
       <Servings servings={servings} />
       <Time
         cookTime={cookTime}

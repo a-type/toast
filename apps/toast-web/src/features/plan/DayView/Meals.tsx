@@ -46,7 +46,7 @@ export const fragments = {
 export const Skeleton = () => (
   <Grid>
     {new Array(3).fill(null).map((_, idx) => (
-      <MealViewSkeleton />
+      <MealViewSkeleton key={idx} />
     ))}
   </Grid>
 );

@@ -21,8 +21,8 @@ export default {
       }
       return null;
     },
-    sourceUrl: null,
-    displayType: 'FULL',
+    sourceUrl: 'http://www.forkknifeswoon.com/simple-homemade-chicken-ramen/',
+    displayType: 'LINK',
   }),
 
   Step: () => ({
@@ -38,7 +38,7 @@ export default {
   RecipeIngredient: () => {
     const unit = (casual as any).unit;
     const value = casual.integer(1, 6);
-    const text = unit + ' ' + value + ' of Ingredient';
+    const text = value + ' ' + unit + ' of Ingredient';
 
     return {
       unit,
@@ -47,22 +47,6 @@ export default {
       valueTextMatch: '' + value,
       ingredientTextMatch: 'Ingredient',
       text,
-    };
-  },
-
-  RecipeSearchResponse: () => {
-    const total = casual.integer(3, 25);
-    return {
-      total: () => total,
-      items: () => new MockList(total),
-    };
-  },
-
-  IngredientSearchResponse: () => {
-    const total = casual.integer(6, 25);
-    return {
-      total: () => total,
-      items: () => new MockList(total),
     };
   },
 

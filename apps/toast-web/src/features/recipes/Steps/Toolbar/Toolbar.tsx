@@ -21,6 +21,11 @@ const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
       <div>
         <Button.Icon name="index" />
       </div>
+      <div>
+        <Link to={recipe.sourceUrl} newTab>
+          <Button.Icon name="view-more" />
+        </Link>
+      </div>
     </Bar>
   );
 };

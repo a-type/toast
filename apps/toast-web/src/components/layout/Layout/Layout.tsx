@@ -163,6 +163,7 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
       <Layout
         className={classnames(className, CLASS_NAMES.LAYOUT)}
         backgroundStyle={backgroundStyle}
+        noScroll={noScroll}
         {...rest}
       >
         {!!renderNavigation && (
