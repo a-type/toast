@@ -11,6 +11,7 @@ type InnerLinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
   className?: string;
   id?: string;
   nav?: boolean;
+  download?: string;
 };
 
 export type LinkProps = InnerLinkProps & {

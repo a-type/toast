@@ -25,14 +25,14 @@ export const typeDefs = gql`
   interface MealAction {
     id: ID!
     type: MealActionType!
-    dayIndex: Int
+    dayIndex: WeekDay
     mealIndex: Int
   }
 
   type MealActionEatOut implements MealAction {
     id: ID!
     type: MealActionType!
-    dayIndex: Int
+    dayIndex: WeekDay
     mealIndex: Int
     note: String
   }
@@ -40,7 +40,7 @@ export const typeDefs = gql`
   type MealActionCook implements MealAction {
     id: ID!
     type: MealActionType!
-    dayIndex: Int
+    dayIndex: WeekDay
     mealIndex: Int
     servings: Int!
     recipeType: MealRecipeType!
@@ -54,7 +54,7 @@ export const typeDefs = gql`
   type MealActionEat implements MealAction {
     id: ID!
     type: MealActionType!
-    dayIndex: Int
+    dayIndex: WeekDay
     mealIndex: Int
     leftovers: Boolean!
     cookAction: MealActionCook
@@ -63,7 +63,7 @@ export const typeDefs = gql`
   type MealActionReadyMade implements MealAction {
     id: ID!
     type: MealActionType!
-    dayIndex: Int
+    dayIndex: WeekDay
     mealIndex: Int
     note: String
   }
@@ -71,7 +71,7 @@ export const typeDefs = gql`
   type MealActionSkip implements MealAction {
     id: ID!
     type: MealActionType!
-    dayIndex: Int
+    dayIndex: WeekDay
     mealIndex: Int
   }
 
@@ -79,7 +79,7 @@ export const typeDefs = gql`
     id: ID!
     mealIndex: Int!
     dateIndex: Int!
-    dayIndex: Int!
+    dayIndex: WeekDay!
     date: Date!
     actions: [MealAction!]!
   }

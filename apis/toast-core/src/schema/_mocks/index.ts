@@ -7,6 +7,8 @@ casual.define('unit', () => UNITS[casual.integer(0, UNITS.length)]);
 
 casual.define('image', () => 'https://placeimg.com/640/480/nature');
 
+casual.define('weekday', () => Math.floor(Math.random() * 7));
+
 export default {
   Recipe: () => ({
     title: casual.title,
@@ -55,4 +57,6 @@ export default {
   }),
 
   Date: () => new Date(casual.date()),
+
+  WeekDay: () => (casual as any).weekday,
 };

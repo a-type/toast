@@ -6,6 +6,8 @@ import { Day } from 'types/Day';
 import { Link, Button } from 'components/generic';
 import GroceryDayQuery from './GroceryDayQuery';
 import { pathOr } from 'ramda';
+import GroceryDayEventCreator from './GroceryDayEventCreator';
+import { Layout } from './components';
 
 const GroceryDayBanner: React.SFC<{}> = ({}) => {
   const [isEditMode, setEditMode] = React.useState(false);
@@ -25,7 +27,7 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
             onSaved={() => setEditMode(false)}
           />
         ) : (
-          <div>
+          <Layout>
             <Span>Grocery day: {Day[groceryDay]}</Span>
             <Link
               style={{
@@ -36,7 +38,8 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
             >
               <Button>Change</Button>
             </Link>
-          </div>
+            <GroceryDayEventCreator dayIndex={groceryDay} />
+          </Layout>
         );
       }}
     </GroceryDayQuery>

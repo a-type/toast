@@ -19,6 +19,7 @@ export { scalars, directives };
 
 const globalTypeDefs = gql`
   scalar Date
+  scalar WeekDay
 
   enum SortOrder {
     ASCENDING

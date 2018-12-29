@@ -23,7 +23,7 @@ export const typeDefs = gql`
   type ScheduleMeal {
     id: ID!
     availability: ScheduleAvailability!
-    dayIndex: Int!
+    dayIndex: WeekDay!
     mealIndex: Int!
   }
 
@@ -50,7 +50,7 @@ export const typeDefs = gql`
     ): Schedule! @hasScope(scope: "update:plan")
     setScheduleMealDetails(
       scheduleId: ID
-      dayIndex: Int!
+      dayIndex: WeekDay!
       mealIndex: Int!
       details: ScheduleSetMealDetailsInput!
     ): Schedule! @hasScope(scope: "update:plan")

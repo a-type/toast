@@ -27,12 +27,14 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
   return (
     <SetGroceryDayMutation>
       {mutate => (
-        <Formik
-          initialValues={{ groceryDay }}
+        <Formik<{}, { groceryDay: string }>
+          initialValues={{ groceryDay: `${groceryDay}` }}
           enableReinitialize
           onSubmit={async values => {
             await mutate({
-              variables: values,
+              variables: {
+                groceryDay: parseInt(values.groceryDay)
+              },
             });
             onSaved();
           }}

@@ -12,7 +12,7 @@ export const typeDefs = () => [
   gql`
     type Plan {
       id: ID!
-      groceryDay: Int!
+      groceryDay: WeekDay!
     }
 
     extend type Query {
