@@ -2,7 +2,7 @@ import { Firestore } from '@google-cloud/firestore';
 import config from 'config';
 
 import Plans from './Plans';
-import Corrections from './Corrections';
+import RecipeIngredientCorrections from './RecipeIngredientCorrections';
 
 const firestore = new Firestore({
   projectId: config.gcloud.projectId,
@@ -12,7 +12,7 @@ firestore.settings({ timestampsInSnapshots: true });
 export interface FirestoreService {
   firestore: Firestore;
   plans: Plans;
-  corrections: Corrections;
+  recipeIngredientCorrections: RecipeIngredientCorrections;
 }
 
 const service: FirestoreService = ({
@@ -20,6 +20,6 @@ const service: FirestoreService = ({
 } as unknown) as FirestoreService;
 
 service.plans = new Plans(service);
-service.corrections = new Corrections(service);
+service.recipeIngredientCorrections = new RecipeIngredientCorrections(service);
 
 export default service;

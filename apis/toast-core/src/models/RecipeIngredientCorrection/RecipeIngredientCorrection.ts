@@ -16,9 +16,10 @@ export interface RecipeIngredientCorrectedValue {
 
 export interface RecipeIngredientCorrectionData {
   id: string;
-  resourceId: string;
+  recipeIngredientId: string;
   correctedValue: RecipeIngredientCorrectedValue;
   reportingUserId: string;
+  status: CorrectionStatus;
 }
 
 export default class RecipeIngredientCorrection {
@@ -32,8 +33,8 @@ export default class RecipeIngredientCorrection {
     return this.data.id;
   }
 
-  get resourceId() {
-    return this.data.resourceId;
+  get recipeIngredientId() {
+    return this.data.recipeIngredientId;
   }
 
   get correctedValue() {
@@ -42,6 +43,10 @@ export default class RecipeIngredientCorrection {
 
   get reportingUserId() {
     return this.data.reportingUserId;
+  }
+
+  get status() {
+    return this.data.status;
   }
 
   toJSON() {

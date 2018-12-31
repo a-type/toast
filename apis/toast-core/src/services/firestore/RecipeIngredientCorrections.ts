@@ -1,16 +1,16 @@
 import { Firestore } from '@google-cloud/firestore';
 import { RecipeIngredientCorrection } from 'models';
 
-const COLLECTION = 'corrections';
+const COLLECTION = 'recipeIngredientCorrections';
 
-export default class Corrections {
+export default class RecipeIngredientCorrections {
   firestore: Firestore;
 
   constructor(service: { firestore: Firestore }) {
     this.firestore = service.firestore;
   }
 
-  listRecipeIngredients = async (offset = 0, limit = 10) => {
+  list = async (offset = 0, limit = 10) => {
     const collection = this.firestore.collection(`${COLLECTION}`);
 
     const query = collection.offset(offset).limit(limit);
@@ -21,7 +21,7 @@ export default class Corrections {
     return corrections;
   };
 
-  createRecipeIngredient = async correction => {
+  set = async (correction: RecipeIngredientCorrection) => {
     const document = this.firestore.doc(`${COLLECTION}/${correction.id}`);
     await document.set(correction.toJSON());
     return correction;
