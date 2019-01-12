@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { id, timestamp } from 'tools';
 import { INGREDIENT_FIELDS } from '../../ingredients/service';
 import { pick } from 'ramda';
-import parse from './parseIngredient';
+import parser from 'services/ingredientParser';
 import {
   searchIngredients_withTransaction,
   normalizeTerm,
@@ -128,7 +128,7 @@ const ensureIngredientCloseEnough = (searchTerm, ingredient) => {
 };
 
 export const parseRecipeIngredientText = async (text, tx) => {
-  const { value, unit, ingredient } = parse(text);
+  const [{ value, unit, ingredient }] = await parser.parse([text]);
 
   const ingredientResults = await tx.run(
     `

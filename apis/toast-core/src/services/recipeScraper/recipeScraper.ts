@@ -4,6 +4,7 @@ import { stringify } from 'querystring';
 import { Readable } from 'stream';
 import mime from 'mime-types';
 import { File } from 'types';
+import logger from 'logger';
 
 const authorization = `Bearer ${config.recipeScraper.secret}`;
 
@@ -39,15 +40,24 @@ export default {
       url,
     });
     const target = `${config.recipeScraper.endpoint}?${query}`;
-    const result = await fetch(target, {
-      headers: {
-        authorization,
-      },
-    });
+    let response;
+    try {
+      response = await fetch(target, {
+        headers: {
+          authorization,
+        },
+      });
 
-    const body = await result.json();
+      const body = await response.json();
 
-    return body;
+      return body;
+    } catch (err) {
+      logger.fatal(err);
+      if (response) {
+        logger.debug(response);
+      }
+      throw err;
+    }
   },
 
   getImagePseudoFile: async (imageUrl: string): Promise<File> => {

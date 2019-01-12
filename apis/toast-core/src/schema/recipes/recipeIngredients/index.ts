@@ -58,6 +58,10 @@ export const typeDefs = gql`
   }
 `;
 
+/**
+ * FIXME: migrate all this to new system for parsing!!!
+ */
+
 export const resolvers = {
   Recipe: {
     ingredients: (parent, args, ctx, info) => getForRecipe(parent.id, ctx),

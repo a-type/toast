@@ -7,6 +7,7 @@ import { gql } from 'apollo-server-express';
 import { Context } from 'context';
 import logger from 'logger';
 import { Recipe } from 'services/graph/sources/Recipes';
+import { Ingredient } from 'services/graph/sources/Ingredients';
 
 export const typeDefs = () => [
   gql`
@@ -122,15 +123,15 @@ interface RecipeLinkResult {
 export const resolvers = [
   {
     Query: {
-      recipes: (_parent, args, ctx, info) =>
+      recipes: (_parent, args, ctx: Context) =>
         ctx.graph.recipes.list(args.pagination),
-      recipe: async (_parent, args, ctx, info) =>
+      recipe: async (_parent, args, ctx: Context) =>
         ctx.graph.recipes.get(args.id),
     },
     Mutation: {
-      createRecipe: (_parent, args, ctx, info) =>
+      createRecipe: (_parent, args, ctx: Context) =>
         ctx.graph.recipes.create(args.input),
-      linkRecipe: async (_parent, args, ctx: Context, info) => {
+      linkRecipe: async (_parent, args, ctx: Context) => {
         const result: RecipeLinkResult = {
           problems: [],
         };
@@ -170,14 +171,13 @@ export const resolvers = [
         let recipeIngredients = [];
         try {
           // parse ingredients
-          const parsed = (scraped.ingredients || []).map(line => ({
-            original: line,
-            ...ctx.ingredientParser.parse(line),
-          }));
+          const parsed = await ctx.ingredientParser.parse(
+            scraped.ingredients || [],
+          );
           // lookup parsed ingredients
           recipeIngredients = await Promise.all(
             parsed.map(async parsed => {
-              let ingredient;
+              let ingredient: Ingredient;
               try {
                 ingredient = await ctx.graph.ingredients.searchForBestMatchOrCreate(
                   parsed.ingredient.normalized,
