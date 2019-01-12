@@ -21,7 +21,7 @@ class App extends React.Component<any, any> {
     if (!hasSeenWelcome) {
       show([
         'Welcome to Toast!',
-        "Toast is a recipe discovery site which understands the food you're cooking with.",
+        "Toast is a meal planning site which understands the food you're cooking with.",
         "We're still setting up here, so things may break!",
       ]);
       localStorage.setItem(SEEN_WELCOME_MESSAGE_KEY, 'true');

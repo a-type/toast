@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export default styled.div`
+export default styled<{ active?: boolean }, 'div'>('div')`
   padding: 10px;
   cursor: pointer;
   text-transform: capitalize;

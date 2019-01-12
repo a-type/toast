@@ -3,7 +3,22 @@ import { Selection, Handle, Container, TipContent } from './components';
 import { Tip } from 'components/generic';
 import { HelpText } from 'components/typeset';
 
-export default class SelectionEditor extends React.Component {
+export interface Selection {
+  text: string;
+  name?: string;
+  tipContent?: React.ReactNode;
+  color?: string;
+}
+
+export interface SelectionEditorProps {
+  value: string;
+  selections: Selection[];
+  onSelectionChanged(selection: Selection, text: string): void;
+}
+
+export default class SelectionEditor extends React.Component<
+  SelectionEditorProps
+> {
   state = {
     selecting: false,
     activeSelection: null,
@@ -110,7 +125,7 @@ export default class SelectionEditor extends React.Component {
     });
   };
 
-  renderTextChars = (offset, text, selectionName) =>
+  renderTextChars = (offset: number, text: string, selectionName?: string) =>
     text.split('').map((char, i) => (
       <span
         onPointerOver={this.handlePointerOverChar}
@@ -149,7 +164,7 @@ export default class SelectionEditor extends React.Component {
     );
   };
 
-  renderSelection = (offset, { name, text, color }) => {
+  renderSelection = (offset: number, { name, text, color }: Selection) => {
     const { selecting, activeSelection } = this.state;
     const isActive = activeSelection === name;
 
@@ -165,7 +180,7 @@ export default class SelectionEditor extends React.Component {
             color={color || 'brand'}
             data-selection-name={name}
             onClick={this.chooseSelection}
-            ref={ref}
+            ref={ref as any}
           >
             <Handle
               interactive={isActive}

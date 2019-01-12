@@ -43,11 +43,16 @@ export const typeDefs = gql`
   }
 
   extend type Query {
-    recipeIngredientCorrections(pagination: ListPaginationInput): [RecipeIngredientCorrection!]! @hasScope(scope: "list:recipeIngredientCorrection")
+    recipeIngredientCorrections(
+      pagination: ListPaginationInput
+    ): [RecipeIngredientCorrection!]!
+      @hasScope(scope: "list:recipeIngredientCorrection")
   }
 
   extend type Mutation {
-    submitRecipeIngredientCorrection($input: RecipeIngredientCorrectionSubmitInput!): ID! @hasScope(scope: "create:recipeIngredientCorrection")
+    submitRecipeIngredientCorrection(
+      input: RecipeIngredientCorrectionSubmitInput!
+    ): ID! @hasScope(scope: "create:recipeIngredientCorrection")
   }
 `;
 

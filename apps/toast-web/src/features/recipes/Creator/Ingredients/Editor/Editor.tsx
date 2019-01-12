@@ -1,13 +1,22 @@
 import React from 'react';
 import Parser, { ParseIngredientFragment } from './Parser';
-import Fixer, { FixIngredientFragment } from './Fixer';
+import Fixer from './Fixer';
+import { RecipeIngredient } from 'generated/schema';
+import { recipeIngredient as fixerFragment } from './Fixer/fragments';
 
 export const fragments = {
   ParseIngredient: ParseIngredientFragment,
-  FixIngredient: FixIngredientFragment,
+  FixIngredient: fixerFragment,
 };
 
-export default class IngredientEditor extends React.Component {
+export interface IngredientEditorProps {
+  recipeIngredient?: RecipeIngredient;
+  recipeId: string;
+}
+
+export default class IngredientEditor extends React.Component<
+  IngredientEditorProps
+> {
   state = {
     mode: this.props.recipeIngredient ? 'fix' : 'parse',
   };

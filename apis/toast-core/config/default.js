@@ -44,4 +44,8 @@ module.exports = {
     endpoint: process.env.RECIPE_SCRAPER_API_ENDPOINT,
     secret: process.env.RECIPE_SCRAPER_API_SECRET,
   },
+  ingredientParser: {
+    endpoint: process.env.INGREDIENT_PARSER_API_ENDPOINT,
+    secret: process.env.INGREDIENT_PARSER_API_SECRET,
+  },
 };

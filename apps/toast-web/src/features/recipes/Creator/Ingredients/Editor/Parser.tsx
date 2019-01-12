@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { path } from 'ramda';
+import { RecipeIngredient } from 'generated/schema';
 
 export const ParseIngredientFragment = gql`
   fragment ParseIngredient on RecipeIngredient {
@@ -45,8 +46,16 @@ const DoReparseIngredient = gql`
   ${ParseIngredientFragment}
 `;
 
-export default class IngredientEditorParser extends React.PureComponent {
-  inputRef = createRef();
+export interface IngredientEditorParserProps {
+  recipeIngredient: RecipeIngredient;
+  recipeId: string;
+  onParsed?(): void;
+}
+
+export default class IngredientEditorParser extends React.PureComponent<
+  IngredientEditorParserProps
+> {
+  inputRef = createRef<HTMLInputElement>();
 
   render() {
     const { recipeIngredient, recipeId, onParsed } = this.props;
@@ -86,7 +95,7 @@ export default class IngredientEditorParser extends React.PureComponent {
                     name="text"
                     required
                     onChange={handleChange}
-                    ref={this.inputRef}
+                    ref={this.inputRef as any}
                   />
                 </Field>
                 <Field>

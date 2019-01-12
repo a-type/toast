@@ -14,10 +14,10 @@ const DeleteIngredient = gql`
   }
 `;
 
-export default ({ ingredientId }) => (
+export default ({ ingredientId }: { ingredientId: string }) => (
   <Mutation mutation={DeleteIngredient} variables={{ id: ingredientId }}>
     {deleteIngredient => (
-      <Button.Icon onClick={deleteIngredient} name="delete-button" />
+      <Button.Icon onClick={() => deleteIngredient()} name="delete-button" />
     )}
   </Mutation>
 );

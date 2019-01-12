@@ -1,41 +1,28 @@
 import React from 'react';
-import { Button } from 'components/generic';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import SelectionEditor from './SelectionEditor';
+import SelectionEditor from './SelectionEditor/SelectionEditor';
 import * as Editors from './editors';
-import { compose } from 'recompose';
 import DeleteButton from './DeleteButton';
 import { Row } from './components';
+import { RecipeIngredient } from 'generated/schema';
+import FixIngredientMutation from './FixIngredientMutation';
 
-export const FixIngredientFragment = gql`
-  fragment FixIngredient on RecipeIngredient {
-    id
-    index
-    text
-    unit
-    unitTextMatch
-    value
-    valueTextMatch
-    ingredientTextMatch
-    ingredient {
-      id
-      name
-    }
-  }
-`;
+export interface IngredientEditorFixerProps {
+  mutate(args: {
+    variables: {
+      id: string;
+      input: {
+        [thing: string]: string;
+      };
+    };
+  }): Promise<any>;
+  recipeIngredient: RecipeIngredient;
+}
 
-const DoFixIngredient = gql`
-  mutation DoFixIngredient($id: ID!, $input: RecipeIngredientUpdateInput!) {
-    updateRecipeIngredient(id: $id, input: $input) {
-      ...FixIngredient
-    }
-  }
-
-  ${FixIngredientFragment}
-`;
-
-class IngredientEditorFixer extends React.PureComponent {
+class IngredientEditorFixer extends React.PureComponent<
+  IngredientEditorFixerProps
+> {
   handleSelectionCommit = async (name, newText) => {
     const selection = document.getSelection();
     const { mutate, recipeIngredient } = this.props;
@@ -114,4 +101,8 @@ class IngredientEditorFixer extends React.PureComponent {
   }
 }
 
-export default graphql(DoFixIngredient)(IngredientEditorFixer);
+export default (props: { recipeIngredient: RecipeIngredient }) => (
+  <FixIngredientMutation>
+    {mutate => <IngredientEditorFixer mutate={mutate} {...props} />}
+  </FixIngredientMutation>
+);

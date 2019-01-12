@@ -5,6 +5,7 @@ import Suggestions from './Suggestions';
 import Border from './Border';
 import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
+import { Ingredient, PickerCreateIngredient } from 'generated/schema';
 
 const CreateIngredient = gql`
   mutation PickerCreateIngredient($name: String!) {
@@ -27,8 +28,16 @@ const ingredientToString = ingredient => {
   return ingredient.name + ' (create)';
 };
 
-class IngredientPicker extends React.Component {
-  handleChange = async newValue => {
+export interface IngredientPickerProps {
+  onChange(ingredient: Ingredient): void;
+  create?(name: string): Promise<Ingredient>;
+  canCreate?: boolean;
+  value: Ingredient;
+  disabled?: boolean;
+}
+
+class IngredientPicker extends React.Component<IngredientPickerProps> {
+  handleChange = async (newValue: Ingredient) => {
     const { onChange, create } = this.props;
 
     if (!newValue.id) {
@@ -98,12 +107,17 @@ class IngredientPicker extends React.Component {
   }
 }
 
-export default graphql(CreateIngredient, {
+export default graphql<
+  any,
+  PickerCreateIngredient.CreateIngredient,
+  PickerCreateIngredient.Variables,
+  Partial<IngredientPickerProps>
+>(CreateIngredient, {
   props: ({ mutate }) => ({
     create: name =>
       mutate({
         variables: { name: name.toLowerCase() },
-      }).then(({ data }) => {
+      }).then(({ data }: any) => {
         return data.createIngredient;
       }),
   }),

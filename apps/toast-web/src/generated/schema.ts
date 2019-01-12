@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2018-12-17T19:57:07-05:00 */
+/** Generated in 2019-01-12T10:45:23-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -8,6 +8,8 @@
 // ====================================================
 // Scalars
 // ====================================================
+
+export type WeekDay = any;
 
 export type Date = any;
 
@@ -22,7 +24,7 @@ export interface MealAction {
 
   type: MealActionType;
 
-  dayIndex?: number | null;
+  dayIndex?: WeekDay | null;
 
   mealIndex?: number | null;
 }
@@ -55,6 +57,8 @@ export interface Query {
   plan?: Plan | null;
 
   schedule?: Schedule | null;
+
+  recipeIngredientCorrections: RecipeIngredientCorrection[];
 
   messages: Message[];
 
@@ -208,7 +212,7 @@ export interface Group {
 export interface Plan {
   id: string;
 
-  groceryDay: number;
+  groceryDay: WeekDay;
 
   meal: PlanMeal;
 
@@ -226,7 +230,7 @@ export interface PlanMeal {
 
   dateIndex: number;
 
-  dayIndex: number;
+  dayIndex: WeekDay;
 
   date: Date;
 
@@ -252,7 +256,7 @@ export interface ScheduleMeal {
 
   availability: ScheduleAvailability;
 
-  dayIndex: number;
+  dayIndex: WeekDay;
 
   mealIndex: number;
 }
@@ -283,6 +287,30 @@ export interface RecipeSearchResponse {
 
 export interface IngredientSearchResponse {
   items: (Ingredient | null)[];
+}
+
+export interface RecipeIngredientCorrection {
+  id: string;
+
+  status?: CorrectionStatus | null;
+
+  recipeIngredientId: string;
+
+  correctedValue: RecipeIngredientCorrectedValue;
+}
+
+export interface RecipeIngredientCorrectedValue {
+  unit?: string | null;
+
+  unitTextMatch?: string | null;
+
+  value?: number | null;
+
+  valueTextMatch?: string | null;
+
+  ingredientTextMatch?: string | null;
+
+  ingredient?: Ingredient | null;
 }
 
 export interface Message {
@@ -364,6 +392,8 @@ export interface Mutation {
 
   markUnpurchased: ShoppingList;
 
+  submitRecipeIngredientCorrection: string;
+
   showMessage?: Message | null;
 
   dismissMessage?: number | null;
@@ -392,7 +422,7 @@ export interface MealActionCook extends MealAction {
 
   type: MealActionType;
 
-  dayIndex?: number | null;
+  dayIndex?: WeekDay | null;
 
   mealIndex?: number | null;
 
@@ -410,7 +440,7 @@ export interface MealActionEat extends MealAction {
 
   type: MealActionType;
 
-  dayIndex?: number | null;
+  dayIndex?: WeekDay | null;
 
   mealIndex?: number | null;
 
@@ -424,7 +454,7 @@ export interface MealActionEatOut extends MealAction {
 
   type: MealActionType;
 
-  dayIndex?: number | null;
+  dayIndex?: WeekDay | null;
 
   mealIndex?: number | null;
 
@@ -436,7 +466,7 @@ export interface MealActionReadyMade extends MealAction {
 
   type: MealActionType;
 
-  dayIndex?: number | null;
+  dayIndex?: WeekDay | null;
 
   mealIndex?: number | null;
 
@@ -448,7 +478,7 @@ export interface MealActionSkip extends MealAction {
 
   type: MealActionType;
 
-  dayIndex?: number | null;
+  dayIndex?: WeekDay | null;
 
   mealIndex?: number | null;
 }
@@ -595,6 +625,26 @@ export interface ScheduleSetMealDetailsInput {
   availability?: ScheduleAvailability | null;
 }
 
+export interface RecipeIngredientCorrectionSubmitInput {
+  recipeIngredientId: string;
+
+  correctedValue: RecipeIngredientCorrectedValueInput;
+}
+
+export interface RecipeIngredientCorrectedValueInput {
+  unit?: string | null;
+
+  unitTextMatch?: string | null;
+
+  value?: number | null;
+
+  valueTextMatch?: string | null;
+
+  ingredientId?: string | null;
+
+  ingredientTextMatch?: string | null;
+}
+
 // ====================================================
 // Arguments
 // ====================================================
@@ -624,6 +674,9 @@ export interface UserQueryArgs {
 }
 export interface ScheduleQueryArgs {
   scheduleId?: string | null;
+}
+export interface RecipeIngredientCorrectionsQueryArgs {
+  pagination?: ListPaginationInput | null;
 }
 export interface RecipesIngredientArgs {
   pagination?: ListPaginationInput | null;
@@ -761,7 +814,7 @@ export interface SetScheduleDetailsMutationArgs {
 export interface SetScheduleMealDetailsMutationArgs {
   scheduleId?: string | null;
 
-  dayIndex: number;
+  dayIndex: WeekDay;
 
   mealIndex: number;
 
@@ -777,6 +830,9 @@ export interface MarkPurchasedMutationArgs {
 }
 export interface MarkUnpurchasedMutationArgs {
   ingredientId: string;
+}
+export interface SubmitRecipeIngredientCorrectionMutationArgs {
+  input: RecipeIngredientCorrectionSubmitInput;
 }
 export interface ShowMessageMutationArgs {
   contents: (string | null)[];
@@ -841,11 +897,16 @@ export enum ScheduleStrategy {
   BIG_PREP = 'BIG_PREP',
 }
 
+export enum CorrectionStatus {
+  Submitted = 'Submitted',
+  Accepted = 'Accepted',
+  Rejected = 'Rejected',
+}
+
 export enum RecipeLinkProblem {
   FailedIngredients = 'FailedIngredients',
   IncompleteIngredients = 'IncompleteIngredients',
   FailedImage = 'FailedImage',
-  FailedAll = 'FailedAll',
 }
 
 export enum CacheControlScope {
@@ -896,6 +957,52 @@ export namespace IngredientDetails {
   };
 
   export type Recipes = RecipeCard.Fragment;
+}
+
+export namespace IngredientPickerSuggestions {
+  export type Variables = {
+    input: IngredientSearchInput;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    searchIngredients: SearchIngredients;
+  };
+
+  export type SearchIngredients = {
+    __typename?: 'IngredientSearchResponse';
+
+    items: (Items | null)[];
+  };
+
+  export type Items = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
+}
+
+export namespace PickerCreateIngredient {
+  export type Variables = {
+    name: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    createIngredient: CreateIngredient;
+  };
+
+  export type CreateIngredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
 }
 
 export namespace CalendarMealSetRecipe {
@@ -1041,7 +1148,7 @@ export namespace GroceryDay {
 
     id: string;
 
-    groceryDay: number;
+    groceryDay: WeekDay;
   };
 }
 
@@ -1061,7 +1168,7 @@ export namespace SetGroceryDay {
 
     id: string;
 
-    groceryDay: number;
+    groceryDay: WeekDay;
   };
 }
 
@@ -1114,7 +1221,7 @@ export namespace CalendarPlan {
 
     id: string;
 
-    groceryDay: number;
+    groceryDay: WeekDay;
 
     schedule?: Schedule | null;
 
@@ -1134,7 +1241,7 @@ export namespace CalendarPlan {
 
     date: Date;
 
-    dayIndex: number;
+    dayIndex: WeekDay;
 
     mealIndex: number;
   } & CalendarMeal.Fragment;
@@ -1182,6 +1289,85 @@ export namespace CreatePlan {
 
     id: string;
   };
+}
+
+export namespace DeleteIngredient {
+  export type Variables = {
+    id: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    deleteRecipeIngredient: DeleteRecipeIngredient;
+  };
+
+  export type DeleteRecipeIngredient = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    ingredients: Ingredients[];
+  };
+
+  export type Ingredients = {
+    __typename?: 'RecipeIngredient';
+
+    id: string;
+  };
+}
+
+export namespace FixIngredient {
+  export type Variables = {
+    id: string;
+    input: RecipeIngredientUpdateInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    updateRecipeIngredient: UpdateRecipeIngredient;
+  };
+
+  export type UpdateRecipeIngredient = FixRecipeIngredient.Fragment;
+}
+
+export namespace DoParseIngredient {
+  export type Variables = {
+    recipeId: string;
+    text: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    addRecipeIngredient: AddRecipeIngredient;
+  };
+
+  export type AddRecipeIngredient = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    ingredients: Ingredients[];
+  };
+
+  export type Ingredients = ParseIngredient.Fragment;
+}
+
+export namespace DoReparseIngredient {
+  export type Variables = {
+    id: string;
+    text: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    reparseRecipeIngredient: ReparseRecipeIngredient;
+  };
+
+  export type ReparseRecipeIngredient = ParseIngredient.Fragment;
 }
 
 export namespace FeaturedRecipes {
@@ -1454,7 +1640,7 @@ export namespace ScheduleQuery {
 
 export namespace SetMealDetails {
   export type Variables = {
-    dayIndex: number;
+    dayIndex: WeekDay;
     mealIndex: number;
     details: ScheduleSetMealDetailsInput;
   };
@@ -1590,7 +1776,7 @@ export namespace GetShoppingList {
 
     id: string;
 
-    groceryDay: number;
+    groceryDay: WeekDay;
 
     shoppingList: ShoppingList;
   };
@@ -1728,7 +1914,7 @@ export namespace CalendarMealEatAction {
 
     id: string;
 
-    dayIndex?: number | null;
+    dayIndex?: WeekDay | null;
 
     recipe?: Recipe | null;
   };
@@ -1770,7 +1956,7 @@ export namespace CalendarPlan {
 
     id: string;
 
-    groceryDay: number;
+    groceryDay: WeekDay;
   };
 }
 
@@ -1816,7 +2002,7 @@ export namespace CalendarMeal {
 
     date: Date;
 
-    dayIndex: number;
+    dayIndex: WeekDay;
 
     dateIndex: number;
 
@@ -1840,7 +2026,7 @@ export namespace PlanPreviewMeal {
 
     id: string;
 
-    dayIndex: number;
+    dayIndex: WeekDay;
 
     dateIndex: number;
 
@@ -1900,7 +2086,7 @@ export namespace PlanPreviewMeal {
 
     id: string;
 
-    dayIndex?: number | null;
+    dayIndex?: WeekDay | null;
   };
 }
 
@@ -1932,6 +2118,84 @@ export namespace RecipeSpotlight {
 
     url: string;
   };
+}
+
+export namespace FixRecipeIngredient {
+  export type Fragment = {
+    __typename?: 'RecipeIngredient';
+
+    id: string;
+
+    index: number;
+
+    text: string;
+
+    unit?: string | null;
+
+    unitTextMatch?: string | null;
+
+    value: number;
+
+    valueTextMatch?: string | null;
+
+    ingredientTextMatch?: string | null;
+
+    ingredient: Ingredient;
+  };
+
+  export type Ingredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
+}
+
+export namespace ParseIngredient {
+  export type Fragment = {
+    __typename?: 'RecipeIngredient';
+
+    id: string;
+
+    index: number;
+
+    text: string;
+
+    unit?: string | null;
+
+    unitTextMatch?: string | null;
+
+    value: number;
+
+    valueTextMatch?: string | null;
+
+    ingredientTextMatch?: string | null;
+
+    ingredient: Ingredient;
+  };
+
+  export type Ingredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+  };
+}
+
+export namespace RecipeCreateIngredients {
+  export type Fragment = {
+    __typename?: 'Recipe';
+
+    id: string;
+
+    ingredients: Ingredients[];
+  };
+
+  export type Ingredients =
+    | ParseIngredient.Fragment
+    | FixRecipeIngredient.Fragment;
 }
 
 export namespace LikeButton {
@@ -2014,7 +2278,7 @@ export namespace DayRowMeal {
 
     availability: ScheduleAvailability;
 
-    dayIndex: number;
+    dayIndex: WeekDay;
 
     mealIndex: number;
   };

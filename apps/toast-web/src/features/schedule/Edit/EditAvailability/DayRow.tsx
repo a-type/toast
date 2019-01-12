@@ -17,7 +17,7 @@ const mealFragments = {
 
 const SetMealDetails = gql`
   mutation SetMealDetails(
-    $dayIndex: Int!
+    $dayIndex: WeekDay!
     $mealIndex: Int!
     $details: ScheduleSetMealDetailsInput!
   ) {

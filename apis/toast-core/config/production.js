@@ -26,4 +26,9 @@ module.exports = {
       'https://us-central1-toast-cooking-0.cloudfunctions.net/scrapeRecipe',
     secret: process.env.RECIPE_SCRAPER_SECRET,
   },
+  ingredientParser: {
+    endpoint:
+      'https://us-central1-toast-cooking-0.cloudfunctions.net/parseIngredients',
+    secret: process.env.INGREDIENT_PARSER_SECRET,
+  },
 };

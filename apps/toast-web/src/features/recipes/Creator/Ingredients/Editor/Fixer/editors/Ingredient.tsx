@@ -1,8 +1,16 @@
 import React from 'react';
 import { Button, Modal } from 'components/generic';
 import Picker from 'features/ingredients/Picker';
+import { Ingredient } from 'generated/schema';
 
-export default class IngredientEditor extends React.Component {
+export interface IngredientEditorProps {
+  onChange(value: Ingredient): void;
+  value: Ingredient;
+}
+
+export default class IngredientEditor extends React.Component<
+  IngredientEditorProps
+> {
   state = {
     editing: false,
   };

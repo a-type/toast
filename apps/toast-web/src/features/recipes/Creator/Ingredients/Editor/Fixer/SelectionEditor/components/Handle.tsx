@@ -23,7 +23,12 @@ const desktopWidth = props => {
 };
 const cornerContent = props => (props.interactive ? '""' : '');
 
-export default styled.div`
+export interface HandleProps {
+  interactive?: boolean;
+  active?: boolean;
+}
+
+export default styled<HandleProps, 'div'>('div')`
   height: 1.5em;
   background: transparent;
   display: inline-block;

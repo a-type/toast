@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from 'components/generic';
 import styled from 'styled-components';
 
-const Button = styled.button`
+const Button = styled<{ active?: boolean }, 'button'>('button')`
   background: transparent;
   border: 0;
   outline: none;
@@ -20,6 +20,6 @@ const Button = styled.button`
 export default ({ onClick, active }) => (
   <Button onClick={onClick} active={active}>
     Create new
-    <Icon name="create" />
+    <Icon name="plus-math" />
   </Button>
 );
