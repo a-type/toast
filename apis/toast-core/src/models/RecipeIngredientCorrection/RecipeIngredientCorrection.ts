@@ -6,10 +6,13 @@ export enum CorrectionStatus {
 
 export interface RecipeIngredientCorrectedValue {
   unit: string;
-  unitTextMatch: string;
+  unitStart: number;
+  unitEnd: number;
   value: number;
-  valueTextMatch: string;
-  ingredientTextMatch: string;
+  valueStart: number;
+  valueEnd: number;
+  ingredientStart: number;
+  ingredientEnd: number;
   text: string;
   ingredientId: string;
 }

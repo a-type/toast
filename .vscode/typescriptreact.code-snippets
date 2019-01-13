@@ -93,9 +93,9 @@
       "  $0",
       "}",
       "",
-      "const $1: React.SFC<$1Props> = ({ }) => (",
+      "const $1: React.SFC<$1Props> = ({ }) => {",
       "  ",
-      ");",
+      "};",
       "",
       "export default $1;"
     ]

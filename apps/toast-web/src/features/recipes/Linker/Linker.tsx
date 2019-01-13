@@ -49,7 +49,9 @@ const RecipeLinker: React.SFC<RouteComponentProps> = ({ history }) => {
               logger.warn(result.data.linkRecipe.problems); // TODO: show
             }
 
-            history.push(`/recipes/${result.data.linkRecipe.recipe.id}/edit`);
+            history.push(
+              `/recipes/${result.data.linkRecipe.recipe.id}/correct`,
+            );
           } catch (err) {
             setLoading(false);
             logger.fatal(err);

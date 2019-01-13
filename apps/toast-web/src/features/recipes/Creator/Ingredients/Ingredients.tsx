@@ -7,7 +7,7 @@ export const RecipeCreateIngredientsFragment = gql`
     id
     ingredients {
       ...ParseIngredient
-      ...FixIngredient
+      ...FixRecipeIngredient
     }
   }
 

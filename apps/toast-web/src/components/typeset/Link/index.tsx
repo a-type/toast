@@ -24,7 +24,7 @@ const ProtectedBaseLink = ({
 }: TextLinkProps) => <BaseLink {...rest} />;
 
 const Link = styled<TextLinkProps>(ProtectedBaseLink)`
-  color: var(--color-brand);
+  color: var(--color-link-foreground);
   text-decoration: underline;
   transition: 0.25s ease-in-out;
   font-size: ${props =>
@@ -32,12 +32,12 @@ const Link = styled<TextLinkProps>(ProtectedBaseLink)`
   display: inline-block;
 
   &:hover {
-    color: var(--color-brand-dark);
+    color: var(--color-link-active);
   }
 
   &:focus {
     outline: none;
-    color: var(--color-brand-dark);
+    color: var(--color-link-active);
   }
 
   margin-top: ${props => (props.inline ? 'auto' : '-0.16em')};

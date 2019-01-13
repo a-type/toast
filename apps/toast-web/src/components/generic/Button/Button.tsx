@@ -122,19 +122,19 @@ Button.NegativeLight = styled(Button)`
 
 Button.Ghost = styled(Button)`
   background: transparent;
-  border-color: var(--color-gray-light);
-  color: var(--color-gray);
+  border-color: var(--color-control-background);
+  color: var(--color-control-foreground);
 
   &:active {
-    border-color: var(--color-brand);
+    border-color: var(--color-background-active);
     border-style: solid;
     background: transparent;
   }
 
   &:hover,
   &:focus {
-    background: var(--color-white);
-    border-color: var(--color-brand-light);
+    background: var(--color-control-background);
+    border-color: var(--color-control-background);
     color: var(--color-dark);
     border-style: solid;
   }

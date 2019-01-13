@@ -14,10 +14,13 @@ export const typeDefs = gql`
 
   type RecipeIngredientCorrectedValue {
     unit: String
-    unitTextMatch: String
+    unitStart: Int
+    unitEnd: Int
     value: Float
-    valueTextMatch: String
-    ingredientTextMatch: String
+    valueStart: Int
+    valueEnd: Int
+    ingredientStart: Int
+    ingredientEnd: Int
     ingredient: Ingredient
   }
 
@@ -30,11 +33,14 @@ export const typeDefs = gql`
 
   input RecipeIngredientCorrectedValueInput {
     unit: String
-    unitTextMatch: String
+    unitStart: Int
+    unitEnd: Int
     value: Float
-    valueTextMatch: String
+    valueStart: Int
+    valueEnd: Int
     ingredientId: String
-    ingredientTextMatch: String
+    ingredientStart: Int
+    ingredientEnd: Int
   }
 
   input RecipeIngredientCorrectionSubmitInput {

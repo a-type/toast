@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2019-01-12T18:14:53-05:00 */
+/** Generated in 2019-01-13T16:29:02-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -312,13 +312,19 @@ export interface RecipeIngredientCorrection {
 export interface RecipeIngredientCorrectedValue {
   unit?: string | null;
 
-  unitTextMatch?: string | null;
+  unitStart?: number | null;
+
+  unitEnd?: number | null;
 
   value?: number | null;
 
-  valueTextMatch?: string | null;
+  valueStart?: number | null;
 
-  ingredientTextMatch?: string | null;
+  valueEnd?: number | null;
+
+  ingredientStart?: number | null;
+
+  ingredientEnd?: number | null;
 
   ingredient?: Ingredient | null;
 }
@@ -654,15 +660,21 @@ export interface RecipeIngredientCorrectionSubmitInput {
 export interface RecipeIngredientCorrectedValueInput {
   unit?: string | null;
 
-  unitTextMatch?: string | null;
+  unitStart?: number | null;
+
+  unitEnd?: number | null;
 
   value?: number | null;
 
-  valueTextMatch?: string | null;
+  valueStart?: number | null;
+
+  valueEnd?: number | null;
 
   ingredientId?: string | null;
 
-  ingredientTextMatch?: string | null;
+  ingredientStart?: number | null;
+
+  ingredientEnd?: number | null;
 }
 
 // ====================================================
@@ -1308,6 +1320,18 @@ export namespace CreatePlan {
     __typename?: 'Plan';
 
     id: string;
+  };
+}
+
+export namespace CorrectIngredient {
+  export type Variables = {
+    input: RecipeIngredientCorrectionSubmitInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    submitRecipeIngredientCorrection: string;
   };
 }
 

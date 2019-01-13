@@ -15,7 +15,11 @@ const Spotlight = ({ recipe }) => {
           <H1>{recipe.title}</H1>
         </Link>
         {recipe.description && <P>{recipe.description}</P>}
-        {recipe.attribution && <Aside>from {recipe.attribution}</Aside>}
+        {recipe.attribution && (
+          <Link to={recipe.sourceUrl} newTab>
+            from {recipe.attribution}
+          </Link>
+        )}
         <LikeButton recipe={recipe} />
       </div>
     </Layout>
@@ -39,6 +43,7 @@ Spotlight.fragments = {
     fragment RecipeSpotlight on Recipe {
       description
       attribution
+      sourceUrl
       author {
         id
         name

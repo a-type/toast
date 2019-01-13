@@ -23,6 +23,8 @@ const backgroundBrandCss = css`
   --color-field-foreground: var(--color-white);
   --color-control-background: var(--color-brand-light);
   --color-control-foreground: var(--color-dark);
+  --color-link-foreground: var(--color-brand-dark);
+  --color-link-active: var(--color-dark);
 `;
 
 const Layout = styled<BaseLayoutProps, 'div'>('div')`

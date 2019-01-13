@@ -1,10 +1,9 @@
 import React from 'react';
 import Button from 'components/generic/Button/Button';
 import Suggestion from './Suggestion';
-import Tip from './Tip';
-import CreateButton from './CreateButton';
 import IngredientPickerSuggestionsQuery from './IngredientPickerSuggestionsQuery';
-import { IngredientPickerSuggestions, Ingredient } from 'generated/schema';
+import { IngredientPickerSuggestions } from 'generated/schema';
+import { HelpText } from 'components/typeset';
 
 const hasNoResults = ({ searchIngredients }) =>
   !searchIngredients.items || searchIngredients.items.length === 0;
@@ -18,7 +17,6 @@ export interface IngredientPickerSuggestionsProps {
   selectedItem?: number;
   highlightedIndex?: number;
   canCreate?: boolean;
-  onCreate?(newValue: Ingredient): void;
 }
 
 class Suggestions extends React.PureComponent<
@@ -61,7 +59,7 @@ class Suggestions extends React.PureComponent<
 
           return (
             <div>
-              <Tip>Choose one:</Tip>
+              <HelpText>Choose one:</HelpText>
               {items.map((ingredient, index) => (
                 <Suggestion
                   key={ingredient.id}

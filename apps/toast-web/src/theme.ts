@@ -84,6 +84,9 @@ export const GlobalStyle = createGlobalStyle`
   --color-control-background-active: var(--color-brand-light);
   --color-control-foreground-active: var(--color-dark);
 
+  --color-link-foreground: var(--color-brand);
+  --color-link-active: var(--color-brand-dark);
+
   --color-content-background: var(--color-white);
   --color-content-foreground: var(--color-black);
 
