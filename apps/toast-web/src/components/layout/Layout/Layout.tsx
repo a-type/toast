@@ -13,6 +13,8 @@ import { Navigation } from 'features/structure';
 export interface BaseLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   noScroll?: boolean;
   backgroundStyle: BackgroundStyle;
+  secondaryContentFirst?: boolean;
+  noSpacing?: boolean;
 }
 
 const backgroundBrandCss = css`
@@ -34,10 +36,14 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
   overflow-x: hidden;
   position: relative;
   display: grid;
-  padding: var(--spacing-sm);
+  padding: ${props => (props.noSpacing ? '0' : 'var(--spacing-sm)')};
 
-  grid-template-areas: 'navigation' 'banner' 'content' 'secondaryContent';
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas: ${props =>
+    props.secondaryContentFirst
+      ? `'navigation' 'banner' 'secondaryContent' 'content'`
+      : `'navigation' 'banner' 'content' 'secondaryContent'`};
+  grid-template-rows: ${props =>
+    props.secondaryContentFirst ? 'auto auto auto 1fr' : 'auto auto 1fr auto'};
   grid-template-columns: 100%;
 
   background: ${props =>
@@ -49,10 +55,7 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
     grid-area: navigation;
 
     width: 100%;
-    padding-top: var(--spacing-md);
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
     height: auto;
     margin-left: auto;
     margin-right: auto;
@@ -69,8 +72,6 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
 
   & > .${CLASS_NAMES.SECONDARY_CONTENT} {
     grid-area: secondaryContent;
-    overflow-y: auto;
-    overflow-y: overlay;
   }
 
   & > .${CLASS_NAMES.CONTROLS} {
@@ -85,10 +86,10 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
 
   & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.CONTROLS} {
     margin: 0 auto;
-    padding-top: var(--spacing-lg);
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    padding-bottom: var(--spacing-xl);
+    padding-top: ${props => (props.noSpacing ? '0' : 'var(--spacing-lg)')};
+    padding-left: ${props => (props.noSpacing ? '0' : 'var(--spacing-md)')};
+    padding-right: ${props => (props.noSpacing ? '0' : 'var(--spacing-md)')};
+    padding-bottom: ${props => (props.noSpacing ? '0' : 'var(--spacing-xl)')};
   }
 
   & .${CLASS_NAMES.CONTENT} {
@@ -96,23 +97,34 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
   }
 
   @media (min-width: ${BREAK_POINT}px) {
-    grid-template-areas: 'navigation navigation' 'banner banner' 'content secondaryContent';
+    grid-template-areas: ${props =>
+      props.secondaryContentFirst
+        ? `'navigation navigation' 'banner banner' 'secondaryContent content'`
+        : `'navigation navigation' 'banner banner' 'content secondaryContent'`};
     grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto 1fr;
+
+    & > .${CLASS_NAMES.SECONDARY_CONTENT} {
+      overflow-y: auto;
+      overflow-y: overlay;
+    }
   }
 
   @media (min-width: 768px) {
     & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.NAVIGATION} {
-      padding-left: var(--spacing-xl);
-      padding-right: var(--spacing-xl);
+      padding-left: ${props => (props.noSpacing ? '0' : 'var(--spacing-xl)')};
+      padding-right: ${props => (props.noSpacing ? '0' : 'var(--spacing-xl)')};
     }
 
     & .${CLASS_NAMES.BANNER} {
-      padding-left: calc(var(--spacing-sm) + var(--spacing-xl));
-      padding-right: calc(var(--spacing-sm) + var(--spacing-xl));
+      padding-left: ${props =>
+        props.noSpacing ? '0' : 'calc(var(--spacing-sm) + var(--spacing-xl))'};
+      padding-right: ${props =>
+        props.noSpacing ? '0' : 'calc(var(--spacing-sm) + var(--spacing-xl))'};
     }
 
     & .${CLASS_NAMES.CONTENT} {
-      padding-bottom: var(--spacing-lg);
+      padding-bottom: ${props => (props.noSpacing ? '0' : 'var(--spacing-lg)')};
     }
   }
 
@@ -136,10 +148,12 @@ export interface TwoColumnLayoutProps
   className?: string;
   backgroundStyle?: BackgroundStyle;
   noScroll?: boolean;
+  noSpacing?: boolean;
   secondaryContentIcon?: string;
   renderNavigation?: NavigationRenderFn;
   renderBanner?: BannerRenderFn;
   renderSecondaryContent?: SecondaryContentRenderFn;
+  secondaryContentFirst?: boolean;
 }
 
 const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
@@ -151,6 +165,7 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
   renderNavigation = () => <Navigation />,
   renderBanner,
   renderSecondaryContent,
+  secondaryContentFirst = false,
   ...rest
 }) => {
   const hasSecondaryContent = !!renderSecondaryContent;
@@ -166,6 +181,7 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
         className={classnames(className, CLASS_NAMES.LAYOUT)}
         backgroundStyle={backgroundStyle}
         noScroll={noScroll}
+        secondaryContentFirst={secondaryContentFirst}
         {...rest}
       >
         {!!renderNavigation && (

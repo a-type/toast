@@ -11,7 +11,7 @@ export interface ToolbarProps {
 const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
   return (
     <Bar>
-      <Link to={`/recipes/${recipe}`}>
+      <Link to={`/recipes/${recipe.id}`}>
         <Button.Icon name="next-page" iconProps={{ rotation: 180 }} />
       </Link>
       <div>

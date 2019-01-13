@@ -13,12 +13,12 @@ export default styled<{}, 'div'>('div')`
     grid-template-areas: 'image details';
     grid-template-rows: 1fr;
     grid-template-columns: auto 1fr;
+
+    & > *[data-grid-area='image'] {
+      height: 15vh;
+      width: 15vh;
+    }
   }
 
   ${gridAreas(['image', 'details'])};
-
-  & > *[data-grid-area='image'] {
-    height: 15vh;
-    width: 15vh;
-  }
 `;

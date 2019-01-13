@@ -12,7 +12,7 @@ const RecipePage = ({ match: { params } }) => (
 );
 
 const RecipeStepsPage = ({ match: { params } }) => (
-  <Layout noScroll>
+  <Layout noScroll noSpacing>
     <Steps recipeId={params.recipeId} />
   </Layout>
 );
