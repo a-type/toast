@@ -12,10 +12,13 @@ export const ParseIngredientFragment = gql`
     index
     text
     unit
-    unitTextMatch
+    unitStart
+    unitEnd
     value
-    valueTextMatch
-    ingredientTextMatch
+    valueStart
+    valueEnd
+    ingredientStart
+    ingredientEnd
     ingredient {
       id
       name

@@ -12,14 +12,24 @@ const GetPreferredServings = gql`
   }
 `;
 
+type RangeName = 'ingredient' | 'unit' | 'value';
+type Range = {
+  name: RangeName;
+  start: number;
+  end: number;
+};
+
 export interface IngredientItemProps {
   servings: number;
   value?: number;
-  valueTextMatch?: string;
+  valueStart?: number;
+  valueEnd?: number;
   unit?: string;
-  unitTextMatch?: string;
+  unitStart?: number;
+  unitEnd?: number;
   ingredient: Ingredient;
-  ingredientTextMatch: string;
+  ingredientStart?: number;
+  ingredientEnd?: number;
   text: string;
 }
 
@@ -28,95 +38,63 @@ interface IngredientItemInternalProps extends IngredientItemProps {
 }
 
 class IngredientItem extends React.Component<IngredientItemInternalProps> {
-  renderValue = key => {
-    const { servings, preferredServings, value, valueTextMatch } = this.props;
+  getTextAtRange = ({ start, end }: { start: number; end: number }) =>
+    this.props.text.slice(start, end);
+
+  renderValue = () => {
+    const {
+      servings,
+      preferredServings,
+      value,
+      valueStart,
+      valueEnd,
+    } = this.props;
 
     if (!preferredServings) {
-      return <b key={`value-${key}`}>{valueTextMatch}</b>;
+      return (
+        <b key={`value`}>
+          {this.getTextAtRange({ start: valueStart, end: valueEnd })}
+        </b>
+      );
     }
 
     return (
-      <b key={`value-${key}`}>
-        {toDisplay((preferredServings / servings) * value)}
-      </b>
+      <b key={`value`}>{toDisplay((preferredServings / servings) * value)}</b>
     );
   };
 
-  renderUnit = key => {
-    const { servings, preferredServings, unit, unitTextMatch } = this.props;
+  renderUnit = () => {
+    const {
+      servings,
+      preferredServings,
+      unit,
+      unitStart,
+      unitEnd,
+    } = this.props;
 
     if (servings === 1 && preferredServings && preferredServings > 1) {
-      return <span key={`unit-${key}`}>{pluralize(unit)}</span>;
+      return <span key={`unit`}>{pluralize(unit)}</span>;
     }
 
-    return <span key={`unit-${key}`}>{unitTextMatch}</span>;
+    return (
+      <span key={`unit`}>
+        {this.getTextAtRange({ start: unitStart, end: unitEnd })}
+      </span>
+    );
   };
 
-  renderIngredient = key => {
-    const { ingredient, ingredientTextMatch } = this.props;
+  renderIngredient = () => {
+    const { ingredient, ingredientStart, ingredientEnd } = this.props;
 
     return (
-      <IngredientLink key={`ingredient-${key}`} ingredient={ingredient}>
-        {ingredientTextMatch}
+      <IngredientLink key={`ingredient`} ingredient={ingredient}>
+        {this.getTextAtRange({ start: ingredientStart, end: ingredientEnd })}
       </IngredientLink>
     );
   };
 
-  textArraySubstituted = (textArray, match, substituteFn) =>
-    textArray.reduce((newArray, item, idx) => {
-      if (typeof item === 'string' && item.includes(match)) {
-        const index = item.indexOf(match);
-        const before = item.slice(0, index);
-        const after = item.slice(index + match.length);
-        return [...newArray, before, substituteFn(idx), after];
-      }
-      return [...newArray, item];
-    }, []);
-
-  withValue = textArray => {
-    const { valueTextMatch } = this.props;
-
-    if (valueTextMatch) {
-      return this.textArraySubstituted(
-        textArray,
-        valueTextMatch,
-        this.renderValue,
-      );
-    }
-
-    return textArray;
-  };
-
-  withUnit = textArray => {
-    const { unitTextMatch } = this.props;
-
-    if (unitTextMatch) {
-      return this.textArraySubstituted(
-        textArray,
-        unitTextMatch,
-        this.renderUnit,
-      );
-    }
-
-    return textArray;
-  };
-
-  withIngredient = textArray => {
-    const { ingredientTextMatch } = this.props;
-
-    if (ingredientTextMatch) {
-      return this.textArraySubstituted(
-        textArray,
-        ingredientTextMatch,
-        this.renderIngredient,
-      );
-    }
-
-    return textArray;
-  };
-
-  convertStringsToSpans = textArray =>
-    textArray.map(item => {
+  convertStringsToSpans = (items: React.ReactNode[]) =>
+    items.map(item => {
       if (typeof item === 'string' && item) {
         return <span key={item}>{item}</span>;
       }
@@ -124,16 +102,56 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
       return item;
     });
 
-  render() {
-    const { text } = this.props;
+  renderRange = (rangeName: RangeName) => {
+    switch (rangeName) {
+      case 'ingredient':
+        return this.renderIngredient();
+      case 'unit':
+        return this.renderUnit();
+      case 'value':
+        return this.renderValue();
+    }
 
-    return (
-      <li>
-        {this.convertStringsToSpans(
-          this.withIngredient(this.withUnit(this.withValue([text]))),
-        )}
-      </li>
+    return null;
+  };
+
+  render() {
+    const {
+      text,
+      ingredientStart,
+      ingredientEnd,
+      unitStart,
+      unitEnd,
+      valueStart,
+      valueEnd,
+    } = this.props;
+
+    const ranges: Range[] = [
+      {
+        name: 'ingredient',
+        start: ingredientStart,
+        end: ingredientEnd,
+      } as Range,
+      { name: 'unit', start: unitStart, end: unitEnd } as Range,
+      { name: 'value', start: valueStart, end: valueEnd } as Range,
+    ].sort((a, b) => b.start - a.start);
+
+    const segments: React.ReactNode[] = ranges.reduce(
+      (segs, range) => {
+        if (range.end - range.start > 0) {
+          return [
+            segs[0].slice(0, range.start),
+            this.renderRange(range.name),
+            segs[0].slice(range.end),
+            ...segs.slice(1),
+          ];
+        }
+        return segs;
+      },
+      [text],
     );
+
+    return <li>{this.convertStringsToSpans(segments)}</li>;
   }
 }
 

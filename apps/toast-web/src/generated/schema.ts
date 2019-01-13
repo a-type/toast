@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2019-01-12T10:45:23-05:00 */
+/** Generated in 2019-01-12T18:14:53-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -144,19 +144,29 @@ export interface RecipeIngredient {
 
   text: string;
 
-  ingredientTextMatch?: string | null;
+  ingredientStart?: number | null;
+
+  ingredientEnd?: number | null;
 
   recipe: Recipe;
 
   unit?: string | null;
 
-  unitTextMatch?: string | null;
+  unitStart?: number | null;
+
+  unitEnd?: number | null;
 
   value: number;
 
-  valueTextMatch?: string | null;
+  valueStart?: number | null;
+
+  valueEnd?: number | null;
 
   index: number;
+
+  comments: string[];
+
+  preparations: string[];
 
   ingredient: Ingredient;
 }
@@ -588,15 +598,25 @@ export interface RecipeDetailsUpdateInput {
 export interface RecipeIngredientUpdateInput {
   unit?: string | null;
 
-  unitTextMatch?: string | null;
+  unitStart?: number | null;
+
+  unitEnd?: number | null;
 
   value?: number | null;
 
-  valueTextMatch?: string | null;
+  valueStart?: number | null;
+
+  valueEnd?: number | null;
 
   ingredientId?: string | null;
 
-  ingredientTextMatch?: string | null;
+  ingredientStart?: number | null;
+
+  ingredientEnd?: number | null;
+
+  comments?: string[] | null;
+
+  preparations?: string[] | null;
 }
 
 export interface RecipeIngredientParseInput {
@@ -1492,17 +1512,27 @@ export namespace FullRecipe {
 
     unit?: string | null;
 
-    unitTextMatch?: string | null;
+    unitStart?: number | null;
+
+    unitEnd?: number | null;
 
     value: number;
 
-    valueTextMatch?: string | null;
+    valueStart?: number | null;
+
+    valueEnd?: number | null;
 
     text: string;
 
-    ingredientTextMatch?: string | null;
+    ingredientStart?: number | null;
+
+    ingredientEnd?: number | null;
 
     index: number;
+
+    comments: string[];
+
+    preparations: string[];
 
     ingredient: Ingredient;
   };
@@ -2132,13 +2162,19 @@ export namespace FixRecipeIngredient {
 
     unit?: string | null;
 
-    unitTextMatch?: string | null;
+    unitStart?: number | null;
+
+    unitEnd?: number | null;
 
     value: number;
 
-    valueTextMatch?: string | null;
+    valueStart?: number | null;
 
-    ingredientTextMatch?: string | null;
+    valueEnd?: number | null;
+
+    ingredientStart?: number | null;
+
+    ingredientEnd?: number | null;
 
     ingredient: Ingredient;
   };
@@ -2164,13 +2200,19 @@ export namespace ParseIngredient {
 
     unit?: string | null;
 
-    unitTextMatch?: string | null;
+    unitStart?: number | null;
+
+    unitEnd?: number | null;
 
     value: number;
 
-    valueTextMatch?: string | null;
+    valueStart?: number | null;
 
-    ingredientTextMatch?: string | null;
+    valueEnd?: number | null;
+
+    ingredientStart?: number | null;
+
+    ingredientEnd?: number | null;
 
     ingredient: Ingredient;
   };

@@ -4,7 +4,8 @@ import { Tip } from 'components/generic';
 import { HelpText } from 'components/typeset';
 
 export interface Selection {
-  text: string;
+  start: number;
+  end: number;
   name?: string;
   tipContent?: React.ReactNode;
   color?: string;
@@ -30,14 +31,13 @@ export default class SelectionEditor extends React.Component<
     const { selections, value } = this.props;
     const selection = selections.find(sel => sel.name === name);
 
-    const start = value.indexOf(selection.text);
     return {
-      start,
-      end: start + selection.text.length,
+      start: selection.start,
+      end: selection.end,
     };
   };
 
-  getTextAtRange = ({ start, end }) =>
+  getTextAtRange = ({ start, end }: { start: number; end: number }) =>
     this.props.value.substr(start, end - start);
 
   handlePointerOverChar = ev => {
@@ -150,7 +150,7 @@ export default class SelectionEditor extends React.Component<
 
     const hypotheticalText = hypotheticalRange
       ? this.getTextAtRange(hypotheticalRange)
-      : active.text;
+      : this.getTextAtRange(active);
 
     if (selecting) {
       return <HelpText>"{hypotheticalText}"</HelpText>;
@@ -164,9 +164,13 @@ export default class SelectionEditor extends React.Component<
     );
   };
 
-  renderSelection = (offset: number, { name, text, color }: Selection) => {
+  renderSelection = (
+    offset: number,
+    { name, start, end, color }: Selection,
+  ) => {
     const { selecting, activeSelection } = this.state;
     const isActive = activeSelection === name;
+    const text = this.getTextAtRange({ start, end });
 
     return (
       <Tip
@@ -215,9 +219,12 @@ export default class SelectionEditor extends React.Component<
     let remainingText = value;
     let offset = 0;
 
-    selections.forEach(selection => {
-      let text = selection.text;
-      if (!text) {
+    selections.sort((a, b) => a.start - b.start).forEach(selection => {
+      let range: { start: number; end: number } = {
+        start: selection.start,
+        end: selection.end,
+      };
+      if (!range) {
         return;
       }
 
@@ -225,13 +232,16 @@ export default class SelectionEditor extends React.Component<
         selection.name === this.state.activeSelection &&
         this.state.hypotheticalRange
       ) {
-        text = this.getTextAtRange(this.state.hypotheticalRange);
+        range = this.state.hypotheticalRange;
       }
-      const split = remainingText.split(text);
+      const split = [
+        remainingText.substr(0, range.start),
+        remainingText.substr(range.end),
+      ];
       parts = parts.concat(this.renderTextChars(offset, split[0]));
       offset += split[0].length;
-      parts.push(this.renderSelection(offset, { ...selection, text }));
-      offset += text.length;
+      parts.push(this.renderSelection(offset, { ...selection, ...range }));
+      offset += range.end - range.start;
       remainingText = split[1] || '';
     });
     parts = parts.concat(this.renderTextChars(offset, remainingText));

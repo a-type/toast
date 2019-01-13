@@ -1,24 +1,25 @@
-import {
-  getForRecipe,
-  parseRecipeIngredient,
-  reparseRecipeIngredient,
-  updateRecipeIngredient,
-  moveRecipeIngredient,
-  deleteRecipeIngredient,
-} from './service';
-import { gql } from 'apollo-server-express';
+import { gql, ForbiddenError } from 'apollo-server-express';
+import { Context } from 'context';
+import { IngredientParseResult } from 'services/ingredientParser/ingredientParser';
+import { RecipeIngredient } from 'services/graph/sources/RecipeIngredients';
+import logger from 'logger';
 
 export const typeDefs = gql`
   type RecipeIngredient {
     id: ID!
     text: String!
-    ingredientTextMatch: String
+    ingredientStart: Int
+    ingredientEnd: Int
     recipe: Recipe!
     unit: String
-    unitTextMatch: String
+    unitStart: Int
+    unitEnd: Int
     value: Float!
-    valueTextMatch: String
+    valueStart: Int
+    valueEnd: Int
     index: Int!
+    comments: [String!]!
+    preparations: [String!]!
   }
 
   input RecipeIngredientParseInput {
@@ -27,11 +28,16 @@ export const typeDefs = gql`
 
   input RecipeIngredientUpdateInput {
     unit: String
-    unitTextMatch: String
+    unitStart: Int
+    unitEnd: Int
     value: Float
-    valueTextMatch: String
+    valueStart: Int
+    valueEnd: Int
     ingredientId: ID
-    ingredientTextMatch: String
+    ingredientStart: Int
+    ingredientEnd: Int
+    comments: [String!]
+    preparations: [String!]
   }
 
   extend type Recipe {
@@ -58,24 +64,114 @@ export const typeDefs = gql`
   }
 `;
 
-/**
- * FIXME: migrate all this to new system for parsing!!!
- */
+const convertParsedToRecipeIngredient = (
+  result: IngredientParseResult,
+  ingredientId: string,
+): Partial<RecipeIngredient> => ({
+  unit: result.unit.normalized,
+  value: result.value.normalized,
+  text: result.original,
+  ingredientStart: result.ingredient.range[0] || null,
+  ingredientEnd: result.ingredient.range[1] || null,
+  unitStart: result.unit.range[0] || null,
+  unitEnd: result.unit.range[1] || null,
+  valueStart: result.value.range[0] || null,
+  valueEnd: result.value.range[1] || null,
+  comments: result.comments,
+  preparations: result.preparations,
+  ingredientId,
+});
 
 export const resolvers = {
   Recipe: {
-    ingredients: (parent, args, ctx, info) => getForRecipe(parent.id, ctx),
+    ingredients: async (parent, args, ctx, info) => {
+      const ingredients = await ctx.graph.recipeIngredients.getForRecipe(
+        parent.id,
+      );
+      logger.debug(ingredients);
+      return ingredients;
+    },
   },
   Mutation: {
-    addRecipeIngredient: (parent, args, ctx, info) =>
-      parseRecipeIngredient(args.recipeId, args.input, ctx),
-    updateRecipeIngredient: (parent, args, ctx, info) =>
-      updateRecipeIngredient(args.id, args.input, ctx),
-    reparseRecipeIngredient: (parent, args, ctx, info) =>
-      reparseRecipeIngredient(args.id, args.input, ctx),
-    moveRecipeIngredient: (parent, args, ctx, info) =>
-      moveRecipeIngredient(args.recipeId, args.input, ctx),
-    deleteRecipeIngredient: (parent, args, ctx, info) =>
-      deleteRecipeIngredient(args.id, ctx),
+    addRecipeIngredient: async (parent, args, ctx: Context) => {
+      const isAuthoredByUser = await ctx.graph.recipes.isAuthoredByUser(
+        args.recipeId,
+        ctx.user.id,
+      );
+      if (!isAuthoredByUser) {
+        throw new ForbiddenError(
+          "You don't have permission to change someone else's recipe.",
+        );
+      }
+
+      const [result] = await ctx.ingredientParser.parse([args.input.text]);
+      const match = await ctx.graph.ingredients.searchForBestMatchOrCreate(
+        result.ingredient.normalized,
+      );
+      await ctx.graph.recipeIngredients.create(
+        args.recipeId,
+        convertParsedToRecipeIngredient(result, match.id),
+      );
+      return ctx.graph.recipes.get(args.recipeId);
+    },
+    updateRecipeIngredient: async (parent, args, ctx: Context) => {
+      const isAuthoredByUser = await ctx.graph.recipeIngredients.isPartOfRecipeAuthoredByUser(
+        args.id,
+        ctx.user.id,
+      );
+      if (!isAuthoredByUser) {
+        throw new ForbiddenError(
+          "You don't have permission to change someone else's recipe.",
+        );
+      }
+
+      return ctx.graph.recipeIngredients.update(args.id, args.input);
+    },
+    reparseRecipeIngredient: async (parent, args, ctx: Context) => {
+      const isAuthoredByUser = await ctx.graph.recipeIngredients.isPartOfRecipeAuthoredByUser(
+        args.id,
+        ctx.user.id,
+      );
+      if (!isAuthoredByUser) {
+        throw new ForbiddenError(
+          "You don't have permission to change someone else's recipe.",
+        );
+      }
+
+      const [result] = await ctx.ingredientParser.parse([args.input.text]);
+      const match = await ctx.graph.ingredients.searchForBestMatchOrCreate(
+        result.ingredient.normalized,
+      );
+      return ctx.graph.recipeIngredients.update(
+        args.id,
+        convertParsedToRecipeIngredient(result, match.id),
+      );
+    },
+    moveRecipeIngredient: async (parent, args, ctx: Context) => {
+      const isAuthoredByUser = await ctx.graph.recipes.isAuthoredByUser(
+        args.recipeId,
+        ctx.user.id,
+      );
+      if (!isAuthoredByUser) {
+        throw new ForbiddenError(
+          "You don't have permission to change someone else's recipe.",
+        );
+      }
+
+      return ctx.graph.recipes.moveIngredient(args.recipeId, args.input);
+    },
+    deleteRecipeIngredient: async (parent, args, ctx: Context) => {
+      const isAuthoredByUser = await ctx.graph.recipeIngredients.isPartOfRecipeAuthoredByUser(
+        args.id,
+        ctx.user.id,
+      );
+      if (!isAuthoredByUser) {
+        throw new ForbiddenError(
+          "You don't have permission to change someone else's recipe.",
+        );
+      }
+
+      return ctx.graph.recipeIngredients.delete(args.id);
+    },
   },
 };

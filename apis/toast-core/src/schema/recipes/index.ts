@@ -187,18 +187,18 @@ export const resolvers = [
                 result.problems.push(RecipeLinkProblem.IncompleteIngredients);
               }
 
-              return ctx.graph.recipeIngredients.create(
-                result.recipe.id,
-                ingredient && ingredient.id,
-                {
-                  unit: parsed.unit.normalized,
-                  unitTextMatch: parsed.unit.raw,
-                  value: parsed.value.normalized,
-                  valueTextMatch: parsed.value.raw,
-                  ingredientTextMatch: parsed.ingredient.raw,
-                  text: parsed.original,
-                },
-              );
+              return ctx.graph.recipeIngredients.create(result.recipe.id, {
+                unit: parsed.unit.normalized,
+                unitStart: parsed.unit.range[0] || null,
+                unitEnd: parsed.unit.range[1] || null,
+                value: parsed.value.normalized,
+                valueStart: parsed.value.range[0] || null,
+                valueEnd: parsed.value.range[1] || null,
+                ingredientStart: parsed.ingredient.range[0] || null,
+                ingredientEnd: parsed.ingredient.range[1] || null,
+                text: parsed.original,
+                ingredientId: ingredient && ingredient.id,
+              });
             }),
           );
         } catch (err) {

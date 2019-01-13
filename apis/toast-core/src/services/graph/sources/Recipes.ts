@@ -1,12 +1,9 @@
 import { timestamp, id } from 'tools';
 import { omit, pick } from 'ramda';
 import Source from './Source';
-// TODO; migrate
-import { parseRecipeIngredient_withTransaction } from 'schema/recipes/recipeIngredients/service';
 import { RecipeIngredient } from './RecipeIngredients';
 import { Ingredient } from './Ingredients';
 import { Image } from './Images';
-import { File } from 'types';
 
 export interface Recipe {
   id: string;
@@ -67,6 +64,22 @@ export default class Recipes extends Source<Recipe> {
       );
 
       return this.hydrateOne(result);
+    });
+
+  isAuthoredByUser = (recipeId: string, userId: string) =>
+    this.ctx.readTransaction(async tx => {
+      const result = await tx.run(
+        `
+          MATCH (recipe:Recipe {id: $recipeId})<-[:AUTHOR_OF]-(user:User {id: $userId})
+          RETURN recipe {.id}
+        `,
+        {
+          recipeId,
+          userId,
+        },
+      );
+
+      return result.records.length > 0;
     });
 
   getAllWithIngredients = (
@@ -137,7 +150,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   listAuthoredForUser = (userId, { offset, count }) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
           MATCH (user:User { id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)
@@ -156,7 +169,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   listDiscoveredForUser = (userId, { offset, count }) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
           MATCH (user:User { id: $userId })-[:DISCOVERER_OF]->(recipe:Recipe)
@@ -174,7 +187,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   listDraftsForUser = (userId, { offset, count }) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
           MATCH (user:User { id: $userId })-[:AUTHOR_OF]->(recipe:Recipe)
@@ -193,7 +206,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   listLikedForUser = (userId, { offset, count }) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
         MATCH (user:User { id: $userId })-[:LIKES]->(recipe:Recipe)
@@ -211,7 +224,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   create = (input: Partial<Recipe>) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.writeTransaction(async tx => {
       const time = timestamp();
       const user = this.ctx.user;
 
@@ -240,7 +253,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   link = (input: Partial<Recipe>) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.writeTransaction(async tx => {
       const user = this.ctx.user;
       const time = timestamp();
 
@@ -295,7 +308,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   updateDetails = (id: string, input: Partial<Recipe>) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.writeTransaction(async tx => {
       const result = await tx.run(
         `
           MATCH (recipe:Recipe {id: $id})<-[:AUTHOR_OF]-(:User {id: $userId})
@@ -329,7 +342,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   publish = (id: string) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.writeTransaction(async tx => {
       const result = await tx.run(
         `
           MATCH (recipe:Recipe { id: $id })<-[:AUTHOR_OF]-(:User {id: $userId})
@@ -343,7 +356,7 @@ export default class Recipes extends Source<Recipe> {
     });
 
   recordView = (id: string) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.writeTransaction(async tx => {
       const result = await tx.run(
         `
           MATCH (recipe:Recipe { id: $id })
@@ -365,7 +378,7 @@ export default class Recipes extends Source<Recipe> {
     recipeId: string,
     input: { url: string; attribution: string; id?: string },
   ) =>
-    this.ctx.transaction(async tx => {
+    this.ctx.writeTransaction(async tx => {
       const result = await tx.run(
         `
         MATCH (recipe:Recipe { id: $recipeId })
@@ -384,5 +397,52 @@ export default class Recipes extends Source<Recipe> {
       recipe.coverImage = this.graph.images.hydrateOne(result);
 
       return recipe;
+    });
+
+  moveIngredient = (
+    recipeId: string,
+    input: { fromIndex: number; toIndex: number },
+  ) =>
+    this.ctx.writeTransaction(async tx => {
+      const ingredientsResult = await tx.run(
+        `
+        MATCH (recipe:Recipe {id: $recipeId})<-[rel:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient)
+        RETURN rel {.index}, recipeIngredient {.id} ORDER BY rel.index
+      `,
+        {
+          recipeId,
+        },
+      );
+
+      if (
+        ingredientsResult.records.length >
+        Math.max(input.fromIndex, input.toIndex)
+      ) {
+        const ingredientIds = ingredientsResult.records.map(
+          rec => rec.get('recipeIngredient').id,
+        );
+        ingredientIds.splice(
+          input.toIndex,
+          0,
+          ingredientIds.splice(input.fromIndex, 1)[0],
+        );
+        const indexAndIds = ingredientIds.map((id: string, index: number) => ({
+          id,
+          index,
+        }));
+        await tx.run(
+          `
+          UNWIND $indexAndIds as indexAndId
+          MATCH (:Recipe {id: $recipeId})<-[rel:INGREDIENT_OF]-(:RecipeIngredient {id: indexAndId.id})
+          SET rel.index = indexAndId.index
+        `,
+          { indexAndIds, recipeId },
+        );
+      }
+
+      const recipeResult = await tx.run(
+        `MATCH (recipe:Recipe {id: $id}) RETURN recipe {${this.dbFields}}`,
+      );
+      return this.hydrateOne(recipeResult);
     });
 }

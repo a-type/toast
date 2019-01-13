@@ -14,12 +14,17 @@ export const Document = gql`
       ingredients {
         id
         unit
-        unitTextMatch
+        unitStart
+        unitEnd
         value
-        valueTextMatch
+        valueStart
+        valueEnd
         text
-        ingredientTextMatch
+        ingredientStart
+        ingredientEnd
         index
+        comments
+        preparations
         ingredient {
           id
           name

@@ -1,29 +1,39 @@
-import { pick, omit } from 'ramda';
+import { pick, omit, mergeWith, defaultTo } from 'ramda';
 import { NotFoundError } from 'errors';
 import { GraphContext } from '../types';
 import { camel } from 'change-case';
 
-export default class Source<T> {
+export default class Source<T extends {}> {
   ctx: GraphContext;
   graph: any;
   fields: string[];
   resourceName: string;
   dbFields: string;
+  defaults?: Partial<T>;
 
   constructor(
     ctx: GraphContext,
     graph: any,
     resourceName: string,
     fields: string[],
+    defaults?: Partial<T>,
   ) {
     this.ctx = ctx;
     this.graph = graph;
     this.fields = fields;
     this.resourceName = resourceName;
     this.dbFields = fields.map(name => `.${name}`).join(', ');
+    this.defaults = defaults;
   }
 
   filterInputFields = data => omit(['id'], pick(this.fields, data));
+
+  applyDefaults = (item: T): T => {
+    if (this.defaults) {
+      return mergeWith(defaultTo, this.defaults, item);
+    }
+    return item;
+  };
 
   hydrateOne = (
     result,
@@ -35,7 +45,7 @@ export default class Source<T> {
       }
       return null;
     }
-    return result.records[0].get(key);
+    return this.applyDefaults(result.records[0].get(key));
   };
 
   hydrateList = (
@@ -48,6 +58,6 @@ export default class Source<T> {
       }
       return [];
     }
-    return result.records.map(rec => rec.get(key));
+    return result.records.map(rec => this.applyDefaults(rec.get(key)));
   };
 }

@@ -24,7 +24,6 @@ class IngredientEditorFixer extends React.PureComponent<
   IngredientEditorFixerProps
 > {
   handleSelectionCommit = async (name, newText) => {
-    const selection = document.getSelection();
     const { mutate, recipeIngredient } = this.props;
 
     if (!recipeIngredient.text.includes(newText) || !newText.length) {
@@ -67,17 +66,20 @@ class IngredientEditorFixer extends React.PureComponent<
     const selections = [
       {
         name: 'value',
-        text: recipeIngredient.valueTextMatch,
+        start: recipeIngredient.valueStart,
+        end: recipeIngredient.valueEnd,
         color: 'positive',
       },
       recipeIngredient.unit && {
         name: 'unit',
-        text: recipeIngredient.unitTextMatch,
+        start: recipeIngredient.unitStart,
+        end: recipeIngredient.unitEnd,
         color: 'negative',
       },
       {
         name: 'ingredient',
-        text: recipeIngredient.ingredientTextMatch,
+        start: recipeIngredient.ingredientStart,
+        end: recipeIngredient.ingredientEnd,
         color: 'brand',
         tipContent: (
           <Editors.Ingredient
