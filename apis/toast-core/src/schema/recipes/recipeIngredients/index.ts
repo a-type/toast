@@ -64,24 +64,6 @@ export const typeDefs = gql`
   }
 `;
 
-const convertParsedToRecipeIngredient = (
-  result: IngredientParseResult,
-  ingredientId: string,
-): Partial<RecipeIngredient> => ({
-  unit: result.unit.normalized,
-  value: result.value.normalized,
-  text: result.original,
-  ingredientStart: result.ingredient.range[0] || null,
-  ingredientEnd: result.ingredient.range[1] || null,
-  unitStart: result.unit.range[0] || null,
-  unitEnd: result.unit.range[1] || null,
-  valueStart: result.value.range[0] || null,
-  valueEnd: result.value.range[1] || null,
-  comments: result.comments,
-  preparations: result.preparations,
-  ingredientId,
-});
-
 export const resolvers = {
   Recipe: {
     ingredients: async (parent, args, ctx, info) => {
@@ -109,7 +91,7 @@ export const resolvers = {
       );
       await ctx.graph.recipeIngredients.create(
         args.recipeId,
-        convertParsedToRecipeIngredient(result, match.id),
+        ctx.ingredientParser.toRecipeIngredient(result, match.id),
       );
       return ctx.graph.recipes.get(args.recipeId);
     },
@@ -143,7 +125,7 @@ export const resolvers = {
       );
       return ctx.graph.recipeIngredients.update(
         args.id,
-        convertParsedToRecipeIngredient(result, match.id),
+        ctx.ingredientParser.toRecipeIngredient(result, match.id),
       );
     },
     moveRecipeIngredient: async (parent, args, ctx: Context) => {

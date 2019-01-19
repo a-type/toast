@@ -59,4 +59,22 @@ export default {
       throw err;
     }
   },
+
+  toRecipeIngredient: (parsed: IngredientParseResult, ingredientId: string) => {
+    const getOrNull = (range: [number, number], index: number): number =>
+      range[index] !== undefined ? range[index] : null;
+
+    return {
+      unit: parsed.unit.normalized,
+      unitStart: getOrNull(parsed.unit.range, 0),
+      unitEnd: getOrNull(parsed.unit.range, 1),
+      value: parsed.value.normalized,
+      valueStart: getOrNull(parsed.value.range, 0),
+      valueEnd: getOrNull(parsed.value.range, 1),
+      ingredientStart: getOrNull(parsed.ingredient.range, 0),
+      ingredientEnd: getOrNull(parsed.ingredient.range, 1),
+      text: parsed.original,
+      ingredientId,
+    };
+  },
 };
