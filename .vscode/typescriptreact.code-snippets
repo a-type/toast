@@ -90,11 +90,11 @@
       "import * as React from 'react';",
       "",
       "interface ${1:${TM_FILENAME/(.*)\\..+$/$1/}}Props {",
-      "  $0",
+      "  $2",
       "}",
       "",
       "const $1: React.SFC<$1Props> = ({ }) => {",
-      "  ",
+      "  $0",
       "};",
       "",
       "export default $1;"

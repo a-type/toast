@@ -88,7 +88,6 @@ export const resolvers = {
       const ingredients = await ctx.graph.recipeIngredients.getForRecipe(
         parent.id,
       );
-      logger.debug(ingredients);
       return ingredients;
     },
   },

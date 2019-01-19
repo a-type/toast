@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2019-01-13T16:29:02-05:00 */
+/** Generated in 2019-01-19T11:21:15-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -302,11 +302,13 @@ export interface IngredientSearchResponse {
 export interface RecipeIngredientCorrection {
   id: string;
 
-  status?: CorrectionStatus | null;
+  status: CorrectionStatus;
+
+  correctionType: CorrectionType;
 
   recipeIngredientId: string;
 
-  correctedValue: RecipeIngredientCorrectedValue;
+  correctedValue?: RecipeIngredientCorrectedValue | null;
 }
 
 export interface RecipeIngredientCorrectedValue {
@@ -654,7 +656,9 @@ export interface ScheduleSetMealDetailsInput {
 export interface RecipeIngredientCorrectionSubmitInput {
   recipeIngredientId: string;
 
-  correctedValue: RecipeIngredientCorrectedValueInput;
+  correctionType: CorrectionType;
+
+  correctedValue?: RecipeIngredientCorrectedValueInput | null;
 }
 
 export interface RecipeIngredientCorrectedValueInput {
@@ -933,6 +937,11 @@ export enum CorrectionStatus {
   Submitted = 'Submitted',
   Accepted = 'Accepted',
   Rejected = 'Rejected',
+}
+
+export enum CorrectionType {
+  Change = 'Change',
+  Delete = 'Delete',
 }
 
 export enum RecipeLinkProblem {
@@ -1320,6 +1329,60 @@ export namespace CreatePlan {
     __typename?: 'Plan';
 
     id: string;
+  };
+}
+
+export namespace ListRecipeIngredientCorrections {
+  export type Variables = {
+    offset: number;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+
+    recipeIngredientCorrections: RecipeIngredientCorrections[];
+  };
+
+  export type RecipeIngredientCorrections = {
+    __typename?: 'RecipeIngredientCorrection';
+
+    id: string;
+
+    status: CorrectionStatus;
+
+    recipeIngredientId: string;
+
+    correctedValue?: CorrectedValue | null;
+  };
+
+  export type CorrectedValue = {
+    __typename?: 'RecipeIngredientCorrectedValue';
+
+    unit?: string | null;
+
+    unitStart?: number | null;
+
+    unitEnd?: number | null;
+
+    value?: number | null;
+
+    valueStart?: number | null;
+
+    valueEnd?: number | null;
+
+    ingredientStart?: number | null;
+
+    ingredientEnd?: number | null;
+
+    ingredient?: Ingredient | null;
+  };
+
+  export type Ingredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
   };
 }
 
@@ -2151,6 +2214,8 @@ export namespace RecipeSpotlight {
     description?: string | null;
 
     attribution?: string | null;
+
+    sourceUrl?: string | null;
 
     author?: Author | null;
 

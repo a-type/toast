@@ -2763,9 +2763,29 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "ENUM",
-              "name": "CorrectionStatus",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "CorrectionStatus",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "correctionType",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "CorrectionType",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2791,13 +2811,9 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "RecipeIngredientCorrectedValue",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "RecipeIngredientCorrectedValue",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2830,6 +2846,29 @@
           },
           {
             "name": "Rejected",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "CorrectionType",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "Change",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Delete",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -4916,16 +4955,26 @@
             "defaultValue": null
           },
           {
-            "name": "correctedValue",
+            "name": "correctionType",
             "description": "",
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "INPUT_OBJECT",
-                "name": "RecipeIngredientCorrectedValueInput",
+                "kind": "ENUM",
+                "name": "CorrectionType",
                 "ofType": null
               }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "correctedValue",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "RecipeIngredientCorrectedValueInput",
+              "ofType": null
             },
             "defaultValue": null
           }

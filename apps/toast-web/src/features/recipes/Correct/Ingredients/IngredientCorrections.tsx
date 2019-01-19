@@ -4,6 +4,7 @@ import IngredientCorrector from './IngredientCorrector';
 import {
   RecipeIngredient,
   RecipeIngredientCorrectedValueInput,
+  CorrectionType,
 } from 'generated/schema';
 
 interface IngredientCorrectionsProps {
@@ -25,6 +26,7 @@ const IngredientCorrections: React.SFC<IngredientCorrectionsProps> = ({
               input: {
                 recipeIngredientId: id,
                 correctedValue: correction,
+                correctionType: CorrectionType.Change,
               },
             },
           });

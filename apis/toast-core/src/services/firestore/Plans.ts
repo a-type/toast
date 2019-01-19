@@ -1,6 +1,5 @@
 import { Firestore } from '@google-cloud/firestore';
 import { Schedule, ShoppingList, Meal, Plan } from 'models';
-import { PlanData } from 'models/Plan/Plan';
 
 const COLLECTION = 'plans';
 

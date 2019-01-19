@@ -1,7 +1,14 @@
+import { removeUndefined } from 'tools';
+
 export enum CorrectionStatus {
-  Submitted,
-  Accepted,
-  Rejected,
+  Submitted = 'Submitted',
+  Accepted = 'Accepted',
+  Rejected = 'Rejected',
+}
+
+export enum CorrectionType {
+  Change = 'Change',
+  Delete = 'Delete',
 }
 
 export interface RecipeIngredientCorrectedValue {
@@ -23,6 +30,7 @@ export interface RecipeIngredientCorrectionData {
   correctedValue: RecipeIngredientCorrectedValue;
   reportingUserId: string;
   status: CorrectionStatus;
+  correctionType: CorrectionType;
 }
 
 export default class RecipeIngredientCorrection {
@@ -53,7 +61,7 @@ export default class RecipeIngredientCorrection {
   }
 
   toJSON() {
-    return this.data;
+    return removeUndefined(this.data);
   }
 
   static fromJSON(data) {

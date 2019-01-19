@@ -12,6 +12,11 @@ export const typeDefs = gql`
     Rejected
   }
 
+  enum CorrectionType {
+    Change
+    Delete
+  }
+
   type RecipeIngredientCorrectedValue {
     unit: String
     unitStart: Int
@@ -26,9 +31,10 @@ export const typeDefs = gql`
 
   type RecipeIngredientCorrection {
     id: ID!
-    status: CorrectionStatus
+    status: CorrectionStatus!
+    correctionType: CorrectionType!
     recipeIngredientId: String!
-    correctedValue: RecipeIngredientCorrectedValue!
+    correctedValue: RecipeIngredientCorrectedValue
   }
 
   input RecipeIngredientCorrectedValueInput {
@@ -45,7 +51,8 @@ export const typeDefs = gql`
 
   input RecipeIngredientCorrectionSubmitInput {
     recipeIngredientId: String!
-    correctedValue: RecipeIngredientCorrectedValueInput!
+    correctionType: CorrectionType!
+    correctedValue: RecipeIngredientCorrectedValueInput
   }
 
   extend type Query {
@@ -76,10 +83,11 @@ export const resolvers = {
     submitRecipeIngredientCorrection: async (_parent, args, ctx: Context) => {
       const correction = new RecipeIngredientCorrection({
         id: id('recipeIngredientCorrection'),
-        recipeIngredientId: args.recipeIngredientId,
-        correctedValue: args.correctedValue,
+        recipeIngredientId: args.input.recipeIngredientId,
+        correctedValue: args.input.correctedValue,
         status: CorrectionStatus.Submitted,
         reportingUserId: ctx.user.id,
+        correctionType: args.input.correctionType,
       });
       const result = await ctx.firestore.recipeIngredientCorrections.set(
         correction,
