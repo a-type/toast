@@ -6,6 +6,7 @@ import { Picker } from 'features/ingredients';
 import { H3 } from 'components/typeset';
 import { Formik } from 'formik';
 import { pick } from 'ramda';
+import { Ingredient } from 'generated/schema';
 
 const EditIngredient = gql`
   mutation EditIngredient($id: ID!, $input: IngredientUpdateInput!) {
@@ -19,7 +20,19 @@ const EditIngredient = gql`
   }
 `;
 
-export default class IngredientMerger extends React.Component {
+export interface IngredientEditProps {
+  ingredient: Ingredient;
+}
+
+interface IngredientEditState {
+  showModal: boolean;
+  error: Error;
+}
+
+export default class IngredientEdit extends React.Component<
+  IngredientEditProps,
+  IngredientEditState
+> {
   state = {
     showModal: false,
     error: null,
@@ -27,7 +40,6 @@ export default class IngredientMerger extends React.Component {
 
   toggleModal = () =>
     this.setState(({ showModal }) => ({ showModal: !showModal }));
-  setValue = value => this.setState({ value });
 
   render() {
     return (

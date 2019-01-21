@@ -2,6 +2,7 @@ import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FileChooser } from 'components/generic';
+import { Ingredient } from 'generated/schema';
 
 const CreateIngredient = gql`
   mutation BulkCreateIngredient($input: IngredientCreateInput!) {
@@ -14,12 +15,22 @@ const CreateIngredient = gql`
   }
 `;
 
-const BulkCreator = ({ createIngredient }) => (
+export interface IngredientBulkCreatorProps {
+  createIngredient(params: {
+    variables: {
+      input: Ingredient;
+    };
+  }): Promise<any>;
+}
+
+const BulkCreator: React.SFC<IngredientBulkCreatorProps> = ({
+  createIngredient,
+}) => (
   <FileChooser
     onChange={file => {
       const reader = new FileReader();
       reader.onload = async ev => {
-        const result = ev.target.result;
+        const result = (ev.target as any).result;
         const bulk = JSON.parse(result);
         console.info('Creating ' + bulk.length + ' ingredients');
         await Promise.all(bulk.map(createIngredient));

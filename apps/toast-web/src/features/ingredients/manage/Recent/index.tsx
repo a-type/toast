@@ -1,8 +1,8 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Loader } from 'components/generic';
 import { Card } from 'features/ingredients';
+import { CardShape } from 'components/generic/Card';
 
 const GetRecentIngredients = gql`
   query RecentIngredients {
@@ -23,7 +23,7 @@ export default class RecentIngredients extends React.Component {
             return (
               <Card.Grid>
                 {new Array(10).fill(null).map((_, idx) => (
-                  <Card.Skeleton shape="normal" key={idx} />
+                  <Card.Skeleton shape={CardShape.Normal} key={idx} />
                 ))}
               </Card.Grid>
             );

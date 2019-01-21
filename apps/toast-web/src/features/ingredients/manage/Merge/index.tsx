@@ -4,7 +4,8 @@ import gql from 'graphql-tag';
 import { Button, Modal } from 'components/generic';
 import { Picker } from 'features/ingredients';
 import { H3 } from 'components/typeset';
-import { withRouter } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Ingredient } from 'generated/schema';
 
 const MergeIngredients = gql`
   mutation MergeIngredients($primary: ID!, $secondary: ID!) {
@@ -16,7 +17,20 @@ const MergeIngredients = gql`
   }
 `;
 
-class IngredientMerger extends React.Component {
+export interface IngredientMergerProps extends RouteComponentProps {
+  ingredientId: string;
+}
+
+interface IngredientMergerState {
+  showModal: boolean;
+  value: Ingredient;
+  error: Error;
+}
+
+class IngredientMerger extends React.Component<
+  IngredientMergerProps,
+  IngredientMergerState
+> {
   state = {
     showModal: false,
     value: null,

@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card } from 'components/generic';
+import Card, { CardShape } from 'components/generic/Card';
 import gql from 'graphql-tag';
+import { Link } from 'components/generic';
 
 const IngredientCard = ({ ingredient }) => (
-  <Card link={`/ingredients/${ingredient.id}`} shape="normal">
-    {ingredient.name}
+  <Card shape={CardShape.Normal}>
+    <Link to={`/ingredients/${ingredient}`}>{ingredient.name}</Link>
   </Card>
 );
 

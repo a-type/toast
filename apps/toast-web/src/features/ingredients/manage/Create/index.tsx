@@ -18,7 +18,15 @@ const CreateIngredient = gql`
 
 const lowerCase = values => map(s => s.toLowerCase(), values);
 
-export default class extends React.Component {
+interface IngredientCreateState {
+  error: Error;
+  showDone: boolean;
+}
+
+export default class IngredientCreate extends React.Component<
+  {},
+  IngredientCreateState
+> {
   state = {
     error: null,
     showDone: false,

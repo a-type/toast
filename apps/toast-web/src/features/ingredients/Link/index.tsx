@@ -2,8 +2,21 @@ import React from 'react';
 import { Tip } from 'components/generic';
 import { Link } from 'components/typeset';
 import { sentence } from 'change-case';
+import { Ingredient } from 'generated/schema';
 
-export default class IngredientLink extends React.PureComponent {
+export interface IngredientLinkProps {
+  ingredient: Ingredient;
+  isHighlighted?: boolean;
+}
+
+interface IngredientLinkState {
+  hovered: boolean;
+}
+
+export default class IngredientLink extends React.PureComponent<
+  IngredientLinkProps,
+  IngredientLinkState
+> {
   state = { hovered: false };
 
   startHover = () => this.setState({ hovered: true });
