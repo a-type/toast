@@ -24,7 +24,7 @@ const CalendarDayView: React.SFC<{}> = ({ ...rest }) => {
         if (networkStatus < 4 || error) {
           return (
             <React.Fragment>
-              <H1>...</H1>
+              <H1.Skeleton />
               <MealsSkeleton />
             </React.Fragment>
           );

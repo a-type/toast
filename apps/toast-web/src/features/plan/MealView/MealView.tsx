@@ -17,7 +17,7 @@ import {
   ReadyMadeAction,
 } from 'features/plan/actions';
 import actionsFragment from 'features/plan/actions/fragment';
-import { Label } from 'components/typeset';
+import { Label, Span } from 'components/typeset';
 import { MealStack } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
 import { Card } from 'components/generic';
@@ -34,7 +34,9 @@ interface CalendarMealState {
 
 export const Skeleton = () => (
   <MealStack>
-    <Label>...</Label>
+    <Label>
+      <Span.Skeleton />
+    </Label>
     <Card.Skeleton />
   </MealStack>
 );
