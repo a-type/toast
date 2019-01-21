@@ -27,11 +27,8 @@ export default () => (
       )}
     />
     <Route
-      path="/plan/:date?"
-      render={({ match }) => {
-        const dateParam = path<string>(['params', 'date'], match);
-
-        const date = dateParam ? parse(dateParam) : startOfDay(Date.now());
+      path="/plan"
+      render={() => {
         return <CalendarPage />;
       }}
     />
