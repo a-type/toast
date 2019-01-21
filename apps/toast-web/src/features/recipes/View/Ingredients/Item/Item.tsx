@@ -5,19 +5,13 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import pluralize from 'pluralize';
 import { Ingredient } from 'generated/schema';
+import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
 
 const GetPreferredServings = gql`
   query IngredientGetPreferredServings {
     preferredServings @client
   }
 `;
-
-type RangeName = 'ingredient' | 'unit' | 'value';
-type Range = {
-  name: RangeName;
-  start: number;
-  end: number;
-};
 
 export interface IngredientItemProps {
   servings: number;
@@ -41,21 +35,11 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
   getTextAtRange = ({ start, end }: { start: number; end: number }) =>
     this.props.text.slice(start, end);
 
-  renderValue = () => {
-    const {
-      servings,
-      preferredServings,
-      value,
-      valueStart,
-      valueEnd,
-    } = this.props;
+  renderValue = (valueText: string) => {
+    const { servings, preferredServings, value } = this.props;
 
     if (!preferredServings) {
-      return (
-        <b key={`value`}>
-          {this.getTextAtRange({ start: valueStart, end: valueEnd })}
-        </b>
-      );
+      return <b key={`value`}>{valueText}</b>;
     }
 
     return (
@@ -63,32 +47,22 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
     );
   };
 
-  renderUnit = () => {
-    const {
-      servings,
-      preferredServings,
-      unit,
-      unitStart,
-      unitEnd,
-    } = this.props;
+  renderUnit = (unitText: string) => {
+    const { servings, preferredServings, unit } = this.props;
 
     if (servings === 1 && preferredServings && preferredServings > 1) {
       return <span key={`unit`}>{pluralize(unit)}</span>;
     }
 
-    return (
-      <span key={`unit`}>
-        {this.getTextAtRange({ start: unitStart, end: unitEnd })}
-      </span>
-    );
+    return <span key={`unit`}>{unitText}</span>;
   };
 
-  renderIngredient = () => {
-    const { ingredient, ingredientStart, ingredientEnd } = this.props;
+  renderIngredient = (ingredientText: string) => {
+    const { ingredient } = this.props;
 
     return (
       <IngredientLink key={`ingredient`} ingredient={ingredient}>
-        {this.getTextAtRange({ start: ingredientStart, end: ingredientEnd })}
+        {ingredientText}
       </IngredientLink>
     );
   };
@@ -101,19 +75,6 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
 
       return item;
     });
-
-  renderRange = (rangeName: RangeName) => {
-    switch (rangeName) {
-      case 'ingredient':
-        return this.renderIngredient();
-      case 'unit':
-        return this.renderUnit();
-      case 'value':
-        return this.renderValue();
-    }
-
-    return null;
-  };
 
   render() {
     const {
@@ -131,27 +92,22 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
         name: 'ingredient',
         start: ingredientStart,
         end: ingredientEnd,
-      } as Range,
-      { name: 'unit', start: unitStart, end: unitEnd } as Range,
-      { name: 'value', start: valueStart, end: valueEnd } as Range,
+        render: this.renderIngredient,
+      },
+      { name: 'unit', start: unitStart, end: unitEnd, render: this.renderUnit },
+      {
+        name: 'value',
+        start: valueStart,
+        end: valueEnd,
+        render: this.renderValue,
+      },
     ].sort((a, b) => b.start - a.start);
 
-    const segments: React.ReactNode[] = ranges.reduce(
-      (segs, range) => {
-        if (range.end - range.start > 0) {
-          return [
-            segs[0].slice(0, range.start),
-            this.renderRange(range.name),
-            segs[0].slice(range.end),
-            ...segs.slice(1),
-          ];
-        }
-        return segs;
-      },
-      [text],
+    return (
+      <li>
+        <RangeHighlighter text={text} ranges={ranges} />
+      </li>
     );
-
-    return <li>{this.convertStringsToSpans(segments)}</li>;
   }
 }
 

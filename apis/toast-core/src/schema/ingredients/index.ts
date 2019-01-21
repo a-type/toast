@@ -8,6 +8,7 @@ import {
   getIngredientForRecipeIngredient,
 } from './service';
 import { gql } from 'apollo-server-express';
+import { Context } from 'context';
 
 export const typeDefs = gql`
   type Ingredient {
@@ -57,6 +58,10 @@ export const typeDefs = gql`
   extend type RecipeIngredient {
     ingredient: Ingredient!
   }
+
+  extend type RecipeIngredientCorrectedValue {
+    ingredient: Ingredient
+  }
 `;
 
 export const resolvers = {
@@ -77,5 +82,9 @@ export const resolvers = {
   RecipeIngredient: {
     ingredient: ({ id }, _args, ctx, _info) =>
       getIngredientForRecipeIngredient(id, ctx),
+  },
+  RecipeIngredientCorrectedValue: {
+    ingredient: ({ ingredientId }, _args, ctx: Context) =>
+      getIngredient(ingredientId, ctx),
   },
 };

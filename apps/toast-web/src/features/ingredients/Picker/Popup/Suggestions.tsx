@@ -4,6 +4,7 @@ import Suggestion from './Suggestion';
 import IngredientPickerSuggestionsQuery from './IngredientPickerSuggestionsQuery';
 import { IngredientPickerSuggestions } from 'generated/schema';
 import { HelpText } from 'components/typeset';
+import { Loader } from 'components/generic';
 
 const hasNoResults = ({ searchIngredients }) =>
   !searchIngredients.items || searchIngredients.items.length === 0;
@@ -49,7 +50,7 @@ class Suggestions extends React.PureComponent<
         }}
       >
         {({ loading, error, data }) => {
-          if (loading) return null;
+          if (loading) return <Loader size={64} />;
           if (error) return <div>Error</div>;
           if (canCreate && hasNoResults(data)) {
             return this.renderCreate(term, getItemProps, 0, highlightedIndex);

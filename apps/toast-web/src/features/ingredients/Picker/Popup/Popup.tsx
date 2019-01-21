@@ -64,16 +64,15 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
               }) => {
                 return (
                   <div>
-                    <Input {...getInputProps()} />
-                    {isOpen && (
-                      <Suggestions
-                        term={inputValue}
-                        getItemProps={getItemProps}
-                        selectedItem={selectedItem}
-                        highlightedIndex={highlightedIndex}
-                        canCreate={canCreate}
-                      />
-                    )}
+                    <H3>Search ingredients</H3>
+                    <Input {...getInputProps({ style: { width: '100%' } })} />
+                    <Suggestions
+                      term={inputValue}
+                      getItemProps={getItemProps}
+                      selectedItem={selectedItem}
+                      highlightedIndex={highlightedIndex}
+                      canCreate={canCreate}
+                    />
                   </div>
                 );
               }}

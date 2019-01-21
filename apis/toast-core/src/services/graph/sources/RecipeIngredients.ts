@@ -148,7 +148,10 @@ export default class RecipeIngredients extends Source<RecipeIngredient> {
           },
         );
 
-        if (refactorResult.records.length) {
+        if (
+          !refactorResult.records.length ||
+          refactorResult.records[0].get('error')
+        ) {
           logger.warn(refactorResult.records[0].get('error'));
           throw new ApolloError(
             "We couldn't change the ingredient. Trying again may help.",

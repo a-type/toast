@@ -11,11 +11,13 @@ import { Picker } from 'features/ingredients';
 interface IngredientCorrectorProps {
   recipeIngredient: RecipeIngredient;
   submit(id: string, correction: RecipeIngredientCorrectedValueInput): void;
+  requestDelete(id: string): void;
 }
 
 const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
   recipeIngredient,
   submit,
+  requestDelete,
 }) => {
   const handleSubmit = (values: RecipeIngredient) => {
     submit(recipeIngredient.id, {
@@ -28,6 +30,7 @@ const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
       valueEnd: values.valueEnd,
       ingredientStart: values.ingredientStart,
       ingredientEnd: values.ingredientEnd,
+      text: values.text,
     });
   };
 
@@ -56,7 +59,10 @@ const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
               canCreate
             />
           </Field>
-          <Button type="submit">Submit correction</Button>
+          <Button.Positive type="submit">Submit correction</Button.Positive>
+          <Button.Negative onClick={() => requestDelete(recipeIngredient.id)}>
+            Delete this ingredient
+          </Button.Negative>
         </form>
       )}
     </Formik>

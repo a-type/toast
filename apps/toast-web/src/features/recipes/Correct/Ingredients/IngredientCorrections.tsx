@@ -31,6 +31,16 @@ const IngredientCorrections: React.SFC<IngredientCorrectionsProps> = ({
             },
           });
 
+        const requestDelete = (id: string) =>
+          mutate({
+            variables: {
+              input: {
+                recipeIngredientId: id,
+                correctionType: CorrectionType.Delete,
+              },
+            },
+          });
+
         return (
           <div>
             {recipeIngredients.map(recipeIngredient => (
@@ -38,6 +48,7 @@ const IngredientCorrections: React.SFC<IngredientCorrectionsProps> = ({
                 key={recipeIngredient.id}
                 recipeIngredient={recipeIngredient}
                 submit={submit}
+                requestDelete={requestDelete}
               />
             ))}
           </div>

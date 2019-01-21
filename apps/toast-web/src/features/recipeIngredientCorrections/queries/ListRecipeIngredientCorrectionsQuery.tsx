@@ -4,12 +4,20 @@ import gql from 'graphql-tag';
 import { ListRecipeIngredientCorrections } from 'generated/schema';
 
 export const Document = gql`
-  query ListRecipeIngredientCorrections($offset: Int!) {
-    recipeIngredientCorrections(pagination: { offset: $offset }) {
+  query ListRecipeIngredientCorrections(
+    $offset: Int!
+    $status: CorrectionStatus!
+  ) {
+    recipeIngredientCorrections(
+      pagination: { offset: $offset }
+      filter: { status: $status }
+    ) {
       id
       status
       recipeIngredientId
+      correctionType
       correctedValue {
+        text
         unit
         unitStart
         unitEnd

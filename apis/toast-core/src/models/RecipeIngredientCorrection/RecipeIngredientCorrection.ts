@@ -60,6 +60,14 @@ export default class RecipeIngredientCorrection {
     return this.data.status;
   }
 
+  get correctionType() {
+    return this.data.correctionType;
+  }
+
+  set status(status: CorrectionStatus) {
+    this.data.status = status;
+  }
+
   toJSON() {
     return removeUndefined(this.data);
   }

@@ -25,3 +25,4 @@ export { default as Link } from './Link';
 export { default as Popup } from './Popup';
 export { default as Calendar } from './Calendar';
 export { default as CrossFade } from './CrossFade';
+export { default as RangeHighlighter } from './RangeHighlighter';

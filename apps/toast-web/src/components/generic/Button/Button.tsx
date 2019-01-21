@@ -72,6 +72,10 @@ const Button: ButtonWithVariants = styled<ButtonProps, 'button'>('button')`
   }
 `;
 
+Button.defaultProps = {
+  type: 'button',
+};
+
 Button.Positive = styled(Button)`
   --color-control-background: var(--color-positive);
   --color-control-foreground: var(--color-white);

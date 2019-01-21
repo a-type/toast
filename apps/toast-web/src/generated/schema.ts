@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2019-01-19T11:21:15-05:00 */
+/** Generated in 2019-01-20T20:06:42-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -328,6 +328,8 @@ export interface RecipeIngredientCorrectedValue {
 
   ingredientEnd?: number | null;
 
+  text?: string | null;
+
   ingredient?: Ingredient | null;
 }
 
@@ -411,6 +413,10 @@ export interface Mutation {
   markUnpurchased: ShoppingList;
 
   submitRecipeIngredientCorrection: string;
+
+  acceptRecipeIngredientCorrection: string;
+
+  rejectRecipeIngredientCorrection: string;
 
   showMessage?: Message | null;
 
@@ -531,6 +537,10 @@ export interface IngredientFilterInput {
 
 export interface IngredientSearchInput {
   term?: string | null;
+}
+
+export interface RecipeIngredientCorrectionsFilterInput {
+  status?: CorrectionStatus | null;
 }
 
 export interface ImageCreateInput {
@@ -679,6 +689,8 @@ export interface RecipeIngredientCorrectedValueInput {
   ingredientStart?: number | null;
 
   ingredientEnd?: number | null;
+
+  text?: string | null;
 }
 
 // ====================================================
@@ -713,6 +725,8 @@ export interface ScheduleQueryArgs {
 }
 export interface RecipeIngredientCorrectionsQueryArgs {
   pagination?: ListPaginationInput | null;
+
+  filter?: RecipeIngredientCorrectionsFilterInput | null;
 }
 export interface RecipesIngredientArgs {
   pagination?: ListPaginationInput | null;
@@ -869,6 +883,12 @@ export interface MarkUnpurchasedMutationArgs {
 }
 export interface SubmitRecipeIngredientCorrectionMutationArgs {
   input: RecipeIngredientCorrectionSubmitInput;
+}
+export interface AcceptRecipeIngredientCorrectionMutationArgs {
+  id: string;
+}
+export interface RejectRecipeIngredientCorrectionMutationArgs {
+  id: string;
 }
 export interface ShowMessageMutationArgs {
   contents: (string | null)[];
@@ -1332,9 +1352,34 @@ export namespace CreatePlan {
   };
 }
 
+export namespace AcceptRecipeIngredientCorrection {
+  export type Variables = {
+    id: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    acceptRecipeIngredientCorrection: string;
+  };
+}
+
+export namespace RejectRecipeIngredientCorrection {
+  export type Variables = {
+    id: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    rejectRecipeIngredientCorrection: string;
+  };
+}
+
 export namespace ListRecipeIngredientCorrections {
   export type Variables = {
     offset: number;
+    status: CorrectionStatus;
   };
 
   export type Query = {
@@ -1352,11 +1397,15 @@ export namespace ListRecipeIngredientCorrections {
 
     recipeIngredientId: string;
 
+    correctionType: CorrectionType;
+
     correctedValue?: CorrectedValue | null;
   };
 
   export type CorrectedValue = {
     __typename?: 'RecipeIngredientCorrectedValue';
+
+    text?: string | null;
 
     unit?: string | null;
 
