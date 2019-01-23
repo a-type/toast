@@ -9,6 +9,7 @@ import { TransactionFunction } from 'types';
 import recipeScraper from 'services/recipeScraper';
 import gcloudStorage from 'services/gcloudStorage';
 import ingredientParser from 'services/ingredientParser';
+import auth0 from 'services/auth0';
 
 logger.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 
@@ -32,6 +33,7 @@ export type Context = {
   recipeScraper: typeof recipeScraper;
   gcloudStorage: typeof gcloudStorage;
   ingredientParser: typeof ingredientParser;
+  auth0: typeof auth0;
   user: { id: string };
   scopes: string[];
 };
@@ -68,6 +70,7 @@ export const createContext = async (req): Promise<Context> => {
     recipeScraper,
     gcloudStorage,
     ingredientParser,
+    auth0,
 
     user,
     scopes,

@@ -14,13 +14,19 @@ import LoggedInPage from './pages/LoggedIn';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
+import LoginPage from './pages/Login';
+import JoinGroupPage from './pages/JoinGroup';
 
 export default () => (
   <Switch>
     <Route path="/" exact component={HomePage} />
+    <Route path="/login" exact component={LoginPage} />
     <Route path="/loggedIn" component={LoggedInPage} />
 
     <PrivateRoute path="/plan" component={PlanPage} />
+    <PrivateRoute path="/shoppingList" component={ShoppingList} />
+    <PrivateRoute path="/joinGroup" exact component={JoinGroupPage} />
+
     <PrivateRoute path="/recipes/create" component={EditRecipePage} />
     <PrivateRoute path="/recipes/link" component={LinkRecipePage} />
     <PrivateRoute
@@ -29,12 +35,17 @@ export default () => (
       component={EditRecipePage}
     />
     <Route path="/recipes/:recipeId" component={RecipePage} />
+
     <Route path="/users/:userId" component={UserPage} />
+
     <Route path="/ingredients/:ingredientId" component={IngredientPage} />
+
     <Route path="/search" component={SearchPage} />
+
     <Route path="/scanner" component={ScannerPage} />
+
     <PrivateRoute path="/manage" component={ManagePage} />
-    <PrivateRoute path="/shoppingList" component={ShoppingList} />
+
     <Route component={NotFoundPage} />
   </Switch>
 );

@@ -5,6 +5,7 @@ import * as React from 'react';
 import { GroceryDayBanner, DayView, Queries } from 'features/plan';
 import { Layout } from 'components/layout';
 import { Link, Button } from 'components/generic';
+import Invite from 'features/groups/Invite';
 
 interface CalendarProps {
   date: Date;
@@ -20,6 +21,7 @@ const CalendarPage: React.SFC<{}> = ({}) => {
       <Link to="/plan/edit">
         <Button.Ghost>Edit your plan</Button.Ghost>
       </Link>
+      <Invite />
     </Layout>
   );
 };

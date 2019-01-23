@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2019-01-20T20:06:42-05:00 */
+/** Generated in 2019-01-22T19:59:58-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -417,6 +417,10 @@ export interface Mutation {
   acceptRecipeIngredientCorrection: string;
 
   rejectRecipeIngredientCorrection: string;
+
+  createGroupInvitation: string;
+
+  acceptGroupInvitation?: Group | null;
 
   showMessage?: Message | null;
 
@@ -890,6 +894,9 @@ export interface AcceptRecipeIngredientCorrectionMutationArgs {
 export interface RejectRecipeIngredientCorrectionMutationArgs {
   id: string;
 }
+export interface AcceptGroupInvitationMutationArgs {
+  id: string;
+}
 export interface ShowMessageMutationArgs {
   contents: (string | null)[];
 }
@@ -990,6 +997,34 @@ export enum MealRecipeType {
 // Documents
 // ====================================================
 
+export namespace CreateGroupInvitation {
+  export type Variables = {};
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    createGroupInvitation: string;
+  };
+}
+
+export namespace AcceptGroupInvitation {
+  export type Variables = {
+    id: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    acceptGroupInvitation?: AcceptGroupInvitation | null;
+  };
+
+  export type AcceptGroupInvitation = {
+    __typename?: 'Group';
+
+    id: string;
+  };
+}
+
 export namespace IngredientDetails {
   export type Variables = {
     id: string;
@@ -1018,6 +1053,124 @@ export namespace IngredientDetails {
   };
 
   export type Recipes = RecipeCard.Fragment;
+}
+
+export namespace BulkCreateIngredient {
+  export type Variables = {
+    input: IngredientCreateInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    createIngredient: CreateIngredient;
+  };
+
+  export type CreateIngredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+
+    description?: string | null;
+
+    attribution?: string | null;
+  };
+}
+
+export namespace CreateIngredient {
+  export type Variables = {
+    input: IngredientCreateInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    createIngredient: CreateIngredient;
+  };
+
+  export type CreateIngredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+
+    description?: string | null;
+
+    attribution?: string | null;
+  };
+}
+
+export namespace EditIngredient {
+  export type Variables = {
+    id: string;
+    input: IngredientUpdateInput;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    updateIngredient: UpdateIngredient;
+  };
+
+  export type UpdateIngredient = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+
+    description?: string | null;
+
+    attribution?: string | null;
+
+    alternateNames: string[];
+  };
+}
+
+export namespace MergeIngredients {
+  export type Variables = {
+    primary: string;
+    secondary: string;
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    mergeIngredients?: MergeIngredients | null;
+  };
+
+  export type MergeIngredients = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+
+    alternateNames: string[];
+  };
+}
+
+export namespace RecentIngredients {
+  export type Variables = {};
+
+  export type Query = {
+    __typename?: 'Query';
+
+    ingredients: Ingredients[];
+  };
+
+  export type Ingredients = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
+
+    alternateNames: string[];
+  };
 }
 
 export namespace IngredientPickerSuggestions {
@@ -2053,6 +2206,16 @@ export namespace MergeUser {
     name?: string | null;
 
     email?: string | null;
+  };
+}
+
+export namespace IngredientCard {
+  export type Fragment = {
+    __typename?: 'Ingredient';
+
+    id: string;
+
+    name: string;
   };
 }
 

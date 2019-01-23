@@ -10,7 +10,7 @@ export interface AuthUser extends AuthToken {
 }
 
 export interface AuthService extends EventEmitter {
-  login(): void;
+  login(params: { returnTo: string }): void;
   clear(): void;
   logout(): void;
   handleAuthentication(): void;

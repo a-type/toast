@@ -10,7 +10,7 @@ export default () => (
       Join Toast and start planning your daily meals in advance the easy way.
     </P>
     <P>
-      <Button.Positive onClick={() => auth.login()}>
+      <Button.Positive onClick={() => auth.login({ returnTo: '/' })}>
         Join or Log In
       </Button.Positive>
     </P>

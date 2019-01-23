@@ -10,6 +10,7 @@ import {
   ID_TOKEN_KEY,
   EXPIRES_AT_KEY,
   SCOPES_KEY,
+  RETURN_TO_KEY,
 } from './constants';
 
 const MergeUser = gql`
@@ -40,7 +41,10 @@ export default class Auth0Service extends EventEmitter implements AuthService {
     this.scheduleRenewal();
   }
 
-  login = () => {
+  login = ({ returnTo }) => {
+    if (returnTo) {
+      sessionStorage.setItem(RETURN_TO_KEY, returnTo);
+    }
     this.auth0.authorize();
     mixpanel.track('login');
   };
@@ -73,7 +77,12 @@ export default class Auth0Service extends EventEmitter implements AuthService {
           mutation: MergeUser,
         });
 
-        history.replace('/');
+        const returnTo = sessionStorage.getItem(RETURN_TO_KEY);
+        if (returnTo) {
+          history.replace(returnTo);
+        } else {
+          history.replace('/');
+        }
       } else if (err) {
         history.replace('/');
         console.error(err);

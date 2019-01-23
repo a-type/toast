@@ -6,7 +6,13 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (
-      <IsLoggedIn fallback={<Redirect to="/" />}>
+      <IsLoggedIn
+        fallback={
+          <Redirect
+            to={`/login?r=${encodeURIComponent(window.location.pathname)}`}
+          />
+        }
+      >
         <Component {...props} />
       </IsLoggedIn>
     )}

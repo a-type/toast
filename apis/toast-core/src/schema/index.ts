@@ -8,6 +8,7 @@ import * as users from './users';
 import * as groups from './groups';
 import * as plans from './plans';
 import * as recipeIngredientCorrections from './recipeIngredientCorrections';
+import * as groupInvitations from './groupInvitations';
 
 import * as directives from './directives';
 import * as scalars from './scalars';
@@ -66,6 +67,7 @@ export const typeDefs = [
   groups.typeDefs,
   ...plans.typeDefs(),
   recipeIngredientCorrections.typeDefs,
+  groupInvitations.typeDefs,
 ];
 export const resolvers = [
   images.resolvers,
@@ -77,5 +79,6 @@ export const resolvers = [
   groups.resolvers,
   plans.resolvers,
   recipeIngredientCorrections.resolvers,
+  groupInvitations.resolvers,
   scalars,
 ].reduce(mergeDeepRight, globalResolvers);

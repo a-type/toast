@@ -16,10 +16,6 @@ interface InnerSelfLinkProps {
 }
 
 class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
-  login = () => {
-    auth.login();
-  };
-
   logout = () => {
     auth.logout();
   };

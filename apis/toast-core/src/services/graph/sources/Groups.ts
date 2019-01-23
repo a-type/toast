@@ -1,5 +1,6 @@
 import Source from './Source';
 import { id } from 'tools';
+import logger from 'logger';
 
 export interface Group {
   id: string;
@@ -26,20 +27,22 @@ export default class Groups extends Source<Group> {
       return this.hydrateOne(result);
     });
 
-  getMine = () =>
+  getForUser = (userId: string) =>
     this.ctx.readTransaction(async tx => {
       const result = await tx.run(
         `
-        MATCH (group:Group)<-[:MEMBER_OF]-(:User {id: $userId})
-        RETURN group {${this.dbFields}}
+          MATCH (group:Group)<-[:MEMBER_OF]-(:User {id: $userId})
+          RETURN group {${this.dbFields}}
         `,
         {
-          userId: this.ctx.user.id,
+          userId,
         },
       );
 
       return this.hydrateOne(result);
     });
+
+  getMine = () => this.getForUser(this.ctx.user.id);
 
   mergeMine = (input: Partial<Group> = {}) =>
     this.ctx.writeTransaction(async tx => {
@@ -55,6 +58,57 @@ export default class Groups extends Source<Group> {
           userId: this.ctx.user.id,
           id: id(),
           data: this.filterInputFields(input),
+        },
+      );
+
+      return this.hydrateOne(result);
+    });
+
+  addUser = (groupId: string, userId: string) =>
+    this.ctx.writeTransaction(async tx => {
+      // for now: a user can only be part of one group. First detach old groups
+      // and delete orphaned groups
+      const oldGroupResult = await tx.run(
+        `
+        MATCH (:User {id: $userId})-[oldRel:MEMBER_OF]->(oldGroup:Group)
+        WITH collect(oldRel) as oldRels, oldGroup
+        FOREACH (r in oldRels | DELETE r)
+        RETURN oldGroup {.id}
+        `,
+        {
+          userId,
+        },
+      );
+
+      if (oldGroupResult.records.length) {
+        logger.info(
+          `Moving user ${userId} from group ${
+            oldGroupResult.records[0].get('oldGroup').id
+          } to ${groupId}`,
+        );
+      }
+
+      /**
+       * TODO: determine how to safely delete orphaned groups.
+       * This query extension would work, but I'm not sure we want to do this without
+       * backups.
+       *
+       *WITH oldGroup
+        MATCH (oldGroup)
+        WHERE (NOT (oldGroup)<-[:MEMBER_OF]-())
+        DELETE oldGroup
+       *
+       */
+
+      const result = await tx.run(
+        `
+        MATCH (user:User {id: $userId}), (group:Group {id: $groupId})
+        MERGE (group)<-[:MEMBER_OF]-(user)
+        RETURN group {${this.dbFields}}
+      `,
+        {
+          userId,
+          groupId,
         },
       );
 

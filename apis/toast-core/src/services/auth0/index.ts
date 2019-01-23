@@ -18,4 +18,4 @@ if (argv.mock) {
   });
 }
 
-export default management;
+export default management as ManagementClient;
