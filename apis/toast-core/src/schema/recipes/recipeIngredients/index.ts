@@ -48,19 +48,18 @@ export const typeDefs = gql`
     updateRecipeIngredient(
       id: ID!
       input: RecipeIngredientUpdateInput!
-    ): RecipeIngredient! @hasScope(scope: "update:fullRecipe")
+    ): RecipeIngredient! @authenticated
     reparseRecipeIngredient(
       id: ID!
       input: RecipeIngredientParseInput!
-    ): RecipeIngredient! @hasScope(scope: "update:fullRecipe")
+    ): RecipeIngredient! @authenticated
     addRecipeIngredient(
       recipeId: ID!
       input: RecipeIngredientParseInput!
-    ): Recipe! @hasScope(scope: "update:fullRecipe")
+    ): Recipe! @authenticated
     moveRecipeIngredient(recipeId: ID!, input: ListMoveInput!): Recipe!
-      @hasScope(scope: "update:fullRecipe")
-    deleteRecipeIngredient(id: ID!): Recipe!
-      @hasScope(scope: "update:fullRecipe")
+      @authenticated
+    deleteRecipeIngredient(id: ID!): Recipe! @authenticated
   }
 `;
 

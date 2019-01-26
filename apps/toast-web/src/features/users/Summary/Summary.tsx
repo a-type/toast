@@ -13,8 +13,7 @@ const Basic = gql`
   query UserInfo($id: ID!) {
     user(id: $id) {
       id
-      name
-      nickname
+      displayName
       recipes {
         ...RecipeCard
       }
@@ -63,7 +62,7 @@ export default class extends React.Component<UserSummaryProps> {
           }
 
           const {
-            nickname,
+            displayName,
             recipes,
             discoveredRecipes,
             draftRecipes,
@@ -72,7 +71,7 @@ export default class extends React.Component<UserSummaryProps> {
 
           return (
             <React.Fragment>
-              <H1>{nickname || 'Anonymous'}</H1>
+              <H1>{displayName || 'Anonymous'}</H1>
 
               {this.renderRecipes('Your Likes', likedRecipes)}
               {this.renderRecipes('Your Drafts', draftRecipes)}

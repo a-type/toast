@@ -56,11 +56,10 @@ application:
     serviceAccountSecretName: toast-core-service-account
     serviceAccountSecretKey: key.json
 
-auth0:
-  domain: toastcooking.auth0.com
-  issuer: https://toastcooking.auth0.com/
-  audience: https://toastcooking.app
-  configSecretName: auth0-config
+firebase:
+  configSecretName: firebase-config
+  serviceAccountSecretName: firebase-prod-service-account
+  serviceAccountSecretKey: key.json
 
 services:
   recipeScraperSecretName: recipe-scraper-secret

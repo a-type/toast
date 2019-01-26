@@ -10,6 +10,7 @@
     "test": "cross-env NODE_PATH=src jest",
     "db:index": "node ./db/indexes.js",
     "db-init": "run-s db:*",
+    "make-admin": "ts-node scripts/makeAdmin.ts",
     "build:clean": "rimraf build",
     "build:transpile": "tsc",
     "build": "run-s build:*",
@@ -20,8 +21,8 @@
     "containerize:run": "docker build -t toast-core .",
     "containerize:clean": "rimraf client",
     "containerize": "run-s containerize:*",
-    "start": "cross-env NODE_PATH=build node build/server.js",
-    "mock": "npm run dev:mock"
+    "mock": "npm run dev:mock",
+    "start": "cross-env NODE_PATH=build node build/server.js"
   },
   "repository": {
     "type": "git",
@@ -57,6 +58,7 @@
     "date-fns": "^1.29.0",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
+    "firebase-admin": "^6.5.1",
     "graphql": "^0.13.2",
     "graphql-parse-resolve-info": "^4.0.0-rc.12",
     "graphql-playground-middleware-express": "^1.6.1",

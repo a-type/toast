@@ -9,7 +9,8 @@ import { TransactionFunction } from 'types';
 import recipeScraper from 'services/recipeScraper';
 import gcloudStorage from 'services/gcloudStorage';
 import ingredientParser from 'services/ingredientParser';
-import auth0 from 'services/auth0';
+import firebase from 'services/firebase';
+import { auth } from 'firebase-admin';
 
 logger.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 
@@ -28,20 +29,20 @@ export type Context = {
   writeTransaction: (txFunction: TransactionFunction<any>) => Promise<{}>;
   readTransaction: (txFunction: TransactionFunction<any>) => Promise<{}>;
   firestore: typeof firestore;
+  firebase: typeof firebase;
   graph: Graph;
   planner: typeof planner;
   recipeScraper: typeof recipeScraper;
   gcloudStorage: typeof gcloudStorage;
   ingredientParser: typeof ingredientParser;
-  auth0: typeof auth0;
-  user: { id: string };
+  user: auth.DecodedIdToken & { id: string };
   scopes: string[];
 };
 
 export const createContext = async (req): Promise<Context> => {
   const isMutation = req.body.query.startsWith('mutation');
 
-  const user = req.user ? { ...req.user, id: req.user.sub } : null;
+  const user = req.user ? { ...req.user, id: req.user.uid } : null;
   const scopes = pathOr<string>('', ['user', 'scope'], req).split(' ');
 
   const context: Context = {
@@ -65,12 +66,12 @@ export const createContext = async (req): Promise<Context> => {
     },
 
     firestore,
+    firebase,
     graph: graph({ writeMode: isMutation, user, scopes }),
     planner,
     recipeScraper,
     gcloudStorage,
     ingredientParser,
-    auth0,
 
     user,
     scopes,

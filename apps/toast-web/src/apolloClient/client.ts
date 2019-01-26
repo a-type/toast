@@ -1,7 +1,7 @@
 import ApolloClient from 'apollo-client';
 import { Operation, ApolloLink, Observable } from 'apollo-link';
 import resolvers, { defaults } from './resolvers';
-import auth from 'services/auth';
+import firebase from 'services/firebase';
 import { InMemoryCache, HttpLink } from 'apollo-boost';
 import { withClientState } from 'apollo-link-state';
 import { onError } from 'apollo-link-error';
@@ -32,9 +32,11 @@ const requestHandler = new ApolloLink(
   (operation, forward) =>
     new Observable(observer => {
       let handle;
-      Promise.resolve(operation)
-        .then(operation => {
-          const token = auth.httpHeader;
+      (async () => {
+        try {
+          const token =
+            firebase.auth().currentUser &&
+            (await firebase.auth().currentUser.getIdToken(true));
           if (token) {
             operation.setContext({
               headers: {
@@ -42,15 +44,15 @@ const requestHandler = new ApolloLink(
               },
             });
           }
-        })
-        .then(() => {
           handle = forward(operation).subscribe({
             next: observer.next.bind(observer),
             error: observer.error.bind(observer),
             complete: observer.complete.bind(observer),
           });
-        })
-        .catch(observer.error.bind(observer));
+        } catch (err) {
+          observer.error.bind(observer)(err);
+        }
+      })();
 
       return () => {
         if (handle) handle.unsubscribe;
@@ -71,7 +73,6 @@ const link = ApolloLink.from(
 const client = new ApolloClient({
   cache,
   link,
-  fragmentMatcher,
 });
 
 export default client;

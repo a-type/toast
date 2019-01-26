@@ -1,7 +1,6 @@
 import React from 'react';
 import { H1, P, H2 } from 'components/typeset';
-import { Button } from 'components/generic';
-import auth from 'services/auth';
+import { Button, Link } from 'components/generic';
 
 export default () => (
   <div>
@@ -10,9 +9,9 @@ export default () => (
       Join Toast and start planning your daily meals in advance the easy way.
     </P>
     <P>
-      <Button.Positive onClick={() => auth.login({ returnTo: '/' })}>
-        Join or Log In
-      </Button.Positive>
+      <Link to="/login?r=/plan/setup">
+        <Button.Positive>Join or Log In</Button.Positive>
+      </Link>
     </P>
     <H2>All of the Internet's Recipes</H2>
     <P>

@@ -1,16 +1,12 @@
 module.exports = {
   origin: 'https://localhost:8080',
-  auth0: {
-    domain: process.env.AUTH0_DOMAIN,
-    clientId: process.env.AUTH0_CLIENTID,
-    audience: process.env.AUTH0_AUDIENCE,
-    requestedScopes: [
-      'read:drafts',
-      'create:linkedRecipe',
-      'create:fullRecipe',
-      'update:linkedRecipe',
-      'update:fullRecipe',
-    ],
+  firebase: {
+    apiKey: 'AIzaSyAbrvRJYypD2xxu8L9Xm91ijElOtBfpiGc',
+    authDomain: 'toast-cooking-dev.firebaseapp.com',
+    databaseURL: 'https://toast-cooking-dev.firebaseio.com',
+    projectId: 'toast-cooking-dev',
+    storageBucket: 'toast-cooking-dev.appspot.com',
+    messagingSenderId: '380160839947',
   },
   mock: process.env.TOAST_MOCK,
 };

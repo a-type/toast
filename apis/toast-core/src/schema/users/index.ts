@@ -1,11 +1,12 @@
 import { gql } from 'apollo-server-express';
+import { Context } from 'context';
 
 export const typeDefs = gql`
   type User {
     id: ID!
-    name: String
-    nickname: String
+    displayName: String
     email: String
+    photoUrl: String
   }
 
   extend type Query {
@@ -29,20 +30,21 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    me: (parent, args, ctx, info) =>
-      ctx.user ? ctx.graph.users.supplementAuth0Data(ctx.user) : null,
-    user: (_parent, { id }, ctx) => ctx.graph.users.get(id),
+    me: (parent, args, ctx: Context) =>
+      ctx.user ? ctx.graph.users.supplementUserData(ctx.user) : null,
+    user: (_parent, { id }, ctx: Context) => ctx.graph.users.get(id),
   },
   Mutation: {
-    mergeUser: (_parent, _args, ctx, info) => ctx.graph.users.login(),
+    mergeUser: (_parent, _args, ctx: Context) => ctx.graph.users.login(),
   },
   Recipe: {
-    author: (parent, args, ctx, info) =>
+    author: (parent, args, ctx: Context) =>
       ctx.graph.users.getRecipeAuthor(parent.id),
-    discoverer: (parent, args, ctx, info) =>
+    discoverer: (parent, args, ctx: Context) =>
       ctx.graph.users.getRecipeDiscoverer(parent.id),
   },
   Group: {
-    members: (parent, args, ctx) => ctx.graph.users.getGroupMembers(parent.id),
+    members: (parent, args, ctx: Context) =>
+      ctx.graph.users.getGroupMembers(parent.id),
   },
 };

@@ -61,7 +61,7 @@ export default class Groups extends Source<Group> {
         },
       );
 
-      return this.hydrateOne(result);
+      return this.hydrateOne(result, { throwIfNone: true });
     });
 
   addUser = (groupId: string, userId: string) =>

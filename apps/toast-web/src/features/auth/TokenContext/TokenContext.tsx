@@ -1,38 +1,51 @@
 import * as React from 'react';
-import auth from 'services/auth';
-import { AuthUser, AuthEventType } from 'services/auth/types';
+import firebase from 'services/firebase';
+import client from 'apolloClient';
+import gql from 'graphql-tag';
 
-interface AuthContext {
-  user: AuthUser;
+export interface AuthContext {
+  user: firebase.User;
+  token: firebase.auth.IdTokenResult;
   isLoggedIn: boolean;
-  hasScope(scope: string): boolean;
 }
+
+const MergeUser = gql`
+  mutation MergeUser {
+    mergeUser {
+      id
+      name
+      email
+    }
+  }
+`;
 
 const ctx = React.createContext<AuthContext>(null);
 const InternalProvider = ctx.Provider;
 
 class TokenProvider extends React.Component {
   state = {
-    user: auth.user,
-    isLoggedIn: auth.isLoggedIn,
-    hasScope: auth.hasScope,
+    user: null,
+    token: null,
+    isLoggedIn: undefined,
   };
 
   componentDidMount() {
-    auth.addListener(AuthEventType.TokenStored, this.onTokenChanged);
-    auth.addListener(AuthEventType.TokenExpired, this.onTokenChanged);
+    firebase.auth().onAuthStateChanged(this.onTokenChanged);
   }
 
-  componentWillUnmount() {
-    auth.removeListener(AuthEventType.TokenStored, this.onTokenChanged);
-    auth.removeListener(AuthEventType.TokenExpired, this.onTokenChanged);
-  }
+  onTokenChanged = async (user: firebase.User) => {
+    const token = user ? await user.getIdTokenResult() : null;
 
-  onTokenChanged = () => {
+    if (token) {
+      await client.mutate({
+        mutation: MergeUser,
+      });
+    }
+
     this.setState({
-      user: auth.user,
-      isLoggedIn: auth.isLoggedIn,
-      hasScope: auth.hasScope,
+      user: user || null,
+      token,
+      isLoggedIn: !!user,
     });
   };
 

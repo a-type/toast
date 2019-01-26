@@ -11,25 +11,28 @@ interface CircleIconProps {
   name: IconName;
 }
 
-const CircleIcon = styled<CircleIconProps>(({ value, ...rest }) => (
-  <Icon {...rest} />
-))`
+const Circle = styled<CircleIconProps, 'div'>('div')`
   background: ${({ value }) => getIconColor(value)};
-  color: ${({ value }) => getForeground(value)};
   width: ${SIZE}px;
   height: ${SIZE}px;
-  font-size: ${Math.floor(SIZE / 2)}px;
   border-radius: 100%;
-  display: inline-block;
+  display: flex;
   text-shadow: none !important;
 
-  &::before {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  & > * {
+    margin: auto;
   }
 `;
+
+const CircleIcon: React.SFC<CircleIconProps> = props => (
+  <Circle {...props}>
+    <Icon
+      name={props.name}
+      size={`${Math.floor(SIZE / 2)}px`}
+      color={getForeground(props.value)}
+    />
+  </Circle>
+);
 
 export default withProps<CircleIconProps, { value: string }>(ownProps => ({
   value: ownProps.value,

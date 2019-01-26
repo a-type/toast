@@ -30,8 +30,8 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    markPurchased(ingredientId: ID!): ShoppingList!
-    markUnpurchased(ingredientId: ID!): ShoppingList!
+    markPurchased(ingredientId: ID!): ShoppingList! @authenticated
+    markUnpurchased(ingredientId: ID!): ShoppingList! @authenticated
   }
 `;
 

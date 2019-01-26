@@ -19,7 +19,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "baseUrl": "./src/",
-    "typeRoots": ["./src/typings", "./node_modules/@types"]
+    "typeRoots": ["./src/typings", "./node_modules/@types"],
+    "resolveJsonModule": true
   },
   "include": ["./src/"]
 }

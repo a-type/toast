@@ -1,5 +1,5 @@
 import React from 'react';
-import { HasScope } from 'features/auth/gates';
+import { IsAdmin } from 'features/auth/gates';
 import { Recent, BulkCreate, Create } from 'features/ingredients/manage';
 import { Manage as Corrections } from 'features/recipeIngredientCorrections';
 import { Layout } from 'components/layout';
@@ -9,7 +9,7 @@ export default class ManagePage extends React.Component {
   render() {
     return (
       <Layout>
-        <HasScope scope="ui:manage">
+        <IsAdmin>
           <H2>Recent Ingredients</H2>
           <Recent />
           <H2>Bulk Upload Ingredients</H2>
@@ -18,7 +18,7 @@ export default class ManagePage extends React.Component {
           <Create />
           <H2>Corrections</H2>
           <Corrections />
-        </HasScope>
+        </IsAdmin>
       </Layout>
     );
   }

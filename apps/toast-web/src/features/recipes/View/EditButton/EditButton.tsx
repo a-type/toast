@@ -4,13 +4,10 @@ import { Button } from 'components/generic';
 import { Link } from 'components/typeset';
 
 export default ({ authorId, recipeId, displayType }) => {
-  const scopeType = displayType === 'FULL' ? 'fullRecipe' : 'linkedRecipe';
-
   return (
     <Gate
-      condition={({ user, hasScope }) =>
-        (user && user.id === authorId && hasScope(`update:${scopeType}`)) ||
-        hasScope(`update:any:${scopeType}`)
+      condition={({ user, token }) =>
+        (user && user.uid === authorId) || token.claims['admin']
       }
     >
       <Link to={`${recipeId}/edit`}>

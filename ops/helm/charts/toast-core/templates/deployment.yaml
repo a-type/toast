@@ -30,6 +30,8 @@ spec:
           volumeMounts:
             - name: service-account-secret
               mountPath: /var/secrets/service-account
+            - name: firebase-service-account-secret
+              mountPath: /var/secrets/firebase-service-account
           env:
             - name: NEO4J_USERNAME
               valueFrom:
@@ -43,11 +45,6 @@ spec:
                   key: password
             - name: NEO4J_BOLT_HOST
               value: {{ .Values.db.hosts.bolt }}
-            - name: JWT_TOKEN_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.application.jwt.secretName }}
-                  key: tokenSecret
             - name: PORT
               value: '{{ .Values.application.port }}'
             - name: GCLOUD_MEDIA_BUCKET
@@ -62,32 +59,28 @@ spec:
                   key: id
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/service-account/key.json
-            - name: AUTH0_DOMAIN
-              value: '{{ .Values.auth0.domain }}'
-            - name: AUTH0_CLIENTID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.auth0.configSecretName }}
-                  key: clientId
-            - name: AUTH0_ISSUER
-              value: '{{ .Values.auth0.issuer }}'
-            - name: AUTH0_AUDIENCE
-              value: '{{ .Values.auth0.audience }}'
-            - name: AUTH0_API_CLIENTID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.auth0.configSecretName }}
-                  key: apiClientId
-            - name: AUTH0_API_CLIENTSECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.auth0.configSecretName }}
-                  key: apiClientSecret
             - name: RECIPE_SCRAPER_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.services.recipeScraperSecretName }}
                   key: secret
+            - name: FIREBASE_SERVICE_ACCOUNT_KEY_FILE
+              value: '/var/secrets/firebase-service-account/key.json'
+            - name: FIREBASE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.firebase.configSecretName }}
+                  key: databaseUrl
+            - name: FIREBASE_MESSAGING_SERVER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.firebase.configSecretName }}
+                  key: messagingServerKey
+            - name: FIREBASE_MESSAGING_SENDER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.firebase.configSecretName }}
+                  key: messagingSenderId
       volumes:
         - name: tls-secret
           secret:
@@ -95,3 +88,6 @@ spec:
         - name: service-account-secret
           secret:
             secretName: {{ .Values.application.service.serviceAccountSecretName }}
+        - name: firebase-service-account-secret
+          secret:
+            secretName: {{ .Values.firebase.serviceAccountSecretName }}

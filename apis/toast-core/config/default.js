@@ -1,34 +1,10 @@
 module.exports = {
   port: process.env.PORT || 4000,
-  security: {
-    tokenSecret: process.env.JWT_TOKEN_SECRET || 'notsecret',
-    masterEmail: 'toastmaster@toastcooking.app',
-    masterPassword: 'INSECURE CHANGE THIS!',
-  },
-  auth0: {
-    domain: process.env.AUTH0_DOMAIN,
-    clientId: process.env.AUTH0_CLIENTID,
-    issuer: process.env.AUTH0_ISSUER,
-    audience: process.env.AUTH0_AUDIENCE,
-    clientSecret: process.env.AUTH0_CLIENTSECRET,
-    apiClientId: process.env.AUTH0_API_CLIENTID,
-    apiClientSecret: process.env.AUTH0_API_CLIENTSECRET,
-  },
   database: {
     neo4j: {
       endpoint: process.env.NEO4J_BOLT_HOST || 'bolt://localhost:7687',
       user: process.env.NEO4J_USERNAME || 'neo4j',
       password: process.env.NEO4J_PASSWORD || 'toast1',
-    },
-  },
-  aws: {
-    accessKeyId: process.env.TOAST_AWS_ACCESS_KEY,
-    secretAccessKey: process.env.TOAST_AWS_SECRET_KEY,
-    s3: {
-      bucket: 'toast-local-media',
-      directories: {
-        images: 'images',
-      },
     },
   },
   gcloud: {
@@ -39,6 +15,12 @@ module.exports = {
         images: 'images',
       },
     },
+  },
+  firebase: {
+    serviceAccountKeyFile: process.env.FIREBASE_SERVICE_ACCOUNT_KEY_FILE,
+    databaseUrl: process.env.FIREBASE_DATABASE_URL,
+    messagingServerKey: process.env.FIREBASE_MESSAGING_SERVER_KEY,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
   },
   recipeScraper: {
     endpoint: process.env.RECIPE_SCRAPER_API_ENDPOINT,

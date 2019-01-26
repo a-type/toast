@@ -8,9 +8,8 @@ import path from 'path';
 import minimist from 'minimist';
 import cors from 'cors';
 import { path as get } from 'ramda';
-import jwt from 'express-jwt';
-import jwks from 'jwks-rsa';
 import mockAuthMiddleware from 'mocks/mockAuthMiddleware';
+import firebase from 'services/firebase';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -23,20 +22,19 @@ const app = express();
 if (argv.mock) {
   app.use('/api', mockAuthMiddleware);
 } else {
-  const auth = jwt({
-    secret: jwks.expressJwtSecret({
-      cache: true,
-      rateLimit: true,
-      jwksRequestsPerMinute: 5,
-      jwksUri: `${config.auth0.issuer}.well-known/jwks.json`,
-    }),
-    audience: config.auth0.audience,
-    issuer: config.auth0.issuer,
-    algorithms: ['RS256'],
-    credentialsRequired: false,
-  });
+  app.use('/api', async (req, res, next) => {
+    const token =
+      req.headers.authorization &&
+      req.headers.authorization.replace('Bearer ', '');
+    if (!token) {
+      next();
+      return;
+    }
 
-  app.use('/api', auth);
+    const decoded = await firebase.auth().verifyIdToken(token);
+    req.user = decoded;
+    next();
+  });
 }
 
 const apollo = new ApolloServer({

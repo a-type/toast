@@ -15,8 +15,6 @@ export default styled.div`
 
   & > h2 {
     margin-left: var(--spacing-md);
-    margin-bottom: 3px;
-    margin-top: auto;
     line-height: 1;
   }
 `;

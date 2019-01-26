@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SIZE = 'var(--font-size-xl)';
+const SIZE = '36px';
 
 interface NumberProps {
   available?: boolean;

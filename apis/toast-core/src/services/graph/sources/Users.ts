@@ -1,7 +1,7 @@
-import auth0 from 'services/auth0';
 import logger from 'logger';
 import Source from './Source';
 import { AuthenticationError } from 'errors';
+import firebase from 'services/firebase';
 
 export interface User {
   id: string;
@@ -12,17 +12,19 @@ export default class Users extends Source<User> {
     super(ctx, graph, 'User', ['id']);
   }
 
-  supplementAuth0Data = async dbUser => {
+  supplementUserData = async (
+    dbUser: User,
+  ): Promise<User & Partial<firebase.auth.UserRecord>> => {
     const { id } = dbUser;
 
     try {
-      const auth0User = await auth0.getUser({ id });
+      const firebaseUser = await firebase.auth().getUser(id);
       return {
         ...dbUser,
-        ...(auth0User || {}),
+        ...firebaseUser,
       };
     } catch (err) {
-      // probably this user was not migrated to auth0 yet...
+      // probably this user was not migrated to firebase yet...
       logger.warn(err);
       return dbUser;
     }
@@ -40,7 +42,7 @@ export default class Users extends Source<User> {
         },
       );
 
-      return this.hydrateOne(result);
+      return this.supplementUserData(this.hydrateOne(result));
     });
 
   getMe = () => this.get(this.ctx.user.id);
@@ -59,7 +61,9 @@ export default class Users extends Source<User> {
         },
       );
 
-      return this.hydrateOne(result, { throwIfNone: true });
+      return this.supplementUserData(
+        this.hydrateOne(result, { throwIfNone: true }),
+      );
     });
 
   updateMe = async (data: Partial<User>) => this.update(this.ctx.user.id, data);
@@ -74,7 +78,7 @@ export default class Users extends Source<User> {
         { recipeId },
       );
 
-      return this.hydrateOne(result);
+      return this.supplementUserData(this.hydrateOne(result));
     });
 
   getRecipeDiscoverer = recipeId =>
@@ -87,7 +91,7 @@ export default class Users extends Source<User> {
         { id: recipeId },
       );
 
-      return this.hydrateOne(result);
+      return this.supplementUserData(this.hydrateOne(result));
     });
 
   getGroupMembers = groupId =>
@@ -102,7 +106,7 @@ export default class Users extends Source<User> {
         },
       );
 
-      return this.hydrateList(result);
+      return Promise.all(this.hydrateList(result).map(this.supplementUserData));
     });
 
   login = () =>
@@ -119,7 +123,7 @@ export default class Users extends Source<User> {
 
       const user = this.hydrateOne(result);
       if (user) {
-        return user;
+        return this.supplementUserData(user);
       } else {
         throw new AuthenticationError('Something went wrong while logging in');
       }

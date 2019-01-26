@@ -1,13 +1,8 @@
-import { Consumer } from '../TokenContext';
+import { Consumer, AuthContext } from '../TokenContext';
 import React from 'react';
-import { AuthUser } from 'services/auth/types';
 
 export interface AuthGateProps {
-  condition(props: {
-    user: AuthUser;
-    hasScope(scope: string): boolean;
-    isLoggedIn: boolean;
-  }): boolean;
+  condition(props: AuthContext): boolean;
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }

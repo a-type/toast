@@ -20,7 +20,7 @@ export const typeDefs = gql`
 
   extend type Mutation {
     updateRecipeCoverImage(id: ID!, input: ImageCreateInput!): Recipe!
-      @hasScope(scope: "update:fullRecipe")
+      @authenticated
   }
 `;
 

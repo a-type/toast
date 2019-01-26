@@ -1,21 +1,40 @@
 import * as React from 'react';
-import auth from 'services/auth';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import firebase from 'services/firebase';
+import { Layout } from './components';
+import { H1, P } from 'components/typeset';
 
 export interface LoginProps {
   returnTo?: string;
 }
 
 const Login: React.SFC<LoginProps> = ({ returnTo }) => {
-  React.useEffect(
-    () => {
-      auth.login({ returnTo });
-    },
-    [
-      /* only on mount */
-    ],
+  return (
+    <Layout>
+      <StyledFirebaseAuth
+        uiConfig={{
+          signInFlow: 'redirect',
+          signInSuccessUrl: returnTo,
+          signInOptions: [
+            firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          ],
+        }}
+        firebaseAuth={firebase.auth()}
+      />
+      <div>
+        <H1>Log in or join for free</H1>
+        <P>
+          Sign up for Toast to start planning meals that fit your
+          life&mdash;your schedule, your recipes, your taste.
+        </P>
+        <P>
+          Joining, planning, and collecting recipes is totally free. Time to get
+          control of weeknight meals.
+        </P>
+      </div>
+    </Layout>
   );
-
-  return <div>Redirecting...</div>;
 };
 
 export default Login;

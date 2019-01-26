@@ -7,17 +7,17 @@ import { Consumer } from 'features/auth/TokenContext';
 import { path } from 'ramda';
 import LoginButton from './LoginButton';
 import { IsLoggedIn } from 'features/auth/gates';
+import firebase from 'firebase';
+import browserHistory from 'browserHistory';
 
 interface InnerSelfLinkProps {
-  user: {
-    picture: string;
-    sub: string;
-  };
+  user: firebase.User;
 }
 
 class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
-  logout = () => {
-    auth.logout();
+  logout = async () => {
+    await firebase.auth().signOut();
+    browserHistory.push('/');
   };
 
   renderTipContent = () => {
@@ -29,8 +29,8 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
 
     return (
       <LinkStack>
-        <Avatar avatarUrl={path(['picture'], user)} />
-        <Link.Clear to={`/users/${user.sub}`}>
+        <Avatar avatarUrl={path(['photoUrl'], user)} />
+        <Link.Clear to={`/users/${user.uid}`}>
           <Button.Ghost>Profile</Button.Ghost>
         </Link.Clear>
         <Button.Ghost onClick={this.logout}>Log out</Button.Ghost>
@@ -54,7 +54,7 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
             }
           >
             <Avatar
-              avatarUrl={path(['picture'], user)}
+              avatarUrl={path(['photoUrl'], user)}
               ref={ref}
               onClick={onClick}
             />

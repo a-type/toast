@@ -47,12 +47,12 @@ export const typeDefs = gql`
 
   extend type Mutation {
     createIngredient(input: IngredientCreateInput!): Ingredient!
-      @hasScope(scope: "create:ingredient")
+      @hasClaim(claim: "admin")
     updateIngredient(id: ID!, input: IngredientUpdateInput!): Ingredient!
-      @hasScope(scope: "update:ingredient")
-    deleteIngredient(id: ID!): Ingredient @hasScope(scope: "delete:ingredient")
+      @hasClaim(claim: "admin")
+    deleteIngredient(id: ID!): Ingredient @hasClaim(claim: "admin")
     mergeIngredients(primary: ID!, secondary: ID!): Ingredient
-      @hasScope(scope: "update:mergeIngredients")
+      @hasClaim(claim: "admin")
   }
 
   extend type RecipeIngredient {

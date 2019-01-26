@@ -67,17 +67,16 @@ export const typeDefs = gql`
     recipeIngredientCorrections(
       pagination: ListPaginationInput
       filter: RecipeIngredientCorrectionsFilterInput
-    ): [RecipeIngredientCorrection!]!
-      @hasScope(scope: "list:recipeIngredientCorrection")
+    ): [RecipeIngredientCorrection!]! @hasClaim(claim: "admin")
   }
 
   extend type Mutation {
     submitRecipeIngredientCorrection(
       input: RecipeIngredientCorrectionSubmitInput!
-    ): ID! @hasScope(scope: "create:recipeIngredientCorrection")
+    ): ID! @authenticated
 
-    acceptRecipeIngredientCorrection(id: ID!): ID!
-    rejectRecipeIngredientCorrection(id: ID!): ID!
+    acceptRecipeIngredientCorrection(id: ID!): ID! @hasClaim(claim: "admin")
+    rejectRecipeIngredientCorrection(id: ID!): ID! @hasClaim(claim: "admin")
   }
 `;
 

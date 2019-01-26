@@ -90,7 +90,7 @@ export const typeDefs = gql`
       mealIndex: Int!
       actionId: ID!
       recipeId: ID!
-    ): MealAction!
+    ): MealAction! @authenticated
   }
 
   extend type Plan {

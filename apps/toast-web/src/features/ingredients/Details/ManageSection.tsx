@@ -1,16 +1,16 @@
 import React from 'react';
 import { Merge, Edit } from 'features/ingredients/manage';
-import { HasScope } from 'features/auth/gates';
+import { IsAdmin } from 'features/auth/gates';
 import { H2 } from 'components/typeset';
 
 export default ({ ingredient }) => (
-  <HasScope scope="ui:manage">
+  <IsAdmin>
     <H2>Manage</H2>
-    <HasScope scope="update:mergeIngredients">
+    <IsAdmin>
       <Merge ingredientId={ingredient.id} />
-    </HasScope>
-    <HasScope scope="update:ingredient">
+    </IsAdmin>
+    <IsAdmin>
       <Edit ingredient={ingredient} />
-    </HasScope>
-  </HasScope>
+    </IsAdmin>
+  </IsAdmin>
 );

@@ -82,13 +82,11 @@ export const typeDefs = () => [
     }
 
     extend type Mutation {
-      createRecipe(input: RecipeCreateInput!): Recipe!
-        @hasScope(scope: "create:fullRecipe")
-      linkRecipe(input: RecipeLinkInput!): RecipeLinkResult!
-        @hasScope(scope: "create:linkedRecipe")
+      createRecipe(input: RecipeCreateInput!): Recipe! @authenticated
+      linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated
       updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe
-        @hasScope(scope: "update:fullRecipe")
-      publishRecipe(id: ID!): Recipe @hasScope(scope: "update:fullRecipe")
+        @authenticated
+      publishRecipe(id: ID!): Recipe @authenticated
       recordRecipeView(id: ID!): Recipe
     }
 

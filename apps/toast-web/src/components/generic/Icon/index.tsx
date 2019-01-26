@@ -27,7 +27,6 @@ export type IconName =
   | 'more'
   | 'next-page'
   | 'plus-math'
-  | 'profile-picture'
   | 'run'
   | 'sand-timer'
   | 'search'
@@ -68,7 +67,6 @@ const Icon = styled<IconStyleProps, 'i'>('i')`
   display: inline-block;
   width: ${props => (props.size ? props.size : '1em')};
   height: ${props => (props.size ? props.size : '1em')};
-  fill: currentColor;
   vertical-align: -0.1em;
   transition: 0.2s ease transform;
   position: relative;

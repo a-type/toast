@@ -36,6 +36,10 @@ export default class extends React.Component {
           }
 
           const schedule = pathOr(null, ['schedule'], data);
+          const refetchAndAdvance = async () => {
+            await refetch();
+            this.setStage(1);
+          };
 
           return (
             <Stages
@@ -44,7 +48,7 @@ export default class extends React.Component {
               stage={this.state.stage}
             >
               <Stages.Stage stageIndex={0} title="Schedule Basics">
-                <EditDetails schedule={schedule} onSave={refetch} />
+                <EditDetails schedule={schedule} onSave={refetchAndAdvance} />
               </Stages.Stage>
               {schedule && (
                 <React.Fragment>

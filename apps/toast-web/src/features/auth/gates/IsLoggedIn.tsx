@@ -11,6 +11,9 @@ const IsLoggedIn: React.SFC<IsLoggedInProps> = ({
 }) => (
   <Consumer>
     {state => {
+      if (state.isLoggedIn === undefined) {
+        return null;
+      }
       return state.isLoggedIn ? children : fallback;
     }}
   </Consumer>

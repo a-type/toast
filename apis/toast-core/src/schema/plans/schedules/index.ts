@@ -47,14 +47,15 @@ export const typeDefs = gql`
     setScheduleDetails(
       scheduleId: ID
       details: ScheduleSetDetailsInput!
-    ): Schedule! @hasScope(scope: "update:plan")
+    ): Schedule! @authenticated
     setScheduleMealDetails(
       scheduleId: ID
       dayIndex: WeekDay!
       mealIndex: Int!
       details: ScheduleSetMealDetailsInput!
-    ): Schedule! @hasScope(scope: "update:plan")
+    ): Schedule! @authenticated
     setScheduleStrategy(scheduleId: ID, strategy: ScheduleStrategy): Schedule!
+      @authenticated
   }
 
   extend type Plan {

@@ -14,7 +14,7 @@ const HasUserId: React.SFC<HasUserIdProps> = ({
 }) => (
   <Consumer>
     {state =>
-      state && state.user && state.user.id !== userId ? children : fallback
+      state && state.user && state.user.uid !== userId ? children : fallback
     }
   </Consumer>
 );

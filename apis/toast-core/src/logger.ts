@@ -1,10 +1,22 @@
 import chalk from 'chalk';
+import { ApolloError } from 'apollo-server-core';
 
 const DEBUG = process.env.NODE_ENV !== 'production';
+
+const isApolloError = (err: Error): err is ApolloError =>
+  !!err['originalError'];
 
 const keyBlacklist = ['password', 'secret'];
 const convert = item => {
   if (item instanceof Error) {
+    if (isApolloError(item)) {
+      return `${item.name}: ${item.message}
+      Path: ${item.path}, Pos: ${item.positions}
+      Original Error:
+      ${convert(item.originalError)}
+      `;
+    }
+
     return `${item.name}: ${item.message}
     ${item.stack}
     `;
