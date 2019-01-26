@@ -13,6 +13,7 @@ declare var CONFIG: {
     storageBucket: string;
     messagingSenderId: string;
   };
+  pushCertPublicKey: string;
   origin: string;
   mock: boolean;
 };

@@ -8,5 +8,7 @@ module.exports = {
     storageBucket: 'toast-cooking-0.appspot.com',
     messagingSenderId: '755464823034',
   },
+  pushCertPublicKey:
+    'BDqZc5X0Aj7VxXHh6UpiexfcUhkL4OJyiGachByHAUaS9gtHSzXwYh0GjoN8tF_oQzTNy6iJZyNwT1UDKtd9A4o',
   mock: false,
 };
