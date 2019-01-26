@@ -1,11 +1,11 @@
-import auth from 'services/auth';
+import firebase from 'services/firebase';
 
 export default async (uri, options) => {
   let response = await fetch(uri, options);
 
   if (response.status === 401) {
     console.info('logging out and trying again');
-    auth.logout();
+    await firebase.auth().signOut();
     response = await fetch(uri, options);
   }
 
