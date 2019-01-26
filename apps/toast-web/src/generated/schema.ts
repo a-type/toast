@@ -1,5 +1,5 @@
 /* tslint:disable */
-/** Generated in 2019-01-22T19:59:58-05:00 */
+/** Generated in 2019-01-26T12:30:18-05:00 */
 
 // ====================================================
 // START: Typescript template
@@ -194,11 +194,11 @@ export interface LikeInfo {
 export interface User {
   id: string;
 
-  name?: string | null;
-
-  nickname?: string | null;
+  displayName?: string | null;
 
   email?: string | null;
+
+  photoUrl?: string | null;
 
   recipes: Recipe[];
 
@@ -996,6 +996,22 @@ export enum MealRecipeType {
 // ====================================================
 // Documents
 // ====================================================
+
+export namespace MergeUser {
+  export type Variables = {};
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+
+    mergeUser?: MergeUser | null;
+  };
+
+  export type MergeUser = {
+    __typename?: 'User';
+
+    id: string;
+  };
+}
 
 export namespace CreateGroupInvitation {
   export type Variables = {};
@@ -2147,9 +2163,7 @@ export namespace UserInfo {
 
     id: string;
 
-    name?: string | null;
-
-    nickname?: string | null;
+    displayName?: string | null;
 
     recipes: Recipes[];
 
@@ -2186,26 +2200,6 @@ export namespace ShowMessage {
     id: string;
 
     contents: (string | null)[];
-  };
-}
-
-export namespace MergeUser {
-  export type Variables = {};
-
-  export type Mutation = {
-    __typename?: 'Mutation';
-
-    mergeUser?: MergeUser | null;
-  };
-
-  export type MergeUser = {
-    __typename?: 'User';
-
-    id: string;
-
-    name?: string | null;
-
-    email?: string | null;
   };
 }
 
@@ -2439,7 +2433,7 @@ export namespace RecipeSpotlight {
 
     id: string;
 
-    name?: string | null;
+    displayName?: string | null;
   };
 
   export type CoverImage = {
@@ -2600,16 +2594,6 @@ export namespace RecipeDetails {
     prepTime?: number | null;
 
     unattendedTime?: number | null;
-
-    author?: Author | null;
-  };
-
-  export type Author = {
-    __typename?: 'User';
-
-    id: string;
-
-    name?: string | null;
   };
 }
 

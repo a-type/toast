@@ -7,7 +7,7 @@ const colors = [
 ];
 
 export default ({ show }) => {
-  const colorIdx = Math.floor(Math.random() * 3);
+  const colorIdx = Math.floor(Math.random() * colors.length);
 
   if (!show) {
     return (

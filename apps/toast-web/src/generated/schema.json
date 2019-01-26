@@ -1438,19 +1438,7 @@
             "deprecationReason": null
           },
           {
-            "name": "name",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "nickname",
+            "name": "displayName",
             "description": "",
             "args": [],
             "type": {
@@ -1463,6 +1451,18 @@
           },
           {
             "name": "email",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "photoUrl",
             "description": "",
             "args": [],
             "type": {

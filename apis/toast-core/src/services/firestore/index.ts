@@ -8,7 +8,6 @@ import GroupInvitations from './GroupInvitations';
 const firestore = new Firestore({
   projectId: config.gcloud.projectId,
 });
-firestore.settings({ timestampsInSnapshots: true });
 
 export interface FirestoreService {
   firestore: Firestore;

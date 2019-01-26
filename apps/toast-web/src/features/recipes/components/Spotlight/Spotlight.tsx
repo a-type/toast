@@ -46,7 +46,7 @@ Spotlight.fragments = {
       sourceUrl
       author {
         id
-        name
+        displayName
       }
       coverImage {
         id

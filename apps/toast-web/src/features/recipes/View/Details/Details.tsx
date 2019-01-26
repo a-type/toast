@@ -35,11 +35,6 @@ RecipeDetails.fragments = {
       cookTime
       prepTime
       unattendedTime
-
-      author {
-        id
-        name
-      }
     }
   `,
 };

@@ -20,7 +20,15 @@ export type LinkProps = InnerLinkProps & {
 
 export const BaseLink = React.forwardRef(
   (
-    { to, children, forceRemote, newTab, nav, ...props }: InnerLinkProps,
+    {
+      to,
+      children,
+      forceRemote,
+      newTab,
+      nav,
+      onClick,
+      ...props
+    }: InnerLinkProps,
     ref: any,
   ) => {
     if (!to) {
@@ -46,6 +54,13 @@ export const BaseLink = React.forwardRef(
           {...props}
           ref={ref}
           activeClassName="link-matching"
+          onClick={e => {
+            if (window['swUpdate']) {
+              e.preventDefault();
+              return (window.location.pathname = to);
+            }
+            return onClick(e);
+          }}
         >
           {children}
         </LibNavLink>
@@ -58,6 +73,13 @@ export const BaseLink = React.forwardRef(
         {...props}
         target={newTab ? '_blank' : undefined}
         ref={ref}
+        onClick={e => {
+          if (window['swUpdate']) {
+            e.preventDefault();
+            return (window.location.pathname = to);
+          }
+          return onClick(e);
+        }}
       >
         {children}
       </LibLink>

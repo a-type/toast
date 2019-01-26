@@ -13,8 +13,6 @@ const MergeUser = gql`
   mutation MergeUser {
     mergeUser {
       id
-      name
-      email
     }
   }
 `;
