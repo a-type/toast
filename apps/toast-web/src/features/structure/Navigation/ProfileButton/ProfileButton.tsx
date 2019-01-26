@@ -28,7 +28,7 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
 
     return (
       <LinkStack>
-        <Avatar avatarUrl={path(['photoUrl'], user)} />
+        <Avatar avatarUrl={path(['photoURL'], user)} />
         <Link.Clear to={`/users/${user.uid}`}>
           <Button.Ghost>Profile</Button.Ghost>
         </Link.Clear>
@@ -53,7 +53,7 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
             }
           >
             <Avatar
-              avatarUrl={path(['photoUrl'], user)}
+              avatarUrl={path(['photoURL'], user)}
               ref={ref}
               onClick={onClick}
             />
