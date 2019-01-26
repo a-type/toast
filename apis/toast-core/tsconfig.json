@@ -16,7 +16,9 @@
       "es2015.promise",
       "esnext.asynciterable",
       "dom"
-    ]
+    ],
+    // temp until they sort stuff out... https://github.com/firebase/firebase-admin-node/issues/358
+    "skipLibCheck": true
   },
   "include": ["./src/**/*"]
 }

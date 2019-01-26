@@ -1,4 +1,4 @@
-import Storage from '@google-cloud/storage';
+import { Storage } from '@google-cloud/storage';
 import config from 'config';
 import uuid from 'uuid';
 import logger from 'logger';
