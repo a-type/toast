@@ -10,6 +10,7 @@ storiesOf('Button', module).add('kinds', () => (
     <Button primary label="Primary" />
     <Button color="status-error" label="Bad" />
     <Button color="status-ok" label="Good" />
+    <Button disabled label="Disabled" />
   </Box>
 )).add('icon', () => (
   <Box pad="large" align="start">

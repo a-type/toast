@@ -1,7 +1,7 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
 import Ingredient from './Ingredient';
-import { H1, HelpText, H3 } from 'components/typeset';
+import { H1, HelpText, H3, Span } from 'components/typeset';
 import { format, getDay, setDay, addWeeks } from 'date-fns';
 import { Checkbox, Disconnected } from 'components/generic';
 import logger from 'logger';
@@ -14,7 +14,7 @@ const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
 const Skeleton = () => (
   <div>
     {new Array(8).fill(null).map((_, idx) => (
-      <Checkbox.Skeleton key={idx} size={12} />
+      <Span.Skeleton key={idx} size={12} />
     ))}
   </div>
 );

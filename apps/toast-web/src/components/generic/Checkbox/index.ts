@@ -1,1 +1,3 @@
-export { default } from './Checkbox';
+import { CheckBox } from 'grommet';
+
+export default CheckBox;

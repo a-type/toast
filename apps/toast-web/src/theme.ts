@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, css } from 'styled-components';
 import { generate } from 'grommet/themes';
 import { deepMerge, normalizeColor } from 'grommet/utils';
 
@@ -256,13 +256,17 @@ export const grommetTheme = deepMerge(base, {
   },
 
   textInput: {
-    extend: props => `
+    extend: props => css`
       font-family: ${props && props.theme.global.font.face};
       background: var(--color-field-background);
       color: var(--color-field-foreground);
       border-color: var(--color-field-background);
       padding: 5px 11px;
       transition: 0.2s ease all;
+
+      &:disabled {
+        opacity: 0.5;
+      }
     `
   }
 });

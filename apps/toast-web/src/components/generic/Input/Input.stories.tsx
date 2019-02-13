@@ -9,5 +9,6 @@ storiesOf('Input', module).add('kinds', () => (
     <Input name="placeholder" placeholder="placeholder" />
     <Input name="small" size={"small" as any} />
     <Input name="large" size={"large" as any} />
+    <Input disabled placeholder="disabled" />
   </Box>
 ));
