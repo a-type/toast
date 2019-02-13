@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import { generate } from 'grommet/themes';
+import { deepMerge, normalizeColor } from 'grommet/utils';
 
 export const rhythmHeight = 24;
 
@@ -212,16 +213,17 @@ Object.keys(statusColors).forEach(color => {
 
 const base = generate();
 
-export const grommetTheme = {
-  ...base,
-  colors,
+export const grommetTheme = deepMerge(base, {
+  global: {
+    colors,
+  },
   font: {
     face: 'Noto Serif, serif',
   },
   button: {
     border: {
       radius: 'var(--border-radius-md)',
-      color: 'brand',
+      //color: 'brand',
     },
     primary: {
       color: {
@@ -233,5 +235,8 @@ export const grommetTheme = {
       vertical: '5px',
       horizontal: '11px',
     },
+    extend: props => `
+      ${props && props.primary && `border-color: ${normalizeColor('accent-1', props.theme)};`}
+    `,
   },
-};
+});

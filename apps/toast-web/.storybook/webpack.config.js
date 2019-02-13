@@ -57,16 +57,12 @@ module.exports = {
         loader: 'graphql-tag/loader',
       },
       {
-        test: /\.(gif|png|jpe?g|svg|eot|woff2?|ttf)$/i,
-        use: [
-          'file-loader',
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              bypassOnDebug: true,
-            },
-          },
-        ],
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: ['file-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
