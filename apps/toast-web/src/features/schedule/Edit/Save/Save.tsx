@@ -52,11 +52,9 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
                   setStrategy(ev.target.value);
                 }}
                 value={strategy || defaultStrategy}
-                name="strategy"
-              >
-                <option value="BASIC">Basic</option>
-                <option value="PREP">Prep</option>
-              </Select>
+                {...{name:"strategy"} as any}
+                options={['BASIC', 'PREP']}
+              />
             </Field>
 
             {strategy && (

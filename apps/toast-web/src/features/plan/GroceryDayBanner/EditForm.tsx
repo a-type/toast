@@ -43,15 +43,18 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
             <HorizontalForm onSubmit={handleSubmit}>
               <Field>
                 <Select
-                  name="groceryDay"
+                  {...{ name: "groceryDay" } as any}
                   value={values.groceryDay}
+                  valueKey="value"
                   onChange={handleChange}
-                >
-                  {new Array(7).fill(null).map((_, dayIndex) => (
-                    <option value={dayIndex} key={dayIndex}>
-                      {Day[dayIndex]}
-                    </option>
+                  options={new Array(7).fill(null).map((_, dayIndex) => (
+                    {
+                      value: dayIndex,
+                      label: Day[dayIndex]
+                    }
                   ))}
+                >
+                  {(option) => option.label}
                 </Select>
               </Field>
               <Field>

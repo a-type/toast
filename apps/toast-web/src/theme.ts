@@ -78,7 +78,7 @@ export const GlobalStyle = createGlobalStyle`
   --color-dark: #280f34;
   --color-shadow: #280f3420;
 
-  --color-field-background: var(--color-gray-lightest);
+  --color-field-background: var(--color-gray-light);
   --color-field-foreground: var(--color-dark);
 
   --color-control-background: var(--color-brand);
@@ -226,7 +226,7 @@ export const grommetTheme = deepMerge(base, {
     control: {
       border: {
         width: '2px',
-        color: 'var(--color-gray-light)',
+        color: 'var(--color-field-background)',
         radius: 'var(--border-radius-md)',
       }
     },
@@ -250,7 +250,7 @@ export const grommetTheme = deepMerge(base, {
       vertical: '5px',
       horizontal: '11px',
     },
-    extend: props => `
+    extend: props => css`
       ${props && props.primary && `border-color: ${normalizeColor('accent-1', props.theme)}; color: ${normalizeColor('light-1', props.theme)};`}
     `,
   },
@@ -258,9 +258,7 @@ export const grommetTheme = deepMerge(base, {
   textInput: {
     extend: props => css`
       font-family: ${props && props.theme.global.font.face};
-      background: var(--color-field-background);
       color: var(--color-field-foreground);
-      border-color: var(--color-field-background);
       padding: 5px 11px;
       transition: 0.2s ease all;
 
