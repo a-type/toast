@@ -58,7 +58,7 @@ export default ({ step }) => {
             {({ values, handleSubmit, handleChange, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <Field label="Instructions" required>
-                  <Input.Block
+                  <TextArea
                     required
                     value={values.text}
                     name="text"

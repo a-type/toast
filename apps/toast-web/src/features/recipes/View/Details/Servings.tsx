@@ -3,6 +3,7 @@ import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { P } from 'components/typeset';
 import { Input, Icon } from 'components/generic';
+import { Box, Button } from 'grommet';
 
 const GetPreferredServings = gql`
   query GetPreferredServings {
@@ -35,21 +36,20 @@ export default ({ servings }) => (
                 mutate({ variables: { servings: val ? parseInt(val) : '' } });
 
               return (
-                <Input.Group
+                <Box direction="row">
+                <Input
                   value={displayServings}
                   onChange={ev => setServings(ev.target.value)}
                   name="preferredServings"
                   type="number"
                   max={99}
                   min={0}
-                  size={2}
-                >
+                />
                   {displayServings !== servings && (
-                    <Input.Group.Button onClick={() => setServings(servings)}>
-                      <Icon name="delete-button" />
-                    </Input.Group.Button>
+                    <Button onClick={() => setServings(servings)} icon={<Icon name="delete-button" />}/>
+
                   )}
-                </Input.Group>
+                </Box>
               );
             }}
           </Mutation>

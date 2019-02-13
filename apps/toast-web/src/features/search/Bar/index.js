@@ -7,6 +7,7 @@ import gql from 'graphql-tag';
 import { parse } from 'query-string';
 import debounce from 'lodash.debounce';
 import styled from 'styled-components';
+import { Box } from 'grommet';
 
 const Container = styled.div`
   width: 100%;
@@ -97,24 +98,22 @@ class SearchBar extends React.Component {
 
     return (
       <Container>
-        <Input.Group
+        <Box direction="row">
+        <Input
           value={inputValue}
           onChange={this.handleInputChanged}
           placeholder="Search recipes or ingredients..."
           onKeyDown={this.handleKeyDown}
           groupProps={rest}
-        >
+        />
           {inputValue.length > 0 && (
             <React.Fragment>
-              <Input.Group.Button onClick={this.commitSearch}>
-                Match "{inputValue}"
-              </Input.Group.Button>
-              <Input.Group.Button.Negative onClick={this.reset}>
-                &times;
-              </Input.Group.Button.Negative>
+              <Button onClick={this.commitSearch}
+                label={`Match "${inputValue}"`} />
+              <Button.Negative onClick={this.reset} label="&times;"/>
             </React.Fragment>
           )}
-        </Input.Group>
+        </Box>
       </Container>
     );
   }

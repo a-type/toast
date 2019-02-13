@@ -1,12 +1,3 @@
-import BaseInput, { InputWithVariants } from './Input';
-import Group from './Group';
+import { TextInput } from 'grommet';
 
-interface InputWithGroup extends InputWithVariants {
-  Group?: typeof Group;
-}
-
-const Input: InputWithGroup = BaseInput;
-
-Input.Group = Group;
-
-export default Input;
+export default TextInput;

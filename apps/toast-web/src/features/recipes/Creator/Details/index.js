@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Form, Input, Button, Field, RadioButton } from 'components/generic';
 import { merge } from 'ramda';
+import { TextArea } from 'grommet';
 
 export const RecipeCreateDetailsFragment = gql`
   fragment RecipeCreateDetails on Recipe {
@@ -80,7 +81,7 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                   />
                 </Field>
                 <Field label="Description">
-                  <Input.Block
+                  <TextArea
                     name="description"
                     value={values.description}
                     onChange={handleChange}

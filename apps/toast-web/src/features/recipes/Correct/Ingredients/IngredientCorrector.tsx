@@ -5,8 +5,9 @@ import {
 } from 'generated/schema';
 import { Formik } from 'formik';
 import { P } from 'components/typeset';
-import { Field, Input, Button } from 'components/generic';
+import { Field, Input } from 'components/generic';
 import { Picker } from 'features/ingredients';
+import { Button } from 'grommet';
 
 interface IngredientCorrectorProps {
   recipeIngredient: RecipeIngredient;

@@ -1,12 +1,11 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Button, Modal, Input, Field } from 'components/generic';
-import { Picker } from 'features/ingredients';
-import { H3 } from 'components/typeset';
+import { Modal, Input, Field } from 'components/generic';
 import { Formik } from 'formik';
 import { pick } from 'ramda';
 import { Ingredient } from 'generated/schema';
+import { TextArea, Button } from 'grommet';
 
 const EditIngredient = gql`
   mutation EditIngredient($id: ID!, $input: IngredientUpdateInput!) {
@@ -78,14 +77,14 @@ export default class IngredientEdit extends React.Component<
                       />
                     </Field>
                     <Field label="description">
-                      <Input.Block
+                      <TextArea
                         name="description"
                         value={values.description}
                         onChange={handleChange}
                       />
                     </Field>
                     <Field label="attribution">
-                      <Input.Block
+                      <TextArea
                         name="attribution"
                         value={values.attribution}
                         onChange={handleChange}

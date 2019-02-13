@@ -108,6 +108,10 @@ export const GlobalStyle = createGlobalStyle`
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 14px;
+
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --border-width-lg: 4px;
 }
 
 html, body {
@@ -188,7 +192,7 @@ const colors = {
   active: 'light-2',
   border: {
     dark: 'dark-2',
-    light: 'dark-5',
+    light: 'light-2',
   },
   brand: brandColor,
   control: {
@@ -216,10 +220,21 @@ const base = generate();
 export const grommetTheme = deepMerge(base, {
   global: {
     colors,
+    font: {
+      face: 'Noto Serif, serif',
+    },
+    control: {
+      border: {
+        width: '2px',
+        color: 'var(--color-gray-light)',
+        radius: 'var(--border-radius-md)',
+      }
+    },
+    input: {
+      weight: 'normal',
+    }
   },
-  font: {
-    face: 'Noto Serif, serif',
-  },
+
   button: {
     border: {
       radius: 'var(--border-radius-md)',
@@ -236,7 +251,18 @@ export const grommetTheme = deepMerge(base, {
       horizontal: '11px',
     },
     extend: props => `
-      ${props && props.primary && `border-color: ${normalizeColor('accent-1', props.theme)};`}
+      ${props && props.primary && `border-color: ${normalizeColor('accent-1', props.theme)}; color: ${normalizeColor('light-1', props.theme)};`}
     `,
   },
+
+  textInput: {
+    extend: props => `
+      font-family: ${props && props.theme.global.font.face};
+      background: var(--color-field-background);
+      color: var(--color-field-foreground);
+      border-color: var(--color-field-background);
+      padding: 5px 11px;
+      transition: 0.2s ease all;
+    `
+  }
 });
