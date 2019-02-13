@@ -33,7 +33,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
           onSubmit={async values => {
             await mutate({
               variables: {
-                groceryDay: parseInt(values.groceryDay)
+                groceryDay: parseInt(values.groceryDay),
               },
             });
             onSaved();
@@ -55,7 +55,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
                 </Select>
               </Field>
               <Field>
-                <Button type="submit">Save</Button>
+                <Button type="submit" primary label="Save" />
               </Field>
             </HorizontalForm>
           )}

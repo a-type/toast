@@ -31,7 +31,7 @@ const CalendarWeeklyView: React.SFC<CalendarWeeklyViewProps> = ({
           onSelect={() => setActiveDateIndex(dayMeals[0].dateIndex)}
         />
       ))}
-      <Button onClick={loadNextWeek}>Next</Button>
+      <Button onClick={loadNextWeek} label="Next" />
     </div>
   );
 };

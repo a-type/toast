@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Bar } from './components';
-import { Button, Link } from 'components/generic';
+import { Button, Link, Icon } from 'components/generic';
 import { H3, HelpText } from 'components/typeset';
 import { Recipe } from 'generated/schema';
 
@@ -12,7 +12,7 @@ const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
   return (
     <Bar>
       <Link to={`/recipes/${recipe.id}`}>
-        <Button.Icon name="next-page" iconProps={{ rotation: 180 }} />
+        <Button icon={<Icon name="next-page" rotation={90} />} />
       </Link>
       <div>
         <HelpText>Cooking</HelpText>
@@ -23,7 +23,7 @@ const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
       </div> */}
       <div>
         <Link to={recipe.sourceUrl} newTab>
-          <Button.Icon name="view-more" />
+          <Button icon={<Icon name="view-more" />} />
         </Link>
       </div>
     </Bar>

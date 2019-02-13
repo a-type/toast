@@ -156,9 +156,14 @@ export default class RecipeCreatorDetails extends React.PureComponent {
                   </RadioButton.Group>
                 </Field>
                 <Field>
-                  <Button type="submit" disabled={recipeId && !dirty}>
-                    {recipeId ? (dirty ? 'Save' : 'Saved') : 'Save & Continue'}
-                  </Button>
+                  <Button
+                    type="submit"
+                    primary
+                    disabled={recipeId && !dirty}
+                    label={
+                      recipeId ? (dirty ? 'Save' : 'Saved') : 'Save & Continue'
+                    }
+                  />
                 </Field>
               </Form>
             )}

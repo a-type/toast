@@ -9,7 +9,7 @@ export default () => (
     <P>Start planning your daily meals in advance the easy way.</P>
     <P>
       <Link to="/plan/edit">
-        <Button.Positive>Get started</Button.Positive>
+        <Button primary label="Get started" />
       </Link>
     </P>
     <H2>All of the Internet's Recipes</H2>

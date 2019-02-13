@@ -158,9 +158,9 @@ const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
       <CrossFade>
         {expanded ? (
           <MonthContainer>
-            <Button.Icon
+            <Button
               name="expand-arrow"
-              iconProps={{ rotation: 90 }}
+              // iconProps={{ rotation: 90 }}
               onClick={goToPreviousMonth}
               onMouseOver={onButtonHover}
               onTouchStart={onButtonHover}
@@ -168,9 +168,9 @@ const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
               onTouchEnd={onButtonLeave}
             />
             <H3>{MONTH_NAMES[month]}</H3>
-            <Button.Icon
+            <Button
               name="expand-arrow"
-              iconProps={{ rotation: 270 }}
+              // iconProps={{ rotation: 270 }}
               onClick={goToNextMonth}
               onMouseOver={onButtonHover}
               onTouchStart={onButtonHover}
@@ -181,11 +181,9 @@ const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
         ) : null}
       </CrossFade>
       <WeekdayRow>
-        {new Array(7)
-          .fill(null)
-          .map((_, idx) => (
-            <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
-          ))}
+        {new Array(7).fill(null).map((_, idx) => (
+          <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
+        ))}
       </WeekdayRow>
       <GridView
         rowCount={rowCount}

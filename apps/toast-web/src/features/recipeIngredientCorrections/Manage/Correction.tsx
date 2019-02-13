@@ -21,12 +21,12 @@ const Correction: React.SFC<
     return (
       <div>
         <div>Delete?</div>
-        <Button.Positive onClick={() => accept(correction.id)}>
-          Accept
-        </Button.Positive>
-        <Button.Negative onClick={() => reject(correction.id)}>
-          Reject
-        </Button.Negative>
+        <Button
+          color="status-error"
+          onClick={() => accept(correction.id)}
+          label="Accept"
+        />
+        <Button onClick={() => reject(correction.id)} label="Reject" />
       </div>
     );
   }
@@ -81,12 +81,16 @@ const Correction: React.SFC<
         </li>
       </ul>
       <div>
-        <Button.Positive onClick={() => accept(correction.id)}>
-          Accept
-        </Button.Positive>
-        <Button.Negative onClick={() => reject(correction.id)}>
-          Reject
-        </Button.Negative>
+        <Button
+          color="status-ok"
+          onClick={() => accept(correction.id)}
+          label="Accept"
+        />
+        <Button
+          color="status-error"
+          onClick={() => reject(correction.id)}
+          label="Reject"
+        />
       </div>
     </div>
   );

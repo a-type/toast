@@ -2,7 +2,7 @@ import React from 'react';
 import Logo from 'components/brand/Logo';
 import { Link } from 'components/generic';
 import ProfileButton from './ProfileButton';
-import { Button } from 'components/generic';
+import { Button, Icon } from 'components/generic';
 import PlanButton from './PlanButton';
 import ShoppingListButton from './ShoppingListButton';
 import Controls from './Controls';
@@ -17,7 +17,7 @@ const NavBar = () => {
         <PlanButton />
         <ShoppingListButton />
         <Link nav to="/search" tabIndex={-1}>
-          <Button.Icon name="search" />
+          <Button icon={<Icon name="search" />} />
         </Link>
         <ProfileButton />
       </Controls>

@@ -29,14 +29,12 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
 
   return (
     <React.Fragment>
-      <Button.Ghost
+      <Button
         onClick={() => setPopupOpen(!isPopupOpen)}
         disabled={disabled}
-      >
-        <Span>{sentence(value.name)}</Span>
-        &nbsp;
-        <Icon name="edit" />
-      </Button.Ghost>
+        icon={<Icon name="edit" />}
+        label={sentence(value.name)}
+      />
       {isPopupOpen && (
         <Popup
           value={value}

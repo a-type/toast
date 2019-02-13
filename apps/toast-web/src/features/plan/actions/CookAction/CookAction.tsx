@@ -57,7 +57,7 @@ export default class CalendarCookAction extends React.Component<
             return (
               <Card imageSrc={image}>
                 <Span>{recipe.title}</Span>
-                <Button onClick={this.showRecipeSelector}>Change</Button>
+                <Button onClick={this.showRecipeSelector} label="Change" />
               </Card>
             );
           }}

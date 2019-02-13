@@ -84,9 +84,12 @@ export default class RecipeCreatorImages extends React.PureComponent {
                   />
                 </Field>
                 <Field>
-                  <Button type="submit" disabled={!dirty || this.state.saving}>
-                    Save
-                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={!dirty || this.state.saving}
+                    label="Save"
+                    primary
+                  />
                 </Field>
               </Form>
             )}

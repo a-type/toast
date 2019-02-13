@@ -10,14 +10,14 @@ const CreatePlanButton: React.SFC<CreatePlanButtonProps> = ({ onCreate }) => {
   return (
     <CreatePlanMutation>
       {mutate => (
-        <Button.Positive
+        <Button
+          primary
           onClick={async () => {
             await mutate();
             onCreate();
           }}
-        >
-          Create my plan
-        </Button.Positive>
+          label="Create my plan"
+        />
       )}
     </CreatePlanMutation>
   );

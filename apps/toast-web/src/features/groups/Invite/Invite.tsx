@@ -50,9 +50,10 @@ const Invite: React.SFC<InviteProps> = ({}) => {
           return (
             <div>
               <Copy text={link} onCopy={() => setCopied(true)}>
-                <Button.Positive>
-                  {copied ? 'Copied' : 'Copy invite link'}
-                </Button.Positive>
+                <Button
+                  primary
+                  label={copied ? 'Copied' : 'Copy invite link'}
+                />
               </Copy>
               <HelpText>
                 This link will only work once, and expires in a day. Be sure to
@@ -63,9 +64,10 @@ const Invite: React.SFC<InviteProps> = ({}) => {
         }
 
         return (
-          <Button onClick={createAndSend}>
-            Invite someone to join your plan
-          </Button>
+          <Button
+            onClick={createAndSend}
+            label="Invite someone to join your plan"
+          />
         );
       }}
     </CreateGroupInvitationMutation>

@@ -9,7 +9,7 @@ export interface StepsLinkProps extends LinkProps {
 const StepsLink: React.SFC<StepsLinkProps> = ({ recipeId }) => {
   return (
     <Link to={`/recipes/${recipeId}/steps`}>
-      <Button>Start Cooking</Button>
+      <Button label="Start Cooking" primary />
     </Link>
   );
 };

@@ -59,10 +59,12 @@ const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
               canCreate
             />
           </Field>
-          <Button.Positive type="submit">Submit correction</Button.Positive>
-          <Button.Negative onClick={() => requestDelete(recipeIngredient.id)}>
-            Delete this ingredient
-          </Button.Negative>
+          <Button primary type="submit" label="Submit correction" />
+          <Button
+            color="status-critical"
+            onClick={() => requestDelete(recipeIngredient.id)}
+            label="Delete this ingredient"
+          />
         </form>
       )}
     </Formik>

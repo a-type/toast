@@ -9,7 +9,8 @@ import { ApolloProvider } from 'react-apollo';
 import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
 import history from 'browserHistory';
-import { GlobalStyle } from 'theme';
+import { GlobalStyle, grommetTheme } from 'theme';
+import { Grommet } from 'grommet';
 
 class App extends React.Component<any, any> {
   componentDidMount() {
@@ -31,7 +32,7 @@ class App extends React.Component<any, any> {
   render() {
     return (
       <ApolloProvider client={apolloClient}>
-        <React.Fragment>
+        <Grommet theme={grommetTheme}>
           <Router history={history}>
             <TokenContext.Provider>
               <Background.Manager>
@@ -41,7 +42,7 @@ class App extends React.Component<any, any> {
             </TokenContext.Provider>
           </Router>
           <GlobalStyle />
-        </React.Fragment>
+        </Grommet>
       </ApolloProvider>
     );
   }

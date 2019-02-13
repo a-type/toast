@@ -58,7 +58,7 @@ export default ({ recipeId, steps }) => (
                   />
                 </Field>
                 <Field>
-                  <Button type="submit">Add</Button>
+                  <Button type="submit" label="Add" />
                 </Field>
               </Form>
             )}

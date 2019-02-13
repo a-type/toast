@@ -44,7 +44,7 @@ export default class IngredientEdit extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <Button onClick={this.toggleModal}>Edit</Button>
+        <Button onClick={this.toggleModal} label="Edit" />
         <Mutation mutation={EditIngredient}>
           {merge => (
             <Modal visible={this.state.showModal} onClose={this.toggleModal}>
@@ -91,7 +91,7 @@ export default class IngredientEdit extends React.Component<
                         onChange={handleChange}
                       />
                     </Field>
-                    <Button type="submit">Save</Button>
+                    <Button type="submit" primary label="Save" />
                     {this.state.error && (
                       <div>Error: {this.state.error.message}</div>
                     )}

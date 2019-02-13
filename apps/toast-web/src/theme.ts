@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { generate } from 'grommet/themes';
 
 export const rhythmHeight = 24;
 
@@ -143,3 +144,94 @@ br {
   background: var(--color-brand-light);
 }
 `;
+
+const brandColor = 'var(--color-brand)';
+const accentColors = [
+  'var(--color-positive)',
+  'var(--color-negative-light)',
+  'var(--color-brand-light)',
+  'var(--color-positive-light)',
+];
+const neutralColors = [
+  'var(--color-dark)',
+  'var(--color-positive-dark)',
+  'var(--color-negative-dark)',
+  'var(--color-brand-dark)',
+];
+const statusColors = {
+  critical: 'var(--color-negative-light)',
+  error: 'var(--color-negative)',
+  warning: 'var(--color-brand-dark)',
+  ok: 'var(--color-positive)',
+  unknown: 'var(--color-gray-light)',
+  disabled: 'var(--color-gray-lightest)',
+};
+const darkColors = [
+  'var(--color-black)',
+  'var(--color-dark)',
+  'var(--color-gray-dark)',
+  'var(--color-gray)',
+  'var(--color-gray)',
+];
+const lightColors = [
+  'var(--color-white)',
+  'var(--color-gray-lightest)',
+  'var(--color-gray-light)',
+  'var(--color-gray-light)',
+  'var(--color-gray-light)',
+];
+
+const colors = {
+  black: darkColors[0],
+  white: lightColors[0],
+  active: 'light-2',
+  border: {
+    dark: 'dark-2',
+    light: 'dark-5',
+  },
+  brand: brandColor,
+  control: {
+    dark: 'neutral-1',
+    light: 'brand',
+  },
+  focus: 'accent-3',
+};
+
+const colorArray = (array, prefix) =>
+  array.forEach((color, index) => {
+    colors[`${prefix}-${index + 1}`] = color;
+  });
+
+colorArray(accentColors, 'accent');
+colorArray(darkColors, 'dark');
+colorArray(lightColors, 'light');
+colorArray(neutralColors, 'neutral');
+Object.keys(statusColors).forEach(color => {
+  colors[`status-${color}`] = statusColors[color];
+});
+
+const base = generate();
+
+export const grommetTheme = {
+  ...base,
+  colors,
+  font: {
+    face: 'Noto Serif, serif',
+  },
+  button: {
+    border: {
+      radius: 'var(--border-radius-md)',
+      color: 'brand',
+    },
+    primary: {
+      color: {
+        dark: 'accent-5',
+        light: 'accent-1',
+      },
+    },
+    padding: {
+      vertical: '5px',
+      horizontal: '11px',
+    },
+  },
+};

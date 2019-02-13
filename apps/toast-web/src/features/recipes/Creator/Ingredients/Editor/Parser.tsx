@@ -102,9 +102,12 @@ export default class IngredientEditorParser extends React.PureComponent<
                   />
                 </Field>
                 <Field>
-                  <Button type="submit" disabled={!dirty}>
-                    Save
-                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={!dirty}
+                    label="Save"
+                    primary
+                  />
                 </Field>
               </form>
             )}

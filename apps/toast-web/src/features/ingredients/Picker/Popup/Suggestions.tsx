@@ -27,9 +27,8 @@ class Suggestions extends React.PureComponent<
     <Button
       {...getItemProps({ item: { name: term }, index })}
       active={index === highlightedIndex}
-    >
-      {term} (create)
-    </Button>
+      label={`${term} (create)`}
+    />
   );
 
   render() {

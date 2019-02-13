@@ -11,7 +11,7 @@ export default ({ authorId, recipeId, displayType }) => {
       }
     >
       <Link to={`${recipeId}/edit`}>
-        <Button>Edit</Button>
+        <Button label="Edit" />
       </Link>
     </Gate>
   );

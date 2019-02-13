@@ -76,9 +76,12 @@ export default class IngredientCreate extends React.Component<
                     onChange={handleChange}
                   />
                 </Field>
-                <Button type="submit" disabled={!dirty}>
-                  Create
-                </Button>
+                <Button
+                  type="submit"
+                  primary
+                  disabled={!dirty}
+                  label="Create"
+                />
                 {showDone && <div>Created!</div>}
                 {error && <div>Error: {error.message}</div>}
               </form>

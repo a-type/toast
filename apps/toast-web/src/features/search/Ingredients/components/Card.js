@@ -15,7 +15,7 @@ export const CardContainer = styled.div`
   }
 `;
 
-const ControlGroup = styled(Button.Group)`
+const ControlGroup = styled.div`
   & button:first-child {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -35,8 +35,8 @@ export default ({ ingredient, include, exclude, ...rest }) => (
       <Name>{ingredient.name}</Name>
     </Link.Clear>
     <ControlGroup>
-      <Button.Positive onClick={include}>+</Button.Positive>
-      <Button.Negative onClick={exclude}>&times;</Button.Negative>
+      <Button color="status-ok" onClick={include} label="+" />
+      <Button color="status-error" onClick={exclude} label="&times;" />
     </ControlGroup>
   </CardContainer>
 );

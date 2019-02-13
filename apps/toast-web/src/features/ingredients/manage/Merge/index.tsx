@@ -44,7 +44,7 @@ class IngredientMerger extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <Button onClick={this.toggleModal}>Merge</Button>
+        <Button onClick={this.toggleModal} label="Merge" />
         <Mutation mutation={MergeIngredients}>
           {merge => (
             <Modal visible={this.state.showModal} onClose={this.toggleModal}>
@@ -66,9 +66,8 @@ class IngredientMerger extends React.Component<
                     this.setState({ error: err });
                   }
                 }}
-              >
-                Merge
-              </Button>
+                label="Merge"
+              />
               {this.state.error && <div>Error: {this.state.error.message}</div>}
             </Modal>
           )}

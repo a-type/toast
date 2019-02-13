@@ -58,7 +58,11 @@ const EditDetails = ({ schedule, onSave }) => (
               />
             </Field>
             <Field>
-              <Button type="submit">{!!schedule ? 'Save' : 'Create'}</Button>
+              <Button
+                type="submit"
+                primary
+                label={!!schedule ? 'Save' : 'Create'}
+              />
             </Field>
           </Form>
         )}

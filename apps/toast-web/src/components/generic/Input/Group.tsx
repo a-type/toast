@@ -1,9 +1,10 @@
 import React from 'react';
 import styled, { StyledComponentClass } from 'styled-components';
 import Input from './Input';
-import Button, { ButtonProps } from '../Button';
+import Button from '../Button';
 import { focusShadow } from 'components/effects';
 import { InputProps } from './types';
+import { ButtonProps } from 'grommet';
 
 const Container = styled<{ hasChildren: boolean }, 'div'>('div')`
   display: inline-flex;
@@ -85,10 +86,10 @@ const ModifiedButton: GroupButtonWithVariants = styled(Button)`
   margin: 0 !important;
 `;
 ModifiedButton.Negative = props => (
-  <ModifiedButton as={Button.Negative} {...props} />
+  <ModifiedButton color="status-error" {...props} />
 );
 ModifiedButton.Positive = props => (
-  <ModifiedButton as={Button.Positive} {...props} />
+  <ModifiedButton color="status-ok" {...props} />
 );
 
 export interface InputGroupProps extends InputProps {

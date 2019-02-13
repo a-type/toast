@@ -12,7 +12,7 @@ export default () => (
     <P>
       Drag this button to your bookmarks toolbar:&nbsp;
       <Link.Clear to={linkContent} forceRemote>
-        <Button>🍽️ Toast Scanner</Button>
+        <Button label="🍽️ Toast Scanner" />
       </Link.Clear>
     </P>
     <P>

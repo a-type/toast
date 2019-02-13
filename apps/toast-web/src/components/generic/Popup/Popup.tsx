@@ -73,7 +73,7 @@ export default class Popup extends React.PureComponent<PopupProps, PopupState> {
             <Background key="popup">
               <ScrollArea>{this.renderContent()}</ScrollArea>
               <Controls>
-                <Button onClick={this.handleClose}>Close</Button>
+                <Button onClick={this.handleClose} label="Close" />
               </Controls>
             </Background>
           </CSSTransition>

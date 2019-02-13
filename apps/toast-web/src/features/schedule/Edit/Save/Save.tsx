@@ -68,28 +68,28 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
               <Mutation mutation={ProcessSchedule}>
                 {mutate => (
                   <div>
-                    <Button.Positive
-                      spaceBelow="lg"
+                    <Button
+                      primary
+                      margin={{ bottom: 'large' }}
                       onClick={async () => {
                         await mutate({
                           variables: { strategy: strategy || defaultStrategy },
                         });
                         history.push('/plan');
                       }}
-                    >
-                      Start planning
-                    </Button.Positive>
+                      label="Start planning"
+                    />
                     <Preview strategy={strategy || defaultStrategy} />
-                    <Button.Positive
+                    <Button
+                      color="status-ok"
                       onClick={async () => {
                         await mutate({
                           variables: { strategy: strategy || defaultStrategy },
                         });
                         history.push('/plan');
                       }}
-                    >
-                      Start planning
-                    </Button.Positive>
+                      label="Start planning"
+                    />
                   </div>
                 )}
               </Mutation>

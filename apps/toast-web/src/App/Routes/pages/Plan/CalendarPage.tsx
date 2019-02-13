@@ -19,7 +19,7 @@ const CalendarPage: React.SFC<{}> = ({}) => {
     >
       <DayView />
       <Link to="/plan/edit">
-        <Button.Ghost>Edit your plan</Button.Ghost>
+        <Button label="Edit your plan" />
       </Link>
       <Invite />
     </Layout>

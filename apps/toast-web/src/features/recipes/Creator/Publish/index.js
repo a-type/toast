@@ -30,9 +30,11 @@ const PublishRecipe = gql`
 export default class RecipeCreatorPublish extends React.PureComponent {
   renderButton = (published, handleClick) => (
     <Field helpText={HELP_TEXT}>
-      <Button disabled={published} onClick={handleClick}>
-        {published ? PUBLISHED_CONTENT : NOT_PUBLISHED_CONTENT}
-      </Button>
+      <Button
+        disabled={published}
+        onClick={handleClick}
+        label={published ? PUBLISHED_CONTENT : NOT_PUBLISHED_CONTENT}
+      />
     </Field>
   );
 

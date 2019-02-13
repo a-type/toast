@@ -10,7 +10,7 @@ export default ({ onAcknowledge }) => (
       <P spaceBelow="0px">
         <Span>Scout new recipes from around the web using the&nbsp;</Span>
         <Link.Clear to="/scanner" onClick={onAcknowledge}>
-          <Button>Toast Scanner</Button>
+          <Button label="Toast Scanner" />
         </Link.Clear>
       </P>
     </Banner>

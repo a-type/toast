@@ -36,7 +36,7 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
               }}
               onClick={() => setEditMode(true)}
             >
-              <Button>Change</Button>
+              <Button label="Change" />
             </Link>
             <GroceryDayEventCreator dayIndex={groceryDay} />
           </Layout>

@@ -66,9 +66,11 @@ export default ({ step }) => {
                   />
                 </Field>
                 <Field>
-                  <Button type="submit" disabled={!dirty}>
-                    {dirty ? 'Save' : 'Saved'}
-                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={!dirty}
+                    label={dirty ? 'Save' : 'Saved'}
+                  />
                 </Field>
               </Form>
             )}

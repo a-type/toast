@@ -1,1 +1,3 @@
-export { default, ButtonProps, IconButtonProps } from './Button';
+import { Button } from 'grommet';
+
+export default Button;

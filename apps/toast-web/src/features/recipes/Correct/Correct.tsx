@@ -32,7 +32,7 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
               recipeIngredients={pathOr([], ['recipe', 'ingredients'], data)}
             />
             <Link to={`/recipes/${recipeId}`}>
-              <Button.Positive>Done</Button.Positive>
+              <Button color="status-ok" label="Done" />
             </Link>
           </div>
         );

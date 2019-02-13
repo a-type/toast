@@ -25,12 +25,12 @@ export default class IngredientEditor extends React.Component<
     return (
       <React.Fragment>
         <span>We detected: {value.name}</span>
-        <Button onClick={this.showModal}>Change ingredient</Button>
+        <Button onClick={this.showModal} label="Change ingredient" />
         {editing && (
           <Modal visible onClose={this.hideModal}>
             <Modal.TitleBar>
               <span>Edit {name}</span>
-              <Button onClick={this.hideModal}>&times;</Button>
+              <Button onClick={this.hideModal} label="&times;" />
             </Modal.TitleBar>
             <Picker value={value} onChange={onChange} />
           </Modal>

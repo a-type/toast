@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../../Button/Button';
+import Button from '../../Button';
 
 const Container = styled.div`
   position: absolute;
@@ -14,6 +14,6 @@ const Container = styled.div`
 
 export default props => (
   <Container>
-    <Button.Icon name="delete" {...props} />
+    <Button icon="delete" {...props} />
   </Container>
 );

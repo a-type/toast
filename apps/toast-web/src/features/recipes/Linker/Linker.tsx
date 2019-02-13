@@ -69,7 +69,7 @@ const RecipeLinker: React.SFC<RouteComponentProps> = ({ history }) => {
                 name="recipeUrl"
               />
             </Field>
-            <Button type="submit">Scan</Button>
+            <Button type="submit" label="Scan" primary />
           </form>
         );
       }}

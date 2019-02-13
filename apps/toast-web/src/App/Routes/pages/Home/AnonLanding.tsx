@@ -10,7 +10,7 @@ export default () => (
     </P>
     <P>
       <Link to="/login?r=/plan/setup">
-        <Button.Positive>Join or Log In</Button.Positive>
+        <Button primary label="Join or Log In" />
       </Link>
     </P>
     <H2>All of the Internet's Recipes</H2>
