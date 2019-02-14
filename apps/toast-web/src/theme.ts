@@ -192,7 +192,7 @@ const colors = {
   active: 'light-2',
   border: {
     dark: 'dark-2',
-    light: 'light-2',
+    light: 'light-3',
   },
   brand: brandColor,
   control: {
@@ -215,6 +215,22 @@ Object.keys(statusColors).forEach(color => {
   colors[`status-${color}`] = statusColors[color];
 });
 
+const hoverBorder = color =>
+  css`
+    &:hover {
+      box-shadow: 0 0 0 2px ${color};
+    }
+  `;
+hoverBorder.default = hoverBorder('var(--color-brand)');
+
+const focusShadow = color =>
+  css`
+    &:focus {
+      box-shadow: 0 0 0 4px ${color};
+    }
+  `;
+focusShadow.default = focusShadow('var(--color-brand-light)');
+
 const base = generate();
 
 export const grommetTheme = deepMerge(base, {
@@ -228,11 +244,11 @@ export const grommetTheme = deepMerge(base, {
         width: '2px',
         color: 'var(--color-field-background)',
         radius: 'var(--border-radius-md)',
-      }
+      },
     },
     input: {
       weight: 'normal',
-    }
+    },
   },
 
   button: {
@@ -250,21 +266,49 @@ export const grommetTheme = deepMerge(base, {
       vertical: '5px',
       horizontal: '11px',
     },
-    extend: props => css`
-      ${props && props.primary && `border-color: ${normalizeColor('accent-1', props.theme)}; color: ${normalizeColor('light-1', props.theme)};`}
+    extend: ({ primary, colorValue, theme, plain }: any) => css`
+      font-style: italic;
+
+      ${primary &&
+        `border-color: ${normalizeColor(
+          'accent-1',
+          theme,
+        )}; color: ${normalizeColor('light-1', theme)};`}
+
+        /* divider */
+
+        ${
+          plain
+            ? ''
+            : primary
+              ? hoverBorder(normalizeColor('accent-1', theme))
+              : colorValue
+                ? hoverBorder(normalizeColor(colorValue, theme))
+                : hoverBorder.default
+        }
+
+        ${
+          plain
+            ? ''
+            : primary
+              ? focusShadow(normalizeColor('accent-4', theme))
+              : focusShadow.default
+        };
     `,
   },
 
   textInput: {
-    extend: props => css`
-      font-family: ${props && props.theme.global.font.face};
+    extend: ({ theme, plain }: any) => css`
+      font-family: ${theme.global.font.face};
       color: var(--color-field-foreground);
       padding: 5px 11px;
       transition: 0.2s ease all;
 
+      ${plain ? '' : focusShadow.default} /* divider */
+
       &:disabled {
         opacity: 0.5;
       }
-    `
-  }
+    `,
+  },
 });

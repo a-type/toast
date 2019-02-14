@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { FileChooser } from 'components/generic';
+import { FileInput } from 'components/generic';
 import { Ingredient } from 'generated/schema';
 
 const CreateIngredient = gql`
@@ -26,7 +26,7 @@ export interface IngredientBulkCreatorProps {
 const BulkCreator: React.SFC<IngredientBulkCreatorProps> = ({
   createIngredient,
 }) => (
-  <FileChooser
+  <FileInput
     onChange={file => {
       const reader = new FileReader();
       reader.onload = async ev => {
@@ -38,9 +38,8 @@ const BulkCreator: React.SFC<IngredientBulkCreatorProps> = ({
       };
       reader.readAsText(file);
     }}
-  >
-    Choose JSON File
-  </FileChooser>
+    label="Choose JSON File"
+  />
 );
 
 export default () => (

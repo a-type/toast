@@ -1,8 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Chooser } from 'features/images';
-import { Button, Field, Form, Input } from 'components/generic';
+import { Button, Field, Form, Input, FileInput } from 'components/generic';
 import { Formik } from 'formik';
 import { pathOr } from 'ramda';
 
@@ -30,7 +29,17 @@ const UpdateImage = gql`
   ${RecipeCreateImageFragment}
 `;
 
-export default class RecipeCreatorImages extends React.PureComponent {
+export interface RecipeCreatorImagesProps {
+  recipeId: string;
+  coverImage?: {
+    url: string;
+    attribution?: string;
+  };
+}
+
+export default class RecipeCreatorImages extends React.PureComponent<
+  RecipeCreatorImagesProps
+> {
   state = {
     saving: false,
   };
@@ -66,15 +75,12 @@ export default class RecipeCreatorImages extends React.PureComponent {
             {({ handleSubmit, handleChange, values, setFieldValue, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <Field label="Cover image">
-                  <Chooser
+                  <FileInput
                     name="image"
                     value={values.image}
                     onChange={image => setFieldValue('image', image)}
-                  >
-                    <div>
-                      {!coverImage ? HAS_IMAGE_CONTENT : NO_IMAGE_CONTENT}
-                    </div>
-                  </Chooser>
+                    label={!coverImage ? HAS_IMAGE_CONTENT : NO_IMAGE_CONTENT}
+                  />
                 </Field>
                 <Field label="Attribution">
                   <Input
