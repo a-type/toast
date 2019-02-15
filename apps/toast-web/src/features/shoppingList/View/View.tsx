@@ -1,9 +1,10 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
 import Ingredient from './Ingredient';
-import { H1, HelpText, H3, Span } from 'components/typeset';
+import { HelpText, Span } from 'components/typeset';
+import { Heading } from 'grommet';
 import { format, getDay, setDay, addWeeks } from 'date-fns';
-import { Checkbox, Disconnected } from 'components/generic';
+import { Disconnected } from 'components/generic';
 import logger from 'logger';
 import { Redirect } from 'react-router-dom';
 import { path } from 'ramda';
@@ -21,7 +22,7 @@ const Skeleton = () => (
 
 const View: React.SFC<{}> = () => (
   <React.Fragment>
-    <H1 spaceBelow="sm">Shopping List</H1>
+    <Heading margin={{ bottom: 'small' }}>Shopping List</Heading>
     <GetShoppingListQuery options={{ fetchPolicy: 'no-cache' }}>
       {({ data, loading, error }) => {
         if (loading) {
@@ -69,7 +70,7 @@ const View: React.SFC<{}> = () => (
                 />
               ))}
             </div>
-            <H3>Purchased</H3>
+            <Heading level="3">Purchased</Heading>
             <div style={{ opacity: 0.5 }}>
               {!!purchased.length ? (
                 purchased.map(ing => (

@@ -1,10 +1,11 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Link } from 'components/typeset';
-import { H1, P, Span, Aside } from 'components/typeset';
+import { P, Span } from 'components/typeset';
 import LikeButton from 'features/recipes/LikeButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
+import { Heading } from 'grommet';
 
 const Spotlight = ({ recipe }) => {
   return recipe ? (
@@ -12,7 +13,7 @@ const Spotlight = ({ recipe }) => {
       <Image src={path(['coverImage', 'url'], recipe)} data-grid-area="image" />
       <div data-grid-area="details">
         <Link to={`/recipes/${recipe.id}`}>
-          <H1>{recipe.title}</H1>
+          <Heading>{recipe.title}</Heading>
         </Link>
         {recipe.description && <P>{recipe.description}</P>}
         {recipe.attribution && (
@@ -30,9 +31,9 @@ Spotlight.Skeleton = () => (
   <Layout>
     <Image data-grid-area="image" />
     <div data-grid-area="details">
-      <H1>
+      <Heading>
         <Span.Skeleton />
-      </H1>
+      </Heading>
       <P.Skeleton />
     </div>
   </Layout>

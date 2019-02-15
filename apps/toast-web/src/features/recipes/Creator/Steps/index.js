@@ -2,9 +2,9 @@ import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Form, Input, Field, Button } from 'components/generic';
-import { H3 } from 'components/typeset';
 import { Formik } from 'formik';
 import StepEditor, { RecipeCreateStepFragment } from './StepEditor';
+import { Heading } from 'grommet';
 
 export const RecipeCreateStepsFragment = gql`
   fragment RecipeCreateSteps on Recipe {
@@ -34,7 +34,7 @@ export default ({ recipeId, steps }) => (
     ))}
 
     <div>
-      <H3>Add a Step</H3>
+      <Heading level="3">Add a Step</Heading>
       <Mutation mutation={CreateStep}>
         {createStep => (
           <Formik

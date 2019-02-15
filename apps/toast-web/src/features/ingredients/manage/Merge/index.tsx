@@ -1,11 +1,10 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Button, Modal } from 'components/generic';
 import { Picker } from 'features/ingredients';
-import { H3 } from 'components/typeset';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Ingredient } from 'generated/schema';
+import { Layer, Box, Button, Heading } from 'grommet';
 
 const MergeIngredients = gql`
   mutation MergeIngredients($primary: ID!, $secondary: ID!) {
@@ -46,31 +45,42 @@ class IngredientMerger extends React.Component<
       <React.Fragment>
         <Button onClick={this.toggleModal} label="Merge" />
         <Mutation mutation={MergeIngredients}>
-          {merge => (
-            <Modal visible={this.state.showModal} onClose={this.toggleModal}>
-              <H3>Merge with:</H3>
-              <Picker value={this.state.value} onChange={this.setValue} />
-              <Button
-                onClick={async () => {
-                  try {
-                    await merge({
-                      variables: {
-                        secondary: this.props.ingredientId,
-                        primary: this.state.value.id,
-                      },
-                    });
-                    this.props.history.replace(
-                      `/ingredients/${this.state.value.id}`,
-                    );
-                  } catch (err) {
-                    this.setState({ error: err });
-                  }
-                }}
-                label="Merge"
-              />
-              {this.state.error && <div>Error: {this.state.error.message}</div>}
-            </Modal>
-          )}
+          {merge =>
+            this.state.showModal && (
+              <Layer onClickOutside={this.toggleModal}>
+                <Heading level="3">Merge with:</Heading>
+                <Picker value={this.state.value} onChange={this.setValue} />
+                <Box direction="row">
+                  <Button
+                    margin={{ right: 'medium' }}
+                    onClick={() => this.setState({ showModal: false })}
+                    label="Cancel"
+                  />
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await merge({
+                          variables: {
+                            secondary: this.props.ingredientId,
+                            primary: this.state.value.id,
+                          },
+                        });
+                        this.props.history.replace(
+                          `/ingredients/${this.state.value.id}`,
+                        );
+                      } catch (err) {
+                        this.setState({ error: err });
+                      }
+                    }}
+                    label="Merge"
+                  />
+                </Box>
+                {this.state.error && (
+                  <div>Error: {this.state.error.message}</div>
+                )}
+              </Layer>
+            )
+          }
         </Mutation>
       </React.Fragment>
     );

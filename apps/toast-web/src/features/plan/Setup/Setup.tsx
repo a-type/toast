@@ -1,23 +1,23 @@
 import React from 'react';
 import { BackdropArt } from 'components/brand';
-import { H1, P, H2 } from 'components/typeset';
-import { Background, Button, Link } from 'components/generic';
+import { Background } from 'components/generic';
 import CreatePlanButton from './CreatePlanButton';
 import { withRouter } from 'react-router-dom';
+import { Heading, Paragraph } from 'grommet';
 
 export default withRouter(({ history }) => (
   <React.Fragment>
     <Background backgroundKey="planUserLanding">
       <BackdropArt />
     </Background>
-    <H1>Let's get started</H1>
-    <P>
+    <Heading>Let's get started</Heading>
+    <Paragraph>
       Thanks for joining Toast! Let's set you up with your new plan. This
       shouldn't take long.
-    </P>
-    <P>
+    </Paragraph>
+    <Paragraph>
       First off, are you looking to start your own plan, or join someone else?
-    </P>
+    </Paragraph>
     <CreatePlanButton onCreate={() => history.push('/plan/edit')} />
   </React.Fragment>
 ));

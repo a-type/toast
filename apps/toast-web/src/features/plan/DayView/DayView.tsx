@@ -9,6 +9,7 @@ import { startOfDay, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
 import Calendar from '../Calendar';
 import { pathOr } from 'ramda';
 import { Redirect } from 'react-router-dom';
+import { Heading } from 'grommet';
 
 const INITIAL_START_DATE = startOfMonth(new Date());
 const INITIAL_END_DATE = endOfMonth(INITIAL_START_DATE);
@@ -59,7 +60,7 @@ const CalendarDayView: React.SFC<{}> = ({ ...rest }) => {
 
         return (
           <React.Fragment>
-            <H1>{formatDay(date)}</H1>
+            <Heading>{formatDay(date)}</Heading>
             <Meals meals={dayMeals} {...rest} />
             <Calendar
               onDatePick={setDate}

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { H1, HelpText } from 'components/typeset';
+import { HelpText } from 'components/typeset';
 import { RecipeCards } from 'features/recipes';
 import { pathOr } from 'ramda';
 import RecipeSearchFiltersQuery from './RecipeSearchFiltersQuery';
 import SearchRecipesQuery from './SearchRecipesQuery';
+import { Heading } from 'grommet';
 
 const SearchRecipeResults: React.SFC<{}> = props => (
   <RecipeSearchFiltersQuery>
@@ -39,7 +40,9 @@ const SearchRecipeResults: React.SFC<{}> = props => (
 
       return (
         <div {...props}>
-          <H1 spaceBelow={filters.length ? 'xl' : 'sm'}>Recipes</H1>
+          <Heading level="2" margin={{ bottom: filters.length ? 'xl' : 'sm' }}>
+            Recipes
+          </Heading>
           {filters.length === 0 && (
             <HelpText spaceBelow="lg">
               Use the search bar above to get started

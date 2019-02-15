@@ -1,8 +1,8 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { H1 } from 'components/typeset';
 import { Card, Layout, Skeleton } from './components';
+import { Heading } from 'grommet';
 
 const GetSearchInputValue = gql`
   query IngredientsGetSearchInputValue {
@@ -45,7 +45,7 @@ export default class SearchRecipeResults extends React.Component {
     if (loading) {
       return (
         <div {...this.props}>
-          <H1>Ingredients</H1>
+          <Heading level="2">Ingredients</Heading>
           <Layout>
             {new Array(10).fill(null).map((_, idx) => (
               <Skeleton key={idx} />
@@ -62,7 +62,7 @@ export default class SearchRecipeResults extends React.Component {
         style={{ overflow: 'hidden', marginBottom: 'var(--spacing-lg)' }}
         {...this.props}
       >
-        <H1>Ingredients</H1>
+        <Heading level="2">Ingredients</Heading>
         <Layout>
           <Mutation mutation={AddFilter}>
             {mutate =>

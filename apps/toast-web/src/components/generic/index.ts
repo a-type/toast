@@ -9,7 +9,6 @@ export { default as Loader } from './Loader';
 export { default as Stages } from './Stages';
 export { default as Field } from './Field';
 export { default as Tip } from './Tip';
-export { default as Modal } from './Modal';
 export { default as RadioButton } from './RadioButton';
 export { default as Message } from './Message';
 export { default as Background } from './Background';

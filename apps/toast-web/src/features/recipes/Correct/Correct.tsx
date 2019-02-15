@@ -3,9 +3,9 @@ import FullRecipeQuery from '../queries/FullRecipeQuery';
 import { Loader, Disconnected, Link, Button } from 'components/generic';
 import logger from 'logger';
 import { Spotlight } from 'features/recipes/components';
-import { H2 } from 'components/typeset';
 import IngredientCorrections from './Ingredients';
 import { pathOr } from 'ramda';
+import { Heading } from 'grommet';
 
 export interface CorrectRecipeProps {
   recipeId: string;
@@ -26,7 +26,7 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
 
         return (
           <div>
-            <H2>Suggest Recipe Corrections</H2>
+            <Heading level="2">Suggest Recipe Corrections</Heading>
             <Spotlight recipe={data.recipe} />
             <IngredientCorrections
               recipeIngredients={pathOr([], ['recipe', 'ingredients'], data)}

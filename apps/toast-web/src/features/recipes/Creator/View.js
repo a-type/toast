@@ -5,10 +5,11 @@ import Steps, { RecipeCreateStepsFragment } from './Steps';
 import Images, { RecipeCreateImageFragment } from './Images';
 import Publish, { RecipeCreatePublishFragment } from './Publish';
 import { Stages } from 'components/generic';
-import { H1, Link } from 'components/typeset';
+import { Link } from 'components/typeset';
 import { PublishedTag } from './components';
 import { pick, path, mergeDeepLeft } from 'ramda';
 import gql from 'graphql-tag';
+import { Heading } from 'grommet';
 
 export const RecipeCreateViewFragment = gql`
   fragment RecipeCreateView on Recipe {
@@ -142,22 +143,22 @@ export default class RecipeCreator extends React.PureComponent {
     const { recipe, recipeId } = this.props;
 
     if (!recipeId) {
-      return <H1>Submit a Recipe</H1>;
+      return <Heading>Submit a Recipe</Heading>;
     }
 
     if (recipe.published) {
       return (
         <Link to={`/recipes/${recipeId}`}>
-          <H1>{recipe.title}</H1>
+          <Heading>{recipe.title}</Heading>
         </Link>
       );
     }
 
     return (
-      <H1>
+      <Heading>
         {recipe.title}
         <PublishedTag>Draft</PublishedTag>
-      </H1>
+      </Heading>
     );
   };
 

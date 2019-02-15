@@ -3,7 +3,7 @@ import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Layout } from './components';
 import Filter from './Filter';
-import { H2 } from 'components/typeset';
+import { Heading } from 'grommet';
 
 const GetFilters = gql`
   query GetFilters {
@@ -39,7 +39,7 @@ export default class Filters extends React.Component {
 
           return (
             <div {...this.props}>
-              <H2>Filters</H2>
+              <Heading level="3">Filters</Heading>
               <Layout>
                 {searchFilters.map(filter => (
                   <Filter key={filter.id} {...filter} />

@@ -3,8 +3,8 @@ import { PlanMeal } from 'generated/schema';
 import CalendarMeal from '../MealView';
 import { MealRow, Link, PositiveText } from './components';
 import { isPast, endOfDay, getDay } from 'date-fns';
-import { H3 } from 'components/typeset';
 import { formatDay } from 'formatters/date';
+import { Heading } from 'grommet';
 
 type Props = {
   meals: PlanMeal[];
@@ -28,12 +28,12 @@ const CalendarDay: CalendarDayComponent = ({ meals, onSelect, groceryDay }) => {
         onSelect();
       }}
     >
-      <H3 spaceBelow="sm">
+      <Heading level="3" margin={{ bottom: 'small' }}>
         {formatDay(date)}{' '}
         {groceryDay === getDay(date) && (
           <PositiveText>Grocery Day</PositiveText>
         )}
-      </H3>
+      </Heading>
       <MealRow past={past}>
         {meals.map(meal => (
           <CalendarMeal key={meal.id} meal={meal} />

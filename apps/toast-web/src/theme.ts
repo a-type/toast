@@ -236,6 +236,9 @@ const base = generate();
 export const grommetTheme = deepMerge(base, {
   global: {
     colors,
+    animation: {
+      duration: '0.3s',
+    },
     font: {
       face: 'Noto Serif, serif',
     },
@@ -248,6 +251,9 @@ export const grommetTheme = deepMerge(base, {
     },
     input: {
       weight: 'normal',
+    },
+    drop: {
+      background: 'var(--color-popover-background)',
     },
   },
 
@@ -309,6 +315,19 @@ export const grommetTheme = deepMerge(base, {
       &:disabled {
         opacity: 0.5;
       }
+    `,
+  },
+
+  heading: {
+    font: {
+      family: 'var(--font-fancy)',
+    },
+    weight: 400,
+    extend: ({ level }: any) => css`
+      opacity: ${level > 1 ? '0.93' : '1'};
+      font-weight: ${level > 3 ? 'var(--bold)' : 'var(--normal)'};
+      line-height: 1.5;
+      margin-top: ${level === 1 ? '-0.16em' : '-0.1em'};
     `,
   },
 });

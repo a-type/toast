@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Modal } from 'components/generic';
 import Picker from 'features/ingredients/Picker';
 import { Ingredient } from 'generated/schema';
+import { Layer, Box, Text, Button } from 'grommet';
 
 export interface IngredientEditorProps {
   onChange(value: Ingredient): void;
@@ -27,13 +27,15 @@ export default class IngredientEditor extends React.Component<
         <span>We detected: {value.name}</span>
         <Button onClick={this.showModal} label="Change ingredient" />
         {editing && (
-          <Modal visible onClose={this.hideModal}>
-            <Modal.TitleBar>
-              <span>Edit {name}</span>
+          <Layer onClickOutside={this.hideModal}>
+            <Box direction="row">
+              <Text margin={{ right: 'auto', vertical: 'auto' }}>
+                Edit {name}
+              </Text>
               <Button onClick={this.hideModal} label="&times;" />
-            </Modal.TitleBar>
+            </Box>
             <Picker value={value} onChange={onChange} />
-          </Modal>
+          </Layer>
         )}
       </React.Fragment>
     );
