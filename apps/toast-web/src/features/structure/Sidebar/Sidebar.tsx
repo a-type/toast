@@ -80,6 +80,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
     <React.Fragment>
       {open && (
         <Layer
+          responsive={false}
           position="left"
           full="vertical"
           margin={{ right: 'medium' }}
