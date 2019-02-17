@@ -2,7 +2,7 @@ import * as React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'services/firebase';
 import { Layout } from './components';
-import { H1, P } from 'components/typeset';
+import { Heading, Paragraph } from 'grommet';
 
 export interface LoginProps {
   returnTo?: string;
@@ -23,15 +23,15 @@ const Login: React.SFC<LoginProps> = ({ returnTo }) => {
         firebaseAuth={firebase.auth()}
       />
       <div>
-        <H1>Log in or join for free</H1>
-        <P>
+        <Heading>Log in or join for free</Heading>
+        <Paragraph>
           Sign up for Toast to start planning meals that fit your
           life&mdash;your schedule, your recipes, your taste.
-        </P>
-        <P>
+        </Paragraph>
+        <Paragraph>
           Joining, planning, and collecting recipes is totally free. Time to get
           control of weeknight meals.
-        </P>
+        </Paragraph>
       </div>
     </Layout>
   );

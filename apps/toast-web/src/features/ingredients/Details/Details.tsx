@@ -1,10 +1,11 @@
 import React from 'react';
 import { RecipeCards } from 'features/recipes';
-import { H1, P, H2, Span } from 'components/typeset';
 import { sentence } from 'change-case';
 import ManageSection from './ManageSection';
 import { Disconnected } from 'components/generic';
 import IngredientDetailsQuery from './IngredientDetailsQuery';
+import { Heading, Paragraph } from 'grommet';
+import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
 
 export default ({ ingredientId }) => (
   <IngredientDetailsQuery variables={{ id: ingredientId }}>
@@ -12,10 +13,8 @@ export default ({ ingredientId }) => (
       if (loading) {
         return (
           <React.Fragment>
-            <H1>
-              <Span.Skeleton />
-            </H1>
-            <P.Skeleton />
+            <HeadingSkeleton />
+            <ParagraphSkeleton />
           </React.Fragment>
         );
       }
@@ -34,23 +33,23 @@ export default ({ ingredientId }) => (
 
       return (
         <React.Fragment>
-          <H1>{sentence(name)}</H1>
+          <Heading>{sentence(name)}</Heading>
           {alternateNames.length > 0 && (
-            <P>
+            <Paragraph>
               <i>
                 Alternate names:{' '}
                 {alternateNames.map(name => sentence(name)).join(', ')}
               </i>
-            </P>
+            </Paragraph>
           )}
-          <P>{description || 'No details'}</P>
+          <Paragraph>{description || 'No details'}</Paragraph>
           {attribution && (
-            <P>
+            <Paragraph>
               <i>{attribution}</i>
-            </P>
+            </Paragraph>
           )}
           <ManageSection ingredient={data.ingredient} />
-          <H2>Recipes</H2>
+          <Heading level="2">Recipes</Heading>
           <RecipeCards recipes={recipes} />
         </React.Fragment>
       );

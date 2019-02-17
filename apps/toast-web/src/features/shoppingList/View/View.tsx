@@ -1,27 +1,29 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
 import Ingredient from './Ingredient';
-import { H1, HelpText, H3 } from 'components/typeset';
+import { HelpText } from 'components/text';
+import { Heading } from 'grommet';
 import { format, getDay, setDay, addWeeks } from 'date-fns';
-import { Checkbox, Disconnected } from 'components/generic';
+import { Disconnected } from 'components/generic';
 import logger from 'logger';
 import { Redirect } from 'react-router-dom';
 import { path } from 'ramda';
 import { ShoppingList } from 'generated/schema';
+import { TextSkeleton } from 'components/skeletons';
 
 const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
 
 const Skeleton = () => (
   <div>
     {new Array(8).fill(null).map((_, idx) => (
-      <Checkbox.Skeleton key={idx} size={12} />
+      <TextSkeleton key={idx} size={12} />
     ))}
   </div>
 );
 
 const View: React.SFC<{}> = () => (
   <React.Fragment>
-    <H1 spaceBelow="sm">Shopping List</H1>
+    <Heading margin={{ bottom: 'small' }}>Shopping List</Heading>
     <GetShoppingListQuery options={{ fetchPolicy: 'no-cache' }}>
       {({ data, loading, error }) => {
         if (loading) {
@@ -69,7 +71,7 @@ const View: React.SFC<{}> = () => (
                 />
               ))}
             </div>
-            <H3>Purchased</H3>
+            <Heading level="3">Purchased</Heading>
             <div style={{ opacity: 0.5 }}>
               {!!purchased.length ? (
                 purchased.map(ing => (

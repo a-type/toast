@@ -1,9 +1,9 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
-import { H1, H2 } from 'components/typeset';
 import gql from 'graphql-tag';
 import { RecipeCards } from 'features/recipes';
+import { Heading } from 'grommet';
 
 interface UserSummaryProps {
   userId: string;
@@ -44,7 +44,7 @@ export default class extends React.Component<UserSummaryProps> {
 
     return (
       <React.Fragment>
-        <H2>{title}</H2>
+        <Heading level="2">{title}</Heading>
         <RecipeCards recipes={recipes} />
       </React.Fragment>
     );
@@ -71,7 +71,7 @@ export default class extends React.Component<UserSummaryProps> {
 
           return (
             <React.Fragment>
-              <H1>{displayName || 'Anonymous'}</H1>
+              <Heading>{displayName || 'Anonymous'}</Heading>
 
               {this.renderRecipes('Your Likes', likedRecipes)}
               {this.renderRecipes('Your Drafts', draftRecipes)}

@@ -1,7 +1,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Button } from 'components/generic';
+import { Icon } from 'components/generic';
+import { Button } from 'grommet';
 
 const DeleteIngredient = gql`
   mutation DeleteIngredient($id: ID!) {
@@ -17,7 +18,10 @@ const DeleteIngredient = gql`
 export default ({ ingredientId }: { ingredientId: string }) => (
   <Mutation mutation={DeleteIngredient} variables={{ id: ingredientId }}>
     {deleteIngredient => (
-      <Button.Icon onClick={() => deleteIngredient()} name="delete-button" />
+      <Button
+        icon={<Icon name="delete-button" />}
+        onClick={() => deleteIngredient()}
+      />
     )}
   </Mutation>
 );

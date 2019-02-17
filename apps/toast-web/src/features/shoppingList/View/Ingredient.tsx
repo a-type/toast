@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cold } from 'react-hot-loader';
 import { ShoppingListView } from 'generated/schema';
-import { Checkbox } from 'components/generic';
+import { CheckBox } from 'grommet';
 import { GlobalLoader } from 'components/generic/Loader';
 import { formatIngredient } from 'formatters';
 import MarkPurchasedMutation from './MarkPurchasedMutation';
@@ -30,7 +30,7 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
     >
       {mutate => (
         <React.Fragment>
-          <Checkbox
+          <CheckBox
             value="done"
             checked={purchasedValue >= totalValue}
             onChange={async () => {
@@ -46,7 +46,7 @@ const ShoppingListIngredient: React.SFC<ShoppingListIngredientProps> = ({
             data-grid-area="checkbox"
           >
             {formatIngredient(totalValue, unit || '', ingredient.name)}{' '}
-          </Checkbox>
+          </CheckBox>
           {loading && <GlobalLoader />}
         </React.Fragment>
       )}

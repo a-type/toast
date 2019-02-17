@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { Disconnected } from 'components/generic';
 import { RecipeCards } from 'features/recipes';
 import { Spotlight } from 'features/recipes/components';
-import { H2 } from 'components/typeset';
+import { Heading } from 'grommet';
 
 const FeaturedRecipes = gql`
   query FeaturedRecipes($count: Int!) {
@@ -30,7 +30,7 @@ const FeaturedRecipe: React.SFC<{}> = () => (
         return (
           <React.Fragment>
             <Spotlight.Skeleton />
-            <H2>Popular Recipes</H2>
+            <Heading level="2">Popular Recipes</Heading>
             <RecipeCards.Skeleton />
           </React.Fragment>
         );
@@ -50,7 +50,7 @@ const FeaturedRecipe: React.SFC<{}> = () => (
       return (
         <React.Fragment>
           <Spotlight recipe={recipes[0]} />
-          <H2>Popular Recipes</H2>
+          <Heading level="2">Popular Recipes</Heading>
           <RecipeCards recipes={recipes.slice(1)} />
         </React.Fragment>
       );

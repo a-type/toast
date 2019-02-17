@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Card } from 'components/generic';
 import { MealActionEat } from 'generated/schema';
 import { pathOr } from 'ramda';
-import { Span, HelpText } from 'components/typeset';
+import { HelpText } from 'components/text';
+import { Text } from 'grommet';
 
 interface CalendarEatActionProps {
   action: MealActionEat;
@@ -37,9 +38,9 @@ export default class CalendarEatAction extends React.Component<
     const cookDay = pathOr(null, ['cookAction', 'dayIndex'], action);
     if (recipe) {
       return (
-        <Span>
+        <Text>
           <HelpText>Leftovers</HelpText> {recipe.title}
-        </Span>
+        </Text>
       );
     }
     return (

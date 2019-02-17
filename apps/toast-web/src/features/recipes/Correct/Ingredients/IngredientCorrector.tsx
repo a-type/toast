@@ -4,9 +4,9 @@ import {
   RecipeIngredientCorrectedValueInput,
 } from 'generated/schema';
 import { Formik } from 'formik';
-import { P } from 'components/typeset';
-import { Field, Input, Button } from 'components/generic';
+import { Field } from 'components/generic';
 import { Picker } from 'features/ingredients';
+import { Button, TextInput, Paragraph } from 'grommet';
 
 interface IngredientCorrectorProps {
   recipeIngredient: RecipeIngredient;
@@ -41,16 +41,16 @@ const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
           onSubmit={handleSubmit}
           style={{ marginBottom: 'var(--spacing-lg)' }}
         >
-          <P>{recipeIngredient.text}</P>
+          <Paragraph>{recipeIngredient.text}</Paragraph>
           <Field label="Value">
-            <Input
+            <TextInput
               type="number"
               value={`${values.value}`}
               onChange={handleChange}
             />
           </Field>
           <Field label="Unit">
-            <Input value={values.unit} onChange={handleChange} />
+            <TextInput value={values.unit} onChange={handleChange} />
           </Field>
           <Field label="Ingredient">
             <Picker
@@ -59,10 +59,12 @@ const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
               canCreate
             />
           </Field>
-          <Button.Positive type="submit">Submit correction</Button.Positive>
-          <Button.Negative onClick={() => requestDelete(recipeIngredient.id)}>
-            Delete this ingredient
-          </Button.Negative>
+          <Button primary type="submit" label="Submit correction" />
+          <Button
+            color="status-critical"
+            onClick={() => requestDelete(recipeIngredient.id)}
+            label="Delete this ingredient"
+          />
         </form>
       )}
     </Formik>

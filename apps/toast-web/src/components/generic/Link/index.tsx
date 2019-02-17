@@ -59,7 +59,7 @@ export const BaseLink = React.forwardRef(
               e.preventDefault();
               return (window.location.pathname = to);
             }
-            return onClick(e);
+            return onClick && onClick(e);
           }}
         >
           {children}
@@ -78,7 +78,7 @@ export const BaseLink = React.forwardRef(
             e.preventDefault();
             return (window.location.pathname = to);
           }
-          return onClick(e);
+          return onClick && onClick(e);
         }}
       >
         {children}

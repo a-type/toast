@@ -7,8 +7,8 @@ import {
   StageContainer,
 } from './components';
 import { Consumer } from './Context';
-import { H2 } from 'components/typeset';
 import CrossFade from '../CrossFade/CrossFade';
+import { Heading } from 'grommet';
 
 export interface StageProps {
   title: string;
@@ -40,7 +40,9 @@ const Stage: React.SFC<StageProps> = ({
             >
               {stageIndex + 1}
             </Number>
-            <H2>{title}</H2>
+            <Heading level="2" margin={{ top: 'auto', bottom: '0' }}>
+              {title}
+            </Heading>
           </HeadingRow>
           <CrossFade>
             {stage === stageIndex ? (

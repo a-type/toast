@@ -17,10 +17,11 @@ import {
   ReadyMadeAction,
 } from 'features/plan/actions';
 import actionsFragment from 'features/plan/actions/fragment';
-import { Label, Span } from 'components/typeset';
+import { Label } from 'components/text';
 import { MealStack } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
 import { Card } from 'components/generic';
+import { TextSkeleton } from 'components/skeletons';
 
 const MEALS = ['Breakfast', 'Lunch', 'Dinner'];
 
@@ -35,7 +36,7 @@ interface CalendarMealState {
 export const Skeleton = () => (
   <MealStack>
     <Label>
-      <Span.Skeleton />
+      <TextSkeleton />
     </Label>
     <Card.Skeleton />
   </MealStack>

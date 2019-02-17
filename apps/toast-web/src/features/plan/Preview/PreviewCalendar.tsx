@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import groupMeals from 'features/plan/groupMeals';
 import { PlanPreviewMeal } from 'generated/schema';
 import { Layout } from './components';
-import { H3 } from 'components/typeset';
+import { Heading } from 'grommet';
 
 export interface PlanPreviewProps {
   week: PlanPreviewMeal.Fragment[];
@@ -29,8 +29,8 @@ const PlanPreviewCalendar: React.SFC<PlanPreviewProps> & {
     <div>
       {grouped.map((meals, dayIndex) => {
         return (
-          <Layout>
-            <H3>{DAYS[dayIndex]}</H3>
+          <Layout key={dayIndex}>
+            <Heading level="3">{DAYS[dayIndex]}</Heading>
             <Meal meal={meals[0]} key="breakfast" data-grid-area="breakfast" />
             <Meal meal={meals[1]} key="lunch" data-grid-area="lunch" />
             <Meal meal={meals[2]} key="dinner" data-grid-area="dinner" />

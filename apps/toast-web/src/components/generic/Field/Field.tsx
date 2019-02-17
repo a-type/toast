@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from './components';
-import { Label, HelpText } from 'components/typeset';
+import { Label, HelpText } from 'components/text';
 
 export interface FieldProps {
   children: React.ReactNode;

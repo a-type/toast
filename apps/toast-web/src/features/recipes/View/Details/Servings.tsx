@@ -1,8 +1,8 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { P } from 'components/typeset';
-import { Input, Icon } from 'components/generic';
+import { Icon } from 'components/generic';
+import { Box, Button, TextInput, Paragraph } from 'grommet';
 
 const GetPreferredServings = gql`
   query GetPreferredServings {
@@ -27,7 +27,7 @@ export default ({ servings }) => (
         data.preferredServings === null ? servings : data.preferredServings;
 
       return (
-        <P>
+        <Paragraph>
           <span>Servings: </span>
           <Mutation mutation={SetPreferredServings}>
             {mutate => {
@@ -35,25 +35,26 @@ export default ({ servings }) => (
                 mutate({ variables: { servings: val ? parseInt(val) : '' } });
 
               return (
-                <Input.Group
-                  value={displayServings}
-                  onChange={ev => setServings(ev.target.value)}
-                  name="preferredServings"
-                  type="number"
-                  max={99}
-                  min={0}
-                  size={2}
-                >
+                <Box direction="row">
+                  <TextInput
+                    value={displayServings}
+                    onChange={ev => setServings(ev.target.value)}
+                    name="preferredServings"
+                    type="number"
+                    max={99}
+                    min={0}
+                  />
                   {displayServings !== servings && (
-                    <Input.Group.Button onClick={() => setServings(servings)}>
-                      <Icon name="delete-button" />
-                    </Input.Group.Button>
+                    <Button
+                      onClick={() => setServings(servings)}
+                      icon={<Icon name="delete-button" />}
+                    />
                   )}
-                </Input.Group>
+                </Box>
               );
             }}
           </Mutation>
-        </P>
+        </Paragraph>
       );
     }}
   </Query>

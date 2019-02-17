@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'components/typeset';
-import { Button } from 'components/generic';
+import { Link } from 'components/text';
+import { Button } from 'grommet';
 
 export default () => (
   <Link to={`/login?r=${window.location.pathname}`}>
-    <Button>Join or Log In</Button>
+    <Button label="Join or Log In" />
   </Link>
 );

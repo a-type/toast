@@ -1,9 +1,10 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Field, Input, Button } from 'components/generic';
+import { Field } from 'components/generic';
 import { Formik } from 'formik';
 import { map } from 'ramda';
+import { TextArea, TextInput, Button } from 'grommet';
 
 const CreateIngredient = gql`
   mutation CreateIngredient($input: IngredientCreateInput!) {
@@ -56,29 +57,32 @@ export default class IngredientCreate extends React.Component<
             {({ values, handleSubmit, handleChange, dirty }) => (
               <form onSubmit={handleSubmit}>
                 <Field label="Name">
-                  <Input
+                  <TextInput
                     name="name"
                     value={values.name}
                     onChange={handleChange}
                   />
                 </Field>
                 <Field label="Description">
-                  <Input.Block
+                  <TextArea
                     name="description"
                     value={values.description}
                     onChange={handleChange}
                   />
                 </Field>
                 <Field label="Attribution">
-                  <Input.Block
+                  <TextArea
                     name="attribution"
                     value={values.attribution}
                     onChange={handleChange}
                   />
                 </Field>
-                <Button type="submit" disabled={!dirty}>
-                  Create
-                </Button>
+                <Button
+                  type="submit"
+                  primary
+                  disabled={!dirty}
+                  label="Create"
+                />
                 {showDone && <div>Created!</div>}
                 {error && <div>Error: {error.message}</div>}
               </form>

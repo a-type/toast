@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Recipe } from 'generated/schema';
 import RecipeSuggestionsQuery from './RecipeSuggestionsQuery';
 import { RecipeCards } from 'features/recipes';
-import { H3, HelpText, Link } from 'components/typeset';
+import { HelpText, Link } from 'components/text';
+import { Heading } from 'grommet';
+import { HeadingSkeleton } from 'components/skeletons';
 
 interface RecipeSuggestionsProps {
   onRecipeSelected(recipe: Recipe): void;
@@ -16,7 +18,7 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
       if (loading) {
         return (
           <React.Fragment>
-            <H3.Skeleton />
+            <HeadingSkeleton level="3" />
             <RecipeCards.Skeleton />
           </React.Fragment>
         );
@@ -30,14 +32,14 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
         <React.Fragment>
           {recipes.length && (
             <React.Fragment>
-              <H3>Your Recipes</H3>
+              <Heading level="4">Your Recipes</Heading>
               <RecipeCards
                 recipes={recipes}
                 onRecipeSelected={onRecipeSelected}
               />
             </React.Fragment>
           )}
-          <H3>Your Likes</H3>
+          <Heading level="4">Your Likes</Heading>
           {likedRecipes.length ? (
             <RecipeCards
               recipes={likedRecipes}
@@ -46,7 +48,7 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
           ) : (
             <HelpText>Like some recipes to make planning easier!</HelpText>
           )}
-          <H3>Your Discoveries</H3>
+          <Heading level="4">Your Discoveries</Heading>
           {discoveredRecipes.length ? (
             <RecipeCards
               recipes={discoveredRecipes}

@@ -11,6 +11,7 @@ const ExpandOuterButton = styled.button`
   margin-bottom: var(--spacing-lg);
   border: 2px solid transparent;
   border-top: 0;
+  cursor: pointer;
 
   transition: 0.2s ease all;
 

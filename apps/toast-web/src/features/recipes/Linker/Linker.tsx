@@ -4,8 +4,8 @@ import { cold } from 'react-hot-loader';
 import { Loader } from './components';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import logger from 'logger';
-import { Disconnected, Input, Field, Button } from 'components/generic';
-import { P } from 'components/typeset';
+import { Disconnected, Field } from 'components/generic';
+import { TextInput, Button, Paragraph } from 'grommet';
 
 const MESSAGES = {
   EXPLANATION:
@@ -61,15 +61,15 @@ const RecipeLinker: React.SFC<RouteComponentProps> = ({ history }) => {
 
         return (
           <form onSubmit={submit}>
-            <P>{MESSAGES.EXPLANATION}</P>
+            <Paragraph>{MESSAGES.EXPLANATION}</Paragraph>
             <Field label="Recipe URL">
-              <Input
+              <TextInput
                 value={url}
                 onChange={ev => setUrl(ev.target.value)}
                 name="recipeUrl"
               />
             </Field>
-            <Button type="submit">Scan</Button>
+            <Button type="submit" label="Scan" primary />
           </form>
         );
       }}

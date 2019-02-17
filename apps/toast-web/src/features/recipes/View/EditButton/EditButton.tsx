@@ -1,7 +1,7 @@
 import React from 'react';
 import { Gate } from 'features/auth/gates';
-import { Button } from 'components/generic';
-import { Link } from 'components/typeset';
+import { Button } from 'grommet';
+import { Link } from 'components/text';
 
 export default ({ authorId, recipeId, displayType }) => {
   return (
@@ -11,7 +11,7 @@ export default ({ authorId, recipeId, displayType }) => {
       }
     >
       <Link to={`${recipeId}/edit`}>
-        <Button>Edit</Button>
+        <Button label="Edit" />
       </Link>
     </Gate>
   );

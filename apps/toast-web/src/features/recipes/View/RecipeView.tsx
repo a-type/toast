@@ -3,11 +3,11 @@ import Ingredients from './Ingredients';
 import Details from './Details/Details';
 import { pathOr, path } from 'ramda';
 import { Redirect } from 'react-router-dom';
-import { H2 } from 'components/typeset';
 import ViewSpy from './ViewSpy';
 import FullRecipeQuery from '../queries/FullRecipeQuery';
 import { Spotlight } from 'features/recipes/components';
 import { StepsLink } from './components';
+import { Heading } from 'grommet';
 
 export interface RecipeViewProps {
   recipeId: string;
@@ -45,7 +45,7 @@ export default class RecipeView extends React.Component<RecipeViewProps> {
             <React.Fragment>
               <Spotlight recipe={recipe} />
               <Details recipe={recipe} />
-              <H2 name="IngredientsSection">Ingredients</H2>
+              <Heading level="2">Ingredients</Heading>
               <Ingredients
                 servings={path(['servings'], recipe)}
                 ingredients={pathOr([], ['ingredients'], recipe)}

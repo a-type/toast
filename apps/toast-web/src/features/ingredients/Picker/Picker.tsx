@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Ingredient } from 'generated/schema';
 import { cold } from 'react-hot-loader';
-import { Button, Icon } from 'components/generic';
-import { Span } from 'components/typeset';
+import { Icon } from 'components/generic';
 import Popup from './Popup';
 import { sentence } from 'change-case';
+import { Button } from 'grommet';
 
 export interface IngredientPickerProps {
   onChange(ingredient: Ingredient): void;
@@ -29,14 +29,12 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
 
   return (
     <React.Fragment>
-      <Button.Ghost
+      <Button
         onClick={() => setPopupOpen(!isPopupOpen)}
         disabled={disabled}
-      >
-        <Span>{sentence(value.name)}</Span>
-        &nbsp;
-        <Icon name="edit" />
-      </Button.Ghost>
+        icon={<Icon name="edit" />}
+        label={sentence(value.name)}
+      />
       {isPopupOpen && (
         <Popup
           value={value}

@@ -1,9 +1,7 @@
 import ApolloClient from 'apollo-client';
-import { Operation, ApolloLink, Observable } from 'apollo-link';
-import resolvers, { defaults } from './resolvers';
+import { ApolloLink, Observable } from 'apollo-link';
 import firebase from 'services/firebase';
-import { InMemoryCache, HttpLink } from 'apollo-boost';
-import { withClientState } from 'apollo-link-state';
+import { InMemoryCache } from 'apollo-boost';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
 import customFetch from './fetch';
@@ -15,7 +13,6 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 });
 
 const cache = new InMemoryCache({ fragmentMatcher });
-const stateLink = withClientState({ resolvers, defaults, cache });
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.map(({ message, locations, path }) => {
@@ -67,7 +64,7 @@ const httpLink = createUploadLink({
 });
 
 const link = ApolloLink.from(
-  [errorLink, requestHandler, stateLink, httpLink].filter(Boolean),
+  [errorLink, requestHandler, httpLink].filter(Boolean),
 );
 
 const client = new ApolloClient({

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import templateIcs from './templateIcs';
-import { Link, Button } from 'components/generic';
+import { Link } from 'components/generic';
+import { Button } from 'grommet';
 
 export interface GroceryDayEventCreatorProps {
   dayIndex: number;
@@ -15,7 +16,7 @@ const GroceryDayEventCreator: React.SFC<GroceryDayEventCreatorProps> = ({
 
   return (
     <Link to={dataUrl} download={filename} forceRemote>
-      <Button>Add to Calendar</Button>
+      <Button label="Add to Calendar" color="status-ok" />
     </Link>
   );
 };

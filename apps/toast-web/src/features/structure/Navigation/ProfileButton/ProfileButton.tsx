@@ -1,7 +1,8 @@
 import React from 'react';
-import { Tip, Button } from 'components/generic';
+import { Tip, Icon } from 'components/generic';
 import { Avatar, LinkStack } from './components';
-import { Link } from 'components/typeset';
+import { Link } from 'components/text';
+import { Button } from 'grommet';
 import { Consumer } from 'features/auth/TokenContext';
 import { path } from 'ramda';
 import LoginButton from './LoginButton';
@@ -30,9 +31,9 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
       <LinkStack>
         <Avatar avatarUrl={path(['photoURL'], user)} />
         <Link.Clear to={`/users/${user.uid}`}>
-          <Button.Ghost>Profile</Button.Ghost>
+          <Button label="Profile" />
         </Link.Clear>
-        <Button.Ghost onClick={this.logout}>Log out</Button.Ghost>
+        <Button onClick={this.logout} label="Log out" />
       </LinkStack>
     );
   };
@@ -45,8 +46,8 @@ class InnerSelfLink extends React.Component<InnerSelfLinkProps> {
         {({ ref, onClick }) => (
           <IsLoggedIn
             fallback={
-              <Button.Icon
-                name="three-dots-symbol"
+              <Button
+                icon={<Icon name="three-dots-symbol" />}
                 ref={ref}
                 onClick={onClick}
               />

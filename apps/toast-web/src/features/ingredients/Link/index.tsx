@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tip } from 'components/generic';
-import { Link } from 'components/typeset';
+import { Link } from 'components/text';
 import { sentence } from 'change-case';
 import { Ingredient } from 'generated/schema';
 

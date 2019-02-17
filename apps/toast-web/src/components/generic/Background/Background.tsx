@@ -13,6 +13,7 @@ const ColorBlock = styled.div`
 interface BackgroundProps {
   backgroundKey: string;
   color?: string;
+  children?: React.ReactNode;
 }
 
 interface ProvidedBackgroundProps extends BackgroundProps {

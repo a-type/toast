@@ -17,10 +17,10 @@ import {
   isSameDay,
   endOfWeek,
 } from 'date-fns';
-import { H3, Label } from 'components/typeset';
+import { Label } from 'components/text';
 import { MONTH_NAMES, WEEKDAY_ABBREVIATIONS } from './constants';
-import { CrossFade } from 'components/generic';
-import Button from '../Button';
+import { CrossFade, Icon } from 'components/generic';
+import { Button, Heading } from 'grommet';
 import { CalendarTransition, GridPosition } from './types';
 
 export interface DateProps {
@@ -39,7 +39,7 @@ export interface DateRenderParams {
 
 export type CalendarProps = {
   value: Date;
-  onChange(date: Date): void;
+  onChange?(date: Date): void;
   renderDate?: (params: DateRenderParams) => React.ReactNode;
   onMonthChange?: (firstDay: Date) => void;
 };
@@ -63,7 +63,7 @@ type GridViewProps = {
   transitionName: CalendarTransition;
   prepForMove: boolean;
   renderDate?: (params: DateRenderParams) => React.ReactNode;
-  onChange(date: Date): void;
+  onChange?(date: Date): void;
   value: Date;
 };
 
@@ -72,7 +72,7 @@ const GridView: React.SFC<GridViewProps> = ({
   startDate,
   month,
   renderDate = defaultRenderDate,
-  onChange,
+  onChange = () => {},
   value,
   ...rest
 }) => {
@@ -158,19 +158,17 @@ const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
       <CrossFade>
         {expanded ? (
           <MonthContainer>
-            <Button.Icon
-              name="expand-arrow"
-              iconProps={{ rotation: 90 }}
+            <Button
+              icon={<Icon name="expand-arrow" rotation={90} />}
               onClick={goToPreviousMonth}
               onMouseOver={onButtonHover}
               onTouchStart={onButtonHover}
               onMouseLeave={onButtonLeave}
               onTouchEnd={onButtonLeave}
             />
-            <H3>{MONTH_NAMES[month]}</H3>
-            <Button.Icon
-              name="expand-arrow"
-              iconProps={{ rotation: 270 }}
+            <Heading level="4">{MONTH_NAMES[month]}</Heading>
+            <Button
+              icon={<Icon name="expand-arrow" rotation={270} />}
               onClick={goToNextMonth}
               onMouseOver={onButtonHover}
               onTouchStart={onButtonHover}
@@ -181,11 +179,9 @@ const Calendar: CalendarComponent = ({ onMonthChange = () => {}, ...rest }) => {
         ) : null}
       </CrossFade>
       <WeekdayRow>
-        {new Array(7)
-          .fill(null)
-          .map((_, idx) => (
-            <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
-          ))}
+        {new Array(7).fill(null).map((_, idx) => (
+          <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
+        ))}
       </WeekdayRow>
       <GridView
         rowCount={rowCount}
