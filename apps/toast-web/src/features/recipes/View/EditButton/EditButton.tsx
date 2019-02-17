@@ -1,7 +1,7 @@
 import React from 'react';
 import { Gate } from 'features/auth/gates';
-import { Button } from 'components/generic';
-import { Link } from 'components/typeset';
+import { Button } from 'grommet';
+import { Link } from 'components/text';
 
 export default ({ authorId, recipeId, displayType }) => {
   return (

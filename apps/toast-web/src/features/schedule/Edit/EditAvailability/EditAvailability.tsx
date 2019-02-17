@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { pathOr } from 'ramda';
 import DayRow from './DayRow';
 import styled from 'styled-components';
-import { HelpText } from 'components/typeset';
+import { HelpText } from 'components/text';
 import { MealGrid } from 'features/schedule/Edit/components';
 
 const TopLabel = styled.span`

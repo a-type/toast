@@ -1,5 +1,5 @@
 import React from 'react';
-import { Aside } from 'components/typeset';
+import { HelpText } from 'components/text';
 
 export default ({ cookTime, prepTime, unattendedTime }) => {
   if (!cookTime && !prepTime && !unattendedTime) {
@@ -7,29 +7,29 @@ export default ({ cookTime, prepTime, unattendedTime }) => {
   }
 
   if (cookTime && !prepTime && !unattendedTime) {
-    return <Aside>{cookTime} min</Aside>;
+    return <HelpText>{cookTime} min</HelpText>;
   }
 
   if (cookTime && unattendedTime) {
     return (
-      <Aside>
+      <HelpText>
         {unattendedTime} min unattended + {cookTime} min active
-      </Aside>
+      </HelpText>
     );
   }
 
   if (prepTime && cookTime) {
     return (
-      <Aside>
+      <HelpText>
         {prepTime} min prep + {cookTime} min cooking
-      </Aside>
+      </HelpText>
     );
   }
 
   return (
-    <Aside>
+    <HelpText>
       {prepTime} min prep, {unattendedTime} min unattended, {cookTime} min
       cooking
-    </Aside>
+    </HelpText>
   );
 };

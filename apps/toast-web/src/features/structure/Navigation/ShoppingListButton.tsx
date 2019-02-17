@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Link, Icon } from 'components/generic';
+import { Link, Icon } from 'components/generic';
+import { Button } from 'grommet';
 import { cold } from 'react-hot-loader';
 import { IsLoggedIn } from 'features/auth/gates';
 

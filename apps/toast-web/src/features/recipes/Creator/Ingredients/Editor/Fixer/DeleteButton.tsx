@@ -1,7 +1,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Button, Icon } from 'components/generic';
+import { Icon } from 'components/generic';
+import { Button } from 'grommet';
 
 const DeleteIngredient = gql`
   mutation DeleteIngredient($id: ID!) {

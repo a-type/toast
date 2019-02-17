@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Background, ScrollArea, Controls } from './components';
-import { Foreground, Button } from 'components/generic';
+import { Foreground } from 'components/generic';
+import { Button } from 'grommet';
 import { DURATION } from './constants';
 import OutsideClickHandler from 'react-outside-click-handler';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'components/generic';
+import { Button } from 'grommet';
 import Link, { LinkProps } from 'components/generic/Link';
 
 export interface StepsLinkProps extends LinkProps {

@@ -1,9 +1,10 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Button, Field, Form, Input, FileInput } from 'components/generic';
+import { Field, FileInput } from 'components/generic';
 import { Formik } from 'formik';
 import { pathOr } from 'ramda';
+import { Button, TextInput } from 'grommet';
 
 const HAS_IMAGE_CONTENT = 'Change image';
 const NO_IMAGE_CONTENT = 'Choose image';
@@ -73,7 +74,7 @@ export default class RecipeCreatorImages extends React.PureComponent<
             }}
           >
             {({ handleSubmit, handleChange, values, setFieldValue, dirty }) => (
-              <Form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit}>
                 <Field label="Cover image">
                   <FileInput
                     name="image"
@@ -83,7 +84,7 @@ export default class RecipeCreatorImages extends React.PureComponent<
                   />
                 </Field>
                 <Field label="Attribution">
-                  <Input
+                  <TextInput
                     name="attribution"
                     value={values.attribution}
                     onChange={handleChange}
@@ -97,7 +98,7 @@ export default class RecipeCreatorImages extends React.PureComponent<
                     primary
                   />
                 </Field>
-              </Form>
+              </form>
             )}
           </Formik>
         )}

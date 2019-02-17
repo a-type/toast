@@ -1,6 +1,7 @@
 import * as React from 'react';
 import FullRecipeQuery from '../queries/FullRecipeQuery';
-import { Loader, Disconnected, Link, Button } from 'components/generic';
+import { Loader, Disconnected, Link } from 'components/generic';
+import { Button } from 'grommet';
 import logger from 'logger';
 import { Spotlight } from 'features/recipes/components';
 import IngredientCorrections from './Ingredients';

@@ -29,7 +29,7 @@ const PlanPreviewCalendar: React.SFC<PlanPreviewProps> & {
     <div>
       {grouped.map((meals, dayIndex) => {
         return (
-          <Layout>
+          <Layout key={dayIndex}>
             <Heading level="3">{DAYS[dayIndex]}</Heading>
             <Meal meal={meals[0]} key="breakfast" data-grid-area="breakfast" />
             <Meal meal={meals[1]} key="lunch" data-grid-area="lunch" />

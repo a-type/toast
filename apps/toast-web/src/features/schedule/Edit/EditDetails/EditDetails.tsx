@@ -2,9 +2,10 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Formik } from 'formik';
-import { Field, Input, Button, Form } from 'components/generic';
+import { Field } from 'components/generic';
 import { Schedule } from 'generated/schema';
 import { pathOr } from 'ramda';
+import { Button, TextInput } from 'grommet';
 
 const fragments = {
   schedule: gql`
@@ -49,9 +50,9 @@ const EditDetails = ({ schedule, onSave }) => (
         }}
       >
         {({ values, handleSubmit, handleChange }) => (
-          <Form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <Field label="Servings per meal" required>
-              <Input
+              <TextInput
                 value={values.defaultServings}
                 name="defaultServings"
                 onChange={handleChange}
@@ -64,7 +65,7 @@ const EditDetails = ({ schedule, onSave }) => (
                 label={!!schedule ? 'Save' : 'Create'}
               />
             </Field>
-          </Form>
+          </form>
         )}
       </Formik>
     )}

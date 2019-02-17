@@ -7,7 +7,7 @@ import {
 } from 'generated/schema';
 import { Box } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
-import { Label, HelpText } from 'components/typeset';
+import { Label, HelpText } from 'components/text';
 import { formatActionType } from 'formatters';
 import { MealActionGuards } from 'guards';
 

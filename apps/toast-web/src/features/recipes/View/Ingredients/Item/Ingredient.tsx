@@ -1,3 +1,3 @@
-import { Span } from 'components/typeset';
+import { Text } from 'grommet';
 
-export default Span;
+export default Text;

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Ingredient } from 'generated/schema';
 import { cold } from 'react-hot-loader';
 import Downshift from 'downshift';
-import { Input, Popup } from 'components/generic';
+import { Popup } from 'components/generic';
 import PickerCreateIngredientMutation from './PickerCreateIngredientMutation';
 import Suggestions from './Suggestions';
-import { Heading } from 'grommet';
+import { Heading, TextInput } from 'grommet';
 
 const ingredientToString = ingredient => {
   if (!ingredient) {
@@ -65,7 +65,9 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
                 return (
                   <div>
                     <Heading level="3">Search ingredients</Heading>
-                    <Input {...getInputProps({ style: { width: '100%' } })} />
+                    <TextInput
+                      {...getInputProps({ style: { width: '100%' } })}
+                    />
                     <Suggestions
                       term={inputValue}
                       getItemProps={getItemProps}

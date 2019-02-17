@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from 'components/generic/Button/Button';
+import { Button } from 'grommet';
 import Suggestion from './Suggestion';
 import IngredientPickerSuggestionsQuery from './IngredientPickerSuggestionsQuery';
 import { IngredientPickerSuggestions } from 'generated/schema';
-import { HelpText } from 'components/typeset';
+import { HelpText } from 'components/text';
 import { Loader } from 'components/generic';
 
 const hasNoResults = ({ searchIngredients }) =>
@@ -32,13 +32,7 @@ class Suggestions extends React.PureComponent<
   );
 
   render() {
-    const {
-      term,
-      getItemProps,
-      selectedItem,
-      highlightedIndex,
-      canCreate,
-    } = this.props;
+    const { term, getItemProps, highlightedIndex, canCreate } = this.props;
 
     return (
       <IngredientPickerSuggestionsQuery
@@ -49,7 +43,7 @@ class Suggestions extends React.PureComponent<
         }}
       >
         {({ loading, error, data }) => {
-          if (loading) return <Loader size={64} />;
+          if (loading) return <Loader size="64px" />;
           if (error) return <div>Error</div>;
           if (canCreate && hasNoResults(data)) {
             return this.renderCreate(term, getItemProps, 0, highlightedIndex);

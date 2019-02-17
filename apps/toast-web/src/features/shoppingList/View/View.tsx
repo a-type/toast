@@ -1,7 +1,7 @@
 import React from 'react';
 import GetShoppingListQuery from './GetShoppingListQuery';
 import Ingredient from './Ingredient';
-import { HelpText, Span } from 'components/typeset';
+import { HelpText } from 'components/text';
 import { Heading } from 'grommet';
 import { format, getDay, setDay, addWeeks } from 'date-fns';
 import { Disconnected } from 'components/generic';
@@ -9,13 +9,14 @@ import logger from 'logger';
 import { Redirect } from 'react-router-dom';
 import { path } from 'ramda';
 import { ShoppingList } from 'generated/schema';
+import { TextSkeleton } from 'components/skeletons';
 
 const sortByName = (a, b) => a.ingredient.name.localeCompare(b.ingredient.name);
 
 const Skeleton = () => (
   <div>
     {new Array(8).fill(null).map((_, idx) => (
-      <Span.Skeleton key={idx} size={12} />
+      <TextSkeleton key={idx} size={12} />
     ))}
   </div>
 );

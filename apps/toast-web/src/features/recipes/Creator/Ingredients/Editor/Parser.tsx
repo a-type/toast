@@ -1,10 +1,11 @@
 import React, { createRef } from 'react';
-import { Input, Field, Button } from 'components/generic';
+import { Field } from 'components/generic';
 import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { path } from 'ramda';
 import { RecipeIngredient } from 'generated/schema';
+import { TextInput, Button } from 'grommet';
 
 export const ParseIngredientFragment = gql`
   fragment ParseIngredient on RecipeIngredient {
@@ -93,7 +94,7 @@ export default class IngredientEditorParser extends React.PureComponent<
             {({ values, handleChange, handleSubmit, dirty }) => (
               <form onSubmit={handleSubmit}>
                 <Field label="Add an ingredient line item" required>
-                  <Input
+                  <TextInput
                     value={values.text}
                     name="text"
                     required

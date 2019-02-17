@@ -1,7 +1,8 @@
 import React from 'react';
-import { Tip, Button, Icon } from 'components/generic';
+import { Tip, Icon } from 'components/generic';
 import { Avatar, LinkStack } from './components';
-import { Link } from 'components/typeset';
+import { Link } from 'components/text';
+import { Button } from 'grommet';
 import { Consumer } from 'features/auth/TokenContext';
 import { path } from 'ramda';
 import LoginButton from './LoginButton';

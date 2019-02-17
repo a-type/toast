@@ -1,9 +1,8 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { P } from 'components/typeset';
-import { Input, Icon } from 'components/generic';
-import { Box, Button } from 'grommet';
+import { Icon } from 'components/generic';
+import { Box, Button, TextInput, Paragraph } from 'grommet';
 
 const GetPreferredServings = gql`
   query GetPreferredServings {
@@ -28,7 +27,7 @@ export default ({ servings }) => (
         data.preferredServings === null ? servings : data.preferredServings;
 
       return (
-        <P>
+        <Paragraph>
           <span>Servings: </span>
           <Mutation mutation={SetPreferredServings}>
             {mutate => {
@@ -37,23 +36,25 @@ export default ({ servings }) => (
 
               return (
                 <Box direction="row">
-                <Input
-                  value={displayServings}
-                  onChange={ev => setServings(ev.target.value)}
-                  name="preferredServings"
-                  type="number"
-                  max={99}
-                  min={0}
-                />
+                  <TextInput
+                    value={displayServings}
+                    onChange={ev => setServings(ev.target.value)}
+                    name="preferredServings"
+                    type="number"
+                    max={99}
+                    min={0}
+                  />
                   {displayServings !== servings && (
-                    <Button onClick={() => setServings(servings)} icon={<Icon name="delete-button" />}/>
-
+                    <Button
+                      onClick={() => setServings(servings)}
+                      icon={<Icon name="delete-button" />}
+                    />
                   )}
                 </Box>
               );
             }}
           </Mutation>
-        </P>
+        </Paragraph>
       );
     }}
   </Query>

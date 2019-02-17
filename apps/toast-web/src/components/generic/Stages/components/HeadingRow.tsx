@@ -15,6 +15,5 @@ export default styled.div`
 
   & > h2 {
     margin-left: var(--spacing-md);
-    line-height: 1;
   }
 `;

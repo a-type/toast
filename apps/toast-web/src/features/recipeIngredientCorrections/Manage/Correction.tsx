@@ -5,7 +5,7 @@ import {
   CorrectionType,
 } from 'generated/schema';
 import { Ingredient, Unit, Value } from './components';
-import { Button } from 'components/generic';
+import { Button } from 'grommet';
 import { pathOr } from 'ramda';
 
 export interface ManageRecipeIngredientCorrectionsCorrectionProps {

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Popup, Button } from 'components/generic';
+import { Popup } from 'components/generic';
+import { Button } from 'grommet';
 import { Recipe } from 'generated/schema';
 import RecipeSuggestions from './RecipeSuggestions';
 

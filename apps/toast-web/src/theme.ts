@@ -190,10 +190,7 @@ const colors = {
   black: darkColors[0],
   white: lightColors[0],
   active: 'light-2',
-  border: {
-    dark: 'dark-2',
-    light: 'light-3',
-  },
+  border: 'var(--color-control-background)',
   brand: brandColor,
   control: {
     dark: 'neutral-1',
@@ -231,7 +228,7 @@ const focusShadow = color =>
   `;
 focusShadow.default = focusShadow('var(--color-brand-light)');
 
-const base = generate();
+const base = generate(24, 12);
 
 export const grommetTheme = deepMerge(base, {
   global: {

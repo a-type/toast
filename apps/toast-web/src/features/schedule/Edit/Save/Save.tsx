@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Select, Button, Field } from 'components/generic';
-import { HelpText } from 'components/typeset';
+import { Field } from 'components/generic';
+import { HelpText } from 'components/text';
 import { path, pathOr } from 'ramda';
 import { Preview } from 'features/plan';
-import { cold } from 'react-hot-loader';
 import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
+import { Button, Select } from 'grommet';
+import { ScheduleStrategy } from 'generated/schema';
 
 const ProcessSchedule = gql`
   mutation ProcessSchedule($strategy: ScheduleStrategy!) {
@@ -35,31 +36,59 @@ const strategyDescriptions = {
     "Like Prep, but instead of spreading out meal prep over the week, you'll just be cooking one or two big meals early and freezing the leftovers.",
 };
 
+const options: {
+  value: ScheduleStrategy;
+  label: string;
+}[] = [
+  {
+    value: ScheduleStrategy.BASIC,
+    label: 'Basic',
+  },
+  {
+    value: ScheduleStrategy.PREP,
+    label: 'Prep',
+  },
+];
+
 const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
-  const [strategy, setStrategy] = React.useState('BASIC');
+  const [strategy, setStrategy] = React.useState<{
+    value: ScheduleStrategy;
+    label: string;
+  }>(null);
 
   return (
     <Query query={GetSchedule}>
       {({ data, loading, error }) => {
         const schedule = path(['schedule'], data);
-        const defaultStrategy = pathOr(strategy, ['strategy'], schedule);
+        const defaultStrategy =
+          options.find(
+            opt =>
+              opt.value ===
+              pathOr(ScheduleStrategy.BASIC, ['strategy'], schedule),
+          ) || options[0];
+        const resolvedStrategyValue = strategy
+          ? strategy.value
+          : defaultStrategy.value;
 
         return (
           <React.Fragment>
             <Field label="Plan strategy" required>
               <Select
                 onChange={ev => {
-                  setStrategy(ev.target.value);
+                  setStrategy(ev.option);
                 }}
                 value={strategy || defaultStrategy}
-                {...{name:"strategy"} as any}
-                options={['BASIC', 'PREP']}
-              />
+                labelKey={'label'}
+                {...{ name: 'strategy' } as any}
+                options={options}
+              >
+                {option => option.label}
+              </Select>
             </Field>
 
             {strategy && (
               <HelpText spaceBelow="lg">
-                {strategyDescriptions[strategy]}
+                {strategyDescriptions[strategy.value]}
               </HelpText>
             )}
             {schedule && (
@@ -71,18 +100,18 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
                       margin={{ bottom: 'large' }}
                       onClick={async () => {
                         await mutate({
-                          variables: { strategy: strategy || defaultStrategy },
+                          variables: { strategy: resolvedStrategyValue },
                         });
                         history.push('/plan');
                       }}
                       label="Start planning"
                     />
-                    <Preview strategy={strategy || defaultStrategy} />
+                    <Preview strategy={resolvedStrategyValue} />
                     <Button
                       color="status-ok"
                       onClick={async () => {
                         await mutate({
-                          variables: { strategy: strategy || defaultStrategy },
+                          variables: { strategy: resolvedStrategyValue },
                         });
                         history.push('/plan');
                       }}
@@ -99,4 +128,4 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default cold(withRouter(ScheduleEditSave));
+export default withRouter(ScheduleEditSave);

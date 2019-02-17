@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PlanMeal } from 'generated/schema';
-import { H1 } from 'components/typeset';
 import { formatDay } from 'formatters/date';
 import Meals, { Skeleton as MealsSkeleton } from './Meals';
 import { cold } from 'react-hot-loader';
@@ -10,6 +9,7 @@ import Calendar from '../Calendar';
 import { pathOr } from 'ramda';
 import { Redirect } from 'react-router-dom';
 import { Heading } from 'grommet';
+import { HeadingSkeleton } from 'components/skeletons';
 
 const INITIAL_START_DATE = startOfMonth(new Date());
 const INITIAL_END_DATE = endOfMonth(INITIAL_START_DATE);
@@ -25,7 +25,7 @@ const CalendarDayView: React.SFC<{}> = ({ ...rest }) => {
         if (networkStatus < 4 || error) {
           return (
             <React.Fragment>
-              <H1.Skeleton />
+              <HeadingSkeleton />
               <MealsSkeleton />
             </React.Fragment>
           );

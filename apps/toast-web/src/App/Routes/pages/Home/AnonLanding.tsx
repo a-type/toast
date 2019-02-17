@@ -9,7 +9,7 @@ export default () => (
       Join Toast and start planning your daily meals in advance the easy way.
     </Paragraph>
     <Paragraph>
-      <Link to="/login?r=/plan/setup">
+      <Link to="/login?r=/">
         <Button primary label="Join or Log In" />
       </Link>
     </Paragraph>

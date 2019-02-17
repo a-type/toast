@@ -2,8 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { gridAreas } from 'components/effects';
 import { ShapedCardProps, ShapedCardSkeletonProps } from '../types';
-import { P } from 'components/typeset';
 import Content from './components/Content';
+import { ParagraphSkeleton } from 'components/skeletons';
 
 const Image = styled<{ src: string }, 'div'>('div')`
   border-radius: var(--border-radius-md);
@@ -32,7 +32,7 @@ export default CompactCard;
 export const Skeleton = React.forwardRef<any, ShapedCardSkeletonProps>(
   ({ shape }, ref) => (
     <CompactCard shape={shape} ref={ref}>
-      <P.Skeleton maxWords={3} />
+      <ParagraphSkeleton words={3} />
     </CompactCard>
   ),
 );

@@ -4,10 +4,9 @@ import {
   RecipeIngredientCorrectedValueInput,
 } from 'generated/schema';
 import { Formik } from 'formik';
-import { P } from 'components/typeset';
-import { Field, Input } from 'components/generic';
+import { Field } from 'components/generic';
 import { Picker } from 'features/ingredients';
-import { Button } from 'grommet';
+import { Button, TextInput, Paragraph } from 'grommet';
 
 interface IngredientCorrectorProps {
   recipeIngredient: RecipeIngredient;
@@ -42,16 +41,16 @@ const IngredientCorrector: React.SFC<IngredientCorrectorProps> = ({
           onSubmit={handleSubmit}
           style={{ marginBottom: 'var(--spacing-lg)' }}
         >
-          <P>{recipeIngredient.text}</P>
+          <Paragraph>{recipeIngredient.text}</Paragraph>
           <Field label="Value">
-            <Input
+            <TextInput
               type="number"
               value={`${values.value}`}
               onChange={handleChange}
             />
           </Field>
           <Field label="Unit">
-            <Input value={values.unit} onChange={handleChange} />
+            <TextInput value={values.unit} onChange={handleChange} />
           </Field>
           <Field label="Ingredient">
             <Picker

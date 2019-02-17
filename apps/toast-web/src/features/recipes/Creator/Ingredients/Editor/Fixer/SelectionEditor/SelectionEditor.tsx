@@ -1,7 +1,7 @@
 import React from 'react';
 import { Selection, Handle, Container, TipContent } from './components';
 import { Tip } from 'components/generic';
-import { HelpText } from 'components/typeset';
+import { HelpText } from 'components/text';
 
 export interface Selection {
   start: number;

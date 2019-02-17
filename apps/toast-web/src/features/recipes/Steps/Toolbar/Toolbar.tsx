@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Bar } from './components';
-import { Button, Link, Icon } from 'components/generic';
-import { HelpText } from 'components/typeset';
+import { Link, Icon } from 'components/generic';
+import { HelpText } from 'components/text';
 import { Recipe } from 'generated/schema';
-import { Heading } from 'grommet';
+import { Heading, Button } from 'grommet';
 
 export interface ToolbarProps {
   recipe: Recipe;

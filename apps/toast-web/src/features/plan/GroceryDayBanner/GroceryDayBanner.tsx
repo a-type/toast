@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { cold } from 'react-hot-loader';
 import EditForm from './EditForm';
-import { Span } from 'components/typeset';
 import { Day } from 'types/Day';
-import { Link, Button } from 'components/generic';
 import GroceryDayQuery from './GroceryDayQuery';
 import { pathOr } from 'ramda';
 import GroceryDayEventCreator from './GroceryDayEventCreator';
 import { Layout } from './components';
+import { Text, Button } from 'grommet';
 
 const GroceryDayBanner: React.SFC<{}> = ({}) => {
   const [isEditMode, setEditMode] = React.useState(false);
@@ -28,16 +26,8 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
           />
         ) : (
           <Layout>
-            <Span>Grocery day: {Day[groceryDay]}</Span>
-            <Link
-              style={{
-                display: 'inline-block',
-                marginLeft: 'var(--spacing-md)',
-              }}
-              onClick={() => setEditMode(true)}
-            >
-              <Button label="Change" />
-            </Link>
+            <Text>Grocery day: {Day[groceryDay]}</Text>
+            <Button label="Change" onClick={() => setEditMode(true)} />
             <GroceryDayEventCreator dayIndex={groceryDay} />
           </Layout>
         );
@@ -46,4 +36,4 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
   );
 };
 
-export default cold(GroceryDayBanner);
+export default GroceryDayBanner;

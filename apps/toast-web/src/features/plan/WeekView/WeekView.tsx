@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PlanMeal } from 'generated/schema';
 import CalendarDay from './CalendarDay';
-import { Button } from 'components/generic';
+import { Button } from 'grommet';
 import groupMeals from 'features/plan/groupMeals';
 
 interface CalendarWeeklyViewProps {

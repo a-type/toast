@@ -1,8 +1,8 @@
 import * as React from 'react';
 import CreateGroupInvitationMutation from './CreateGroupInvitationMutation';
-import { Button } from 'components/generic';
 import Copy from 'react-copy-to-clipboard';
-import { HelpText } from 'components/typeset';
+import { HelpText } from 'components/text';
+import { Button } from 'grommet';
 
 export interface InviteProps {}
 

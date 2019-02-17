@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'components/generic';
+import { Button } from 'grommet';
 import CreatePlanMutation from './CreatePlanMutation';
 
 export interface CreatePlanButtonProps {

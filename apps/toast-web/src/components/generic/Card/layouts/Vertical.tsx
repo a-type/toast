@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { ShapedCardProps, ShapedCardSkeletonProps } from '../types';
-import { P } from 'components/typeset';
 import Content from './components/Content';
+import { ParagraphSkeleton } from 'components/skeletons';
 
 const Wrapper = styled<{ src: string; onClick?: Function }, 'div'>('div')`
   position: relative;
@@ -45,7 +45,7 @@ export default VerticalCard;
 export const Skeleton = React.forwardRef<any, ShapedCardSkeletonProps>(
   ({ shape }, ref) => (
     <VerticalCard shape={shape} ref={ref}>
-      <P.Skeleton maxWords={3} />
+      <ParagraphSkeleton words={3} />
     </VerticalCard>
   ),
 );

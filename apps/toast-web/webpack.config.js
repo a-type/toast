@@ -1,39 +1,29 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const webpack = require('webpack');
-const history = require('connect-history-api-fallback');
-const convert = require('koa-connect');
-const proxy = require('http-proxy-middleware');
-const cors = require('@koa/cors');
 const fs = require('fs');
 const config = require('config');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const OfflinePlugin = require('offline-plugin');
+const { WebpackPluginServe: Serve } = require('webpack-plugin-serve');
 
 const publicPath = '/';
 const publicUrl = '';
-
-const createHttpsConfig = () => {
-  if (fs.existsSync(path.resolve(__dirname, 'localhost.cert'))) {
-    const key = fs.readFileSync(path.resolve(__dirname, 'localhost.key'));
-    const cert = fs.readFileSync(path.resolve(__dirname, 'localhost.cert'));
-    return {
-      key,
-      cert,
-    };
-  }
-
-  return false;
-};
+const outputPath = path.resolve(process.cwd(), 'dist');
 
 module.exports = {
-  mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  watch: process.env.NODE_ENV !== 'production',
 
-  entry: ['babel-polyfill', 'resize-observer-polyfill', './src/index.tsx'],
+  entry: [
+    '@babel/polyfill',
+    'resize-observer-polyfill',
+    './src/index.tsx',
+    'webpack-plugin-serve/client',
+  ],
   output: {
     publicPath: '/',
-    path: path.resolve(process.cwd(), 'dist'),
+    path: outputPath,
     filename: '[name].[hash].bundle.js',
   },
   resolve: {
@@ -119,23 +109,22 @@ module.exports = {
         navigateFallbackURL: '/',
       },
     }),
-    new ErrorOverlayPlugin(),
+    new Serve({
+      host: 'localhost',
+      port: 8080,
+      progress: 'minimal',
+      historyFallback: {
+        rewrites: [
+          {
+            from: '/wps',
+            to: context => context.parsedUrl.pathname,
+          },
+        ],
+      },
+      static: outputPath,
+      middleware: (app, builtins) => {
+        app.use(builtins.proxy('/api', { target: 'http://localhost:4000' }));
+      },
+    }),
   ],
-  serve: {
-    content: [path.resolve(__dirname, 'public')],
-    add: (app, middleware, options) => {
-      app.use(cors({ origin: '*' }));
-      app.use(convert(proxy('/api', { target: 'http://localhost:4000' })));
-      app.use(
-        convert(
-          proxy('/bookmarklet', {
-            target: 'http://localhost:9001',
-            pathRewrite: path => path.replace('/bookmarklet', ''),
-          }),
-        ),
-      );
-      app.use(convert(history()));
-    },
-    https: createHttpsConfig(),
-  },
 };

@@ -17,7 +17,7 @@ import {
   isSameDay,
   endOfWeek,
 } from 'date-fns';
-import { Label } from 'components/typeset';
+import { Label } from 'components/text';
 import { MONTH_NAMES, WEEKDAY_ABBREVIATIONS } from './constants';
 import { CrossFade, Icon } from 'components/generic';
 import { Button, Heading } from 'grommet';

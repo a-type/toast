@@ -8,8 +8,6 @@ import UserPage from './pages/User';
 import IngredientPage from './pages/Ingredient';
 import EditRecipePage from './pages/EditRecipe';
 import LinkRecipePage from './pages/LinkRecipe';
-import SearchPage from './pages/Search';
-import ScannerPage from './pages/Scanner';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
@@ -37,10 +35,6 @@ export default () => (
     <Route path="/users/:userId" component={UserPage} />
 
     <Route path="/ingredients/:ingredientId" component={IngredientPage} />
-
-    <Route path="/search" component={SearchPage} />
-
-    <Route path="/scanner" component={ScannerPage} />
 
     <PrivateRoute path="/manage" component={ManagePage} />
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { RecipeCards } from 'features/recipes';
-import { P, Span } from 'components/typeset';
 import { sentence } from 'change-case';
 import ManageSection from './ManageSection';
 import { Disconnected } from 'components/generic';
 import IngredientDetailsQuery from './IngredientDetailsQuery';
 import { Heading, Paragraph } from 'grommet';
+import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
 
 export default ({ ingredientId }) => (
   <IngredientDetailsQuery variables={{ id: ingredientId }}>
@@ -13,10 +13,8 @@ export default ({ ingredientId }) => (
       if (loading) {
         return (
           <React.Fragment>
-            <Heading>
-              <Span.Skeleton />
-            </Heading>
-            <P.Skeleton />
+            <HeadingSkeleton />
+            <ParagraphSkeleton />
           </React.Fragment>
         );
       }

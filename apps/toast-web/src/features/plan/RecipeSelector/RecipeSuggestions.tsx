@@ -2,8 +2,9 @@ import * as React from 'react';
 import { Recipe } from 'generated/schema';
 import RecipeSuggestionsQuery from './RecipeSuggestionsQuery';
 import { RecipeCards } from 'features/recipes';
-import { H3, HelpText, Link } from 'components/typeset';
+import { HelpText, Link } from 'components/text';
 import { Heading } from 'grommet';
+import { HeadingSkeleton } from 'components/skeletons';
 
 interface RecipeSuggestionsProps {
   onRecipeSelected(recipe: Recipe): void;
@@ -17,7 +18,7 @@ const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
       if (loading) {
         return (
           <React.Fragment>
-            <H3.Skeleton />
+            <HeadingSkeleton level="3" />
             <RecipeCards.Skeleton />
           </React.Fragment>
         );
