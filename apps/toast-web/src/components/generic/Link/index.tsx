@@ -35,7 +35,7 @@ export const BaseLink = React.forwardRef(
   ) => {
     if (!to) {
       return (
-        <a href="#" {...props} ref={ref}>
+        <a href="#" onClick={onClick} {...props} ref={ref}>
           {children}
         </a>
       );
@@ -43,7 +43,7 @@ export const BaseLink = React.forwardRef(
 
     if (/^https?:\/\//.test(to) || forceRemote) {
       return (
-        <a href={to} target="_blank" {...props} ref={ref}>
+        <a href={to} target="_blank" onClick={onClick} {...props} ref={ref}>
           {children}
         </a>
       );
@@ -60,6 +60,7 @@ export const BaseLink = React.forwardRef(
           onClick={e => {
             if (window['swUpdate']) {
               e.preventDefault();
+              onClick && onClick(e);
               return (window.location.pathname = to);
             }
             return onClick && onClick(e);
@@ -79,6 +80,7 @@ export const BaseLink = React.forwardRef(
         onClick={e => {
           if (window['swUpdate']) {
             e.preventDefault();
+            onClick && onClick(e);
             return (window.location.pathname = to);
           }
           return onClick && onClick(e);

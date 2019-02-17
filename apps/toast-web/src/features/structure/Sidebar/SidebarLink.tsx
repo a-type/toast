@@ -12,7 +12,8 @@ const ModdedLink = styled(Link)`
   transition: 0.2s ease all;
   position: relative;
   padding: var(--spacing-md) var(--spacing-lg);
-  background: var(--color-brand);
+  background: var(--color-shadow);
+  color: var(--color-white);
 
   &:hover {
     background: var(--color-brand-light);
@@ -35,6 +36,7 @@ const ModdedLink = styled(Link)`
   &.link-matching {
     background: var(--color-brand-dark);
     color: var(--color-white);
+    cursor: default;
   }
 `;
 

@@ -4,7 +4,6 @@ export { default as Loader } from './Loader';
 export { default as Stages } from './Stages';
 export { default as Field } from './Field';
 export { default as Tip } from './Tip';
-export { default as Background } from './Background';
 export { default as Foreground } from './Foreground';
 export * from './Card';
 export { default as Centered } from './Centered';

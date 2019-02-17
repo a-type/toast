@@ -5,7 +5,7 @@ import {
   MealActionType,
   MealActionCook,
 } from 'generated/schema';
-import { Box } from './components';
+import { PreviewMealBox } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
 import { Label, HelpText } from 'components/text';
 import { formatActionType } from 'formatters';
@@ -35,10 +35,10 @@ const Meal: React.SFC<PlanPreviewMealProps> & { fragments: { meal: any } } = ({
 
   if (!primaryAction) {
     return (
-      <Box {...rest}>
+      <PreviewMealBox {...rest}>
         <Label>{MEAL_NAMES[meal.mealIndex]}</Label>
         <span>Skip</span>
-      </Box>
+      </PreviewMealBox>
     );
   }
 
@@ -54,11 +54,11 @@ const Meal: React.SFC<PlanPreviewMealProps> & { fragments: { meal: any } } = ({
   }
 
   return (
-    <Box {...rest}>
+    <PreviewMealBox {...rest}>
       <Label>{MEAL_NAMES[meal.mealIndex]}</Label>
       <span>{formatActionType(primaryAction.type)}</span>
       {extraContent}
-    </Box>
+    </PreviewMealBox>
   );
 };
 

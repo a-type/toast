@@ -1,69 +1,105 @@
-import * as React from 'react';
+import React, { SFC, useContext, Fragment } from 'react';
 import { Recipe } from 'generated/schema';
-import RecipeSuggestionsQuery from './RecipeSuggestionsQuery';
 import { RecipeCards } from 'features/recipes';
 import { HelpText, Link } from 'components/text';
-import { Heading } from 'grommet';
-import { HeadingSkeleton } from 'components/skeletons';
+import { Heading, Box, Text, Paragraph, Button } from 'grommet';
+import gql from 'graphql-tag';
+import { useQuery } from 'react-apollo-hooks';
+import LinkerContext from 'contexts/LinkerContext';
+
+export const Document = gql`
+  query RecipeSuggestions {
+    me {
+      id
+      recipes {
+        ...RecipeCard
+      }
+      discoveredRecipes {
+        ...RecipeCard
+      }
+      likedRecipes {
+        ...RecipeCard
+      }
+    }
+  }
+
+  ${RecipeCards.fragments.recipe}
+`;
 
 interface RecipeSuggestionsProps {
   onRecipeSelected(recipe: Recipe): void;
+  onCancel(): void;
 }
 
-const RecipeSuggestions: React.SFC<RecipeSuggestionsProps> = ({
+const RecipeSuggestions: SFC<RecipeSuggestionsProps> = ({
   onRecipeSelected,
-}) => (
-  <RecipeSuggestionsQuery>
-    {({ data, loading }) => {
-      if (loading) {
-        return (
-          <React.Fragment>
-            <HeadingSkeleton level="3" />
-            <RecipeCards.Skeleton />
-          </React.Fragment>
-        );
-      }
+  onCancel,
+}) => {
+  const { data, error, refetch } = useQuery(Document);
+  const { setOpen } = useContext(LinkerContext);
 
-      const {
-        me: { discoveredRecipes, likedRecipes, recipes },
-      } = data;
+  if (error) {
+    return (
+      <Box>
+        <Text color="status-error">Dangit.</Text>
+        <Paragraph>
+          We couldn't load your recipes. That's almost definitely our bad. Maybe
+          retrying will help?
+        </Paragraph>
+        <Button onClick={() => refetch()} label="Retry" />
+      </Box>
+    );
+  }
 
-      return (
-        <React.Fragment>
-          {recipes.length && (
-            <React.Fragment>
-              <Heading level="4">Your Recipes</Heading>
-              <RecipeCards
-                recipes={recipes}
-                onRecipeSelected={onRecipeSelected}
-              />
-            </React.Fragment>
-          )}
-          <Heading level="4">Your Likes</Heading>
-          {likedRecipes.length ? (
-            <RecipeCards
-              recipes={likedRecipes}
-              onRecipeSelected={onRecipeSelected}
-            />
-          ) : (
-            <HelpText>Like some recipes to make planning easier!</HelpText>
-          )}
-          <Heading level="4">Your Discoveries</Heading>
-          {discoveredRecipes.length ? (
-            <RecipeCards
-              recipes={discoveredRecipes}
-              onRecipeSelected={onRecipeSelected}
-            />
-          ) : (
-            <HelpText>
-              Use the <Link to="/scanner">Toast Scanner</Link> to gather recipes
-              from around the web!
-            </HelpText>
-          )}
-        </React.Fragment>
-      );
-    }}
-  </RecipeSuggestionsQuery>
-);
+  if (!data || !data.me) {
+    return null;
+  }
+
+  const {
+    me: { discoveredRecipes, likedRecipes, recipes },
+  } = data;
+
+  return (
+    <Box margin={{ bottom: 'large' }}>
+      {recipes.length > 0 && (
+        <Fragment>
+          <Heading level="4">Your Recipes</Heading>
+          <RecipeCards recipes={recipes} onRecipeSelected={onRecipeSelected} />
+        </Fragment>
+      )}
+      {/* <Heading level="4">Your Likes</Heading>
+      {likedRecipes.length ? (
+        <RecipeCards
+          recipes={likedRecipes}
+          onRecipeSelected={onRecipeSelected}
+        />
+      ) : (
+        <HelpText margin={{ bottom: 'large' }}>
+          Like some recipes to make planning easier!
+        </HelpText>
+      )} */}
+      <Heading level="4">Your Discoveries</Heading>
+      {discoveredRecipes.length ? (
+        <RecipeCards
+          recipes={discoveredRecipes}
+          onRecipeSelected={onRecipeSelected}
+        />
+      ) : (
+        <Box>
+          <HelpText margin={{ bottom: 'medium' }}>
+            Use the Toast Scanner to gather recipes from around the web!
+          </HelpText>
+          <Button
+            onClick={() => {
+              setOpen(true);
+              onCancel();
+            }}
+            label="Add a recipe"
+          />
+        </Box>
+      )}
+    </Box>
+  );
+};
 
 export default RecipeSuggestions;

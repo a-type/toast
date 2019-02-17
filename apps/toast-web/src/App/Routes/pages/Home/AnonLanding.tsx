@@ -10,7 +10,7 @@ export default () => (
     </Paragraph>
     <Paragraph>
       <Link to="/login?r=/">
-        <Button primary label="Join or Log In" />
+        <Button primary label="Join or log in" />
       </Link>
     </Paragraph>
     <Heading level="2">All of the Internet's Recipes</Heading>
@@ -18,10 +18,10 @@ export default () => (
       Bring all your favorites. We make it easy to scan recipes from across the
       web and add them to your plan.
     </Paragraph>
-    <Heading level="2">Instantly Fit Your Schedule with Toast Gold</Heading>
+    {/* <Heading level="2">Instantly Fit Your Schedule with Toast Gold</Heading>
     <Paragraph>
       Upgrade your account to make planning even easier with an AI-driven
       schedule.
-    </Paragraph>
+    </Paragraph> */}
   </div>
 );

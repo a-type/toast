@@ -10,12 +10,6 @@ export type TextLinkProps = LinkProps & {
   spaceBelow?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string;
 };
 
-interface LinkWithVariants extends StyledComponentClass<TextLinkProps, {}> {
-  Positive: StyledComponentClass<TextLinkProps, {}>;
-  Negative: StyledComponentClass<TextLinkProps, {}>;
-  Clear: typeof BaseLink;
-}
-
 const ProtectedBaseLink = ({
   textSize,
   inline,
@@ -23,7 +17,7 @@ const ProtectedBaseLink = ({
   ...rest
 }: TextLinkProps) => <BaseLink {...rest} />;
 
-const Link = styled<TextLinkProps>(ProtectedBaseLink)`
+const LinkWrap = styled<TextLinkProps>(ProtectedBaseLink)`
   color: var(--color-link-foreground);
   text-decoration: underline;
   transition: 0.25s ease-in-out;
@@ -43,30 +37,22 @@ const Link = styled<TextLinkProps>(ProtectedBaseLink)`
   margin-top: ${props => (props.inline ? 'auto' : '-0.16em')};
   margin-bottom: ${props =>
     props.inline ? 'auto' : `calc(${getSize(props.spaceBelow)} - 0.36em)`};
-` as LinkWithVariants;
-
-Link.Positive = styled(Link)`
-  color: var(--color-positive);
-
-  &:hover {
-    color: var(--color-positive-dark);
-  }
 `;
 
-Link.Negative = styled(Link)`
-  color: var(--color-negative);
-
-  &:hover {
-    color: var(--color-negative-dark);
-  }
-`;
-
-Link.Clear = BaseLink;
-
-Link.defaultProps = {
+LinkWrap.defaultProps = {
   to: '#',
   textSize: null,
   inline: false,
 };
+
+const LinkText = styled.span`
+  color: var(--color-brand-dark);
+`;
+
+const Link: React.SFC<TextLinkProps> = ({ children, ...props }) => (
+  <LinkWrap {...props}>
+    <LinkText>{children}</LinkText>
+  </LinkWrap>
+);
 
 export default Link;

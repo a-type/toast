@@ -81,9 +81,7 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
                 labelKey={'label'}
                 {...{ name: 'strategy' } as any}
                 options={options}
-              >
-                {option => option.label}
-              </Select>
+              />
             </Field>
 
             {strategy && (

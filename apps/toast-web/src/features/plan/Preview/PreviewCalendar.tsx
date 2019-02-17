@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Meal from './Meal';
-import gql from 'graphql-tag';
 import groupMeals from 'features/plan/groupMeals';
 import { PlanPreviewMeal } from 'generated/schema';
 import { Layout } from './components';

@@ -58,9 +58,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
                     value: dayIndex,
                     label: Day[dayIndex],
                   }))}
-                >
-                  {option => option.label}
-                </Select>
+                />
               </Field>
               <Field>
                 <Button type="submit" primary label="Save" />

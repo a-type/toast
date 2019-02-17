@@ -5,6 +5,7 @@ import { Disconnected, Field } from 'components/generic';
 import { TextInput, Button, Paragraph, Box, Text } from 'grommet';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
+import { Link } from 'components/text';
 
 const MESSAGES = {
   EXPLANATION:
@@ -18,6 +19,7 @@ export const LinkRecipeMutation = gql`
     linkRecipe(input: { url: $url }) {
       recipe {
         id
+        title
       }
       problems
     }
@@ -26,11 +28,12 @@ export const LinkRecipeMutation = gql`
 
 export interface LinkRecipeFormProps {
   onStarted?(): any;
-  onComplete?(id: string): any;
+  onComplete?(args: { id: string; title: string }): any;
   onFailed?(err: Error): any;
   onReset?(): any;
   loading?: boolean;
   error?: Error;
+  lastResult?: { id: string; title: string };
 }
 
 const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
@@ -40,12 +43,28 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
   onReset,
   loading,
   error,
+  lastResult,
 }) => {
   const [url, setUrl] = React.useState('');
   const mutate = useMutation(LinkRecipeMutation);
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (lastResult) {
+    return (
+      <Box>
+        <Text color="status-ok">Nice!</Text>
+        <Paragraph>
+          We scanned <i>{lastResult.title}</i> for you.{' '}
+          <Link to={`/recipes/${lastResult.id}/correct`}>
+            Give it a once-over just to make sure we got things right.
+          </Link>
+        </Paragraph>
+        <Button label="Scan another one" onClick={onStarted} />
+      </Box>
+    );
   }
 
   const submit = async ev => {
@@ -67,7 +86,11 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
         logger.warn(result.data.linkRecipe.problems); // TODO: show
       }
 
-      onComplete && onComplete(result.data.linkRecipe.recipe.id);
+      onComplete &&
+        onComplete({
+          id: result.data.linkRecipe.recipe.id,
+          title: result.data.linkRecipe.recipe.title,
+        });
     } catch (err) {
       logger.fatal(err);
       onFailed && onFailed(err);
@@ -79,9 +102,9 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
       <Box>
         <Text color="status-error">Bummer.</Text>
         <Paragraph>
-          Something may be wrong on our end, but we couldn't scan that recipe
-          page. We are working on some options for situations like this, but for
-          now we're sorry for the disappointment.
+          This is totally our fault... We couldn't scan that recipe page. We're
+          working on some options for situations like this, but for now we're
+          sorry for the disappointment.
         </Paragraph>
         <Button onClick={() => onReset()}>Back</Button>
       </Box>

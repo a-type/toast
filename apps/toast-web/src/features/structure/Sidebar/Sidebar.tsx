@@ -12,6 +12,8 @@ import { OverlayColorContext } from 'components/graphics';
 import { GroceryDay } from 'features/plan';
 import Invite from 'features/groups/Invite';
 import styled from 'styled-components';
+import browserHistory from 'browserHistory';
+import firebase from 'firebase';
 
 const SidebarContentBox = styled<{ embedded: boolean } & BoxProps>(
   ({ embedded, ...props }) => <Box {...props} />,
@@ -36,7 +38,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
   const anonContent = (
     <SidebarLink
       nav
-      label="Log in or sign up"
+      label="Join or log in"
       icon="chef-toque"
       to="/login"
       onMouseUp={hideSidebar}
@@ -57,7 +59,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
       />
       <SidebarLink
         nav
-        label="Shopping List"
+        label="Shopping list"
         icon="check-list"
         to="/shoppingList"
         onMouseUp={hideSidebar}
@@ -68,6 +70,16 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
         icon="edit"
         to="/plan/edit"
         onMouseUp={hideSidebar}
+      />
+
+      <SidebarLink
+        label="Log out"
+        icon="login"
+        onClick={async () => {
+          console.log('logging out');
+          await firebase.auth().signOut();
+          browserHistory.push('/');
+        }}
       />
 
       <Box align="center" pad="medium">
