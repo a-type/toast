@@ -1,10 +1,9 @@
 import * as React from 'react';
 import Correct from 'features/recipes/Correct';
-import { Layout } from 'components/layout';
-import { BackgroundStyle } from 'components/layout/types';
+import Column from 'components/layout/Column';
 
 export default ({ match: { params } }) => (
-  <Layout backgroundStyle={BackgroundStyle.Brand}>
+  <Column>
     <Correct recipeId={params.recipeId} />
-  </Layout>
+  </Column>
 );

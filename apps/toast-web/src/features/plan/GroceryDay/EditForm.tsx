@@ -21,41 +21,43 @@ const HorizontalForm = styled.form`
 
 export interface GroceryDayEditFormProps {
   groceryDay: number;
-  onSaved(): void;
+  onSaved?(): void;
 }
 
 const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
   groceryDay,
-  onSaved,
+  onSaved = () => {},
 }) => {
   return (
     <SetGroceryDayMutation>
       {mutate => (
-        <Formik<{}, { groceryDay: string }>
-          initialValues={{ groceryDay: `${groceryDay}` }}
+        <Formik<{}, { groceryDay: { value: number; label: string } }>
+          initialValues={{
+            groceryDay: { value: groceryDay, label: `${Day[groceryDay]}` },
+          }}
           enableReinitialize
           onSubmit={async values => {
             await mutate({
               variables: {
-                groceryDay: parseInt(values.groceryDay),
+                groceryDay: values.groceryDay.value,
               },
             });
             onSaved();
           }}
         >
-          {({ values, handleSubmit, handleChange }) => (
-            <HorizontalForm onSubmit={handleSubmit}>
-              <Field>
+          {({ values, handleSubmit, setFieldValue }) => (
+            <form onSubmit={handleSubmit}>
+              <Field label="Grocery day" required>
                 <Select
                   {...{ name: 'groceryDay' } as any}
                   value={values.groceryDay}
                   valueKey="value"
-                  onChange={handleChange}
+                  labelKey="label"
+                  onChange={ev => setFieldValue('groceryDay', ev.option)}
                   options={new Array(7).fill(null).map((_, dayIndex) => ({
                     value: dayIndex,
                     label: Day[dayIndex],
                   }))}
-                  valueLabel={Day[values.groceryDay]}
                 >
                   {option => option.label}
                 </Select>
@@ -63,7 +65,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
               <Field>
                 <Button type="submit" primary label="Save" />
               </Field>
-            </HorizontalForm>
+            </form>
           )}
         </Formik>
       )}

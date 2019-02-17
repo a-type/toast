@@ -1,15 +1,15 @@
 import React from 'react';
-import { Layout, LayoutTypes } from 'components/layout';
 import { IsLoggedIn } from 'features/auth/gates';
 import AnonLanding from './AnonLanding';
 import { Redirect } from 'react-router-dom';
+import Column from 'components/layout/Column';
 
 export default () => (
   <IsLoggedIn
     fallback={
-      <Layout backgroundStyle={LayoutTypes.BackgroundStyle.Art}>
+      <Column>
         <AnonLanding />
-      </Layout>
+      </Column>
     }
   >
     <Redirect to="/plan" />

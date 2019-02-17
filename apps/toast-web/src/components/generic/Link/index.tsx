@@ -11,6 +11,7 @@ type InnerLinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
   className?: string;
   id?: string;
   nav?: boolean;
+  exact?: boolean;
   download?: string;
 };
 
@@ -27,6 +28,7 @@ export const BaseLink = React.forwardRef(
       newTab,
       nav,
       onClick,
+      exact,
       ...props
     }: InnerLinkProps,
     ref: any,
@@ -54,6 +56,7 @@ export const BaseLink = React.forwardRef(
           {...props}
           ref={ref}
           activeClassName="link-matching"
+          exact={exact}
           onClick={e => {
             if (window['swUpdate']) {
               e.preventDefault();

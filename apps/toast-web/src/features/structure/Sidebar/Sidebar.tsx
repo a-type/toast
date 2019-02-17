@@ -9,7 +9,7 @@ import AuthContext from 'contexts/AuthContext';
 import Avatar from './Avatar';
 import { path } from 'ramda';
 import { OverlayColorContext } from 'components/graphics';
-import { GroceryDayBanner } from 'features/plan';
+import { GroceryDay } from 'features/plan';
 import Invite from 'features/groups/Invite';
 import styled from 'styled-components';
 
@@ -49,6 +49,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
 
       <SidebarLink
         nav
+        exact
         label="Plan"
         icon="calendar"
         to="/plan"
@@ -61,11 +62,6 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
         to="/shoppingList"
         onMouseUp={hideSidebar}
       />
-
-      <Box margin={{ top: 'auto' }} pad="medium">
-        <GroceryDayBanner />
-      </Box>
-
       <SidebarLink
         nav
         label="Edit your plan"
@@ -76,6 +72,8 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
 
       <Box align="center" pad="medium">
         <Invite />
+        <br />
+        <GroceryDay />
       </Box>
     </Fragment>
   );

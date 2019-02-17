@@ -19,6 +19,7 @@ export const VerticalCardContents = styled.div`
   bottom: 2px;
   height: auto;
   max-height: 60%;
+  min-height: 20%;
   left: 2px;
   right: 2px;
 `;
@@ -30,4 +31,5 @@ export const HorizontalCardContents = styled.div`
   top: 2px;
   bottom: 2px;
   max-width: 75%;
+  min-width: 40%;
 `;

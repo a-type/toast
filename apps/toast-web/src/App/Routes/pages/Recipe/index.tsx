@@ -1,20 +1,20 @@
 import React from 'react';
 import Recipe from 'features/recipes/View';
 import Steps from 'features/recipes/Steps';
-import { Layout } from 'components/layout';
 import { Route, Switch } from 'react-router-dom';
 import Correct from './Correct';
+import Column from 'components/layout/Column';
 
 const RecipePage = ({ match: { params } }) => (
-  <Layout>
+  <Column>
     <Recipe recipeId={params.recipeId} />
-  </Layout>
+  </Column>
 );
 
 const RecipeStepsPage = ({ match: { params } }) => (
-  <Layout noScroll noSpacing>
+  <Column>
     <Steps recipeId={params.recipeId} />
-  </Layout>
+  </Column>
 );
 
 export default () => (

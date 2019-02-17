@@ -1,4 +1,4 @@
 import React from 'react';
-import { Layout } from 'components/layout';
+import Column from 'components/layout/Column';
 
-export default () => <Layout>Not found</Layout>;
+export default () => <Column>Not found</Column>;

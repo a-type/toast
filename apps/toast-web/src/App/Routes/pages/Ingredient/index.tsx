@@ -1,9 +1,9 @@
 import React from 'react';
-import { Layout } from 'components/layout';
 import Details from 'features/ingredients/Details';
+import Column from 'components/layout/Column';
 
 export default ({ match: { params } }) => (
-  <Layout>
+  <Column>
     <Details ingredientId={params.ingredientId} />
-  </Layout>
+  </Column>
 );

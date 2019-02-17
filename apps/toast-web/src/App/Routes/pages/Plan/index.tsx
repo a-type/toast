@@ -1,26 +1,26 @@
 import React from 'react';
-import { Layout, LayoutTypes } from 'components/layout';
 import { Edit } from 'features/schedule';
 import { Setup } from 'features/plan';
 import { Switch, Route } from 'react-router-dom';
 import CalendarPage from './CalendarPage';
+import Column from 'components/layout/Column';
 
 export default () => (
   <Switch>
     <Route
       path="/plan/edit"
       render={props => (
-        <Layout backgroundStyle={LayoutTypes.BackgroundStyle.Brand}>
+        <Column>
           <Edit {...props} />
-        </Layout>
+        </Column>
       )}
     />
     <Route
       path="/plan/setup"
       render={() => (
-        <Layout backgroundStyle={LayoutTypes.BackgroundStyle.Art}>
+        <Column>
           <Setup />
-        </Layout>
+        </Column>
       )}
     />
     <Route
