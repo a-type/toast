@@ -6,7 +6,7 @@ export { default as Field } from './Field';
 export { default as Tip } from './Tip';
 export { default as Background } from './Background';
 export { default as Foreground } from './Foreground';
-export { default as Card } from './Card';
+export * from './Card';
 export { default as Centered } from './Centered';
 export { default as Disconnected } from './Disconnected';
 export { default as Bubble } from './Bubble';

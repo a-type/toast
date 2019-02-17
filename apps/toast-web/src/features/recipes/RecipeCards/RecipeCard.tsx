@@ -1,5 +1,5 @@
 import React from 'react';
-import Card, { CardShape } from 'components/generic/Card';
+import { Card, CardShape } from 'components/generic/Card';
 import gql from 'graphql-tag';
 import { path } from 'ramda';
 import styled from 'styled-components';
@@ -55,7 +55,5 @@ RecipeCard.fragments = {
     ${LikeButton.fragments.recipe}
   `,
 };
-
-RecipeCard.Skeleton = Card.Skeleton;
 
 export default RecipeCard;

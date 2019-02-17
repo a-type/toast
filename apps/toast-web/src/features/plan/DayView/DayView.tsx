@@ -22,24 +22,6 @@ const CalendarDayView: React.SFC<{}> = ({ ...rest }) => {
       variables={{ startDate: INITIAL_START_DATE, endDate: INITIAL_END_DATE }}
     >
       {({ data, error, networkStatus, fetchMore }) => {
-        if (networkStatus < 4 || error) {
-          return (
-            <React.Fragment>
-              <HeadingSkeleton />
-              <MealsSkeleton />
-            </React.Fragment>
-          );
-        }
-
-        if (networkStatus === 7 && (!data.group || !data.group.plan)) {
-          return <Redirect to="/plan/setup" />;
-        }
-
-        const meals = pathOr<PlanMeal[]>([], ['group', 'plan', 'meals'], data);
-        const dayMeals = meals
-          .filter(meal => isSameDay(meal.date, date))
-          .sort((a, b) => a.mealIndex - b.mealIndex);
-
         const fetchMeals = ({ startDate, endDate }) => {
           fetchMore({
             variables: {
@@ -57,6 +39,30 @@ const CalendarDayView: React.SFC<{}> = ({ ...rest }) => {
             },
           });
         };
+
+        if (networkStatus < 4 || error) {
+          return (
+            <React.Fragment>
+              <HeadingSkeleton />
+              <MealsSkeleton />
+              <Calendar
+                onDatePick={setDate}
+                selectedDate={date}
+                meals={[]}
+                fetchMeals={fetchMeals}
+              />
+            </React.Fragment>
+          );
+        }
+
+        if (networkStatus === 7 && (!data.group || !data.group.plan)) {
+          return <Redirect to="/plan/setup" />;
+        }
+
+        const meals = pathOr<PlanMeal[]>([], ['group', 'plan', 'meals'], data);
+        const dayMeals = meals
+          .filter(meal => isSameDay(meal.date, date))
+          .sort((a, b) => a.mealIndex - b.mealIndex);
 
         return (
           <React.Fragment>

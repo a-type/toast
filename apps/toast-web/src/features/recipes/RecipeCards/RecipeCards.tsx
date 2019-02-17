@@ -1,10 +1,10 @@
 import * as React from 'react';
 import RecipeCard from './RecipeCard';
-import { Card } from 'components/generic';
 import { RecipeCard as RecipeCardTypes, Recipe } from 'generated/schema';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { withProps, compose } from 'recompose';
-import { CardShape } from 'components/generic/Card';
+import { Card, CardShape, CardGrid } from 'components/generic/Card';
+import { CardSkeleton } from 'components/skeletons';
 
 interface RecipeCardsProps {
   recipes: RecipeCardTypes.Fragment[];
@@ -12,7 +12,7 @@ interface RecipeCardsProps {
 }
 
 const Grid: React.SFC<RecipeCardsProps> = ({ recipes, onRecipeSelected }) => (
-  <Card.Grid>
+  <CardGrid>
     {recipes.map(recipe => (
       <RecipeCard
         key={recipe.id}
@@ -20,7 +20,7 @@ const Grid: React.SFC<RecipeCardsProps> = ({ recipes, onRecipeSelected }) => (
         onClick={() => onRecipeSelected(recipe)}
       />
     ))}
-  </Card.Grid>
+  </CardGrid>
 );
 
 const withDefaultSelectBehavior = withProps<
@@ -36,7 +36,7 @@ const withDefaultSelectBehavior = withProps<
 }));
 
 const Skeleton: React.SFC<{ count?: number }> = ({ count = 9 }) => (
-  <Card.Grid loading>
+  <CardGrid loading>
     {new Array(count).fill(null).map((_, idx) => {
       const shapeIdx = Math.floor(Math.random() * 10);
       let shape: CardShape;
@@ -47,9 +47,9 @@ const Skeleton: React.SFC<{ count?: number }> = ({ count = 9 }) => (
       } else {
         shape = CardShape.Normal;
       }
-      return <Card.Skeleton key={idx} shape={shape} />;
+      return <CardSkeleton key={idx} shape={shape} />;
     })}
-  </Card.Grid>
+  </CardGrid>
 );
 
 interface RecipeCardsWithFragments

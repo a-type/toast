@@ -16,7 +16,12 @@ const App: SFC<{}> = () => (
       <Router history={history}>
         <TokenContext.Provider>
           <Background.Manager>
-            <Box direction="row" height="100%" width="100%">
+            <Box
+              direction="row"
+              height="100%"
+              width="100%"
+              margin={{ bottom: '80px' }}
+            >
               <Sidebar />
               <Routes />
             </Box>

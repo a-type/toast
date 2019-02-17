@@ -13,8 +13,3 @@ export interface ShapedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
   ref?: any;
 }
-
-export interface ShapedCardSkeletonProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  shape: CardShape;
-}

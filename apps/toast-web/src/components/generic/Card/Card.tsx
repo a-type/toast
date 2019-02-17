@@ -1,15 +1,14 @@
-import * as React from 'react';
-import Grid from './Grid';
+import React, { SFC } from 'react';
 import { CardShape, ShapedCardProps } from './types';
-import {
-  Vertical,
-  VerticalSkeleton,
-  Compact,
-  CompactSkeleton,
-  Horizontal,
-  HorizontalSkeleton,
-} from './layouts';
 import useComponentSize from '@rehooks/component-size';
+import styled from 'styled-components';
+import { loading } from 'components/effects';
+import CardWrapper from './components/CardWrapper';
+import {
+  VerticalCardContents,
+  HorizontalCardContents,
+  CompactCardContents,
+} from './components/CardContents';
 
 interface Props {
   imageSrc?: string;
@@ -42,49 +41,54 @@ const useCardLayout = (): [any, LayoutMode] => {
   return [ref, layout];
 };
 
-const Card: React.ComponentType<Props> & {
-  Grid?: typeof Grid;
-  Skeleton?: React.SFC<{ shape?: CardShape }>;
-} = props => {
-  //const [contentRef, layoutMode] = useCardLayout();
-  const layoutMode: LayoutMode = LayoutMode.Vertical;
+export const Card: SFC<Props> = props => {
+  const [contentRef, layoutMode] = useCardLayout();
 
-  let Layout: React.ComponentType<ShapedCardProps>;
+  let Layout;
   switch (layoutMode) {
-    // case LayoutMode.Compact:
-    //   Layout = Compact;
-    //   break;
-    // case LayoutMode.Horizontal:
-    //   Layout = Horizontal;
-    //   break;
+    case LayoutMode.Compact:
+      Layout = CompactCardContents;
+      break;
+    case LayoutMode.Horizontal:
+      Layout = HorizontalCardContents;
+      break;
     default:
-      Layout = Vertical;
+      Layout = VerticalCardContents;
       break;
   }
 
-  return <Layout {...props} />;
+  return (
+    <CardWrapper ref={contentRef} data-card-shape={props.shape}>
+      <Layout {...props} />
+    </CardWrapper>
+  );
 };
 
-Card.Grid = Grid;
+export const CardGrid = styled<{ loading?: boolean }, 'div'>('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-auto-rows: 10vh;
 
-Card.Skeleton = ({ shape = CardShape.Normal }) => {
-  // const [contentRef, layoutMode] = useCardLayout();
-  const layoutMode: LayoutMode = LayoutMode.Vertical;
+  grid-gap: 20px;
+  grid-auto-flow: dense;
+  margin-bottom: var(--spacing-lg);
 
-  let Layout: React.ComponentType<any>;
-  switch (layoutMode) {
-    // case LayoutMode.Compact:
-    //   Layout = CompactSkeleton;
-    //   break;
-    // case LayoutMode.Horizontal:
-    //   Layout = HorizontalSkeleton;
-    //   break;
-    default:
-      Layout = VerticalSkeleton;
-      break;
+  ${props => (props.loading ? loading : '')};
+
+  @media (max-height: 600px) {
+    grid-auto-rows: 20vmax;
   }
 
-  return <Layout shape={shape} />;
-};
+  & > * {
+    height: 100%;
+  }
 
-export default Card;
+  & > *[data-card-shape='large'] {
+    grid-column-end: span 2;
+    grid-row-end: span 2;
+  }
+
+  & > *[data-card-shape='wide'] {
+    grid-column-end: span 2;
+  }
+`;

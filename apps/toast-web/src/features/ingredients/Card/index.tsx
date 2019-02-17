@@ -1,6 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
-import Card, { CardShape } from 'components/generic/Card';
+import { Card, CardShape } from 'components/generic/Card';
 import gql from 'graphql-tag';
 import { Link } from 'components/generic';
 
@@ -18,8 +17,5 @@ IngredientCard.fragments = {
     }
   `,
 };
-
-IngredientCard.Grid = Card.Grid;
-IngredientCard.Skeleton = Card.Skeleton;
 
 export default IngredientCard;

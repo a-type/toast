@@ -1,10 +1,9 @@
 import React, { SFC, useState, useContext, Fragment } from 'react';
 import ToggleButton from './ToggleButton';
-import { Box, Layer, Button } from 'grommet';
+import { Box, Layer, BoxProps } from 'grommet';
 import useMedia from 'hooks/useMedia';
 import { Link } from 'components/generic';
 import { Logo, BackdropArt } from 'components/brand';
-import { IsLoggedIn } from 'features/auth/gates';
 import SidebarLink from './SidebarLink';
 import AuthContext from 'contexts/AuthContext';
 import Avatar from './Avatar';
@@ -12,6 +11,19 @@ import { path } from 'ramda';
 import { OverlayColorContext } from 'components/graphics';
 import { GroceryDayBanner } from 'features/plan';
 import Invite from 'features/groups/Invite';
+import styled from 'styled-components';
+
+const SidebarContentBox = styled<{ embedded: boolean } & BoxProps>(
+  ({ embedded, ...props }) => <Box {...props} />,
+)`
+  position: relative;
+  flex-shrink: 0;
+  width: ${props => (props.embedded ? '300px' : '80vw')};
+
+  @media (min-width: 800px) {
+    width: 300px;
+  }
+`;
 
 interface SidebarProps {}
 
@@ -49,15 +61,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
   );
 
   const content = (
-    <Box
-      basis="auto"
-      height="100%"
-      style={{
-        position: 'relative',
-        flexShrink: 0,
-        width: isWide ? '300px' : '80vw',
-      }}
-    >
+    <SidebarContentBox height="100%" embedded={isWide}>
       <OverlayColorContext>
         <BackdropArt />
         <Box style={{ position: 'relative' }}>
@@ -69,7 +73,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
           {isLoggedIn ? authContent : anonContent}
         </Box>
       </OverlayColorContext>
-    </Box>
+    </SidebarContentBox>
   );
 
   if (isWide) {

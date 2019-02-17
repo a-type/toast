@@ -2,7 +2,8 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Card } from 'features/ingredients';
-import { CardShape } from 'components/generic/Card';
+import { CardShape, CardGrid } from 'components/generic/Card';
+import { CardSkeleton } from 'components/skeletons';
 
 const GetRecentIngredients = gql`
   query RecentIngredients {
@@ -21,11 +22,11 @@ export default class RecentIngredients extends React.Component {
         {({ loading, error, data }) => {
           if (loading) {
             return (
-              <Card.Grid>
+              <CardGrid>
                 {new Array(10).fill(null).map((_, idx) => (
-                  <Card.Skeleton shape={CardShape.Normal} key={idx} />
+                  <CardSkeleton key={idx} />
                 ))}
-              </Card.Grid>
+              </CardGrid>
             );
           }
 
@@ -34,11 +35,11 @@ export default class RecentIngredients extends React.Component {
           }
 
           return (
-            <Card.Grid>
+            <CardGrid>
               {data.ingredients.map(ingredient => (
                 <Card ingredient={ingredient} />
               ))}
-            </Card.Grid>
+            </CardGrid>
           );
         }}
       </Query>

@@ -24,6 +24,7 @@ const ToggleButton: SFC<
         <Icon
           name={props.open ? 'next-page' : 'three-dots-symbol'}
           rotation={props.open ? 180 : 0}
+          color="var(--color-brand-dark)"
         />
       }
     />

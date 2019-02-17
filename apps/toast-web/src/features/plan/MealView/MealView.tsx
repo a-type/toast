@@ -20,8 +20,7 @@ import actionsFragment from 'features/plan/actions/fragment';
 import { Label } from 'components/text';
 import { MealStack } from './components';
 import getPrimaryAction from 'features/plan/getPrimaryAction';
-import { Card } from 'components/generic';
-import { TextSkeleton } from 'components/skeletons';
+import { TextSkeleton, CardSkeleton } from 'components/skeletons';
 
 const MEALS = ['Breakfast', 'Lunch', 'Dinner'];
 
@@ -38,7 +37,7 @@ export const Skeleton = () => (
     <Label>
       <TextSkeleton />
     </Label>
-    <Card.Skeleton />
+    <CardSkeleton />
   </MealStack>
 );
 

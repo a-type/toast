@@ -7,6 +7,7 @@ import logger from 'logger';
 import { pathOr } from 'ramda';
 import RecipePreviewQuery from './RecipePreviewQuery';
 import { Text, Button } from 'grommet';
+import { CardSkeleton } from 'components/skeletons';
 
 interface CalendarCookActionProps {
   dateIndex: number;
@@ -43,12 +44,12 @@ export default class CalendarCookAction extends React.Component<
         <RecipePreviewQuery variables={{ recipeId }}>
           {({ data, networkStatus, error }) => {
             if (networkStatus < 7) {
-              return <Card.Skeleton />;
+              return <CardSkeleton />;
             }
 
             if (error) {
               logger.fatal(error);
-              return <Card.Skeleton />;
+              return <CardSkeleton />;
             }
 
             const recipe = pathOr({}, ['recipe'], data);
@@ -66,7 +67,7 @@ export default class CalendarCookAction extends React.Component<
     }
 
     if (loading) {
-      return <Card.Skeleton />;
+      return <CardSkeleton />;
     }
 
     return <Card onClick={this.showRecipeSelector}>No recipe selected</Card>;
