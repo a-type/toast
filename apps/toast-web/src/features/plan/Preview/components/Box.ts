@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export default styled.div`
+const PreviewMealBox = styled.div`
   background: var(--color-control-background);
   color: var(--color-control-foreground);
   padding: var(--spacing-md);
@@ -10,3 +10,5 @@ export default styled.div`
   flex-direction: column;
   justify-content: flex-end;
 `;
+
+export default PreviewMealBox;

@@ -11,7 +11,11 @@ setConfig({
   pureRender: true,
 });
 
-ReactDOM.render(<App />, document.getElementById('main'));
+const renderApp = (AppComponent = App) => {
+  ReactDOM.render(<AppComponent />, document.getElementById('main'));
+};
+
+renderApp();
 
 OfflinePluginRuntime.install({
   onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
@@ -20,5 +24,8 @@ OfflinePluginRuntime.install({
 });
 
 if (module.hot) {
-  module.hot.accept();
+  module.hot.accept('./App/index.tsx', () => {
+    const NewApp = require('./App/index').default;
+    renderApp(NewApp);
+  });
 }

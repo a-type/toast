@@ -59,7 +59,7 @@ const View: React.SFC<{}> = () => (
 
         return (
           <React.Fragment>
-            <HelpText spaceBelow="lg">
+            <HelpText margin={{ bottom: 'large' }}>
               your grocery day is {format(groceryDate, 'MMMM Do, YYYY')}
             </HelpText>
             <div>

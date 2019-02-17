@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader';
 import React, { SFC } from 'react';
 import Routes from './Routes';
 import { Background } from 'components/generic';
@@ -8,7 +7,8 @@ import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
 import history from 'browserHistory';
 import { GlobalStyle, grommetTheme } from 'theme';
-import { Grommet } from 'grommet';
+import { Grommet, Box } from 'grommet';
+import Sidebar from 'features/structure/Sidebar';
 
 const App: SFC<{}> = () => (
   <ApolloProvider client={apolloClient}>
@@ -16,7 +16,10 @@ const App: SFC<{}> = () => (
       <Router history={history}>
         <TokenContext.Provider>
           <Background.Manager>
-            <Routes />
+            <Box direction="row" height="100%" width="100%">
+              <Sidebar />
+              <Routes />
+            </Box>
           </Background.Manager>
         </TokenContext.Provider>
       </Router>
@@ -25,4 +28,4 @@ const App: SFC<{}> = () => (
   </ApolloProvider>
 );
 
-export default hot(module)(App);
+export default App;

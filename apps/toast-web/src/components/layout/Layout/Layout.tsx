@@ -8,7 +8,6 @@ import { BackgroundStyle } from '../types';
 import * as Areas from './areas';
 import { BackdropArt } from 'components/brand';
 import { Background } from 'components/generic';
-import { Navigation } from 'features/structure';
 
 export interface BaseLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   noScroll?: boolean;
@@ -50,16 +49,6 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
     props.backgroundStyle === BackgroundStyle.Brand
       ? 'var(--color-brand)'
       : 'transparent'};
-
-  & > .${CLASS_NAMES.NAVIGATION} {
-    grid-area: navigation;
-
-    width: 100%;
-    padding: var(--spacing-md);
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
-  }
 
   & > .${CLASS_NAMES.CONTENT} {
     grid-area: content;
@@ -162,7 +151,6 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
   backgroundStyle = BackgroundStyle.Blank,
   secondaryContentIcon = 'three-dots-symbol',
   noScroll = false,
-  renderNavigation = () => <Navigation />,
   renderBanner,
   renderSecondaryContent,
   secondaryContentFirst = false,
@@ -184,9 +172,6 @@ const TwoColumnLayout: React.SFC<TwoColumnLayoutProps> = ({
         secondaryContentFirst={secondaryContentFirst}
         {...rest}
       >
-        {!!renderNavigation && (
-          <Areas.Navigation>{renderNavigation()}</Areas.Navigation>
-        )}
         {!!renderBanner && <Areas.Banner>{renderBanner()}</Areas.Banner>}
 
         <Areas.Content>{children}</Areas.Content>

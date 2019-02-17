@@ -228,7 +228,7 @@ const focusShadow = color =>
   `;
 focusShadow.default = focusShadow('var(--color-brand-light)');
 
-const base = generate(24, 12);
+const base = generate(spaceSizes.lg, 12);
 
 export const grommetTheme = deepMerge(base, {
   global: {
@@ -271,6 +271,13 @@ export const grommetTheme = deepMerge(base, {
     },
     extend: ({ primary, colorValue, theme, plain }: any) => css`
       font-style: italic;
+      word-wrap: normal;
+      max-width: 240px;
+      border-color: ${
+        colorValue
+          ? normalizeColor(colorValue, theme)
+          : 'var(--color-control-background)'
+      };
 
       ${primary &&
         `border-color: ${normalizeColor(

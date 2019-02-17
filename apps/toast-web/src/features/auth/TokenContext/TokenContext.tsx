@@ -2,6 +2,7 @@ import * as React from 'react';
 import firebase from 'services/firebase';
 import client from 'apolloClient';
 import gql from 'graphql-tag';
+import AuthContext from 'contexts/AuthContext';
 
 export interface AuthContext {
   user: firebase.User;
@@ -17,8 +18,7 @@ const MergeUser = gql`
   }
 `;
 
-const ctx = React.createContext<AuthContext>(null);
-const InternalProvider = ctx.Provider;
+const InternalProvider = AuthContext.Provider;
 
 class TokenProvider extends React.Component {
   state = {
@@ -57,6 +57,6 @@ class TokenProvider extends React.Component {
 }
 
 export const Provider = TokenProvider;
-export const Consumer = ctx.Consumer;
+export const Consumer = AuthContext.Consumer;
 
 export default { Provider, Consumer };

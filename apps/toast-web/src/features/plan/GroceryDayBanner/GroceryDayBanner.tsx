@@ -5,7 +5,7 @@ import GroceryDayQuery from './GroceryDayQuery';
 import { pathOr } from 'ramda';
 import GroceryDayEventCreator from './GroceryDayEventCreator';
 import { Layout } from './components';
-import { Text, Button } from 'grommet';
+import { Text, Button, Box } from 'grommet';
 
 const GroceryDayBanner: React.SFC<{}> = ({}) => {
   const [isEditMode, setEditMode] = React.useState(false);
@@ -25,11 +25,23 @@ const GroceryDayBanner: React.SFC<{}> = ({}) => {
             onSaved={() => setEditMode(false)}
           />
         ) : (
-          <Layout>
-            <Text>Grocery day: {Day[groceryDay]}</Text>
-            <Button label="Change" onClick={() => setEditMode(true)} />
+          <Box
+            direction="column"
+            align="start"
+            background="white"
+            pad="medium"
+            style={{ borderRadius: 'var(--border-radius-md)' }}
+          >
+            <Text margin={{ bottom: 'medium' }}>
+              Grocery day: {Day[groceryDay]}
+            </Text>
+            <Button
+              margin={{ bottom: 'medium' }}
+              label="Change"
+              onClick={() => setEditMode(true)}
+            />
             <GroceryDayEventCreator dayIndex={groceryDay} />
-          </Layout>
+          </Box>
         );
       }}
     </GroceryDayQuery>

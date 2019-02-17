@@ -4,8 +4,7 @@
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties",
     "graphql-tag",
-    "styled-components",
-    "react-hot-loader/babel"
+    "styled-components"
   ],
   "env": {
     "test": {
@@ -14,8 +13,7 @@
         "@babel/plugin-proposal-object-rest-spread",
         "@babel/plugin-proposal-class-properties",
         "graphql-tag",
-        "styled-components",
-        "react-hot-loader/babel"
+        "styled-components"
       ]
     }
   }

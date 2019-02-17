@@ -7,10 +7,11 @@ export enum CardShape {
 }
 
 export interface ShapedCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  shape: CardShape;
+  shape?: CardShape;
   imageSrc?: string;
   children: React.ReactNode;
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
+  ref?: any;
 }
 
 export interface ShapedCardSkeletonProps

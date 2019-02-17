@@ -9,7 +9,6 @@ import {
   Horizontal,
   HorizontalSkeleton,
 } from './layouts';
-import { cold } from 'react-hot-loader';
 import useComponentSize from '@rehooks/component-size';
 
 interface Props {
@@ -46,44 +45,46 @@ const useCardLayout = (): [any, LayoutMode] => {
 const Card: React.ComponentType<Props> & {
   Grid?: typeof Grid;
   Skeleton?: React.SFC<{ shape?: CardShape }>;
-} = cold(props => {
-  const [contentRef, layoutMode] = useCardLayout();
+} = props => {
+  //const [contentRef, layoutMode] = useCardLayout();
+  const layoutMode: LayoutMode = LayoutMode.Vertical;
 
   let Layout: React.ComponentType<ShapedCardProps>;
   switch (layoutMode) {
-    case LayoutMode.Compact:
-      Layout = Compact;
-      break;
-    case LayoutMode.Horizontal:
-      Layout = Horizontal;
-      break;
+    // case LayoutMode.Compact:
+    //   Layout = Compact;
+    //   break;
+    // case LayoutMode.Horizontal:
+    //   Layout = Horizontal;
+    //   break;
     default:
       Layout = Vertical;
       break;
   }
 
-  return <Layout {...props} ref={contentRef} />;
-});
+  return <Layout {...props} />;
+};
 
 Card.Grid = Grid;
 
-Card.Skeleton = cold(({ shape = CardShape.Normal }) => {
-  const [contentRef, layoutMode] = useCardLayout();
+Card.Skeleton = ({ shape = CardShape.Normal }) => {
+  // const [contentRef, layoutMode] = useCardLayout();
+  const layoutMode: LayoutMode = LayoutMode.Vertical;
 
   let Layout: React.ComponentType<any>;
   switch (layoutMode) {
-    case LayoutMode.Compact:
-      Layout = CompactSkeleton;
-      break;
-    case LayoutMode.Horizontal:
-      Layout = HorizontalSkeleton;
-      break;
+    // case LayoutMode.Compact:
+    //   Layout = CompactSkeleton;
+    //   break;
+    // case LayoutMode.Horizontal:
+    //   Layout = HorizontalSkeleton;
+    //   break;
     default:
       Layout = VerticalSkeleton;
       break;
   }
 
-  return <Layout shape={shape} ref={contentRef} />;
-});
+  return <Layout shape={shape} />;
+};
 
 export default Card;

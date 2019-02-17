@@ -87,7 +87,7 @@ const ScheduleEditSave: React.SFC<RouteComponentProps> = ({ history }) => {
             </Field>
 
             {strategy && (
-              <HelpText spaceBelow="lg">
+              <HelpText margin={{ bottom: 'large' }}>
                 {strategyDescriptions[strategy.value]}
               </HelpText>
             )}

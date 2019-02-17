@@ -2,7 +2,7 @@ import * as React from 'react';
 import CreateGroupInvitationMutation from './CreateGroupInvitationMutation';
 import Copy from 'react-copy-to-clipboard';
 import { HelpText } from 'components/text';
-import { Button } from 'grommet';
+import { Button, Box, DropButton } from 'grommet';
 
 export interface InviteProps {}
 
@@ -46,27 +46,27 @@ const Invite: React.SFC<InviteProps> = ({}) => {
           }
         };
 
-        if (link) {
-          return (
-            <div>
-              <Copy text={link} onCopy={() => setCopied(true)}>
-                <Button
-                  primary
-                  label={copied ? 'Copied' : 'Copy invite link'}
-                />
-              </Copy>
-              <HelpText>
-                This link will only work once, and expires in a day. Be sure to
-                send it to the right person.
-              </HelpText>
-            </div>
-          );
-        }
+        const content = link ? (
+          <Box direction="column" align="center" pad="medium">
+            <Copy text={link} onCopy={() => setCopied(true)}>
+              <Button primary label={copied ? 'Copied' : 'Copy invite link'} />
+            </Copy>
+            <HelpText style={{ maxWidth: '200px' }}>
+              This link will only work once, and expires in a day. Be sure to
+              send it to the right person.
+            </HelpText>
+          </Box>
+        ) : (
+          <Box pad="medium">Loading...</Box>
+        );
 
         return (
-          <Button
+          <DropButton
             onClick={createAndSend}
-            label="Invite someone to join your plan"
+            label="Invite someone to your plan"
+            open={!!link}
+            onClose={() => setLink(null)}
+            dropContent={content}
           />
         );
       }}

@@ -11,9 +11,11 @@ const InnerJoin: React.SFC<{ mutate: any } & RouteComponentProps> = ({
   mutate,
 }) => {
   React.useEffect(
-    async () => {
-      await mutate();
-      history.push('/');
+    () => {
+      (async () => {
+        await mutate();
+        history.push('/');
+      })();
     },
     [
       /* only on mount */

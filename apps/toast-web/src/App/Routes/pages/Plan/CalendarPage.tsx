@@ -2,28 +2,22 @@
  * TODO: does this need to be somewhere else?
  */
 import * as React from 'react';
-import { GroceryDayBanner, DayView, Queries } from 'features/plan';
-import { Layout } from 'components/layout';
+import { DayView } from 'features/plan';
 import { Link } from 'components/generic';
 import Invite from 'features/groups/Invite';
-import { Button } from 'grommet';
-
-interface CalendarProps {
-  date: Date;
-}
+import { Button, Box } from 'grommet';
 
 const CalendarPage: React.SFC<{}> = ({}) => {
   return (
-    <Layout
-      renderBanner={() => <GroceryDayBanner />}
-      renderSecondaryContent={() => <div>{/* TODO */}</div>}
-    >
-      <DayView />
-      <Link to="/plan/edit">
-        <Button label="Edit your plan" />
-      </Link>
-      <Invite />
-    </Layout>
+    <Box direction="column" width="100%" pad="large">
+      <Box
+        margin={{ horizontal: 'auto', vertical: 'large' }}
+        width="100%"
+        style={{ maxWidth: '900px' }}
+      >
+        <DayView />
+      </Box>
+    </Box>
   );
 };
 

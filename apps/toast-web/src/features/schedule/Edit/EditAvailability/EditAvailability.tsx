@@ -32,7 +32,7 @@ const EditAvailability = ({ schedule }) => {
 
   return (
     <div>
-      <HelpText spaceBelow="lg">
+      <HelpText margin={{ bottom: 'small' }}>
         What's your average week look like? How much time would you like to
         spend on each meal? How you answer is up to you; anywhere from
         'realistic' to 'aspirational'.

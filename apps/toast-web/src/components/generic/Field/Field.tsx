@@ -22,7 +22,7 @@ const Field: React.SFC<FieldProps> = ({
         {!required && ' (optional)'}
       </Label>
     )}
-    {helpText && <HelpText spaceBelow="sm">{helpText}</HelpText>}
+    {helpText && <HelpText margin={{ bottom: 'small' }}>{helpText}</HelpText>}
     {children}
   </Container>
 );

@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 import { Inner, Outer } from './components';
 import { BackdropArt } from 'components/brand';
 
-export default React.forwardRef(({ children, ...rest }, ref) => (
-  <Outer ref={ref as any} {...rest}>
-    <BackdropArt />
-    <Inner>{children}</Inner>
-  </Outer>
-));
+export default forwardRef<any, { children?: ReactNode }>(
+  ({ children, ...rest }, ref) => (
+    <Outer ref={ref as any} {...rest}>
+      <BackdropArt />
+      <Inner>{children}</Inner>
+    </Outer>
+  ),
+);
