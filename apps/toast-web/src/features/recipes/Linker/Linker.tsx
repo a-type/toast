@@ -1,80 +1,71 @@
-import * as React from 'react';
-import LinkRecipeMutation from './LinkRecipeMutation';
-import { cold } from 'react-hot-loader';
-import { Loader } from './components';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import logger from 'logger';
-import { Disconnected, Field } from 'components/generic';
-import { TextInput, Button, Paragraph } from 'grommet';
+import React, { SFC, Fragment, useState } from 'react';
+import { Icon, Loader } from 'components/generic';
+import { Button, Layer, Box } from 'grommet';
+import LinkRecipeForm from './LinkRecipeForm';
 
-const MESSAGES = {
-  EXPLANATION:
-    'Our computers will do their best to read the recipe on the webpage you provide and add it to your collection. Just enter a valid URL below.',
-  UNKNOWN_ERROR:
-    "Something went wrong when we tried to scan this recipe. If trying again doesn't work, feel free to reach out.",
-};
+interface LinkerProps {}
 
-const RecipeLinker: React.SFC<RouteComponentProps> = ({ history }) => {
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(null);
-  const [url, setUrl] = React.useState('');
+const Linker: SFC<LinkerProps> = ({}) => {
+  const [open, setOpen] = useState(false);
+  const [working, setWorking] = useState(false);
+  const [error, setError] = useState<Error>(null);
+  const close = () => setOpen(false);
 
-  if (loading) {
-    return <Loader />;
-  }
+  const handleStarted = () => {
+    setWorking(true);
+    close();
+  };
 
-  if (error) {
-    return <Disconnected />;
-  }
+  const handleComplete = () => {
+    setWorking(false);
+    setOpen(true);
+  };
+
+  const handleFailed = err => {
+    setError(err);
+    setWorking(false);
+    setOpen(true);
+  };
+
+  const handleReset = () => {
+    setError(null);
+    setWorking(false);
+    setOpen(false);
+  };
+
+  const icon = working ? <Loader size="1em" /> : <Icon name="plus-math" />;
+  const label = working ? 'Scanning...' : 'Add recipe';
 
   return (
-    <LinkRecipeMutation>
-      {mutate => {
-        const submit = async ev => {
-          ev.preventDefault();
-          setLoading(true);
-
-          try {
-            const result = await mutate({
-              variables: {
-                url,
-              },
-            });
-
-            if (!result) {
-              throw new Error(MESSAGES.UNKNOWN_ERROR);
-            }
-
-            if (result.data.linkRecipe.problems.length) {
-              logger.warn(result.data.linkRecipe.problems); // TODO: show
-            }
-
-            history.push(
-              `/recipes/${result.data.linkRecipe.recipe.id}/correct`,
-            );
-          } catch (err) {
-            setLoading(false);
-            logger.fatal(err);
-            setError(err.message);
-          }
-        };
-
-        return (
-          <form onSubmit={submit}>
-            <Paragraph>{MESSAGES.EXPLANATION}</Paragraph>
-            <Field label="Recipe URL">
-              <TextInput
-                value={url}
-                onChange={ev => setUrl(ev.target.value)}
-                name="recipeUrl"
-              />
-            </Field>
-            <Button type="submit" label="Scan" primary />
-          </form>
-        );
+    <div
+      style={{
+        position: 'fixed',
+        right: 'var(--spacing-md)',
+        bottom: 'var(--spacing-md)',
       }}
-    </LinkRecipeMutation>
+    >
+      <Button label={label} icon={icon} onClick={() => setOpen(!open)} />
+      {open && (
+        <Layer
+          responsive={false}
+          position="bottom-right"
+          margin="medium"
+          onClickOutside={close}
+        >
+          <Box pad="large">
+            <LinkRecipeForm
+              onStarted={handleStarted}
+              onComplete={handleComplete}
+              onFailed={handleFailed}
+              onReset={handleReset}
+              loading={working}
+              error={error}
+            />
+          </Box>
+        </Layer>
+      )}
+    </div>
   );
 };
 
-export default cold(withRouter(RecipeLinker));
+export default Linker;

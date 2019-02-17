@@ -1,11 +1,7 @@
-/**
- * TODO: does this need to be somewhere else?
- */
 import * as React from 'react';
 import { DayView } from 'features/plan';
-import { Link } from 'components/generic';
-import Invite from 'features/groups/Invite';
-import { Button, Box } from 'grommet';
+import { Box } from 'grommet';
+import { Linker } from 'features/recipes';
 
 const CalendarPage: React.SFC<{}> = ({}) => {
   return (
@@ -16,6 +12,7 @@ const CalendarPage: React.SFC<{}> = ({}) => {
         style={{ maxWidth: '900px' }}
       >
         <DayView />
+        <Linker />
       </Box>
     </Box>
   );

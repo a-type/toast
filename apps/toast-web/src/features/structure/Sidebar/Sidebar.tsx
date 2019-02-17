@@ -30,29 +30,49 @@ interface SidebarProps {}
 const Sidebar: SFC<SidebarProps> = ({}) => {
   const isWide = useMedia('(min-width: 1200px)');
   const [open, setOpen] = useState<boolean>(false);
+  const hideSidebar = () => setOpen(false);
   const { user, isLoggedIn } = useContext(AuthContext);
 
   const anonContent = (
-    <SidebarLink nav label="Log in or sign up" icon="chef-toque" to="/login" />
+    <SidebarLink
+      nav
+      label="Log in or sign up"
+      icon="chef-toque"
+      to="/login"
+      onMouseUp={hideSidebar}
+    />
   );
 
   const authContent = (
     <Fragment>
       <Avatar avatarUrl={path(['photoURL'], user)} />
 
-      <SidebarLink nav label="Plan" icon="calendar" to="/plan" />
+      <SidebarLink
+        nav
+        label="Plan"
+        icon="calendar"
+        to="/plan"
+        onMouseUp={hideSidebar}
+      />
       <SidebarLink
         nav
         label="Shopping List"
         icon="check-list"
         to="/shoppingList"
+        onMouseUp={hideSidebar}
       />
 
       <Box margin={{ top: 'auto' }} pad="medium">
         <GroceryDayBanner />
       </Box>
 
-      <SidebarLink nav label="Edit your plan" icon="edit" to="/plan/edit" />
+      <SidebarLink
+        nav
+        label="Edit your plan"
+        icon="edit"
+        to="/plan/edit"
+        onMouseUp={hideSidebar}
+      />
 
       <Box align="center" pad="medium">
         <Invite />
@@ -94,7 +114,11 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
           {content}
         </Layer>
       )}
-      <ToggleButton open={open} onClick={() => setOpen(!open)} />
+      <ToggleButton
+        open={open}
+        onClick={() => setOpen(!open)}
+        style={{ zIndex: open ? 10000 : 10 }}
+      />
     </React.Fragment>
   );
 };

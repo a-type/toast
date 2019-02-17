@@ -4,7 +4,6 @@ export const CLASS_NAMES = {
   LAYOUT: 'layout',
   BANNER: 'layout-banner',
   CONTROLS: 'layout-controls',
-  NAVIGATION: 'layout-navigation',
 };
 
 export const BREAK_POINT = 1200;

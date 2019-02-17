@@ -3,9 +3,6 @@ import { Layout, LayoutTypes } from 'components/layout';
 import { Edit } from 'features/schedule';
 import { Setup } from 'features/plan';
 import { Switch, Route } from 'react-router-dom';
-import { path } from 'ramda';
-import { parse, startOfDay } from 'date-fns';
-import { Navigation } from 'features/structure';
 import CalendarPage from './CalendarPage';
 
 export default () => (

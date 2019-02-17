@@ -100,7 +100,7 @@ const Layout = styled<BaseLayoutProps, 'div'>('div')`
   }
 
   @media (min-width: 768px) {
-    & .${CLASS_NAMES.CONTENT}, & .${CLASS_NAMES.NAVIGATION} {
+    & .${CLASS_NAMES.CONTENT} {
       padding-left: ${props => (props.noSpacing ? '0' : 'var(--spacing-xl)')};
       padding-right: ${props => (props.noSpacing ? '0' : 'var(--spacing-xl)')};
     }

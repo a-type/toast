@@ -7,7 +7,6 @@ import RecipePage from './pages/Recipe';
 import UserPage from './pages/User';
 import IngredientPage from './pages/Ingredient';
 import EditRecipePage from './pages/EditRecipe';
-import LinkRecipePage from './pages/LinkRecipe';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
@@ -24,7 +23,6 @@ export default () => (
     <PrivateRoute path="/joinGroup" exact component={JoinGroupPage} />
 
     <PrivateRoute path="/recipes/create" component={EditRecipePage} />
-    <PrivateRoute path="/recipes/link" component={LinkRecipePage} />
     <PrivateRoute
       exact
       path="/recipes/:recipeId/edit"
