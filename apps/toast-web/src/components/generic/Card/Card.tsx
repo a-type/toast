@@ -41,7 +41,7 @@ const useCardLayout = (): [any, LayoutMode] => {
   return [ref, layout];
 };
 
-export const Card: SFC<Props> = props => {
+export const Card: SFC<Props> = ({ onClick, imageSrc, ...props }) => {
   const [contentRef, layoutMode] = useCardLayout();
 
   let Layout;
@@ -58,7 +58,12 @@ export const Card: SFC<Props> = props => {
   }
 
   return (
-    <CardWrapper ref={contentRef} data-card-shape={props.shape}>
+    <CardWrapper
+      ref={contentRef}
+      onClick={onClick}
+      data-card-shape={props.shape}
+      imageSrc={imageSrc}
+    >
       <Layout {...props} />
     </CardWrapper>
   );

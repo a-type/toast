@@ -15,9 +15,7 @@ type InnerLinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
   download?: string;
 };
 
-export type LinkProps = InnerLinkProps & {
-  spaceBelow?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string;
-};
+export type LinkProps = InnerLinkProps;
 
 export const BaseLink = React.forwardRef(
   (
@@ -92,13 +90,9 @@ export const BaseLink = React.forwardRef(
   },
 );
 
-export default styled<LinkProps>(({ spaceBelow, ...rest }) => (
-  <BaseLink {...rest} />
-))`
+export default styled<LinkProps>(BaseLink)`
   color: inherit;
   text-decoration: none;
-  margin-bottom: ${props =>
-    props.spaceBelow ? getSize(props.spaceBelow) : 'initial'};
   display: block;
 
   &:focus {

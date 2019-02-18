@@ -8,6 +8,7 @@ import { pathOr } from 'ramda';
 import RecipePreviewQuery from './RecipePreviewQuery';
 import { Text, Button } from 'grommet';
 import { CardSkeleton } from 'components/skeletons';
+import { Link } from 'components/text';
 
 interface CalendarCookActionProps {
   dateIndex: number;
@@ -57,7 +58,12 @@ export default class CalendarCookAction extends React.Component<
 
             return (
               <Card imageSrc={image}>
-                <Text>{recipe.title}</Text>
+                <Link
+                  margin={{ bottom: 'medium' }}
+                  to={`/recipes/${recipe.id}`}
+                >
+                  {recipe.title}
+                </Link>
                 <Button onClick={this.showRecipeSelector} label="Change" />
               </Card>
             );
@@ -70,7 +76,12 @@ export default class CalendarCookAction extends React.Component<
       return <CardSkeleton />;
     }
 
-    return <Card onClick={this.showRecipeSelector}>No recipe selected</Card>;
+    return (
+      <Card>
+        <Text margin={{ bottom: 'medium' }}>No recipe selected.</Text>
+        <Button onClick={this.showRecipeSelector} label="Pick one" />
+      </Card>
+    );
   };
 
   render() {

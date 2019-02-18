@@ -60,7 +60,10 @@ const RecipeSuggestions: SFC<RecipeSuggestionsProps> = ({
   } = data;
 
   return (
-    <Box margin={{ bottom: 'large' }}>
+    <Box
+      margin={{ bottom: 'large' }}
+      style={{ minWidth: '500px', maxWidth: '90vw' }}
+    >
       {recipes.length > 0 && (
         <Fragment>
           <Heading level="4">Your Recipes</Heading>

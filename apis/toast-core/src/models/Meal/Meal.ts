@@ -1,7 +1,7 @@
 import { getDay } from 'date-fns';
 import { isCookAction, isEatAction } from 'guards/planActions';
 import { dates } from 'tools';
-import { mergeDeepRight } from 'ramda';
+import { clone } from 'ramda';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -163,7 +163,7 @@ export default class Meal {
   };
 
   clone = (overrides: Partial<MealData>) => {
-    return new Meal({ ...this.data, ...overrides });
+    return new Meal({ ...clone(this.data), ...overrides });
   };
 
   /**

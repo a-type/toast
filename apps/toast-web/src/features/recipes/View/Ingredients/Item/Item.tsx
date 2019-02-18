@@ -1,17 +1,9 @@
 import React from 'react';
 import { toDisplay } from 'formatters/unitValue';
 import IngredientLink from 'features/ingredients/Link';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import pluralize from 'pluralize';
 import { Ingredient } from 'generated/schema';
 import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
-
-const GetPreferredServings = gql`
-  query IngredientGetPreferredServings {
-    preferredServings @client
-  }
-`;
 
 export interface IngredientItemProps {
   servings: number;
@@ -111,11 +103,4 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
   }
 }
 
-export default graphql<
-  IngredientItemProps,
-  { preferredServings: number },
-  {},
-  { preferredServings?: number }
->(GetPreferredServings, {
-  props: ({ data }) => ({ preferredServings: data.preferredServings }),
-})(IngredientItem);
+export default IngredientItem;

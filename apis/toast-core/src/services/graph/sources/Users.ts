@@ -15,7 +15,11 @@ export default class Users extends Source<User> {
   supplementUserData = async (
     dbUser: User,
   ): Promise<User & Partial<firebase.auth.UserRecord>> => {
-    const { id } = dbUser;
+    if (!dbUser) {
+      return dbUser;
+    }
+
+    const id = dbUser.id;
 
     try {
       const firebaseUser = await firebase.auth().getUser(id);
