@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "wp",
-    "build": "node scripts/build.js",
+    "build": "cross-env NODE_ENV=production wp",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
