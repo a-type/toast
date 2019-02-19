@@ -33,6 +33,8 @@ spec:
             - name: firebase-service-account-secret
               mountPath: /var/secrets/firebase-service-account
           env:
+            - name: NODE_ENV
+              value: 'production'
             - name: NEO4J_USERNAME
               valueFrom:
                 secretKeyRef:
