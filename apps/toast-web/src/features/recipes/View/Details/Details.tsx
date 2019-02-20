@@ -3,16 +3,18 @@ import Layout from './Layout';
 import Servings from './Servings';
 import gql from 'graphql-tag';
 import Time from './Time';
+import { Link } from 'components/text';
 
 const RecipeDetails = ({ recipe }) => {
   if (!recipe) {
     return null;
   }
 
-  const { servings, cookTime, prepTime, unattendedTime } = recipe;
+  const { servings, cookTime, prepTime, unattendedTime, sourceUrl } = recipe;
 
   return (
     <Layout>
+      <Link to={sourceUrl}>{sourceUrl}</Link>
       <Servings servings={servings} />
       <Time
         cookTime={cookTime}

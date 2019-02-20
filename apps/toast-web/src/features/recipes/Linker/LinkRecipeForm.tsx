@@ -20,6 +20,7 @@ export const LinkRecipeMutation = gql`
       recipe {
         id
         title
+        locked
       }
       problems
     }
@@ -28,12 +29,12 @@ export const LinkRecipeMutation = gql`
 
 export interface LinkRecipeFormProps {
   onStarted?(): any;
-  onComplete?(args: { id: string; title: string }): any;
+  onComplete?(args: { recipe: any; problems: any }): any;
   onFailed?(err: Error): any;
   onReset?(): any;
   loading?: boolean;
   error?: Error;
-  lastResult?: { id: string; title: string };
+  lastResult?: { recipe: any; problems: any };
 }
 
 const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
@@ -53,16 +54,42 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
   }
 
   if (lastResult) {
+    const linkTo = lastResult.recipe.locked
+      ? `/recipes/${lastResult.recipe.id}/correct`
+      : `/recipes/${lastResult.recipe.id}/edit`;
+
+    if (lastResult.problems.length) {
+      return (
+        <Box>
+          <Text color="status-ok">We didn't quite get everything.</Text>
+          <Paragraph>
+            That one was a little tough. We need to hand it over to you to
+            finish off.
+          </Paragraph>
+          <Box direction="row">
+            <Link to={linkTo}>
+              <Button label="Manage Recipe" />
+            </Link>
+            <Button
+              margin={{ left: 'large' }}
+              label="Scan another one"
+              onClick={onReset}
+            />
+          </Box>
+        </Box>
+      );
+    }
+
     return (
       <Box>
         <Text color="status-ok">Nice!</Text>
         <Paragraph>
-          We scanned <i>{lastResult.title}</i> for you.{' '}
-          <Link to={`/recipes/${lastResult.id}/correct`}>
+          We scanned <i>{lastResult.recipe.title}</i> for you.{' '}
+          <Link to={linkTo}>
             Give it a once-over just to make sure we got things right.
           </Link>
         </Paragraph>
-        <Button label="Scan another one" onClick={onStarted} />
+        <Button label="Scan another one" onClick={onReset} />
       </Box>
     );
   }
@@ -86,11 +113,7 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
         logger.warn(result.data.linkRecipe.problems); // TODO: show
       }
 
-      onComplete &&
-        onComplete({
-          id: result.data.linkRecipe.recipe.id,
-          title: result.data.linkRecipe.recipe.title,
-        });
+      onComplete && onComplete(result.data.linkRecipe);
     } catch (err) {
       logger.fatal(err);
       onFailed && onFailed(err);

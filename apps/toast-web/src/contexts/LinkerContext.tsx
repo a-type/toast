@@ -5,13 +5,13 @@ interface LinkerContextValue {
   working: boolean;
   error: Error;
   lastResult: {
-    id: string;
-    title: string;
+    recipe: any;
+    problems: any;
   };
   setOpen(open: boolean): void;
   setWorking(working: boolean): void;
   setError(err: Error): void;
-  setLastResult(res: { id: string; title: string }): void;
+  setLastResult(res: { problems: any; recipe: any }): void;
   reset(): void;
 }
 
@@ -33,7 +33,7 @@ export const Provider = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<Error>(null);
-  const [lastResult, setLastResult] = useState<{ id: string; title: string }>(
+  const [lastResult, setLastResult] = useState<{ recipe: any; problems: any }>(
     null,
   );
 

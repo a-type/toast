@@ -4,6 +4,8 @@ import Source from './Source';
 import { RecipeIngredient } from './RecipeIngredients';
 import { Ingredient } from './Ingredients';
 import { Image } from './Images';
+import * as yup from 'yup';
+import { InternalError } from 'errors';
 
 export interface Recipe {
   id: string;
@@ -51,6 +53,7 @@ export default class Recipes extends Source<Recipe> {
       'cookTime',
       'prepTime',
       'unattendedTime',
+      'locked',
     ]);
   }
 
@@ -244,6 +247,7 @@ export default class Recipes extends Source<Recipe> {
             createdAt: time,
             updatedAt: time,
             viewedAt: time,
+            locked: false,
           },
           userId: user.id,
         },
@@ -252,8 +256,24 @@ export default class Recipes extends Source<Recipe> {
       return this.hydrateOne(result);
     });
 
-  link = (input: Partial<Recipe>) =>
-    this.ctx.writeTransaction(async tx => {
+  linkValidationSchema = yup.object().shape({
+    title: yup.string().required(),
+    description: yup.string(),
+    attribution: yup.string(),
+    cookTime: yup.number(),
+    prepTime: yup.number(),
+    unattendedTime: yup.number(),
+    servings: yup.number(),
+    sourceUrl: yup.string().required(),
+  });
+
+  link = async (input: Partial<Recipe>) => {
+    const isValid = await this.linkValidationSchema.isValid(input);
+    if (!isValid) {
+      throw new InternalError('Sorry, that recipe could not be scanned.');
+    }
+
+    return await this.ctx.writeTransaction(async tx => {
       const user = this.ctx.user;
       const time = timestamp();
 
@@ -306,6 +326,7 @@ export default class Recipes extends Source<Recipe> {
 
       return recipe;
     });
+  };
 
   updateDetails = (id: string, input: Partial<Recipe>) =>
     this.ctx.writeTransaction(async tx => {

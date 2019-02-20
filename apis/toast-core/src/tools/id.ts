@@ -3,5 +3,11 @@ import uuid from 'uuid';
 
 export default (name?: string) =>
   name
-    ? name.toLowerCase().replace(/\s/g, '-') + '-' + shortid.generate()
+    ? name
+        .toLowerCase()
+        .split(/\s/)
+        .map(s => s.replace(/\W/g, ''))
+        .join('-') +
+      '-' +
+      shortid.generate()
     : uuid();

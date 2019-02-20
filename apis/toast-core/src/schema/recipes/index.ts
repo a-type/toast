@@ -35,6 +35,8 @@ export const typeDefs = () => [
       updatedAt: String!
       viewedAt: String!
       views: Int!
+
+      locked: Boolean!
     }
 
     enum RecipeLinkProblem {
@@ -136,16 +138,19 @@ export const resolvers = [
 
         const scraped = await ctx.recipeScraper.scrape(args.input.url);
 
-        result.recipe = await ctx.graph.recipes.link({
-          title: scraped.title,
+        const data = {
+          title: scraped.title || `Scanned Recipe (${args.input.url})`,
           description: scraped.description,
           attribution: scraped.attribution,
           cookTime: scraped.cookTimeMinutes,
           prepTime: scraped.prepTimeMinutes,
           unattendedTime: scraped.unaccountedForTimeMinutes,
-          servings: scraped.servings,
-          sourceUrl: scraped.source,
-        });
+          servings: scraped.servings || 1,
+          sourceUrl: scraped.source || args.input.url,
+          locked: scraped.title && scraped.ingredients.length > 3,
+        };
+
+        result.recipe = await ctx.graph.recipes.link(data);
 
         if (scraped.image) {
           try {
@@ -194,10 +199,15 @@ export const resolvers = [
               );
             }),
           );
+
+          if (recipeIngredients.length === 0) {
+            result.problems.push(RecipeLinkProblem.FailedIngredients);
+          }
         } catch (err) {
           logger.fatal(`Ingredient parsing failed`);
           logger.fatal(err);
           // again, don't fail the whole link due to this
+          result.problems.push(RecipeLinkProblem.FailedIngredients);
         }
 
         result.recipe.ingredients = recipeIngredients;
@@ -239,6 +249,11 @@ export const resolvers = [
           parent.id,
           args.pagination || { offset: 0, count: 25 },
         ),
+    },
+    Recipe: {
+      // default value of locked to true
+      locked: parent => (parent.locked === null ? true : parent.locked),
+      servings: parent => (parent.servings === null ? 1 : parent.servings),
     },
   },
   recipeIngredients.resolvers,
