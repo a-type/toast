@@ -58,8 +58,8 @@ const requestHandler = new ApolloLink(
 );
 
 const httpLink = createUploadLink({
-  uri: '/api',
-  credentials: 'same-origin',
+  uri: `${CONFIG.apiHost}/api`,
+  credentials: 'include',
   fetch: customFetch,
 });
 

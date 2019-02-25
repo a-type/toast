@@ -15,6 +15,7 @@ declare var CONFIG: {
   };
   pushCertPublicKey: string;
   origin: string;
+  apiHost: string;
   mock: boolean;
 };
 
