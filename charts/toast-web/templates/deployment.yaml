@@ -1,15 +1,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "toast-web.fullname" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    chart: {{ template "toast-web.chart" . }}
+    app: {{ template "toast-web.name" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "toast-web.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: {{ template "toast-web.name" . }}
+        release: {{ .Release.Name }}
 {{- if .Values.podAnnotations }}
       annotations:
 {{ toYaml .Values.podAnnotations | indent 8 }}

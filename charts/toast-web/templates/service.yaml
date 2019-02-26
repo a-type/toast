@@ -1,13 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.service.name }}
-  name: {{ .Values.service.name }}
-{{- else }}
-  name: {{ template "fullname" . }}
-{{- end }}
+  name: {{ template "toast-web.name" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    chart: {{ template "toast-web.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 {{- if .Values.service.annotations }}
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
@@ -20,4 +18,5 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: {{ template "fullname" . }}
+    app: {{ template "toast-web.name" . }}
+    release: {{ .Release.Name }}

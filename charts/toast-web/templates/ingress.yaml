@@ -1,4 +1,4 @@
-{{- $fullName := include "toast-core.fullname" . -}}
+{{- $fullName := include "toast-web.fullname" . -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -18,8 +18,8 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.staticIp }}
     kubernetes.io/ingress.allow-http: "false"
   labels:
-    app: {{ template "toast-core.name" . }}
-    chart: {{ template "toast-core.chart" . }}
+    app: {{ template "toast-web.name" . }}
+    chart: {{ template "toast-web.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
