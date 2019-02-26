@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
 service:
   name: toast-web
-  type: ClusterIP
+  type: NodePort
   externalPort: 80
   internalPort: 4040
 resources:
