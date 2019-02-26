@@ -2,13 +2,11 @@ FROM node:9
 
 WORKDIR /app
 
-ADD ./server .
+ADD . .
 
-RUN npm install
+WORKDIR /app/server
 
-RUN npm run build
-
-EXPOSE 4000
+EXPOSE 4040
 
 RUN chown -R 1001:1001 /app
 

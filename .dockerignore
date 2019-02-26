@@ -1,5 +1,7 @@
-draft.toml
 charts/
 NOTICE
 LICENSE
 README.md
+.vscode/
+.storybook/
+scripts/

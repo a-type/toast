@@ -10,7 +10,7 @@ service:
   name: toast-web
   type: ClusterIP
   externalPort: 80
-  internalPort: 8080
+  internalPort: 4040
 resources:
   limits:
     cpu: 400m
