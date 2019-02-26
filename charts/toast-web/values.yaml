@@ -29,3 +29,8 @@ readinessProbe:
   successThreshold: 1
   timeoutSeconds: 1
 terminationGracePeriodSeconds: 10
+ingress:
+  staticIp: 'toast-primary-ingress'
+  path: /
+  tls:
+    secretName: toastcooking-app-tls-prod
