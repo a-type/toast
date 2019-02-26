@@ -14,8 +14,7 @@
       "es2016.array.include",
       "es2017",
       "es2015.promise",
-      "esnext.asynciterable",
-      "dom"
+      "esnext.asynciterable"
     ],
     // temp until they sort stuff out... https://github.com/firebase/firebase-admin-node/issues/358
     "skipLibCheck": true
