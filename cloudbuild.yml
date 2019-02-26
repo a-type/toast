@@ -13,18 +13,6 @@ steps:
     env:
       - 'BUILD_ID=$BUILD_ID'
 
-  - name: 'gcr.io/cloud-builders/npm'
-    id: 'Install server dependencies'
-    args: ['install']
-    dir: 'server'
-
-  - name: 'gcr.io/cloud-builders/npm'
-    id: 'Build server'
-    args: ['run', 'build']
-    env:
-      - 'BUILD_ID=$BUILD_ID'
-    dir: 'server'
-
   # Build snapshot images and push them to Cloud Registry
 
   - name: 'gcr.io/cloud-builders/docker'

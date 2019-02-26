@@ -5,3 +5,5 @@ README.md
 .vscode/
 .storybook/
 scripts/
+node_modules/
+server/node_modules/

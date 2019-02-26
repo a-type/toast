@@ -6,9 +6,13 @@ ADD . .
 
 WORKDIR /app/server
 
+RUN npm i
+
+RUN npm run build
+
 EXPOSE 4040
 
-RUN chown -R 1001:1001 /app
+# RUN chown -R 1001:1001 /app
 
 USER 1001
 
