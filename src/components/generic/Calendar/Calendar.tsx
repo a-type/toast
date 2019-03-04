@@ -42,6 +42,7 @@ export type CalendarProps = {
   onChange?(date: Date): void;
   renderDate?: (params: DateRenderParams) => React.ReactNode;
   onMonthChange?: (firstDay: Date) => void;
+  expandable?: boolean;
 };
 
 const defaultRenderDate = ({
@@ -129,6 +130,7 @@ type CalendarComponent = React.SFC<CalendarProps> & {
 const Calendar: CalendarComponent = ({
   onMonthChange = () => {},
   value = new Date(),
+  expandable = false,
   ...rest
 }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -169,7 +171,7 @@ const Calendar: CalendarComponent = ({
   return (
     <div>
       <CrossFade>
-        {expanded ? (
+        {expandable && expanded ? (
           <MonthContainer>
             <Button
               icon={<Icon name="expand-arrow" rotation={90} />}
@@ -206,7 +208,9 @@ const Calendar: CalendarComponent = ({
         value={value}
         {...rest}
       />
-      <ExpandButton onClick={toggleExpanded} expanded={expanded} />
+      {expandable && (
+        <ExpandButton onClick={toggleExpanded} expanded={expanded} />
+      )}
     </div>
   );
 };

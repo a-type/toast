@@ -99,33 +99,40 @@ module.exports = {
       fileName: 'asset-manifest.json',
       publicPath: publicPath,
     }),
-    new OfflinePlugin({
-      excludes: ['**/*.map'],
-      updateStrategy: 'changed',
-      autoUpdate: 1000 * 60 * 2,
+    ...(process.env.NODE_ENV === 'production'
+      ? [
+          new OfflinePlugin({
+            excludes: ['**/*.map'],
+            updateStrategy: 'changed',
+            autoUpdate: 1000 * 60 * 2,
 
-      ServiceWorker: {
-        events: true,
-        navigateFallbackURL: '/',
-      },
-    }),
-    new Serve({
-      host: 'localhost',
-      port: 8080,
-      progress: 'minimal',
-      liveReload: true,
-      historyFallback: {
-        rewrites: [
-          {
-            from: '/wps',
-            to: context => context.parsedUrl.pathname,
-          },
-        ],
-      },
-      static: outputPath,
-      middleware: (app, builtins) => {
-        app.use(builtins.proxy('/api', { target: 'http://localhost:4000' }));
-      },
-    }),
+            ServiceWorker: {
+              events: true,
+              navigateFallbackURL: '/',
+            },
+          }),
+        ]
+      : [
+          new Serve({
+            host: 'localhost',
+            port: 8080,
+            progress: 'minimal',
+            liveReload: true,
+            historyFallback: {
+              rewrites: [
+                {
+                  from: '/wps',
+                  to: context => context.parsedUrl.pathname,
+                },
+              ],
+            },
+            static: outputPath,
+            middleware: (app, builtins) => {
+              app.use(
+                builtins.proxy('/api', { target: 'http://localhost:4000' }),
+              );
+            },
+          }),
+        ]),
   ],
 };
