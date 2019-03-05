@@ -54,10 +54,6 @@ const fragments = {
   recipe: gql`
     fragment LikeButton on Recipe {
       id
-      yourLike {
-        id
-        likedAt
-      }
     }
   `,
 };

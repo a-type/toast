@@ -32,8 +32,29 @@ const GetPlanQuery = gql`
     }
   }
 
+  fragment MealRecipeFragment on Recipe {
+    id
+    title
+    coverImage {
+      id
+      url
+    }
+  }
+
   fragment MealFragment on PlanMeal {
     id
+
+    cooking {
+      ...MealRecipeFragment
+    }
+
+    eating {
+      id
+
+      cooking {
+        ...MealRecipeFragment
+      }
+    }
   }
 `;
 
