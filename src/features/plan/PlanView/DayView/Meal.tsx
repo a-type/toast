@@ -1,7 +1,7 @@
 import React, { SFC, useState } from 'react';
 import { PlanMeal, Recipe } from '../types';
 import { Box, Text, Button } from 'grommet';
-import { Label } from 'components/text';
+import { Label, Link } from 'components/text';
 import { Card } from 'components/generic';
 import { TextSkeleton, CardSkeleton } from 'components/skeletons';
 import styled from 'styled-components';
@@ -10,14 +10,44 @@ import { pathOr } from 'ramda';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 
+export const MealFragment = gql`
+  fragment MealRecipeFragment on Recipe {
+    id
+    title
+    coverImage {
+      id
+      url
+    }
+  }
+
+  fragment MealFragment on PlanMeal {
+    id
+
+    cooking {
+      ...MealRecipeFragment
+    }
+
+    eating {
+      id
+
+      cooking {
+        ...MealRecipeFragment
+      }
+    }
+  }
+`;
+
 const AssignRecipeMutation = gql`
   mutation AssignRecipe($planMealId: ID!, $recipeId: ID!) {
     assignPlanMealRecipe(
       input: { planMealId: $planMealId, recipeId: $recipeId }
     ) {
       id
+      ...MealFragment
     }
   }
+
+  ${MealFragment}
 `;
 
 const MealBox = styled(Box)`
@@ -28,7 +58,7 @@ const MealBox = styled(Box)`
 
 interface CookingSectionProps {
   cooking: Recipe[];
-  assignRecipe(recipeId: string): any;
+  assignRecipe(recipeId: string): Promise<any>;
 }
 
 const CookingSection: SFC<CookingSectionProps> = ({
@@ -37,15 +67,27 @@ const CookingSection: SFC<CookingSectionProps> = ({
 }) => {
   const [showSelector, setShowSelector] = useState(false);
 
-  const handleSelectRecipe = (recipe: Recipe) => assignRecipe(recipe.id);
+  const handleSelectRecipe = async (recipe: Recipe) => {
+    await assignRecipe(recipe.id);
+    setShowSelector(false);
+  };
 
-  if (cooking && cooking.length) {
-    return <Text>Cooking {cooking[0].title}</Text>;
-  }
+  const mainContent =
+    cooking && cooking.length ? (
+      <>
+        <Text>
+          Cooking:{' '}
+          <Link to={`/recipes/${cooking[0].id}`}>{cooking[0].title}</Link>
+        </Text>
+        <Button onClick={() => setShowSelector(true)} label="Change recipe" />
+      </>
+    ) : (
+      <Button onClick={() => setShowSelector(true)} label="Cook something" />
+    );
 
   return (
     <>
-      <Button onClick={() => setShowSelector(true)} label="Cook something" />
+      {mainContent}
       {showSelector && (
         <RecipeSelector
           onChange={handleSelectRecipe}
@@ -70,9 +112,11 @@ const Meal: SFC<MealProps> = ({ meal, mealName }) => {
       <Card imageSrc={pathOr(null, ['cooking', 0, 'coverImage', 'url'], meal)}>
         <CookingSection
           cooking={meal.cooking}
-          assignRecipe={recipeId =>
-            assignMutate({ variables: { recipeId, planMealId: meal.id } })
-          }
+          assignRecipe={async recipeId => {
+            await assignMutate({
+              variables: { recipeId, planMealId: meal.id },
+            });
+          }}
         />
       </Card>
     </MealBox>

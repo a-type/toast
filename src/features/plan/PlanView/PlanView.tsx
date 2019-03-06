@@ -7,6 +7,7 @@ import { pathOr } from 'ramda';
 import DayView from './DayView/DayView';
 import { startOfDay, isSameDay } from 'date-fns';
 import Calendar from 'components/generic/Calendar';
+import { MealFragment } from './DayView/Meal';
 
 const GetPlanQuery = gql`
   query GetPlanQuery {
@@ -32,30 +33,7 @@ const GetPlanQuery = gql`
     }
   }
 
-  fragment MealRecipeFragment on Recipe {
-    id
-    title
-    coverImage {
-      id
-      url
-    }
-  }
-
-  fragment MealFragment on PlanMeal {
-    id
-
-    cooking {
-      ...MealRecipeFragment
-    }
-
-    eating {
-      id
-
-      cooking {
-        ...MealRecipeFragment
-      }
-    }
-  }
+  ${MealFragment}
 `;
 
 interface PlanViewProps {}
