@@ -1,33 +1,18 @@
 import React from 'react';
-import { Edit } from 'features/schedule';
-import { Setup } from 'features/plan';
 import { Switch, Route } from 'react-router-dom';
-import CalendarPage from './CalendarPage';
 import Column from 'components/layout/Column';
+import PlanView from 'features/plan/PlanView/PlanView';
+import { Linker } from 'features/recipes';
+
+const PlanPage = () => (
+  <Column>
+    <PlanView />
+    <Linker />
+  </Column>
+);
 
 export default () => (
   <Switch>
-    <Route
-      path="/plan/edit"
-      render={props => (
-        <Column>
-          <Edit {...props} />
-        </Column>
-      )}
-    />
-    <Route
-      path="/plan/setup"
-      render={() => (
-        <Column>
-          <Setup />
-        </Column>
-      )}
-    />
-    <Route
-      path="/plan"
-      render={() => {
-        return <CalendarPage />;
-      }}
-    />
+    <Route path="/plan" component={PlanPage} />
   </Switch>
 );

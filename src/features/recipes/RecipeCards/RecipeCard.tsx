@@ -3,7 +3,6 @@ import { Card, CardShape } from 'components/generic/Card';
 import gql from 'graphql-tag';
 import { path } from 'ramda';
 import styled from 'styled-components';
-import LikeButton from 'features/recipes/LikeButton';
 
 const Row = styled.div`
   display: flex;
@@ -35,7 +34,6 @@ const RecipeCard = ({ recipe, onClick }) => (
   >
     <Row>
       <span>{recipe.title}</span>
-      <LikeButton recipe={recipe} />
     </Row>
   </Card>
 );
@@ -49,10 +47,7 @@ RecipeCard.fragments = {
         id
         url
       }
-      ...LikeButton
     }
-
-    ${LikeButton.fragments.recipe}
   `,
 };
 

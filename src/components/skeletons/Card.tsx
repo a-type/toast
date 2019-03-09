@@ -1,4 +1,4 @@
-import React, { SFC } from 'react';
+import React, { SFC, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { CardShape } from 'components/generic';
 import { loading } from 'components/effects';
@@ -10,6 +10,8 @@ export const CardSkeletonStyle = styled.div`
   ${loading};
 `;
 
-export const CardSkeleton: SFC<{ shape?: CardShape }> = ({ shape }) => (
-  <CardSkeletonStyle data-card-shape={shape} />
+export const CardSkeleton: SFC<
+  { shape?: CardShape } & HTMLAttributes<HTMLDivElement>
+> = ({ shape, ...rest }) => (
+  <CardSkeletonStyle data-card-shape={shape} {...rest} />
 );

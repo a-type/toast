@@ -1,4 +1,4 @@
-import React, { SFC } from 'react';
+import React, { SFC, HTMLAttributes } from 'react';
 import { CardShape, ShapedCardProps } from './types';
 import useComponentSize from '@rehooks/component-size';
 import styled from 'styled-components';
@@ -10,7 +10,7 @@ import {
   CompactCardContents,
 } from './components/CardContents';
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   imageSrc?: string;
   children: React.ReactNode;
   shape?: CardShape;
@@ -41,7 +41,13 @@ const useCardLayout = (): [any, LayoutMode] => {
   return [ref, layout];
 };
 
-export const Card: SFC<Props> = ({ onClick, imageSrc, ...props }) => {
+export const Card: SFC<Props> = ({
+  onClick,
+  imageSrc,
+  children,
+  shape,
+  ...props
+}) => {
   const [contentRef, layoutMode] = useCardLayout();
 
   let Layout;
@@ -61,10 +67,11 @@ export const Card: SFC<Props> = ({ onClick, imageSrc, ...props }) => {
     <CardWrapper
       ref={contentRef}
       onClick={onClick}
-      data-card-shape={props.shape}
+      data-card-shape={shape}
       imageSrc={imageSrc}
+      {...props}
     >
-      <Layout {...props} />
+      <Layout shape={shape}>{children}</Layout>
     </CardWrapper>
   );
 };
