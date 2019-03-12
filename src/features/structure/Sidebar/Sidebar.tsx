@@ -64,13 +64,6 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
         to="/shoppingList"
         onMouseUp={hideSidebar}
       />
-      <SidebarLink
-        nav
-        label="Edit your plan"
-        icon="edit"
-        to="/plan/edit"
-        onMouseUp={hideSidebar}
-      />
 
       <SidebarLink
         label="Log out"

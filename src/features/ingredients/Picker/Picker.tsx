@@ -5,6 +5,7 @@ import { Icon } from 'components/generic';
 import Popup from './Popup';
 import { sentence } from 'change-case';
 import { Button } from 'grommet';
+import { pathOr } from 'ramda';
 
 export interface IngredientPickerProps {
   onChange(ingredient: Ingredient): void;
@@ -33,7 +34,7 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
         onClick={() => setPopupOpen(!isPopupOpen)}
         disabled={disabled}
         icon={<Icon name="edit" />}
-        label={sentence(value.name)}
+        label={sentence(pathOr('Unknown Ingredient', ['name'], value))}
       />
       {isPopupOpen && (
         <Popup

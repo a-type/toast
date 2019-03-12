@@ -6,10 +6,8 @@ import { GroceryDay } from 'generated/schema';
 export const Document = gql`
   query GroceryDay {
     group {
-      plan {
-        id
-        groceryDay
-      }
+      id
+      groceryDay
     }
   }
 `;
