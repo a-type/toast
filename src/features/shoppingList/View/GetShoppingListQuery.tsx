@@ -6,11 +6,13 @@ import { shoppingList } from './fragments';
 
 export const Document = gql`
   query GetShoppingList {
-    group {
-      id
-      groceryDay
-      shoppingList {
-        ...ShoppingListView
+    me {
+      group {
+        id
+        groceryDay
+        shoppingList {
+          ...ShoppingListView
+        }
       }
     }
   }

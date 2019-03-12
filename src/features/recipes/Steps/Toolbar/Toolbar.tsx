@@ -13,11 +13,13 @@ const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
   return (
     <Bar>
       <Link to={`/recipes/${recipe.id}`}>
-        <Button icon={<Icon name="next-page" rotation={90} />} />
+        <Button icon={<Icon name="next-page" rotation={180} />} />
       </Link>
       <div>
         <HelpText>Cooking</HelpText>
-        <Heading level="3">{recipe.title}</Heading>
+        <Heading margin="0" level="3">
+          {recipe.title}
+        </Heading>
       </div>
       {/* <div>
         <Button.Icon name="index" />

@@ -53,8 +53,6 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
   }
 
   const selectedDay = group.planDays.find(planDay => {
-    console.log(date);
-    console.log(new Date(planDay.date));
     return isSameDay(new Date(planDay.date), date);
   });
 

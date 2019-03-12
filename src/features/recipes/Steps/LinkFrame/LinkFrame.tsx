@@ -8,8 +8,4 @@ const enforceHttps = (src: string) => {
   return src;
 };
 
-export default ({ src }: { src: string }) => (
-  <ScrollArea>
-    <IFrame src={enforceHttps(src)} />
-  </ScrollArea>
-);
+export default ({ src }: { src: string }) => <IFrame src={enforceHttps(src)} />;

@@ -113,7 +113,7 @@
     "formik": "^0.11.11",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
-    "grommet": "^2.4.0",
+    "grommet": "^2.5.5",
     "history": "^4.7.2",
     "iso8601-duration": "^1.1.1",
     "jwt-decode": "^2.2.0",

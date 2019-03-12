@@ -4,6 +4,7 @@ import Steps from 'features/recipes/Steps';
 import { Route, Switch } from 'react-router-dom';
 import Correct from './Correct';
 import Column from 'components/layout/Column';
+import Fullscreen from 'components/layout/Fullscreen';
 
 const RecipePage = ({ match: { params } }) => (
   <Column>
@@ -12,9 +13,9 @@ const RecipePage = ({ match: { params } }) => (
 );
 
 const RecipeStepsPage = ({ match: { params } }) => (
-  <Column>
+  <Fullscreen>
     <Steps recipeId={params.recipeId} />
-  </Column>
+  </Fullscreen>
 );
 
 export default () => (
