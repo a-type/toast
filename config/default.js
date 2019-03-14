@@ -1,6 +1,6 @@
 module.exports = {
   origin: 'http://localhost:8080',
-  apiHost: 'http://localhost:8080',
+  apiHost: 'http://localhost:4000',
   firebase: {
     apiKey: 'AIzaSyAbrvRJYypD2xxu8L9Xm91ijElOtBfpiGc',
     authDomain: 'toast-cooking-dev.firebaseapp.com',

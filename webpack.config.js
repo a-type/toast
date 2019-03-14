@@ -127,11 +127,6 @@ module.exports = {
               ],
             },
             static: outputPath,
-            middleware: (app, builtins) => {
-              app.use(
-                builtins.proxy('/api', { target: 'http://localhost:4000' }),
-              );
-            },
           }),
         ]),
   ],
