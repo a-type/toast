@@ -7,9 +7,9 @@ import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
 
 export interface IngredientItemProps {
   servings: number;
-  value?: number;
-  valueStart?: number;
-  valueEnd?: number;
+  quantity?: number;
+  quantityStart?: number;
+  quantityEnd?: number;
   unit?: string;
   unitStart?: number;
   unitEnd?: number;
@@ -27,8 +27,8 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
   getTextAtRange = ({ start, end }: { start: number; end: number }) =>
     this.props.text.slice(start, end);
 
-  renderValue = (valueText: string) => {
-    const { servings, preferredServings, value } = this.props;
+  renderQuantity = (valueText: string) => {
+    const { servings, preferredServings, quantity: value } = this.props;
 
     if (!preferredServings) {
       return <b key={`value`}>{valueText}</b>;
@@ -75,8 +75,8 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
       ingredientEnd,
       unitStart,
       unitEnd,
-      valueStart,
-      valueEnd,
+      quantityStart: valueStart,
+      quantityEnd: valueEnd,
     } = this.props;
 
     const ranges: Range[] = [
@@ -91,7 +91,7 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
         name: 'value',
         start: valueStart,
         end: valueEnd,
-        render: this.renderValue,
+        render: this.renderQuantity,
       },
     ].sort((a, b) => b.start - a.start);
 
