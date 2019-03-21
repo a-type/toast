@@ -30,15 +30,15 @@ const GetShoppingListQuery = gql`
             ingredient {
               id
               name
+            }
 
-              plannedUses {
+            plannedUses {
+              id
+              text
+
+              recipe {
                 id
-                text
-
-                recipe {
-                  id
-                  title
-                }
+                title
               }
             }
           }
@@ -85,6 +85,10 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
   }) => markPurchasedMutation({ variables: { input } });
   const unmarkPurchased = (input: { shoppingListItemId: string }) =>
     markUnpurchasedMutation({ variables: { input } });
+
+  if (!data || !data.me) {
+    return null;
+  }
 
   if (error) {
     logger.fatal(error);

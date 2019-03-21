@@ -1,4 +1,4 @@
-import React, { SFC } from 'react';
+import React, { FC, Suspense } from 'react';
 import Routes from './Routes';
 import { TokenContext } from 'features/auth';
 import { ApolloProvider } from 'react-apollo';
@@ -10,18 +10,21 @@ import { GlobalStyle, grommetTheme } from 'theme';
 import { Grommet, Box } from 'grommet';
 import Sidebar from 'features/structure/Sidebar';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
+import { GlobalLoader } from 'components/generic/Loader';
 
-const App: SFC<{}> = () => (
+const App: FC<{}> = () => (
   <ApolloProvider client={apolloClient}>
     <ApolloHooksProvider client={apolloClient}>
       <Grommet theme={grommetTheme} full>
         <Router history={history}>
           <TokenContext.Provider>
             <LinkerContextProvider>
-              <Box direction="row" height="100%" width="100%">
-                <Sidebar />
-                <Routes />
-              </Box>
+              <Suspense fallback={<GlobalLoader />}>
+                <Box direction="row" height="100%" width="100%">
+                  <Sidebar />
+                  <Routes />
+                </Box>
+              </Suspense>
             </LinkerContextProvider>
           </TokenContext.Provider>
         </Router>
