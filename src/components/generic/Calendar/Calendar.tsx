@@ -1,27 +1,18 @@
-import * as React from 'react';
+import React, { FC, ReactNode } from 'react';
+import { Grid, Day, MonthContainer, WeekdayRow } from './components';
 import {
-  Grid,
-  Day,
-  ExpandButton,
-  MonthContainer,
-  WeekdayRow,
-} from './components';
-import { cold } from 'react-hot-loader';
-import {
-  startOfWeek,
   addDays,
   getDate,
   getMonth,
-  addMonths,
-  startOfMonth,
   isSameDay,
   endOfWeek,
+  differenceInDays,
+  startOfWeek,
+  isWithinRange,
 } from 'date-fns';
 import { Label } from 'components/text';
 import { MONTH_NAMES, WEEKDAY_ABBREVIATIONS } from './constants';
-import { CrossFade, Icon } from 'components/generic';
-import { Button, Heading } from 'grommet';
-import { CalendarTransition, GridPosition } from './types';
+import { Heading } from 'grommet';
 
 export interface DateProps {
   title: string;
@@ -35,14 +26,15 @@ export interface DateRenderParams {
   otherMonth: boolean;
   selected: boolean;
   props: DateProps;
+  disabled: boolean;
 }
 
 export type CalendarProps = {
   value?: Date;
   onChange?(date: Date): void;
-  renderDate?: (params: DateRenderParams) => React.ReactNode;
-  onMonthChange?: (firstDay: Date) => void;
-  expandable?: boolean;
+  renderDate?: (params: DateRenderParams) => ReactNode;
+  startDate?: Date;
+  endDate?: Date;
 };
 
 const defaultRenderDate = ({
@@ -50,46 +42,44 @@ const defaultRenderDate = ({
   props,
   selected,
   otherMonth,
+  disabled,
 }: DateRenderParams) => (
-  <Day {...props} selected={selected} faded={otherMonth}>
+  <Day {...props} selected={selected} faded={otherMonth} disabled={disabled}>
     {getDate(date)}
   </Day>
 );
 
 type CalendarGridViewProps = {
-  rowCount?: number;
-  startDate?: Date;
+  startDate: Date;
+  endDate: Date;
   month?: number;
-  position?: GridPosition;
-  transitionName?: CalendarTransition;
-  prepForMove?: boolean;
-  renderDate?: (params: DateRenderParams) => React.ReactNode;
+  renderDate?: (params: DateRenderParams) => ReactNode;
   onChange?(date: Date): void;
   value?: Date;
 };
 
-export const CalendarGridView: React.SFC<CalendarGridViewProps> = ({
-  rowCount = 2,
-  startDate = new Date(),
+export const CalendarGridView: FC<CalendarGridViewProps> = ({
+  startDate,
+  endDate,
   month = new Date().getMonth(),
   renderDate = defaultRenderDate,
   onChange = () => {},
   value = new Date(),
-  transitionName = CalendarTransition.None,
-  position = GridPosition.Current,
-  prepForMove = false,
   ...rest
 }) => {
+  const renderedStartDate = startOfWeek(startDate);
+  const renderedEndDate = endOfWeek(endDate);
+  const dayCount =
+    Math.abs(differenceInDays(renderedEndDate, renderedStartDate)) + 1;
+
   return (
-    <Grid
-      {...rest}
-      position={position}
-      transitionName={transitionName}
-      rows={rowCount}
-      prepForMove={prepForMove}
-    >
-      {new Array(rowCount * 7).fill(null).map((_, idx) => {
-        const date = addDays(startDate, idx);
+    <Grid {...rest} rows={Math.ceil(dayCount / 7)}>
+      {new Array(dayCount).fill(null).map((_, idx) => {
+        const date = addDays(renderedStartDate, idx);
+        const isEnabled =
+          isWithinRange(date, startDate, endDate) ||
+          isSameDay(date, startDate) ||
+          isSameDay(date, endDate);
         const title = date.toString();
         const otherMonth = date.getMonth() !== month;
         const selected = isSameDay(date, value);
@@ -97,6 +87,7 @@ export const CalendarGridView: React.SFC<CalendarGridViewProps> = ({
           date,
           otherMonth,
           selected,
+          disabled: !isEnabled,
           props: {
             value: date.getTime(),
             title,
@@ -109,112 +100,35 @@ export const CalendarGridView: React.SFC<CalendarGridViewProps> = ({
   );
 };
 
-const useMonthTransition = (): [
-  CalendarTransition,
-  (newTransition: CalendarTransition) => void
-] => {
-  const [transitionName, setTransitionName] = React.useState<
-    CalendarTransition
-  >(CalendarTransition.None);
-  const timeoutSet = (newTransitionName: CalendarTransition) => {
-    setTransitionName(newTransitionName);
-    setTimeout(() => setTransitionName(CalendarTransition.None), 200);
-  };
-  return [transitionName, timeoutSet];
-};
-
-type CalendarComponent = React.SFC<CalendarProps> & {
-  Day?: typeof Day;
-};
-
-const Calendar: CalendarComponent = ({
-  onMonthChange = () => {},
+const Calendar: FC<CalendarProps> = ({
   value = new Date(),
-  expandable = false,
+  startDate,
+  endDate,
   ...rest
 }) => {
-  const [expanded, setExpanded] = React.useState(false);
-  const toggleExpanded = () => setExpanded(current => !current);
-  const [firstDayOfCurrentPage, setFirstDayOfCurrentPage] = React.useState(
-    startOfWeek(startOfMonth(value)),
-  );
-  const [transitionName, setTransitionName] = useMonthTransition();
-  const [isHoveringButton, setIsHoveringButton] = React.useState(false);
-
-  const rowCount = expanded ? 6 : 2;
-  const month = getMonth(endOfWeek(firstDayOfCurrentPage));
-
-  const startDate = expanded ? firstDayOfCurrentPage : startOfWeek(value);
-
-  const nextMonth = addMonths(
-    startOfMonth(endOfWeek(firstDayOfCurrentPage)),
-    1,
-  );
-  const previousMonth = addMonths(
-    startOfMonth(endOfWeek(firstDayOfCurrentPage)),
-    -1,
-  );
-  const goToNextMonth = () => {
-    setTransitionName(CalendarTransition.Backwards);
-    setFirstDayOfCurrentPage(startOfWeek(nextMonth));
-    onMonthChange(nextMonth);
-  };
-  const goToPreviousMonth = () => {
-    setTransitionName(CalendarTransition.Forwards);
-    setFirstDayOfCurrentPage(startOfWeek(previousMonth));
-    onMonthChange(previousMonth);
-  };
-
-  const onButtonHover = () => setIsHoveringButton(true);
-  const onButtonLeave = () => setIsHoveringButton(false);
+  const month = getMonth(endOfWeek(startDate));
 
   return (
     <div>
-      <CrossFade>
-        {expandable && expanded ? (
-          <MonthContainer>
-            <Button
-              icon={<Icon name="expand-arrow" rotation={90} />}
-              onClick={goToPreviousMonth}
-              onMouseOver={onButtonHover}
-              onTouchStart={onButtonHover}
-              onMouseLeave={onButtonLeave}
-              onTouchEnd={onButtonLeave}
-            />
-            <Heading level="4">{MONTH_NAMES[month]}</Heading>
-            <Button
-              icon={<Icon name="expand-arrow" rotation={270} />}
-              onClick={goToNextMonth}
-              onMouseOver={onButtonHover}
-              onTouchStart={onButtonHover}
-              onMouseLeave={onButtonLeave}
-              onTouchEnd={onButtonLeave}
-            />
-          </MonthContainer>
-        ) : null}
-      </CrossFade>
+      <MonthContainer>
+        <Heading level="4">{MONTH_NAMES[month]}</Heading>
+      </MonthContainer>
       <WeekdayRow>
         {new Array(7).fill(null).map((_, idx) => (
           <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
         ))}
       </WeekdayRow>
       <CalendarGridView
-        rowCount={rowCount}
         startDate={startDate}
+        endDate={endDate}
         month={month}
-        position={GridPosition.Current}
-        transitionName={transitionName}
-        prepForMove={isHoveringButton}
         value={value}
         {...rest}
       />
-      {expandable && (
-        <ExpandButton onClick={toggleExpanded} expanded={expanded} />
-      )}
     </div>
   );
 };
 
-Calendar.Day = Day;
+export const CalendarDay = Day;
 
-export default cold(Calendar);
+export default Calendar;

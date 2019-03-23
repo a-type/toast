@@ -1,5 +1,5 @@
 import React, { SFC, useState } from 'react';
-import { PlanMeal, Recipe } from '../types';
+import { PlanMealData, PlanMealRecipeData } from '../types';
 import { Box, Text, Button } from 'grommet';
 import { Label, Link } from 'components/text';
 import { Card } from 'components/generic';
@@ -57,7 +57,7 @@ const MealBox = styled(Box)`
 `;
 
 interface CookingSectionProps {
-  cooking: Recipe[];
+  cooking: PlanMealRecipeData[];
   assignRecipe(recipeId: string): Promise<any>;
 }
 
@@ -67,7 +67,7 @@ const CookingSection: SFC<CookingSectionProps> = ({
 }) => {
   const [showSelector, setShowSelector] = useState(false);
 
-  const handleSelectRecipe = async (recipe: Recipe) => {
+  const handleSelectRecipe = async (recipe: PlanMealRecipeData) => {
     await assignRecipe(recipe.id);
     setShowSelector(false);
   };
@@ -99,7 +99,7 @@ const CookingSection: SFC<CookingSectionProps> = ({
 };
 
 interface MealProps {
-  meal: PlanMeal;
+  meal: PlanMealData;
   mealName: string;
 }
 

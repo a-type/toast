@@ -1,14 +1,13 @@
 import * as React from 'react';
 import RecipeCard from './RecipeCard';
-import { RecipeCard as RecipeCardTypes, Recipe } from 'generated/schema';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { withProps, compose } from 'recompose';
-import { Card, CardShape, CardGrid } from 'components/generic/Card';
+import { CardShape, CardGrid } from 'components/generic/Card';
 import { CardSkeleton } from 'components/skeletons';
 
 interface RecipeCardsProps {
-  recipes: RecipeCardTypes.Fragment[];
-  onRecipeSelected?(recipe: RecipeCardTypes.Fragment): void;
+  recipes: any[];
+  onRecipeSelected?(recipe: any): void;
 }
 
 const Grid: React.SFC<RecipeCardsProps> = ({ recipes, onRecipeSelected }) => (
@@ -30,7 +29,7 @@ const withDefaultSelectBehavior = withProps<
   recipes: ownProps.recipes,
   onRecipeSelected:
     ownProps.onRecipeSelected ||
-    function(recipe: Recipe) {
+    function(recipe: any) {
       ownProps.history.push(`/recipes/${recipe.id}`);
     },
 }));

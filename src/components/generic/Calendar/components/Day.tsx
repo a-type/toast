@@ -5,13 +5,14 @@ import { focusShadow } from 'components/effects';
 export interface DayProps {
   faded?: boolean;
   selected?: boolean;
+  highlighted?: boolean;
 }
 
 const Day = styled<DayProps, 'button'>('button')`
   cursor: pointer;
   border: 2px solid
     ${props =>
-      props.selected ? 'var(--color-brand)' : 'var(--color-gray-lightest)'};
+      props.selected ? 'var(--color-brand)' : props.highlighted ? 'var(--color-positive)' : 'var(--color-gray-lightest)'};
   background: ${props =>
     props.selected ? 'var(--color-brand)' : 'transparent'};
   border-radius: 100%;
@@ -25,6 +26,11 @@ const Day = styled<DayProps, 'button'>('button')`
   &:focus {
     outline: 0;
     box-shadow: ${focusShadow.default};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
   }
 `;
 

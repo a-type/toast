@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View } from 'features/shoppingList';
+import { ShoppingList } from 'features/shoppingList/ShoppingList';
 import Column from 'components/layout/Column';
 
 export default () => (
   <Column>
-    <View />
+    <ShoppingList />
   </Column>
 );

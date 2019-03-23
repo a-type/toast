@@ -16,9 +16,9 @@ export const Document = gql`
         unit
         unitStart
         unitEnd
-        value
-        valueStart
-        valueEnd
+        quantity
+        quantityStart
+        quantityEnd
         text
         ingredientStart
         ingredientEnd
