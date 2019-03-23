@@ -1,27 +1,23 @@
-export type Image = {
-  id: string;
-  url: string;
-};
-
-export type Recipe = {
+export type PlanMealRecipeData = {
   id: string;
   title: string;
-  coverImage: Image;
+  coverImage: {
+    id: string;
+    url: string;
+  };
 };
 
-export type PlanMeal = {
+export type PlanMealData = {
   id: string;
-  note: string;
+  cooking: PlanMealRecipeData[];
 
-  cooking: Recipe[];
-  eating: PlanMeal[];
+  eating: PlanMealData[];
 };
 
-export type PlanDay = {
+export type PlanDayData = {
   id: string;
   date: number;
-
-  breakfast: PlanMeal;
-  lunch: PlanMeal;
-  dinner: PlanMeal;
+  breakfast: PlanMealData;
+  lunch: PlanMealData;
+  dinner: PlanMealData;
 };

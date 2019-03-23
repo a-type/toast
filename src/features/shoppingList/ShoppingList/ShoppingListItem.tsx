@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { CheckBox } from 'grommet';
+import { CheckBox, Text } from 'grommet';
+import { toDisplay } from 'formatters/quantity';
 
 type Ingredient = {
   id: string;
@@ -19,20 +20,17 @@ type RecipeIngredient = {
 
 type ShoppingListItem = {
   id: string;
-  totalQuantitiy: number;
+  totalQuantity: number;
   purchasedQuantity: number;
   unit?: string;
   ingredient?: Ingredient;
+  displayName: string;
   plannedUses: RecipeIngredient[];
 };
 
 export interface ShoppingListItemProps {
   item: ShoppingListItem;
-  onMark(input: {
-    shoppingListItemId: string;
-    quantity: number;
-    unit?: string;
-  }): any;
+  onMark(input: { shoppingListItemId: string }): any;
   onUnmark(input: { shoppingListItemId: string }): any;
 }
 
@@ -41,26 +39,44 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({
   onMark,
   onUnmark,
 }) => {
-  const displayName = item.ingredient
-    ? item.ingredient.name
-    : item.plannedUses[0].text;
-
-  const marked = item.totalQuantitiy === item.purchasedQuantity;
+  const marked = item.totalQuantity <= item.purchasedQuantity;
 
   const handleChange = ev => {
     if (ev.target.checked) {
-      onUnmark({ shoppingListItemId: item.id });
-    } else {
       onMark({
         shoppingListItemId: item.id,
-        quantity: item.totalQuantitiy,
-        unit: item.unit,
       });
+    } else {
+      onUnmark({ shoppingListItemId: item.id });
     }
   };
 
+  const label = item.ingredient ? (
+    <Text>
+      {toDisplay(item.totalQuantity)}
+      {item.unit ? ` ${item.unit}` : ''} {item.displayName}
+    </Text>
+  ) : (
+    <Text>{item.displayName}</Text>
+  );
+
+  const details = item.ingredient ? (
+    <Text
+      style={{
+        fontStyle: 'italic',
+        fontSize: 'var(--font-size-sm)',
+        opacity: 0.7,
+      }}
+    >
+      ({item.plannedUses.map(use => use.text).join(', ')})
+    </Text>
+  ) : null;
+
   return (
-    <CheckBox checked={marked} onChange={handleChange} label={displayName} />
+    <>
+      <CheckBox checked={marked} onChange={handleChange} label={label} />
+      {details}
+    </>
   );
 };
 

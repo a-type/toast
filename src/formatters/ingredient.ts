@@ -1,4 +1,4 @@
-import { toDisplay } from './unitValue';
+import { toDisplay } from './quantity';
 import pluralize from 'pluralize';
 
 export default (value: number, unit: string, rest: string): string => {

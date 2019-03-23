@@ -1,5 +1,5 @@
 import React from 'react';
-import { toDisplay } from 'formatters/unitValue';
+import { toDisplay } from 'formatters/quantity';
 import IngredientLink from 'features/ingredients/Link';
 import pluralize from 'pluralize';
 import { Ingredient } from 'generated/schema';

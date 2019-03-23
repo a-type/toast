@@ -1,5 +1,5 @@
 import React, { SFC, useContext, Fragment } from 'react';
-import { Recipe } from '../types';
+import { PlanMealRecipeData } from '../types';
 import { RecipeCards } from 'features/recipes';
 import { HelpText, Link } from 'components/text';
 import { Heading, Box, Text, Paragraph, Button } from 'grommet';
@@ -27,7 +27,7 @@ export const Document = gql`
 `;
 
 interface RecipeSuggestionsProps {
-  onRecipeSelected(recipe: Recipe): void;
+  onRecipeSelected(recipe: PlanMealRecipeData): void;
   onCancel(): void;
 }
 

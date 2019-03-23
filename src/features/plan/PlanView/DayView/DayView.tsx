@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import { PlanDay } from '../types';
+import { PlanDayData } from '../types';
 import { Heading, Box } from 'grommet';
 import { formatDay } from 'formatters/date';
 import MealGrid from './MealGrid';
@@ -7,7 +7,7 @@ import Meal, { MealSkeleton } from './Meal';
 import { HeadingSkeleton } from 'components/skeletons';
 
 interface DayViewProps {
-  day?: PlanDay;
+  day?: PlanDayData;
 }
 
 const DayView: SFC<DayViewProps> = ({ day }) => {

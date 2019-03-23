@@ -7,6 +7,7 @@ import { Box, Heading } from 'grommet';
 import { HelpText } from 'components/text';
 import { format } from 'date-fns';
 import { ShoppingListItem } from './ShoppingListItem';
+import { ShoppingListItemList } from './components/ShoppingListItemList';
 
 const GetShoppingListQuery = gql`
   query GetShoppingListQuery {
@@ -26,6 +27,7 @@ const GetShoppingListQuery = gql`
             totalQuantity
             purchasedQuantity
             unit
+            displayName
 
             ingredient {
               id
@@ -35,7 +37,6 @@ const GetShoppingListQuery = gql`
             plannedUses {
               id
               text
-
               recipe {
                 id
                 title
@@ -47,6 +48,43 @@ const GetShoppingListQuery = gql`
     }
   }
 `;
+
+type GetShoppingListResult = {
+  me: {
+    id: string;
+    group: {
+      id: string;
+      shoppingList: {
+        id: string;
+        startDate: string;
+        endDate: string;
+
+        items: {
+          id: string;
+          totalQuantity: number;
+          purchasedQuantity: number;
+          unit: string;
+          displayName: string;
+
+          ingredient: {
+            id: string;
+            name: string;
+          };
+
+          plannedUses: {
+            id: string;
+            text: string;
+
+            recipe: {
+              id: string;
+              title: string;
+            };
+          }[];
+        }[];
+      };
+    };
+  };
+};
 
 const MarkPurchasedMutation = gql`
   mutation MarkPurchasedItem($input: MarkPurchasedItemInput!) {
@@ -73,16 +111,14 @@ const MarkUnpurchasedMutation = gql`
 export interface ShoppingListProps {}
 
 export const ShoppingList: FC<ShoppingListProps> = () => {
-  const { data, error } = useQuery(GetShoppingListQuery);
+  const { data, error } = useQuery<GetShoppingListResult>(GetShoppingListQuery);
 
   const markPurchasedMutation = useMutation(MarkPurchasedMutation);
   const markUnpurchasedMutation = useMutation(MarkUnpurchasedMutation);
 
-  const markPurchased = (input: {
-    shoppingListItemId: string;
-    quantity: number;
-    unit?: string;
-  }) => markPurchasedMutation({ variables: { input } });
+  const markPurchased = (input: { shoppingListItemId: string }) => {
+    markPurchasedMutation({ variables: { input } });
+  };
   const unmarkPurchased = (input: { shoppingListItemId: string }) =>
     markUnpurchasedMutation({ variables: { input } });
 
@@ -105,18 +141,21 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
 
   return (
     <>
-      <Heading>Shopping List</Heading>
-      <HelpText>Week of {format(new Date(startDate), 'MMMM Do')}</HelpText>
-      <Box>
+      <Heading margin={{ bottom: 'medium' }}>Shopping List</Heading>
+      <HelpText margin={{ bottom: 'large' }}>
+        Week of {format(new Date(startDate), 'MMMM Do')}
+      </HelpText>
+      <ShoppingListItemList>
         {items.map(item => (
-          <ShoppingListItem
-            item={item}
-            key={item.id}
-            onMark={markPurchased}
-            onUnmark={unmarkPurchased}
-          />
+          <li key={item.id}>
+            <ShoppingListItem
+              item={item}
+              onMark={markPurchased}
+              onUnmark={unmarkPurchased}
+            />
+          </li>
         ))}
-      </Box>
+      </ShoppingListItemList>
     </>
   );
 };

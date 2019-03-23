@@ -9,16 +9,8 @@ const MonthContainer = styled.div`
 
   & > * {
     flex: 1;
-    margin: auto 0;
+    margin: auto;
     text-align: center;
-  }
-
-  & > *:first-child {
-    flex: 0 0 auto;
-  }
-
-  & > *:last-child {
-    flex: 0 0 auto;
   }
 `;
 export default MonthContainer;
