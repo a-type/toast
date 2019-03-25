@@ -5,7 +5,7 @@ import { Text, Box } from 'grommet';
 import Setup from './Setup';
 import { pathOr } from 'ramda';
 import DayView from './DayView/DayView';
-import { startOfDay, isSameDay, getDate } from 'date-fns';
+import { startOfDay, isSameDay, getDate, parse } from 'date-fns';
 import Calendar from 'components/generic/Calendar';
 import { MealFragment } from './DayView/Meal';
 import { CalendarDay } from 'components/generic/Calendar/Calendar';
@@ -65,8 +65,8 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
 
   const group = pathOr(null, ['me', 'group'], data);
 
-  const orderedDays = pathOr([], ['planDays'], group).sort(
-    (a, b) => a.date - b.date,
+  const orderedDays = pathOr([], ['planDays'], group).sort((a, b) =>
+    a.date.localeCompare(b.date),
   );
 
   if (!group) {
@@ -74,11 +74,12 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
   }
 
   const selectedDay = orderedDays.find(planDay => {
-    return isSameDay(new Date(planDay.date), date);
+    return isSameDay(parse(planDay.date), date);
   });
 
-  const startDate = new Date(orderedDays[0].date);
-  const endDate = new Date(orderedDays[orderedDays.length - 1].date);
+  const startDate = parse(orderedDays[0].date);
+  const endDate = parse(orderedDays[orderedDays.length - 1].date);
+  console.log(startDate, endDate);
 
   return (
     <Box>
@@ -90,7 +91,7 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
         onChange={setDate}
         renderDate={({ date, disabled, otherMonth, selected, props }) => {
           const planDay = orderedDays.find(day =>
-            isSameDay(new Date(day.date), date),
+            isSameDay(parse(day.date), date),
           );
           const isCooking = isCookingSomething(planDay);
 
@@ -98,7 +99,6 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
             <CalendarDay
               {...props}
               selected={selected}
-              faded={otherMonth}
               disabled={disabled}
               highlighted={isCooking}
             >

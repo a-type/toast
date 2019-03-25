@@ -5,6 +5,7 @@ import { formatDay } from 'formatters/date';
 import MealGrid from './MealGrid';
 import Meal, { MealSkeleton } from './Meal';
 import { HeadingSkeleton } from 'components/skeletons';
+import { parse } from 'date-fns';
 
 interface DayViewProps {
   day?: PlanDayData;
@@ -28,7 +29,7 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
 
   return (
     <Box>
-      <Heading>{formatDay(new Date(date))}</Heading>
+      <Heading>{formatDay(parse(date))}</Heading>
       <MealGrid>
         <Meal meal={breakfast} mealName="Breakfast" />
         <Meal meal={lunch} mealName="Lunch" />
