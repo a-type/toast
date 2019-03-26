@@ -115,10 +115,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
           full="vertical"
           margin={{ right: 'medium' }}
           animate
-          onClickOutside={ev => {
-            ev.persist();
-            console.log(ev);
-            console.log('outside');
+          onClickOutside={() => {
             setOpen(false);
           }}
         >
