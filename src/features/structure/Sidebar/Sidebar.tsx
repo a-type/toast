@@ -32,7 +32,10 @@ interface SidebarProps {}
 const Sidebar: SFC<SidebarProps> = ({}) => {
   const isWide = useMedia('(min-width: 1200px)');
   const [open, setOpen] = useState<boolean>(false);
-  const hideSidebar = () => setOpen(false);
+  const hideSidebar = () => {
+    // if this isn't delayed, the navigation never happens... unsure why
+    setTimeout(() => setOpen(false), 0);
+  };
   const { user, isLoggedIn } = useContext(AuthContext);
 
   const anonContent = (
@@ -112,7 +115,12 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
           full="vertical"
           margin={{ right: 'medium' }}
           animate
-          onClickOutside={() => setOpen(false)}
+          onClickOutside={ev => {
+            ev.persist();
+            console.log(ev);
+            console.log('outside');
+            setOpen(false);
+          }}
         >
           {content}
         </Layer>
