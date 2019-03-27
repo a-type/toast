@@ -34,7 +34,9 @@ const withDefaultSelectBehavior = withProps<
     },
 }));
 
-const Skeleton: React.SFC<{ count?: number }> = ({ count = 9 }) => (
+export const RecipeCardsSkeleton: React.SFC<{ count?: number }> = ({
+  count = 9,
+}) => (
   <CardGrid loading>
     {new Array(count).fill(null).map((_, idx) => {
       const shapeIdx = Math.floor(Math.random() * 10);
@@ -53,7 +55,7 @@ const Skeleton: React.SFC<{ count?: number }> = ({ count = 9 }) => (
 
 interface RecipeCardsWithFragments
   extends React.ComponentClass<RecipeCardsProps> {
-  Skeleton?: typeof Skeleton;
+  Skeleton?: typeof RecipeCardsSkeleton;
   fragments?: {
     [key: string]: any;
   };
@@ -65,6 +67,6 @@ const RecipeCards: RecipeCardsWithFragments = compose<{}, RecipeCardsProps>(
 )(Grid);
 
 RecipeCards.fragments = RecipeCard.fragments;
-RecipeCards.Skeleton = Skeleton;
+RecipeCards.Skeleton = RecipeCardsSkeleton;
 
 export default RecipeCards;

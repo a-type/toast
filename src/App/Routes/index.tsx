@@ -12,6 +12,7 @@ import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
 import LoginPage from './pages/Login';
 import JoinGroupPage from './pages/JoinGroup';
+import RecipeCollection from './pages/RecipeCollection';
 
 export default () => (
   <Switch>
@@ -23,6 +24,7 @@ export default () => (
     <PrivateRoute path="/joinGroup" exact component={JoinGroupPage} />
 
     <PrivateRoute path="/recipes/create" component={EditRecipePage} />
+    <PrivateRoute path="/recipes/collection" component={RecipeCollection} />
     <PrivateRoute
       exact
       path="/recipes/:recipeId/edit"

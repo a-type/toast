@@ -22,7 +22,6 @@ export const Document = gql`
         text
         ingredientStart
         ingredientEnd
-        index
         comments
         preparations
         ingredient {
@@ -32,7 +31,6 @@ export const Document = gql`
       }
       steps {
         id
-        index
         step {
           id
           text

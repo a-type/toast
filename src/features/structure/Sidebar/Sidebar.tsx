@@ -67,6 +67,13 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
         to="/shoppingList"
         onMouseUp={hideSidebar}
       />
+      <SidebarLink
+        nav
+        label="Your recipes"
+        icon="list-view"
+        to="/recipes/collection"
+        onMouseDown={hideSidebar}
+      />
 
       <SidebarLink
         label="Log out"

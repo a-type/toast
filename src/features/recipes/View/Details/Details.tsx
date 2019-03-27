@@ -1,9 +1,9 @@
 import React from 'react';
-import Layout from './Layout';
 import Servings from './Servings';
 import gql from 'graphql-tag';
 import Time from './Time';
 import { Link } from 'components/text';
+import { Heading, Box, Text, Button } from 'grommet';
 
 const RecipeDetails = ({ recipe }) => {
   if (!recipe) {
@@ -13,15 +13,21 @@ const RecipeDetails = ({ recipe }) => {
   const { servings, cookTime, prepTime, unattendedTime, sourceUrl } = recipe;
 
   return (
-    <Layout>
-      <Link to={sourceUrl}>{sourceUrl}</Link>
+    <Box margin={{ bottom: 'large' }}>
+      <Heading level="5">Details</Heading>
+      <Text>
+        Source: <Link to={sourceUrl}>{sourceUrl}</Link>
+      </Text>
       <Servings servings={servings} />
       <Time
         cookTime={cookTime}
         prepTime={prepTime}
         unattendedTime={unattendedTime}
       />
-    </Layout>
+      <Link to={`/recipes/${recipe.id}/correct`}>
+        <Button label="Suggest Correction" />
+      </Link>
+    </Box>
   );
 };
 
