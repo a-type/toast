@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Ingredient } from 'generated/schema';
 import { cold } from 'react-hot-loader';
 import { Icon } from 'components/generic';
 import Popup from './Popup';
@@ -7,11 +6,16 @@ import { sentence } from 'change-case';
 import { Button } from 'grommet';
 import { pathOr } from 'ramda';
 
+export interface IngredientPickerIngredient {
+  id: string;
+  name: string;
+}
+
 export interface IngredientPickerProps {
-  onChange(ingredient: Ingredient): void;
-  create?(name: string): Promise<Ingredient>;
+  onChange(ingredient: IngredientPickerIngredient): void;
+  create?(name: string): Promise<IngredientPickerIngredient>;
   canCreate?: boolean;
-  value: Ingredient;
+  value: IngredientPickerIngredient;
   disabled?: boolean;
 }
 
@@ -23,7 +27,7 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
 }) => {
   const [isPopupOpen, setPopupOpen] = React.useState(false);
 
-  const handleChange = (ing: Ingredient) => {
+  const handleChange = (ing: IngredientPickerIngredient) => {
     setPopupOpen(false);
     onChange(ing);
   };

@@ -29,11 +29,12 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
           <div>
             <Heading level="2">Suggest Recipe Corrections</Heading>
             <Spotlight recipe={data.recipe} />
+            <Heading level="3">Ingredients</Heading>
             <IngredientCorrections
               recipeIngredients={pathOr([], ['recipe', 'ingredients'], data)}
             />
             <Link to={`/recipes/${recipeId}`}>
-              <Button color="status-ok" label="Done" />
+              <Button label="Done" />
             </Link>
           </div>
         );

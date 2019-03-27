@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Ingredient } from 'generated/schema';
 import { cold } from 'react-hot-loader';
 import Downshift from 'downshift';
 import { Popup } from 'components/generic';
@@ -22,7 +21,7 @@ const ingredientToString = ingredient => {
 interface IngredientPickerPopupProps {
   onCancel(): void;
   onChange(ingredient: { id: string; name: string }): void;
-  value: Ingredient;
+  value: { id: string; name: string };
   canCreate?: boolean;
 }
 
@@ -36,7 +35,10 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
     <Popup onClose={onCancel}>
       <PickerCreateIngredientMutation>
         {mutate => {
-          const handleChange = async (newValue: Ingredient) => {
+          const handleChange = async (newValue: {
+            id: string;
+            name: string;
+          }) => {
             if (!newValue.id) {
               const result = await mutate({
                 variables: { name: newValue.name },
