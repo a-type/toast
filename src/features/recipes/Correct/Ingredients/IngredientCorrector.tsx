@@ -1,13 +1,12 @@
 import React, { FC, useState } from 'react';
-import { Formik } from 'formik';
-import { Field, Icon } from 'components/generic';
-import { Picker } from 'features/ingredients';
-import { Button, TextInput, Paragraph, Box, DropButton } from 'grommet';
+import { Icon } from 'components/generic';
+import { Button, Paragraph, Box, DropButton } from 'grommet';
 import { HelpText } from 'components/text';
 import { IngredientCorrectionForm } from './CorrectionForm';
+import { toDisplay } from 'formatters/quantity';
 
 export interface IngredientCorrectorRecipeIngredient {
-  id: string;
+  id?: string;
   text: string;
   unit?: string;
   unitStart?: number;
@@ -48,6 +47,7 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
   requestDelete,
 }) => {
   const [showForm, setShowForm] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   if (!showForm) {
     return (
@@ -58,7 +58,7 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
           </Paragraph>
           <Paragraph margin={{ top: '0', bottom: 'small' }}>
             <HelpText>
-              Quantity: {recipeIngredient.quantity}, Unit:{' '}
+              Quantity: {toDisplay(recipeIngredient.quantity)}, Unit:{' '}
               {recipeIngredient.unit}, Ingredient:{' '}
               {recipeIngredient.ingredient
                 ? recipeIngredient.ingredient.name
@@ -67,24 +67,28 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
           </Paragraph>
         </Box>
         <Box justify="center">
-          <DropButton
-            icon={<Icon name="three-dots-symbol" />}
-            dropAlign={{ right: 'right', top: 'top' }}
-            dropContent={
-              <Box pad="medium" round background="white">
-                <Button
-                  label="Suggest Change"
-                  onClick={() => setShowForm(true)}
-                  margin={{ bottom: 'small' }}
-                />
-                <Button
-                  color="status-critical"
-                  onClick={() => requestDelete(recipeIngredient.id)}
-                  label="Suggest Delete"
-                />
-              </Box>
-            }
-          />
+          {hasSubmitted ? (
+            <HelpText>Correction submitted</HelpText>
+          ) : (
+            <DropButton
+              icon={<Icon name="three-dots-symbol" />}
+              dropAlign={{ right: 'right', top: 'top' }}
+              dropContent={
+                <Box pad="medium" round background="white">
+                  <Button
+                    label="Suggest Change"
+                    onClick={() => setShowForm(true)}
+                    margin={{ bottom: 'small' }}
+                  />
+                  <Button
+                    color="status-critical"
+                    onClick={() => requestDelete(recipeIngredient.id)}
+                    label="Suggest Delete"
+                  />
+                </Box>
+              }
+            />
+          )}
         </Box>
       </Box>
     );
@@ -108,7 +112,11 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
   return (
     <IngredientCorrectionForm
       initialValue={recipeIngredient}
-      onSubmit={handleSubmit}
+      onSubmit={async data => {
+        await handleSubmit(data);
+        setShowForm(false);
+        setHasSubmitted(true);
+      }}
       onCancel={() => setShowForm(false)}
     />
   );

@@ -1,29 +1,45 @@
-import React from 'react';
-import { Button } from 'grommet';
+import React, { FC } from 'react';
+import { Button, Box } from 'grommet';
 import Suggestion from './Suggestion';
-import IngredientPickerSuggestionsQuery from './IngredientPickerSuggestionsQuery';
-import { IngredientPickerSuggestions } from 'generated/schema';
 import { HelpText } from 'components/text';
 import { Loader } from 'components/generic';
+import gql from 'graphql-tag';
+import { useQuery } from 'react-apollo-hooks';
+
+const IngredientPickerSuggestionsQuery = gql`
+  query IngredientPickerSuggestions($input: IngredientSearchInput!) {
+    searchIngredients(input: $input) {
+      id
+      name
+    }
+  }
+`;
 
 const hasNoResults = ({ searchIngredients }) =>
-  !searchIngredients.items || searchIngredients.items.length === 0;
+  !searchIngredients || searchIngredients.length === 0;
 
 export interface IngredientPickerSuggestionsProps {
   term: string;
-  getItemProps(params: {
-    item: IngredientPickerSuggestions.Items;
-    index: number;
-  }): any;
+  getItemProps(params: { item: any; index: number }): any;
   selectedItem?: number;
   highlightedIndex?: number;
   canCreate?: boolean;
 }
 
-class Suggestions extends React.PureComponent<
-  IngredientPickerSuggestionsProps
-> {
-  renderCreate = (term, getItemProps, index, highlightedIndex) => (
+export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
+  term,
+  getItemProps,
+  highlightedIndex,
+  canCreate,
+}) => {
+  const { data, loading, error } = useQuery(IngredientPickerSuggestionsQuery, {
+    variables: {
+      input: {
+        term,
+      },
+    },
+  });
+  const renderCreate = (term, getItemProps, index, highlightedIndex) => (
     <Button
       {...getItemProps({ item: { name: term }, index })}
       active={index === highlightedIndex}
@@ -31,51 +47,36 @@ class Suggestions extends React.PureComponent<
     />
   );
 
-  render() {
-    const { term, getItemProps, highlightedIndex, canCreate } = this.props;
-
-    return (
-      <IngredientPickerSuggestionsQuery
-        variables={{
-          input: {
-            term,
-          },
-        }}
-      >
-        {({ loading, error, data }) => {
-          if (loading) return <Loader size="64px" />;
-          if (error) return <div>Error</div>;
-          if (canCreate && hasNoResults(data)) {
-            return this.renderCreate(term, getItemProps, 0, highlightedIndex);
-          }
-
-          const items = data.searchIngredients.items;
-
-          return (
-            <div>
-              <HelpText>Choose one:</HelpText>
-              {items.map((ingredient, index) => (
-                <Suggestion
-                  key={ingredient.id}
-                  {...getItemProps({ item: ingredient, index })}
-                  active={highlightedIndex === index}
-                >
-                  {ingredient.name}
-                </Suggestion>
-              ))}
-              {canCreate &&
-                this.renderCreate(
-                  term,
-                  getItemProps,
-                  items.length,
-                  highlightedIndex,
-                )}
-            </div>
-          );
-        }}
-      </IngredientPickerSuggestionsQuery>
-    );
+  if (loading) return <Loader size="64px" />;
+  if (error) return <div>Error</div>;
+  if (hasNoResults(data)) {
+    if (canCreate && term.length > 3) {
+      return renderCreate(term, getItemProps, 0, highlightedIndex);
+    } else {
+      return <HelpText>No results</HelpText>;
+    }
   }
-}
+
+  const items = data.searchIngredients;
+
+  return (
+    <Box>
+      <HelpText>Choose one:</HelpText>
+      <Box margin={{ bottom: 'medium' }}>
+        {items.map((ingredient, index) => (
+          <Suggestion
+            key={ingredient.id}
+            {...getItemProps({ item: ingredient, index })}
+            active={highlightedIndex === index}
+          >
+            {ingredient.name}
+          </Suggestion>
+        ))}
+      </Box>
+      {canCreate &&
+        renderCreate(term, getItemProps, items.length, highlightedIndex)}
+    </Box>
+  );
+};
 
 export default Suggestions;

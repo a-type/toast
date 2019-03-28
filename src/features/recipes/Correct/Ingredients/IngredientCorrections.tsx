@@ -14,7 +14,10 @@ interface IngredientCorrectionsProps {
 
 const CorrectIngredientMutation = gql`
   mutation CorrectIngredient($input: RecipeIngredientCorrectionSubmitInput!) {
-    submitRecipeIngredientCorrection(input: $input)
+    submitRecipeIngredientCorrection(input: $input) {
+      id
+      status
+    }
   }
 `;
 

@@ -25,14 +25,16 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
           return <Disconnected />;
         }
 
+        const recipeIngredients = pathOr([], ['recipe', 'ingredients'], data);
+
         return (
           <div>
             <Heading level="2">Suggest Recipe Corrections</Heading>
             <Spotlight recipe={data.recipe} />
-            <Heading level="3">Ingredients</Heading>
-            <IngredientCorrections
-              recipeIngredients={pathOr([], ['recipe', 'ingredients'], data)}
-            />
+            <Heading level="3">
+              Ingredients ({recipeIngredients.length})
+            </Heading>
+            <IngredientCorrections recipeIngredients={recipeIngredients} />
             <Link to={`/recipes/${recipeId}`}>
               <Button label="Done" />
             </Link>

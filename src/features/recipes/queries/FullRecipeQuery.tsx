@@ -45,10 +45,6 @@ export const Document = gql`
       ...RecipeDetails
       ...RecipeSpotlight
     }
-
-    me {
-      id
-    }
   }
 
   ${Details.fragments.Recipe}

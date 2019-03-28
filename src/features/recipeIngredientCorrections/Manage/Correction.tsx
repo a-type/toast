@@ -9,7 +9,7 @@ import { Button } from 'grommet';
 import { pathOr } from 'ramda';
 
 export interface ManageRecipeIngredientCorrectionsCorrectionProps {
-  correction: ListRecipeIngredientCorrections.RecipeIngredientCorrections;
+  correction: any;
   accept(id: string): void;
   reject(id: string): void;
 }
@@ -45,9 +45,9 @@ const Correction: React.SFC<
       render: text => <Unit>{text}</Unit>,
     },
     {
-      name: 'value',
-      start: correction.correctedValue.valueStart,
-      end: correction.correctedValue.valueEnd,
+      name: 'quantity',
+      start: correction.correctedValue.quantityStart,
+      end: correction.correctedValue.quantityEnd,
       render: text => <Value>{text}</Value>,
     },
   ];
@@ -74,9 +74,9 @@ const Correction: React.SFC<
           <Unit>{pathOr('None', ['correctedValue', 'unit'], correction)}</Unit>
         </li>
         <li>
-          <label>Value:</label>{' '}
+          <label>Quantity:</label>{' '}
           <Value>
-            {pathOr('None', ['correctedValue', 'value'], correction)}
+            {pathOr('None', ['correctedValue', 'quantity'], correction)}
           </Value>
         </li>
       </ul>

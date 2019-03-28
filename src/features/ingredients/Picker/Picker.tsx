@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { cold } from 'react-hot-loader';
 import { Icon } from 'components/generic';
 import Popup from './Popup';
 import { sentence } from 'change-case';
@@ -17,6 +16,7 @@ export interface IngredientPickerProps {
   canCreate?: boolean;
   value: IngredientPickerIngredient;
   disabled?: boolean;
+  initialSearchText?: string;
 }
 
 const IngredientPicker: React.SFC<IngredientPickerProps> = ({
@@ -24,6 +24,7 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
   canCreate,
   onChange,
   disabled,
+  initialSearchText,
 }) => {
   const [isPopupOpen, setPopupOpen] = React.useState(false);
 
@@ -43,6 +44,7 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
       {isPopupOpen && (
         <Popup
           value={value}
+          initialSearchText={initialSearchText}
           canCreate={canCreate}
           onChange={handleChange}
           onCancel={() => setPopupOpen(false)}
@@ -52,4 +54,4 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
   );
 };
 
-export default cold(IngredientPicker);
+export default IngredientPicker;

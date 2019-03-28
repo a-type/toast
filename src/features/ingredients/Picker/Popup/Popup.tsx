@@ -23,6 +23,7 @@ interface IngredientPickerPopupProps {
   onChange(ingredient: { id: string; name: string }): void;
   value: { id: string; name: string };
   canCreate?: boolean;
+  initialSearchText?: string;
 }
 
 const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
@@ -30,6 +31,7 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
   onCancel,
   canCreate,
   value,
+  initialSearchText,
 }) => {
   return (
     <Popup onClose={onCancel}>
@@ -55,6 +57,7 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
             <Downshift
               onChange={handleChange}
               itemToString={ingredientToString}
+              defaultInputValue={initialSearchText}
             >
               {({
                 getInputProps,

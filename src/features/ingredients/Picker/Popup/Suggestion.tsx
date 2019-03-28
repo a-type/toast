@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled<{ active?: boolean }, 'div'>('div')`
-  padding: 10px;
+  padding: var(--spacing-lg) var(--spacing-md);
   cursor: pointer;
   text-transform: capitalize;
   color: ${props =>
