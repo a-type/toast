@@ -1,13 +1,15 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+
+interface LinkerResult {
+  recipe: any;
+  problems: any;
+}
 
 interface LinkerContextValue {
   open: boolean;
   working: boolean;
   error: Error;
-  lastResult: {
-    recipe: any;
-    problems: any;
-  };
+  lastResult: LinkerResult;
   setOpen(open: boolean): void;
   setWorking(working: boolean): void;
   setError(err: Error): void;
@@ -64,3 +66,50 @@ export const Provider = ({ children }) => {
 };
 
 export const Consumer = LinkerContext.Consumer;
+
+export const useLinker = () => {
+  const {
+    open,
+    working,
+    error,
+    lastResult,
+    setOpen,
+    setWorking,
+    setError,
+    setLastResult,
+    reset,
+  } = useContext(LinkerContext);
+
+  const handleStarted = () => {
+    setWorking(true);
+    setOpen(false);
+    setLastResult(null);
+  };
+
+  const handleComplete = (res: LinkerResult) => {
+    setWorking(false);
+    setOpen(true);
+    setLastResult(res);
+  };
+
+  const handleFailed = err => {
+    setError(err);
+    setWorking(false);
+    setOpen(true);
+  };
+
+  return {
+    open,
+    working,
+    error,
+    lastResult,
+    setOpen,
+    setWorking,
+    setLastResult,
+    setError,
+    reset,
+    handleStarted,
+    handleComplete,
+    handleFailed,
+  };
+};

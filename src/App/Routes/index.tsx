@@ -13,6 +13,7 @@ import ShoppingList from './pages/ShoppingList';
 import LoginPage from './pages/Login';
 import JoinGroupPage from './pages/JoinGroup';
 import RecipeCollection from './pages/RecipeCollection';
+import ScanRecipe from './pages/ScanRecipe';
 
 export default () => (
   <Switch>
@@ -31,6 +32,8 @@ export default () => (
       component={EditRecipePage}
     />
     <Route path="/recipes/:recipeId" component={RecipePage} />
+
+    <PrivateRoute path="/scanRecipe" component={ScanRecipe} />
 
     <Route path="/users/:userId" component={UserPage} />
 

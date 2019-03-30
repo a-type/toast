@@ -1,11 +1,12 @@
-import * as React from 'react';
+import React, { useState, FC } from 'react';
 import { Loader } from 'components/generic';
 import logger from 'logger';
-import { Disconnected, Field } from 'components/generic';
+import { Field } from 'components/generic';
 import { TextInput, Button, Paragraph, Box, Text } from 'grommet';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { Link } from 'components/text';
+import { useLinker } from 'contexts/LinkerContext';
 
 const MESSAGES = {
   EXPLANATION:
@@ -28,28 +29,57 @@ export const LinkRecipeMutation = gql`
 `;
 
 export interface LinkRecipeFormProps {
-  onStarted?(): any;
-  onComplete?(args: { recipe: any; problems: any }): any;
-  onFailed?(err: Error): any;
-  onReset?(): any;
-  loading?: boolean;
-  error?: Error;
-  lastResult?: { recipe: any; problems: any };
+  prefilledValue?: string;
 }
 
-const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
-  onStarted,
-  onComplete,
-  onFailed,
-  onReset,
-  loading,
-  error,
-  lastResult,
-}) => {
-  const [url, setUrl] = React.useState('');
+const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
+  const {
+    working,
+    error,
+    lastResult,
+    reset,
+    handleStarted,
+    handleComplete,
+    handleFailed,
+  } = useLinker();
+  const [url, setUrl] = useState(prefilledValue || '');
   const mutate = useMutation(LinkRecipeMutation);
 
-  if (loading) {
+  const submit = async (ev?: any) => {
+    if (ev) {
+      ev.preventDefault();
+    }
+    handleStarted && handleStarted();
+
+    try {
+      const result = await mutate({
+        variables: {
+          url,
+        },
+      });
+
+      if (!result) {
+        throw new Error(MESSAGES.UNKNOWN_ERROR);
+      }
+
+      if (result.data.linkRecipe.problems.length) {
+        logger.warn(result.data.linkRecipe.problems); // TODO: show
+      }
+
+      handleComplete && handleComplete(result.data.linkRecipe);
+    } catch (err) {
+      logger.fatal(err);
+      handleFailed && handleFailed(err);
+    }
+  };
+
+  React.useEffect(() => {
+    if (prefilledValue) {
+      submit();
+    }
+  }, [prefilledValue]);
+
+  if (working) {
     return <Loader />;
   }
 
@@ -73,7 +103,7 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
             <Button
               margin={{ left: 'large' }}
               label="Scan another one"
-              onClick={onReset}
+              onClick={reset}
             />
           </Box>
         </Box>
@@ -89,36 +119,10 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
             Give it a once-over just to make sure we got things right.
           </Link>
         </Paragraph>
-        <Button label="Scan another one" onClick={onReset} />
+        <Button label="Scan another one" onClick={reset} />
       </Box>
     );
   }
-
-  const submit = async ev => {
-    ev.preventDefault();
-    onStarted && onStarted();
-
-    try {
-      const result = await mutate({
-        variables: {
-          url,
-        },
-      });
-
-      if (!result) {
-        throw new Error(MESSAGES.UNKNOWN_ERROR);
-      }
-
-      if (result.data.linkRecipe.problems.length) {
-        logger.warn(result.data.linkRecipe.problems); // TODO: show
-      }
-
-      onComplete && onComplete(result.data.linkRecipe);
-    } catch (err) {
-      logger.fatal(err);
-      onFailed && onFailed(err);
-    }
-  };
 
   if (error) {
     return (
@@ -129,7 +133,7 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
           working on some options for situations like this, but for now we're
           sorry for the disappointment.
         </Paragraph>
-        <Button onClick={() => onReset()}>Back</Button>
+        <Button onClick={reset}>Back</Button>
       </Box>
     );
   }
@@ -151,7 +155,7 @@ const LinkRecipeForm: React.SFC<LinkRecipeFormProps> = ({
         primary
         margin={{ right: 'medium' }}
       />
-      <Button label="Cancel" type="reset" onClick={onReset} />
+      <Button label="Cancel" type="reset" onClick={reset} />
     </form>
   );
 };

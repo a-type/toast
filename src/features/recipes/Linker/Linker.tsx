@@ -1,41 +1,13 @@
-import React, { SFC, useContext } from 'react';
+import React, { SFC } from 'react';
 import { Icon, Loader } from 'components/generic';
 import { Button, Layer, Box } from 'grommet';
 import LinkRecipeForm from './LinkRecipeForm';
-import LinkerContext from 'contexts/LinkerContext';
+import { useLinker } from 'contexts/LinkerContext';
 
 interface LinkerProps {}
 
 const Linker: SFC<LinkerProps> = ({}) => {
-  const {
-    open,
-    working,
-    error,
-    lastResult,
-    setOpen,
-    setWorking,
-    setError,
-    setLastResult,
-    reset,
-  } = useContext(LinkerContext);
-
-  const handleStarted = () => {
-    setWorking(true);
-    setOpen(false);
-    setLastResult(null);
-  };
-
-  const handleComplete = res => {
-    setWorking(false);
-    setOpen(true);
-    setLastResult(res);
-  };
-
-  const handleFailed = err => {
-    setError(err);
-    setWorking(false);
-    setOpen(true);
-  };
+  const { open, working, setOpen } = useLinker();
 
   const icon = working ? <Loader size="1em" /> : <Icon name="plus-math" />;
   const label = working ? 'Scanning...' : 'Add recipe';
@@ -58,15 +30,7 @@ const Linker: SFC<LinkerProps> = ({}) => {
           onEsc={() => setOpen(false)}
         >
           <Box pad="large">
-            <LinkRecipeForm
-              onStarted={handleStarted}
-              onComplete={handleComplete}
-              onFailed={handleFailed}
-              onReset={reset}
-              loading={working}
-              error={error}
-              lastResult={lastResult}
-            />
+            <LinkRecipeForm />
           </Box>
         </Layer>
       )}
