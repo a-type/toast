@@ -8,6 +8,9 @@ export const MealFragment = gql`
   fragment MealRecipeFragment on Recipe {
     id
     title
+    attribution
+    sourceUrl
+    description
     coverImage {
       id
       url

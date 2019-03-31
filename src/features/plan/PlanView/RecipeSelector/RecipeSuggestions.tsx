@@ -6,20 +6,22 @@ import { Heading, Box, Text, Paragraph, Button } from 'grommet';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo-hooks';
 import LinkerContext from 'contexts/LinkerContext';
+import useRecipeCollection from 'features/recipes/useRecipeCollection';
+import { Loader } from 'components/generic';
 
 export const Document = gql`
   query RecipeSuggestions {
     me {
       id
-      recipes {
+      authoredRecipes {
         ...RecipeCard
       }
       discoveredRecipes {
         ...RecipeCard
       }
-      # likedRecipes {
-      #   ...RecipeCard
-      # }
+      likedRecipes {
+        ...RecipeCard
+      }
     }
   }
 
@@ -43,8 +45,12 @@ const RecipeSuggestions: SFC<RecipeSuggestionsProps> = ({
   onRecipeSelected,
   onCancel,
 }) => {
-  const { data, error, refetch } = useQuery(Document);
+  const [collections, loading, error, result] = useRecipeCollection();
   const { setOpen } = useContext(LinkerContext);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (error) {
     return (
@@ -54,31 +60,28 @@ const RecipeSuggestions: SFC<RecipeSuggestionsProps> = ({
           We couldn't load your recipes. That's almost definitely our bad. Maybe
           retrying will help?
         </Paragraph>
-        <Button onClick={() => refetch()} label="Retry" />
+        <Button onClick={() => result.refetch()} label="Retry" />
       </Box>
     );
   }
 
-  if (!data || !data.me) {
-    return null;
-  }
-
-  const {
-    me: { discoveredRecipes, likedRecipes, recipes },
-  } = data;
+  const { authoredRecipes, likedRecipes, discoveredRecipes } = collections;
 
   return (
     <Box
       margin={{ bottom: 'large' }}
       style={{ minWidth: '500px', maxWidth: '90vw' }}
     >
-      {recipes.length > 0 && (
+      {authoredRecipes.length > 0 && (
         <Fragment>
           <Heading level="4">Your Recipes</Heading>
-          <RecipeCards recipes={recipes} onRecipeSelected={onRecipeSelected} />
+          <RecipeCards
+            recipes={authoredRecipes}
+            onRecipeSelected={onRecipeSelected}
+          />
         </Fragment>
       )}
-      {/* <Heading level="4">Your Likes</Heading>
+      <Heading level="4">Your Likes</Heading>
       {likedRecipes.length ? (
         <RecipeCards
           recipes={likedRecipes}
@@ -88,7 +91,7 @@ const RecipeSuggestions: SFC<RecipeSuggestionsProps> = ({
         <HelpText margin={{ bottom: 'large' }}>
           Like some recipes to make planning easier!
         </HelpText>
-      )} */}
+      )}
       <Heading level="4">Your Discoveries</Heading>
       {discoveredRecipes.length ? (
         <RecipeCards
