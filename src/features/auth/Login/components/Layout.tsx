@@ -4,8 +4,13 @@ const Layout = styled<{}, 'div'>('div')`
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
+  row-gap: var(--spacing-lg);
 
-  @media (min-width: 768px) {
+  & > * {
+    margin: auto;
+  }
+
+  @media (min-width: 900px) {
     grid-template-columns: 1fr 2fr;
     grid-template-rows: auto;
 

@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
-export default styled<{}, 'div'>('div')`
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
+export default styled<{ size?: string }, 'div'>('div')`
+  padding: calc(${props => props.size || '32px'} / 3);
+  border-radius: calc(${props => props.size || '32px'} / 3);
   background: var(--color-brand);
+  position: relative;
+  overflow: hidden;
 `;

@@ -1,55 +1,56 @@
 import React from 'react';
 import Rotator from './Rotator';
+import { FoodIconName, FoodIcon } from 'components/generic/Icon';
 
-const icons = [
-  'icons8-avocado',
-  'icons8-beet',
-  'icons8-bread',
-  'icons8-carrot',
-  'icons8-cheese',
-  'icons8-cheeseburger',
-  'icons8-cherry',
-  'icons8-chinese-fried-rice',
-  'icons8-croissant',
-  'icons8-eggs',
-  'icons8-fish-food',
-  'icons8-food',
-  'icons8-food-and-wine',
-  'icons8-food-basket',
-  'icons8-food-wrapper',
-  'icons8-garlic',
-  'icons8-ham',
-  'icons8-italian-pizza',
-  'icons8-leaf-outline',
-  'icons8-olive',
-  'icons8-olive-oil',
-  'icons8-pancake',
-  'icons8-peanuts',
-  'icons8-pear',
-  'icons8-pie',
-  'icons8-piece-of-lemon-cake',
-  'icons8-potato',
-  'icons8-prawn',
-  'icons8-sandwich',
-  'icons8-sandwich-with-fried-egg',
-  'icons8-slice-of-bread-outline',
-  'icons8-soup-plate',
-  'icons8-soy',
-  'icons8-steak',
-  'icons8-sushi',
-  'icons8-taco',
-  'icons8-tapas',
-  'icons8-tomato',
-  'icons8-vegan-food',
-  'icons8-watermelon',
+const icons: FoodIconName[] = [
+  'avocado',
+  'beet',
+  'bread',
+  'carrot',
+  'cheese',
+  'cheeseburger',
+  'cherry',
+  'chinese-fried-rice',
+  'croissant',
+  'eggs',
+  'fish-food',
+  'food',
+  'food-and-wine',
+  'food-basket',
+  'food-wrapper',
+  'garlic',
+  'ham',
+  'italian-pizza',
+  'leaf-outline',
+  'olive',
+  'olive-oil',
+  'pancake',
+  'peanuts',
+  'pear',
+  'pie',
+  'piece-of-lemon-cake',
+  'potato',
+  'prawn',
+  'sandwich',
+  'sandwich-with-fried-egg',
+  'slice-of-bread-outline',
+  'soup-plate',
+  'soy',
+  'steak',
+  'sushi',
+  'taco',
+  'tapas',
+  'tomato',
+  'vegan-food',
+  'watermelon',
 ];
 
 export default class Loader extends React.Component<
   { size?: string; color?: string },
-  { icon: string }
+  { icon: FoodIconName }
 > {
-  state = {
-    icon: 'icons8-food-and-wine',
+  state: { icon: FoodIconName } = {
+    icon: 'food-and-wine',
   };
 
   timer = null;
@@ -74,9 +75,9 @@ export default class Loader extends React.Component<
 
     return (
       <Rotator>
-        <span
+        <FoodIcon
           style={{ fontSize: this.props.size, color, opacity: 0.3 }}
-          className={this.state.icon}
+          name={this.state.icon}
         />
       </Rotator>
     );

@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "wp",
-    "build:clean": "rimraf dist",
     "build:package": "cross-env NODE_ENV=production wp",
     "build": "run-s build:*",
     "precommit": "lint-staged",
@@ -44,8 +43,10 @@
     "browser-image-resizer": "^1.2.0",
     "change-case": "^3.0.2",
     "classnames": "^2.2.6",
+    "clean-webpack-plugin": "^2.0.1",
     "date-fns": "^1.29.0",
     "downshift": "^1.30.0",
+    "favicons-webpack-plugin": "0.0.9",
     "firebase": "^5.8.0",
     "formik": "^0.11.11",
     "graphql": "^14.1.1",
@@ -70,6 +71,7 @@
     "react-dom": "^16.8.1",
     "react-firebaseui": "^3.1.2",
     "react-flip-toolkit": "^6.3.0",
+    "react-helmet": "^5.2.0",
     "react-intersection-visible-hook": "^1.4.2",
     "react-outside-click-handler": "^1.2.2",
     "react-popper": "^1.0.2",
@@ -104,6 +106,7 @@
     "@types/ramda": "^0.25.39",
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.2",
+    "@types/react-helmet": "^5.0.8",
     "@types/react-hot-loader": "^4.1.0",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-transition-group": "^2.0.14",
@@ -147,6 +150,8 @@
     "webpack": "^4.26.0",
     "webpack-cli": "^3.1.0",
     "webpack-manifest-plugin": "^2.0.3",
-    "webpack-nano": "^0.6.1"
+    "webpack-nano": "^0.6.1",
+    "webpack-pwa-manifest": "^4.0.0",
+    "workbox-webpack-plugin": "^4.1.1"
   }
 }

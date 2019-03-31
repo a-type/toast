@@ -53,20 +53,9 @@ export const RecipeCardsSkeleton: React.SFC<{ count?: number }> = ({
   </CardGrid>
 );
 
-interface RecipeCardsWithFragments
-  extends React.ComponentClass<RecipeCardsProps> {
-  Skeleton?: typeof RecipeCardsSkeleton;
-  fragments?: {
-    [key: string]: any;
-  };
-}
-
-const RecipeCards: RecipeCardsWithFragments = compose<{}, RecipeCardsProps>(
+export const RecipeCards = compose<{}, RecipeCardsProps>(
   withRouter,
   withDefaultSelectBehavior,
 )(Grid);
-
-RecipeCards.fragments = RecipeCard.fragments;
-RecipeCards.Skeleton = RecipeCardsSkeleton;
 
 export default RecipeCards;

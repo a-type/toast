@@ -291,18 +291,18 @@ export const grommetTheme = deepMerge(base, {
           plain
             ? ''
             : primary
-              ? hoverBorder(normalizeColor('accent-1', theme))
-              : colorValue
-                ? hoverBorder(normalizeColor(colorValue, theme))
-                : hoverBorder.default
+            ? hoverBorder(normalizeColor('accent-1', theme))
+            : colorValue
+            ? hoverBorder(normalizeColor(colorValue, theme))
+            : hoverBorder.default
         }
 
         ${
           plain
             ? ''
             : primary
-              ? focusShadow(normalizeColor('accent-4', theme))
-              : focusShadow.default
+            ? focusShadow(normalizeColor('accent-4', theme))
+            : focusShadow.default
         };
     `,
   },
@@ -331,7 +331,6 @@ export const grommetTheme = deepMerge(base, {
       opacity: ${level > 1 ? '0.93' : '1'};
       font-weight: ${level > 3 ? 'var(--bold)' : 'var(--normal)'};
       line-height: 1.5;
-      margin-top: ${level === 1 ? '-0.16em' : '-0.1em'};
     `,
   },
 });

@@ -2,7 +2,7 @@ import React, { SFC } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'components/generic';
 import Link, { LinkProps } from 'components/generic/Link';
-import { IconName } from 'components/generic/Icon';
+import { GenericIconName } from 'components/generic/Icon';
 
 const ModdedLink = styled(Link)`
   border-radius: 0;
@@ -40,11 +40,9 @@ const ModdedLink = styled(Link)`
   }
 `;
 
-const SidebarLink: SFC<LinkProps & { label: string; icon: IconName }> = ({
-  label,
-  icon,
-  ...props
-}) => (
+const SidebarLink: SFC<
+  LinkProps & { label: string; icon: GenericIconName }
+> = ({ label, icon, ...props }) => (
   <ModdedLink {...props}>
     <Icon name={icon} /> {label}
   </ModdedLink>

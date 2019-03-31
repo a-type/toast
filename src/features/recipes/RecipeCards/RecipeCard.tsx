@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Card, CardShape } from 'components/generic/Card';
-import gql from 'graphql-tag';
 import { path } from 'ramda';
 import styled from 'styled-components';
 
@@ -26,7 +25,19 @@ const getShape = recipe => {
   return CardShape.Normal;
 };
 
-const RecipeCard = ({ recipe, onClick }) => (
+export interface RecipeCardRecipe {
+  id: string;
+  title: string;
+  coverImage?: {
+    id: string;
+    url: string;
+  };
+}
+
+const RecipeCard: FC<{
+  recipe: RecipeCardRecipe;
+  onClick?: (ev: any) => void;
+}> = ({ recipe, onClick }) => (
   <Card
     imageSrc={path(['coverImage', 'url'], recipe)}
     shape={getShape(recipe)}
@@ -37,18 +48,5 @@ const RecipeCard = ({ recipe, onClick }) => (
     </Row>
   </Card>
 );
-
-RecipeCard.fragments = {
-  recipe: gql`
-    fragment RecipeCard on Recipe {
-      id
-      title
-      coverImage {
-        id
-        url
-      }
-    }
-  `,
-};
 
 export default RecipeCard;

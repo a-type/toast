@@ -29,7 +29,15 @@ const Basic = gql`
     }
   }
 
-  ${RecipeCards.fragments.recipe}
+  fragment RecipeCard on Recipe {
+    id
+    title
+    coverImage {
+      id
+      url
+      attribution
+    }
+  }
 `;
 
 export default class extends React.Component<UserSummaryProps> {

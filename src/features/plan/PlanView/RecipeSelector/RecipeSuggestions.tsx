@@ -23,7 +23,15 @@ export const Document = gql`
     }
   }
 
-  ${RecipeCards.fragments.recipe}
+  fragment RecipeCard on Recipe {
+    id
+    title
+    coverImage {
+      id
+      url
+      attribution
+    }
+  }
 `;
 
 interface RecipeSuggestionsProps {

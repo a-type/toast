@@ -56,8 +56,18 @@ const isCookingSomething = (day: PlanDayData) =>
 interface PlanViewProps {}
 
 const PlanView: SFC<PlanViewProps> = ({}) => {
-  const { data, error, refetch } = useQuery<GetPlanQueryResult>(GetPlanQuery);
+  const { data, loading, error, refetch } = useQuery<GetPlanQueryResult>(
+    GetPlanQuery,
+  );
   const [date, setDate] = useState(startOfDay(new Date()));
+
+  if (loading) {
+    return (
+      <Box>
+        <DayView />
+      </Box>
+    );
+  }
 
   if (error) {
     return <Text>Dang. We couldn't load the plan.</Text>;

@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom';
 
 import App from './App';
 
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { setConfig } from 'react-hot-loader';
 
 setConfig({
@@ -17,15 +16,22 @@ const renderApp = (AppComponent = App) => {
 
 renderApp();
 
-OfflinePluginRuntime.install({
-  onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-  // this isn't working right...
-  //onUpdated: () => (window['swUpdate'] = true),
-});
-
 if (module.hot) {
   module.hot.accept('./App/index.tsx', () => {
     const NewApp = require('./App/index').default;
     renderApp(NewApp);
+  });
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then(registration => {
+        console.log('SW registered: ', registration);
+      })
+      .catch(registrationError => {
+        console.log('SW registration failed: ', registrationError);
+      });
   });
 }

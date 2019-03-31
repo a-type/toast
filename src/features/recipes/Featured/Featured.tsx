@@ -2,24 +2,27 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Disconnected } from 'components/generic';
-import { RecipeCards } from 'features/recipes';
+import {
+  RecipeCards,
+  RecipeCardsSkeleton,
+} from 'features/recipes/RecipeCards/RecipeCards';
 import { Spotlight } from 'features/recipes/components';
 import { Heading } from 'grommet';
 
 const FeaturedRecipes = gql`
   query FeaturedRecipes($count: Int!) {
     recipes(pagination: { offset: 0, count: $count }) {
+      id
+      title
       coverImage {
         id
         url
         attribution
       }
-      ...RecipeCard
       ...RecipeSpotlight
     }
   }
 
-  ${RecipeCards.fragments.recipe}
   ${Spotlight.fragments.recipe}
 `;
 
@@ -31,7 +34,7 @@ const FeaturedRecipe: React.SFC<{}> = () => (
           <React.Fragment>
             <Spotlight.Skeleton />
             <Heading level="2">Popular Recipes</Heading>
-            <RecipeCards.Skeleton />
+            <RecipeCardsSkeleton />
           </React.Fragment>
         );
       }

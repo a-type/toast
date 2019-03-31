@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Heading, Paragraph, Button } from 'grommet';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
+import { Loader } from 'components/generic';
+import useStoredFlag from 'hooks/useStoredFlag';
 
 export const Document = gql`
   mutation CreatePlan {
@@ -13,10 +15,15 @@ export const Document = gql`
 
 export default ({ onCreated }: { onCreated: () => any }) => {
   const [showJoinInfo, setShowJoinInfo] = useState(false);
+  const [loading, setLoading] = useState(false);
   const mutate = useMutation(Document);
+  const [_, setTutorialFlag] = useStoredFlag('onboarding');
 
   const create = async () => {
+    setLoading(true);
     await mutate();
+    setLoading(false);
+    setTutorialFlag(true);
     onCreated();
   };
 
@@ -31,18 +38,22 @@ export default ({ onCreated }: { onCreated: () => any }) => {
         First off, are you looking to start your own plan, or join someone else?
       </Paragraph>
       {!showJoinInfo ? (
-        <>
-          <Button
-            primary
-            label="Create my own plan"
-            onClick={create}
-            margin={{ bottom: 'medium' }}
-          />
-          <Button
-            label="Join someone else's plan"
-            onClick={() => setShowJoinInfo(true)}
-          />
-        </>
+        loading ? (
+          <Loader />
+        ) : (
+          <>
+            <Button
+              primary
+              label="Create my own plan"
+              onClick={create}
+              margin={{ bottom: 'medium' }}
+            />
+            <Button
+              label="Join someone else's plan"
+              onClick={() => setShowJoinInfo(true)}
+            />
+          </>
+        )
       ) : (
         <>
           <Paragraph margin={{ bottom: 'medium' }}>

@@ -4,7 +4,10 @@ const webpack = require('webpack');
 const fs = require('fs');
 const config = require('config');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const OfflinePlugin = require('offline-plugin');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const FaviconsPlugin = require('favicons-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 const { WebpackPluginServe: Serve } = require('webpack-plugin-serve');
 
 const publicPath = '/';
@@ -18,6 +21,7 @@ module.exports = {
   entry: [
     '@babel/polyfill',
     'resize-observer-polyfill',
+    './thirdParty/mixpanel.js',
     './src/index.tsx',
     'webpack-plugin-serve/client',
   ],
@@ -67,7 +71,7 @@ module.exports = {
         loader: 'graphql-tag/loader',
       },
       {
-        test: /\.(gif|png|jpe?g|svg)$/i,
+        test: /\.(gif|png|jpe?g|svg|ico)$/i,
         use: ['file-loader'],
       },
       {
@@ -77,9 +81,39 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
       template: './public/index.html',
       inject: true,
+    }),
+    new WebpackPwaManifest({
+      name: 'Toast Cooking',
+      short_name: 'Toast',
+      description: 'Meal planning that makes sesne',
+      background_color: '#fefeff',
+      display: 'standalone',
+      start_url: '.',
+      theme_color: '#f6c667',
+      inject: true,
+      icons: [
+        {
+          src: path.resolve(__dirname, './public/logo_small.png'),
+          sizes: [96, 128, 192, 256],
+        },
+        {
+          src: path.resolve(__dirname, './public/logo.png'),
+          sizes: [384, 512, 1024],
+        },
+      ],
+      gcm_sender_id: '103953800507',
+      share_target: {
+        action: '/recipes/find',
+        params: {
+          title: 'title',
+          text: 'text',
+          url: 'url',
+        },
+      },
     }),
     new webpack.DefinePlugin({
       process: {
@@ -99,20 +133,12 @@ module.exports = {
       fileName: 'asset-manifest.json',
       publicPath: publicPath,
     }),
-    ...(process.env.NODE_ENV === 'production'
+    new WorkboxWebpackPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
+    ...(process.env.NODE_ENV !== 'production'
       ? [
-          new OfflinePlugin({
-            excludes: ['**/*.map'],
-            updateStrategy: 'changed',
-            autoUpdate: 1000 * 60 * 2,
-
-            ServiceWorker: {
-              events: true,
-              navigateFallbackURL: '/',
-            },
-          }),
-        ]
-      : [
           new Serve({
             host: 'localhost',
             port: 8080,
@@ -126,7 +152,13 @@ module.exports = {
                 },
               ],
             },
-            static: outputPath,
+            static: [outputPath, './public'],
+          }),
+        ]
+      : [
+          new FaviconsPlugin({
+            logo: path.resolve(__dirname, './public/logo_small.png'),
+            inject: true,
           }),
         ]),
   ],

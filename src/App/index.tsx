@@ -11,6 +11,7 @@ import { Grommet, Box } from 'grommet';
 import Sidebar from 'features/structure/Sidebar';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { GlobalLoader } from 'components/generic/Loader';
+import Helmet from 'react-helmet';
 
 const App: FC<{}> = () => (
   <ApolloProvider client={apolloClient}>
@@ -20,6 +21,9 @@ const App: FC<{}> = () => (
           <TokenContext.Provider>
             <LinkerContextProvider>
               <Suspense fallback={<GlobalLoader />}>
+                <Helmet>
+                  <title>Toast</title>
+                </Helmet>
                 <Box direction="row" height="100%" width="100%">
                   <Sidebar />
                   <Routes />
