@@ -13,7 +13,7 @@ export const Document = gql`
   }
 `;
 
-export default ({ onCreated }: { onCreated: () => any }) => {
+export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
   const [showJoinInfo, setShowJoinInfo] = useState(false);
   const [loading, setLoading] = useState(false);
   const mutate = useMutation(Document);

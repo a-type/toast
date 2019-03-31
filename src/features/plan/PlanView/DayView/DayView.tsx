@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import { PlanDayData } from '../types';
+import { PlanDayData } from '../../types';
 import { Heading, Box } from 'grommet';
 import { formatDay } from 'formatters/date';
 import MealGrid from './MealGrid';

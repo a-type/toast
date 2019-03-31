@@ -5,7 +5,6 @@ import { Text } from 'grommet';
 
 export type TextLinkProps = LinkProps & {
   to?: string;
-  margin?: any;
 };
 
 const ProtectedBaseLink = (props: TextLinkProps) => <BaseLink {...props} />;
@@ -15,14 +14,36 @@ const LinkWrap = styled<TextLinkProps>(ProtectedBaseLink)`
   text-decoration: underline;
   transition: 0.25s ease-in-out;
   display: inline-block;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: -0.5em;
+    right: -0.5em;
+    top: 0;
+    bottom: 0;
+    border-radius: 1em;
+    background: var(--color-brand-light);
+    opacity: 0;
+    transition: 0.25s ease-in-out;
+  }
 
   &:hover {
     color: var(--color-link-active);
+
+    &::after {
+      opacity: 0.25;
+    }
   }
 
   &:focus {
     outline: none;
     color: var(--color-link-active);
+
+    &::after {
+      opacity: 0.25;
+    }
   }
 `;
 
@@ -34,9 +55,9 @@ const LinkText = styled(Text)`
   color: var(--color-brand-dark);
 `;
 
-const Link: React.SFC<TextLinkProps> = ({ children, margin, ...props }) => (
+const Link: React.SFC<TextLinkProps> = ({ children, ...props }) => (
   <LinkWrap {...props}>
-    <LinkText margin={margin}>{children}</LinkText>
+    <LinkText>{children}</LinkText>
   </LinkWrap>
 );
 

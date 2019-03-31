@@ -9,6 +9,7 @@ export const Column = ({ children }) => (
     width="100%"
     pad="large"
     style={{ overflowY: 'auto' }}
+    className="layout-column"
   >
     <Box
       margin={{ horizontal: 'auto', top: 'large', bottom: '120px' }}

@@ -1,5 +1,5 @@
 import React, { SFC, useState } from 'react';
-import { PlanMealData, PlanMealRecipeData } from '../types';
+import { PlanMealData, PlanMealRecipeData } from '../../types';
 import { Box, Text, Button } from 'grommet';
 import { Label, Link } from 'components/text';
 import { Card } from 'components/generic';
@@ -9,33 +9,7 @@ import RecipeSelector from '../RecipeSelector/RecipeSelector';
 import { pathOr } from 'ramda';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
-
-export const MealFragment = gql`
-  fragment MealRecipeFragment on Recipe {
-    id
-    title
-    coverImage {
-      id
-      url
-    }
-  }
-
-  fragment MealFragment on PlanMeal {
-    id
-
-    cooking {
-      ...MealRecipeFragment
-    }
-
-    eating {
-      id
-
-      cooking {
-        ...MealRecipeFragment
-      }
-    }
-  }
-`;
+import { MealFragment } from '../../usePlan';
 
 const AssignRecipeMutation = gql`
   mutation AssignRecipe($planMealId: ID!, $recipeId: ID!) {

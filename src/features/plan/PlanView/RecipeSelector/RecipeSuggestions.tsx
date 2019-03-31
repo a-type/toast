@@ -1,5 +1,5 @@
 import React, { SFC, useContext, Fragment } from 'react';
-import { PlanMealRecipeData } from '../types';
+import { PlanMealRecipeData } from '../../types';
 import { RecipeCards } from 'features/recipes';
 import { HelpText, Link } from 'components/text';
 import { Heading, Box, Text, Paragraph, Button } from 'grommet';
