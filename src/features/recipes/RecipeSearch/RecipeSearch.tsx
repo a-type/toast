@@ -87,14 +87,7 @@ export const RecipeSearch = () => {
   );
 
   return (
-    <Box margin={{ bottom: 'large' }}>
-      <Heading level="2">
-        <Icon name="search" /> Search Recipes
-      </Heading>
-      <Paragraph>
-        Search other recipes our users have discovered from all over the
-        internet.
-      </Paragraph>
+    <>
       <RecipeSearchForm
         searchTerm={search.searchTerm}
         onSearchTermChanged={search.setSearchTerm}
@@ -106,6 +99,6 @@ export const RecipeSearch = () => {
         removeExcludeIngredient={search.removeExcludeIngredient}
       />
       <RecipeSearchResults {...result} />
-    </Box>
+    </>
   );
 };
