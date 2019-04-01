@@ -12,7 +12,8 @@ const guides: { [key: string]: Guide } = {
   plan: {
     name: 'plan',
     summary: 'Plan your upcoming week',
-    text: "Add recipes you've collected to your plan for next week's meals.",
+    text:
+      "Plan what you're going to cook or eat each day next week by tapping the icons. You can select recipes from your collection, plan to eat meals you've already prepped, or indicate when you're going out to eat.",
     page: '/plan',
     action: 'Start planning meals',
   },
