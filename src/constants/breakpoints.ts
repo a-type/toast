@@ -1,0 +1,1 @@
+export const NAV_SIDEBAR_MIN_WIDTH_PX = 1000;

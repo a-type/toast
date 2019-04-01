@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { Loader } from 'components/generic';
 import useStoredFlag from 'hooks/useStoredFlag';
+import useGuides from 'features/guides/useGuides';
 
 export const Document = gql`
   mutation CreatePlan {
@@ -18,12 +19,15 @@ export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
   const [loading, setLoading] = useState(false);
   const mutate = useMutation(Document);
   const [_, setTutorialFlag] = useStoredFlag('onboarding');
+  const [__, { queueGuide }] = useGuides();
 
   const create = async () => {
     setLoading(true);
     await mutate();
     setLoading(false);
     setTutorialFlag(true);
+    queueGuide('addRecipes');
+    queueGuide('plan');
     onCreated();
   };
 

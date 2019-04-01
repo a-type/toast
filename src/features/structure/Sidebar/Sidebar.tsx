@@ -1,5 +1,5 @@
 import React, { SFC, useState, useContext, Fragment } from 'react';
-import ToggleButton from './ToggleButton';
+import HeaderBar from './HeaderBar';
 import { Box, Layer, BoxProps } from 'grommet';
 import useMedia from 'hooks/useMedia';
 import { Link } from 'components/generic';
@@ -14,6 +14,8 @@ import Invite from 'features/groups/Invite';
 import styled from 'styled-components';
 import browserHistory from 'browserHistory';
 import firebase from 'firebase';
+import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
+import ToggleButton from './ToggleButton';
 
 const SidebarContentBox = styled<{ embedded: boolean } & BoxProps>(
   ({ embedded, ...props }) => <Box {...props} />,
@@ -30,7 +32,7 @@ const SidebarContentBox = styled<{ embedded: boolean } & BoxProps>(
 interface SidebarProps {}
 
 const Sidebar: SFC<SidebarProps> = ({}) => {
-  const isWide = useMedia('(min-width: 1200px)');
+  const isWide = useMedia(`(min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px)`);
   const [open, setOpen] = useState<boolean>(false);
   const hideSidebar = () => {
     // if this isn't delayed, the navigation never happens... unsure why
@@ -97,6 +99,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
     <SidebarContentBox height="100%" embedded={isWide}>
       <OverlayColorContext>
         <BackdropArt />
+        {!isWide && <ToggleButton open onClick={() => setOpen(false)} />}
         <Box style={{ position: 'relative' }}>
           <Box pad="large" align="center">
             <Link nav to="/">
@@ -129,11 +132,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
           {content}
         </Layer>
       )}
-      <ToggleButton
-        open={open}
-        onClick={() => setOpen(!open)}
-        style={{ zIndex: open ? 10000 : 10 }}
-      />
+      <HeaderBar open={open} onClick={() => setOpen(!open)} />
     </React.Fragment>
   );
 };

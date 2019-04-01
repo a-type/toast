@@ -5,9 +5,9 @@ import { Icon } from 'components/generic';
 import { Button } from 'grommet';
 
 const ToggleButtonStyle = styled(Button)`
-  position: fixed;
-  left: var(--spacing-md);
-  bottom: var(--spacing-md);
+  position: absolute;
+  left: var(--spacing-sm);
+  top: var(--spacing-sm);
   border: 2px solid var(--color-brand);
   border-radius: var(--border-radius-md);
   background: var(--color-brand);

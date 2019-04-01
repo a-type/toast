@@ -12,6 +12,42 @@ import Sidebar from 'features/structure/Sidebar';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { GlobalLoader } from 'components/generic/Loader';
 import Helmet from 'react-helmet';
+import Guides from 'features/guides/Guides/Guides';
+import styled from 'styled-components';
+import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
+
+const MainContentBox = styled(Box)`
+  overflow-y: auto;
+  flex: 1 0 0;
+`;
+
+const MainGrid = styled.div`
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-areas: 'nav' 'content' 'guides';
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+
+  @media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px) {
+    grid-template-areas: 'nav content' 'nav guides';
+    grid-template-rows: 1fr auto;
+    grid-template-columns: auto 1fr;
+  }
+
+  & > *:nth-child(1) {
+    grid-area: nav;
+  }
+
+  & > *:nth-child(2) {
+    grid-area: content;
+  }
+
+  & > *:nth-child(3) {
+    grid-area: guides;
+  }
+`;
 
 const App: FC<{}> = () => (
   <ApolloProvider client={apolloClient}>
@@ -24,10 +60,13 @@ const App: FC<{}> = () => (
                 <Helmet>
                   <title>Toast</title>
                 </Helmet>
-                <Box direction="row" height="100%" width="100%">
+                <MainGrid>
                   <Sidebar />
-                  <Routes />
-                </Box>
+                  <MainContentBox width="100%">
+                    <Routes />
+                  </MainContentBox>
+                  <Guides />
+                </MainGrid>
               </Suspense>
             </LinkerContextProvider>
           </TokenContext.Provider>
