@@ -12,19 +12,19 @@ import {
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   imageSrc?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   shape?: CardShape;
   ref?: React.Ref<any>;
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-enum LayoutMode {
+export enum LayoutMode {
   Vertical,
   Horizontal,
   Compact,
 }
 
-const useCardLayout = (): [any, LayoutMode] => {
+export const useCardLayout = (): [any, LayoutMode] => {
   const ref = React.useRef(null);
   const { width, height } = useComponentSize(ref);
   let layout;

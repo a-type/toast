@@ -5,7 +5,7 @@ const guides: { [key: string]: Guide } = {
     name: 'addRecipes',
     summary: 'Add recipes to use while planning',
     text:
-      'On this page, you can add new recipes to your collection. These recipes can then be used when you plan meals. The easiest way to add a recipe is using our Scanner, which takes any URL to a recipe webpage. You can also search for recipes that other users have scanned.',
+      'On this page, you can add new recipes to your collection. These recipes can then be used when you plan meals. The easiest way to add a recipe is using our Scanner, which can read recipes from webpages. You can also search for recipes that other users have scanned.',
     page: '/recipes/find',
     action: 'Start adding recipes',
   },

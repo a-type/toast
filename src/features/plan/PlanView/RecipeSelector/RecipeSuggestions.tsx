@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo-hooks';
 import LinkerContext from 'contexts/LinkerContext';
 import useRecipeCollection from 'features/recipes/useRecipeCollection';
-import { Loader } from 'components/generic';
+import { Loader, Link as WrapLink } from 'components/generic';
 
 export const Document = gql`
   query RecipeSuggestions {
@@ -103,13 +103,9 @@ const RecipeSuggestions: SFC<RecipeSuggestionsProps> = ({
           <HelpText margin={{ bottom: 'medium' }}>
             Use the Toast Scanner to gather recipes from around the web!
           </HelpText>
-          <Button
-            onClick={() => {
-              setOpen(true);
-              onCancel();
-            }}
-            label="Add a recipe"
-          />
+          <WrapLink to="/recipes/find">
+            <Button label="Add a recipe" />
+          </WrapLink>
         </Box>
       )}
     </Box>

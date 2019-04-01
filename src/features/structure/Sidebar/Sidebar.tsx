@@ -1,8 +1,8 @@
 import React, { SFC, useState, useContext, Fragment } from 'react';
 import HeaderBar from './HeaderBar';
-import { Box, Layer, BoxProps } from 'grommet';
+import { Box, Layer, BoxProps, Button } from 'grommet';
 import useMedia from 'hooks/useMedia';
-import { Link } from 'components/generic';
+import { Link, Icon } from 'components/generic';
 import { Logo, BackdropArt } from 'components/brand';
 import SidebarLink from './SidebarLink';
 import AuthContext from 'contexts/AuthContext';
@@ -57,6 +57,15 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
       <SidebarLink
         nav
         exact
+        label="Home"
+        icon="chef-toque"
+        to="/"
+        onMouseUp={hideSidebar}
+      />
+
+      <SidebarLink
+        nav
+        exact
         label="Plan"
         icon="calendar"
         to="/plan"
@@ -64,9 +73,10 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
       />
       <SidebarLink
         nav
-        label="Shopping list"
-        icon="check-list"
-        to="/shoppingList"
+        exact
+        label="Find recipes"
+        icon="copybook"
+        to="/recipes/find"
         onMouseUp={hideSidebar}
       />
       <SidebarLink
@@ -76,21 +86,27 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
         to="/recipes/collection"
         onMouseDown={hideSidebar}
       />
-
       <SidebarLink
-        label="Log out"
-        icon="login"
-        onClick={async () => {
-          console.log('logging out');
-          await firebase.auth().signOut();
-          browserHistory.push('/');
-        }}
+        nav
+        label="Shopping list"
+        icon="check-list"
+        to="/shoppingList"
+        onMouseUp={hideSidebar}
       />
 
       <Box align="center" pad="medium">
         <Invite />
         <br />
         <GroceryDay />
+        <br />
+        <Button
+          label="Log out"
+          icon={<Icon name="login" rotation={180} />}
+          onClick={async () => {
+            await firebase.auth().signOut();
+            browserHistory.push('/');
+          }}
+        />
       </Box>
     </Fragment>
   );

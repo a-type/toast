@@ -2,12 +2,10 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Column from 'components/layout/Column';
 import PlanView from 'features/plan/PlanView/PlanView';
-import { Linker } from 'features/recipes';
 
 const PlanPage = () => (
   <Column>
     <PlanView />
-    <Linker />
   </Column>
 );
 

@@ -1,15 +1,16 @@
 import React, { SFC, useState } from 'react';
 import { PlanMealData, PlanMealRecipeData } from '../../types';
-import { Box, Text, Button } from 'grommet';
-import { Label, Link } from 'components/text';
+import { Box } from 'grommet';
+import { Label } from 'components/text';
 import { Card } from 'components/generic';
 import { TextSkeleton, CardSkeleton } from 'components/skeletons';
 import styled from 'styled-components';
 import RecipeSelector from '../RecipeSelector/RecipeSelector';
-import { pathOr } from 'ramda';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { MealFragment } from '../../usePlan';
+import EmptyMeal from './EmptyMeal';
+import RecipeCard from 'features/recipes/RecipeCards/RecipeCard';
 
 const AssignRecipeMutation = gql`
   mutation AssignRecipe($planMealId: ID!, $recipeId: ID!) {
@@ -30,48 +31,6 @@ const MealBox = styled(Box)`
   }
 `;
 
-interface CookingSectionProps {
-  cooking: PlanMealRecipeData[];
-  assignRecipe(recipeId: string): Promise<any>;
-}
-
-const CookingSection: SFC<CookingSectionProps> = ({
-  cooking,
-  assignRecipe,
-}) => {
-  const [showSelector, setShowSelector] = useState(false);
-
-  const handleSelectRecipe = async (recipe: PlanMealRecipeData) => {
-    await assignRecipe(recipe.id);
-    setShowSelector(false);
-  };
-
-  const mainContent =
-    cooking && cooking.length ? (
-      <>
-        <Text>
-          Cooking:{' '}
-          <Link to={`/recipes/${cooking[0].id}`}>{cooking[0].title}</Link>
-        </Text>
-        <Button onClick={() => setShowSelector(true)} label="Change recipe" />
-      </>
-    ) : (
-      <Button onClick={() => setShowSelector(true)} label="Cook something" />
-    );
-
-  return (
-    <>
-      {mainContent}
-      {showSelector && (
-        <RecipeSelector
-          onChange={handleSelectRecipe}
-          onCancel={() => setShowSelector(false)}
-        />
-      )}
-    </>
-  );
-};
-
 interface MealProps {
   meal: PlanMealData;
   mealName: string;
@@ -79,20 +38,46 @@ interface MealProps {
 
 const Meal: SFC<MealProps> = ({ meal, mealName }) => {
   const assignMutate = useMutation(AssignRecipeMutation);
+  const [showSelector, setShowSelector] = useState(false);
+  const assignRecipe = async recipeId => {
+    await assignMutate({
+      variables: { recipeId, planMealId: meal.id },
+    });
+  };
+
+  const handleSelectRecipe = async (recipe: PlanMealRecipeData) => {
+    await assignRecipe(recipe.id);
+    setShowSelector(false);
+  };
+
+  if (!meal.cooking.length && !meal.eating.length) {
+    return (
+      <MealBox>
+        <Label>{mealName}</Label>
+        <EmptyMeal onChooseRecipe={() => setShowSelector(true)} />
+        {showSelector && (
+          <RecipeSelector
+            onChange={handleSelectRecipe}
+            onCancel={() => setShowSelector(false)}
+          />
+        )}
+      </MealBox>
+    );
+  }
+
+  if (meal.cooking.length) {
+    return (
+      <MealBox>
+        <Label>{mealName}</Label>
+        <RecipeCard recipe={meal.cooking[0]} />
+      </MealBox>
+    );
+  }
 
   return (
     <MealBox>
       <Label>{mealName}</Label>
-      <Card imageSrc={pathOr(null, ['cooking', 0, 'coverImage', 'url'], meal)}>
-        <CookingSection
-          cooking={meal.cooking}
-          assignRecipe={async recipeId => {
-            await assignMutate({
-              variables: { recipeId, planMealId: meal.id },
-            });
-          }}
-        />
-      </Card>
+      <Card />
     </MealBox>
   );
 };

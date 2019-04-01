@@ -38,7 +38,6 @@ const ActionLink = styled<{ primary?: boolean } & LinkProps>(
   color: ${props =>
     props.primary ? 'var(--color-white)' : 'var(--color-positive)'};
   border-top: 1px solid var(--color-positive);
-  height: 100%;
   text-align: center;
   font-style: italic;
   display: flex;
@@ -68,14 +67,16 @@ export const GuideMessage: FC<GuideMessageProps & RouteComponentProps> = ({
       <Box direction="row">
         <Button
           style={{ padding: 0 }}
-          margin={{ right: 'medium' }}
+          margin={{ right: 'medium', left: 'small' }}
           onClick={() => setExpanded(!expanded)}
           icon={<Icon name="expand-arrow" rotation={expanded ? 0 : 180} />}
         />
         <Text>{guide.summary}</Text>
       </Box>
       <Collapsible open={expanded}>
-        <Text>{guide.text}</Text>
+        <Box pad="medium">
+          <Text size="small">{guide.text}</Text>
+        </Box>
       </Collapsible>
     </Box>
   ) : (
