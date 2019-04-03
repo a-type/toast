@@ -5,7 +5,7 @@ import { Field } from 'components/generic';
 import { TextInput, Button, Paragraph, Box, Text } from 'grommet';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
-import { Link } from 'components/text';
+import { Link } from 'components/generic';
 import { useLinker } from 'contexts/LinkerContext';
 
 const MESSAGES = {
