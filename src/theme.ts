@@ -114,6 +114,18 @@ export const GlobalStyle = createGlobalStyle`
   --border-width-lg: 4px;
 }
 
+.overlay-context {
+  --color-content-foreground: var(--color-dark);
+  --color-content-background: var(--color-brand);
+  --color-heading: var(--color-dark);
+  --color-field-background: var(--color-brand-dark);
+  --color-field-foreground: var(--color-dark);
+  --color-control-background: var(--color-brand-light);
+  --color-control-foreground: var(--color-dark);
+  --color-link-foreground: var(--color-brand-dark);
+  --color-link-active: var(--color-dark);
+}
+
 html, body {
   margin: 0;
   padding: 0;

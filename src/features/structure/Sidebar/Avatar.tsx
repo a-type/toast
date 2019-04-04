@@ -16,6 +16,8 @@ const Circle = styled<{ avatarUrl: string }, 'div'>('div')`
   background-position: center;
   background-size: cover;
 
+  flex-shrink: 0;
+
   & > * {
     margin: auto;
   }

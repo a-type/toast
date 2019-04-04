@@ -16,6 +16,7 @@ const ToggleButtonStyle = styled(Button)`
 
 const RelativeBox = styled(Box)`
   position: relative;
+  height: 48px;
 `;
 
 const HeaderBar: SFC<BoxProps & { open?: boolean; onClick(): void }> = ({
@@ -32,11 +33,12 @@ const HeaderBar: SFC<BoxProps & { open?: boolean; onClick(): void }> = ({
           <Icon
             name={open ? 'next-page' : 'three-dots-symbol'}
             rotation={open ? 180 : 0}
+            size="24px"
           />
         }
       />
       <Link to="/">
-        <Logo size="3vh" />
+        <Logo size="24px" />
       </Link>
     </RelativeBox>
   );

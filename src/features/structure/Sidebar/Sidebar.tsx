@@ -1,4 +1,10 @@
-import React, { SFC, useState, useContext, Fragment } from 'react';
+import React, {
+  SFC,
+  useState,
+  useContext,
+  Fragment,
+  HTMLAttributes,
+} from 'react';
 import HeaderBar from './HeaderBar';
 import { Box, Layer, BoxProps, Button } from 'grommet';
 import useMedia from 'hooks/useMedia';
@@ -16,13 +22,26 @@ import browserHistory from 'browserHistory';
 import firebase from 'firebase';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
 import ToggleButton from './ToggleButton';
+import SidebarContact from './Contact';
 
-const SidebarContentBox = styled<{ embedded: boolean } & BoxProps>(
-  ({ embedded, ...props }) => <Box {...props} />,
-)`
+const SidebarContentBox = styled<
+  { embedded: boolean } & BoxProps & HTMLAttributes<HTMLDivElement>
+>(({ embedded, ...props }) => <Box {...props} />)`
   position: relative;
   flex-shrink: 0;
   width: ${props => (props.embedded ? '300px' : '80vw')};
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+
+  & > .sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  & > .sidebar-contact {
+    flex: 0 0 auto;
+  }
 
   @media (min-width: 800px) {
     width: 300px;
@@ -41,13 +60,15 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
   const { user, isLoggedIn } = useContext(AuthContext);
 
   const anonContent = (
-    <SidebarLink
-      nav
-      label="Join or log in"
-      icon="chef-toque"
-      to="/login"
-      onMouseUp={hideSidebar}
-    />
+    <>
+      <SidebarLink
+        nav
+        label="Join or log in"
+        icon="chef-toque"
+        to="/login"
+        onMouseUp={hideSidebar}
+      />
+    </>
   );
 
   const authContent = (
@@ -75,14 +96,14 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
         nav
         exact
         label="Find recipes"
-        icon="copybook"
+        icon="search"
         to="/recipes/find"
         onMouseUp={hideSidebar}
       />
       <SidebarLink
         nav
         label="Your recipes"
-        icon="list-view"
+        icon="copybook"
         to="/recipes/collection"
         onMouseDown={hideSidebar}
       />
@@ -112,19 +133,22 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
   );
 
   const content = (
-    <SidebarContentBox height="100%" embedded={isWide}>
-      <OverlayColorContext>
-        <BackdropArt />
-        {!isWide && <ToggleButton open onClick={() => setOpen(false)} />}
-        <Box style={{ position: 'relative' }}>
-          <Box pad="large" align="center">
-            <Link nav to="/">
-              <Logo />
-            </Link>
-          </Box>
-          {isLoggedIn ? authContent : anonContent}
+    <SidebarContentBox
+      height="100%"
+      embedded={isWide}
+      className="sidebar overlay-context"
+    >
+      <BackdropArt />
+      {!isWide && <ToggleButton open onClick={() => setOpen(false)} />}
+      <Box style={{ position: 'relative' }} className="sidebar-content">
+        <Box pad="large" align="center">
+          <Link nav to="/">
+            <Logo />
+          </Link>
         </Box>
-      </OverlayColorContext>
+        {isLoggedIn ? authContent : anonContent}
+      </Box>
+      <SidebarContact className="sidebar-contact" />
     </SidebarContentBox>
   );
 

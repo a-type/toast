@@ -21,7 +21,7 @@
     "body": [
       "import React, { FC } from 'react';",
       "",
-      "interface ${1:${TM_FILENAME/(.*)\\..+$/$1/}}Props {",
+      "export interface ${1:${TM_FILENAME/(.*)\\..+$/$1/}}Props {",
       "  $2",
       "}",
       "",
