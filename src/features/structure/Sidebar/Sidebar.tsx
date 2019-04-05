@@ -14,7 +14,6 @@ import SidebarLink from './SidebarLink';
 import AuthContext from 'contexts/AuthContext';
 import Avatar from './Avatar';
 import { path } from 'ramda';
-import { OverlayColorContext } from 'components/graphics';
 import { GroceryDay } from 'features/plan';
 import Invite from 'features/groups/Invite';
 import styled from 'styled-components';
@@ -23,13 +22,14 @@ import firebase from 'firebase';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
 import ToggleButton from './ToggleButton';
 import SidebarContact from './Contact';
+import SidebarGestureContainer from './GestureContainer';
 
 const SidebarContentBox = styled<
   { embedded: boolean } & BoxProps & HTMLAttributes<HTMLDivElement>
 >(({ embedded, ...props }) => <Box {...props} />)`
   position: relative;
   flex-shrink: 0;
-  width: ${props => (props.embedded ? '300px' : '80vw')};
+  width: 300px;
   display: flex;
   min-height: 100%;
   flex-direction: column;
@@ -158,20 +158,9 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
 
   return (
     <React.Fragment>
-      {open && (
-        <Layer
-          responsive={false}
-          position="left"
-          full="vertical"
-          margin={{ right: 'medium' }}
-          animate
-          onClickOutside={() => {
-            setOpen(false);
-          }}
-        >
-          {content}
-        </Layer>
-      )}
+      <SidebarGestureContainer open={open} setOpen={setOpen}>
+        {content}
+      </SidebarGestureContainer>
       <HeaderBar open={open} onClick={() => setOpen(!open)} />
     </React.Fragment>
   );
