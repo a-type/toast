@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "path": "app",
+      "name": "App"
+    },
+    {
+      "path": "core",
+      "name": "Core"
+    },
+    {
+      "path": "planning",
+      "name": "Planning"
+    },
+    {
+      "path": "scanning",
+      "name": "Scanning"
+    }
+  ]
+}
