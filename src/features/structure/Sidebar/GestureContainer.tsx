@@ -25,8 +25,6 @@ export const SidebarGestureContainer: FC<SidebarGestureContainerProps> = ({
     ({ down, x: gestureX, xInitial, args: [element, isCurrentlyOpen] }) => {
       const isWindow = element === 'window';
 
-      console.log(gestureX);
-
       const wasTapOutside =
         isCurrentlyOpen &&
         isWindow &&
