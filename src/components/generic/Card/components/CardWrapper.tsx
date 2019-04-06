@@ -8,6 +8,7 @@ const CardWrapper = styled<{ imageSrc?: string; onClick?: any }, 'div'>('div')`
   padding: 2px;
   position: relative;
   cursor: ${props => (props.onClick ? 'pointer' : 'default')};
+  height: 100%;
 `;
 
 export default CardWrapper;

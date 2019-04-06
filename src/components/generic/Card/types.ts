@@ -6,6 +6,12 @@ export enum CardShape {
   Wide = 'wide',
 }
 
+export enum CardLayoutMode {
+  Vertical,
+  Horizontal,
+  Compact,
+}
+
 export interface ShapedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   shape?: CardShape;
   imageSrc?: string;

@@ -1,4 +1,4 @@
-import React, { SFC, useState } from 'react';
+import React, { SFC, useState, useEffect } from 'react';
 import { Text, Box } from 'grommet';
 import { pathOr } from 'ramda';
 import DayView from './DayView/DayView';
@@ -9,11 +9,14 @@ import {
   parse,
   isPast,
   endOfDay,
+  addDays,
 } from 'date-fns';
 import Calendar from 'components/generic/Calendar';
 import { CalendarDay } from 'components/generic/Calendar/Calendar';
 import { PlanDayData } from '../types';
 import usePlan from '../usePlan';
+import useGroceryDay from '../useGroceryDay';
+import getNextDay from 'utils/getNextDay';
 
 const isCookingSomething = (day: PlanDayData) =>
   !!pathOr(0, ['breakfast', 'cooking', 'length'], day) ||
@@ -23,10 +26,18 @@ const isCookingSomething = (day: PlanDayData) =>
 interface PlanViewProps {}
 
 const PlanView: SFC<PlanViewProps> = ({}) => {
-  const [planDays, loading, error, result] = usePlan();
+  const [groceryDay, groceryDayLoading] = useGroceryDay();
+  const [planDays, loading, error] = usePlan();
   const [date, setDate] = useState(startOfDay(new Date()));
 
-  if (loading) {
+  useEffect(() => {
+    if (!groceryDayLoading) {
+      // start on the day after grocery day
+      setDate(addDays(getNextDay(new Date(), groceryDay.index), 1));
+    }
+  }, [groceryDayLoading]);
+
+  if (loading || groceryDayLoading) {
     return (
       <Box>
         <DayView />

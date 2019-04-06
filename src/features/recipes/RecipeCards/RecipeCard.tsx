@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Card, CardShape } from 'components/generic/Card';
+import { Card, CardShape, CardProps } from 'components/generic/Card';
 import { path } from 'ramda';
 import styled from 'styled-components';
 
@@ -34,14 +34,15 @@ export interface RecipeCardRecipe {
   };
 }
 
-const RecipeCard: FC<{
-  recipe: RecipeCardRecipe;
-  onClick?: (ev: any) => void;
-}> = ({ recipe, onClick }) => (
+const RecipeCard: FC<
+  CardProps & {
+    recipe: RecipeCardRecipe;
+  }
+> = ({ recipe, ...props }) => (
   <Card
     imageSrc={path(['coverImage', 'url'], recipe)}
     shape={getShape(recipe)}
-    onClick={onClick}
+    {...props}
   >
     <Row>
       <span>{recipe.title}</span>

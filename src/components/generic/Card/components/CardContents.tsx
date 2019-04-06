@@ -1,20 +1,13 @@
 import styled, { css } from 'styled-components';
+import { CardLayoutMode } from '../types';
 
-const commonStyles = css`
-  background: var(--color-content-background);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-`;
-
-export const CompactCardContents = styled.div`
-  ${commonStyles} width: 100%;
+export const compact = css`
+  width: 100%;
   height: 100%;
 `;
 
-export const VerticalCardContents = styled.div`
-  ${commonStyles} position: absolute;
+export const vertical = css`
+  position: absolute;
   top: auto;
   bottom: 2px;
   height: auto;
@@ -24,12 +17,32 @@ export const VerticalCardContents = styled.div`
   right: 2px;
 `;
 
-export const HorizontalCardContents = styled.div`
-  ${commonStyles} position: absolute;
+export const horizontal = css`
+  position: absolute;
   left: 2px;
   right: auto;
   top: 2px;
   bottom: 2px;
   max-width: 75%;
   min-width: 40%;
+`;
+
+export const CardContents = styled.div`
+  background: var(--color-content-background);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+
+  &[data-card-layout='${CardLayoutMode.Compact}'] {
+    ${compact}
+  }
+
+  &[data-card-layout='${CardLayoutMode.Horizontal}'] {
+    ${horizontal}
+  }
+
+  &[data-card-layout='${CardLayoutMode.Vertical}'] {
+    ${vertical}
+  }
 `;

@@ -1,77 +1,65 @@
-import React, { SFC, HTMLAttributes } from 'react';
-import { CardShape, ShapedCardProps } from './types';
+import React, { SFC, HTMLAttributes, ReactNode } from 'react';
+import { CardShape, CardLayoutMode } from './types';
 import useComponentSize from '@rehooks/component-size';
 import styled from 'styled-components';
 import { loading } from 'components/effects';
 import CardWrapper from './components/CardWrapper';
-import {
-  VerticalCardContents,
-  HorizontalCardContents,
-  CompactCardContents,
-} from './components/CardContents';
+import { CardContents } from './components/CardContents';
+import { CardBadge } from './components/CardBadge';
+import CardActionMenu from './components/CardActionMenu';
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   imageSrc?: string;
   children?: React.ReactNode;
   shape?: CardShape;
   ref?: React.Ref<any>;
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
+  renderBadge?: () => ReactNode;
+  renderActions?: () => ReactNode;
 }
 
-export enum LayoutMode {
-  Vertical,
-  Horizontal,
-  Compact,
-}
-
-export const useCardLayout = (): [any, LayoutMode] => {
+export const useCardLayout = (): [any, CardLayoutMode] => {
   const ref = React.useRef(null);
   const { width, height } = useComponentSize(ref);
   let layout;
   if (width >= 250) {
     if (height >= 250) {
-      layout = LayoutMode.Vertical;
+      layout = CardLayoutMode.Vertical;
     } else {
-      layout = LayoutMode.Horizontal;
+      layout = CardLayoutMode.Horizontal;
     }
   } else {
-    layout = LayoutMode.Compact;
+    layout = CardLayoutMode.Compact;
   }
 
   return [ref, layout];
 };
 
-export const Card: SFC<Props> = ({
+export const Card: SFC<CardProps> = ({
   onClick,
   imageSrc,
   children,
   shape,
+  renderBadge,
+  renderActions,
   ...props
 }) => {
   const [contentRef, layoutMode] = useCardLayout();
-
-  let Layout;
-  switch (layoutMode) {
-    case LayoutMode.Compact:
-      Layout = CompactCardContents;
-      break;
-    case LayoutMode.Horizontal:
-      Layout = HorizontalCardContents;
-      break;
-    default:
-      Layout = VerticalCardContents;
-      break;
-  }
 
   return (
     <CardWrapper
       ref={contentRef}
       onClick={onClick}
       data-card-shape={shape}
+      data-card-layout={layoutMode}
       imageSrc={imageSrc}
       {...props}
     >
-      <Layout shape={shape}>{children}</Layout>
+      <CardContents data-card-layout={layoutMode} data-shape={shape}>
+        {children}
+        {renderActions && <CardActionMenu>{renderActions()}</CardActionMenu>}
+      </CardContents>
+      {renderBadge && <CardBadge>{renderBadge()}</CardBadge>}
     </CardWrapper>
   );
 };
