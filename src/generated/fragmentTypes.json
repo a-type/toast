@@ -1,17 +1,1 @@
-{
-  "__schema": {
-    "types": [
-      {
-        "kind": "INTERFACE",
-        "name": "MealAction",
-        "possibleTypes": [
-          { "name": "MealActionEatOut" },
-          { "name": "MealActionCook" },
-          { "name": "MealActionEat" },
-          { "name": "MealActionReadyMade" },
-          { "name": "MealActionSkip" }
-        ]
-      }
-    ]
-  }
-}
+{ "__schema": { "types": [] } }
