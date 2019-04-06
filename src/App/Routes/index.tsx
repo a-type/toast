@@ -14,6 +14,7 @@ import LoginPage from './pages/Login';
 import JoinGroupPage from './pages/JoinGroup';
 import RecipeCollection from './pages/RecipeCollection';
 import FindRecipes from './pages/FindRecipes';
+import SettingsPage from './pages/Settings';
 
 export default () => (
   <Switch>
@@ -37,6 +38,8 @@ export default () => (
     <Route path="/users/:userId" component={UserPage} />
 
     <Route path="/ingredients/:ingredientId" component={IngredientPage} />
+
+    <PrivateRoute path="/settings" component={SettingsPage} />
 
     <PrivateRoute path="/manage" component={ManagePage} />
 

@@ -16,7 +16,7 @@ const GroceryDayEventCreator: React.SFC<GroceryDayEventCreatorProps> = ({
 
   return (
     <Link to={dataUrl} download={filename} forceRemote>
-      <Button label="Add to Calendar" color="status-ok" />
+      <Button label="Add grocery day to calendar" color="status-ok" />
     </Link>
   );
 };

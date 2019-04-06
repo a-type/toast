@@ -14,8 +14,6 @@ import SidebarLink from './SidebarLink';
 import AuthContext from 'contexts/AuthContext';
 import Avatar from './Avatar';
 import { path } from 'ramda';
-import { GroceryDay } from 'features/plan';
-import Invite from 'features/groups/Invite';
 import styled from 'styled-components';
 import browserHistory from 'browserHistory';
 import firebase from 'firebase';
@@ -117,11 +115,15 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
         onMouseUp={hideSidebar}
       />
 
+      <SidebarLink
+        nav
+        label="Settings"
+        icon="more"
+        to="/settings"
+        onMouseUp={hideSidebar}
+      />
+
       <Box align="center" pad="medium">
-        <Invite />
-        <br />
-        <GroceryDay />
-        <br />
         <Button
           label="Log out"
           icon={<Icon name="login" rotation={180} />}
