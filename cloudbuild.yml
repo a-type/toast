@@ -60,6 +60,7 @@ steps:
     id: 'Core Test'
     waitFor: ['Core Install']
     args: ['run', 'test']
+    dir: 'core'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Core Containerize'
