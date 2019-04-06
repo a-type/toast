@@ -8,13 +8,13 @@ steps:
 
   - name: 'gcr.io/cloud-builders/npm'
     id: 'App Test'
-    waitFor: 'App Install'
+    waitFor: ['App Install']
     args: ['run', 'test']
     dir: 'app'
 
   - name: 'gcr.io/cloud-builders/npm'
     id: 'App Build'
-    waitFor: 'App Install'
+    waitFor: ['App Install']
     args: ['run', 'build']
     env:
       - 'BUILD_ID=$BUILD_ID'
@@ -22,19 +22,19 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'App Containerize'
-    waitFor: 'App Build'
+    waitFor: ['App Build']
     args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA', '.']
     dir: 'app'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'App Push'
-    waitFor: 'App Containerize'
+    waitFor: ['App Containerize']
     args: ['push', 'us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA']
     dir: 'app'
 
   - name: 'gcr.io/toast-cooking-0/helm'
     id: 'App Deploy'
-    waitFor: 'App Push'
+    waitFor: ['App Push']
     args:
       - 'upgrade'
       - '--install'
@@ -58,24 +58,24 @@ steps:
 
   - name: 'gcr.io/cloud-builders/npm'
     id: 'Core Test'
-    waitFor: 'Core Install'
+    waitFor: ['Core Install']
     args: ['run', 'test']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Core Containerize'
-    waitFor: 'Core Test'
+    waitFor: ['Core Test']
     args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA', '.']
     dir: 'core'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Core Push'
-    waitFor: 'Core Containerize'
+    waitFor: ['Core Containerize']
     args: ['push', 'us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA']
     dir: 'core'
 
   - name: 'gcr.io/toast-cooking-0/helm'
     id: 'Core Deploy'
-    waitFor: 'Core Push'
+    waitFor: ['Core Push']
     args:
       - 'upgrade'
       - '--install'
@@ -100,24 +100,24 @@ steps:
 
   - name: 'gcr.io/cloud-builders/npm'
     id: 'Planning Test'
-    waitFor: 'Planning Install'
+    waitFor: ['Planning Install']
     args: ['run', 'test']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Planning Containerize'
-    waitFor: 'Planning Test'
+    waitFor: ['Planning Test']
     args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA', '.']
     dir: 'planning'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Planning Push'
-    waitFor: 'Planning Containerize'
+    waitFor: ['Planning Containerize']
     args: ['push', 'us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA']
     dir: 'planning'
 
   - name: 'gcr.io/toast-cooking-0/helm'
     id: 'Planning Deploy'
-    waitFor: 'Planning Push'
+    waitFor: ['Planning Push']
     args:
       - 'upgrade'
       - '--install'
@@ -142,25 +142,25 @@ steps:
 
   - name: 'gcr.io/cloud-builders/npm'
     id: 'Scanning Test'
-    waitFor: 'Scanning Install'
+    waitFor: ['Scanning Install']
     args: ['run', 'test']
     dir: 'scanning'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Scanning Containerize'
-    waitFor: 'Scanning Test'
+    waitFor: ['Scanning Test']
     args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA', '.']
     dir: 'scanning'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Scanning Push'
-    waitFor: 'Scanning Containerize'
+    waitFor: ['Scanning Containerize']
     args: ['push', 'us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA']
     dir: 'scanning'
 
   - name: 'gcr.io/toast-cooking-0/helm'
     id: 'Scanning Deploy'
-    waitFor: 'Scanning Push'
+    waitFor: ['Scanning Push']
     args:
       - 'upgrade'
       - '--install'
