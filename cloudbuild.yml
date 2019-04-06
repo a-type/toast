@@ -102,6 +102,7 @@ steps:
     id: 'Planning Test'
     waitFor: ['Planning Install']
     args: ['run', 'test']
+    dir: 'planning'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Planning Containerize'
