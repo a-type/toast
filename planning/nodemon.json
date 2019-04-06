@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.test.js",
+    ".git",
+    "node_modules",
+    "build",
+    "client",
+    "db"
+  ],
+  "watch": ["src"],
+  "exec": "npm run dev:run",
+  "ext": "ts"
+}

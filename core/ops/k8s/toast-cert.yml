@@ -1,0 +1,21 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: toast-tls
+  namespace: production
+spec:
+  secretName: toast-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: toastcooking.app
+  dnsNames:
+  - toastcooking.app
+  - api.toastcooking.app
+  acme:
+    config:
+    - dns01:
+        provider: prod-dns
+      domains:
+      - toastcooking.app
+      - api.toastcooking.app

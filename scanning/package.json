@@ -1,0 +1,59 @@
+{
+  "name": "toast-scanning",
+  "version": "0.1.0",
+  "description": "Services to scan recipes and parse ingredients",
+  "main": "build/functions.js",
+  "scripts": {
+    "test": "jest",
+    "dev:run": "node --inspect=9239 -r ts-node/register -r dotenv/config ./src/server.ts",
+    "dev": "nodemon",
+    "build:clean-dir": "rimraf build",
+    "build:transpile": "tsc",
+    "build": "run-s build:*",
+    "start": "node -r dotenv/config ./build/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a-type/toast-scanning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/a-type/toast-scanning/issues"
+  },
+  "homepage": "https://github.com/a-type/toast-scanning#readme",
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "@types/jest": "^24.0.9",
+    "@types/node": "^11.9.5",
+    "cross-env": "^5.2.0",
+    "express": "^4.16.4",
+    "jest": "^24.1.0",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "ts-jest": "^24.0.0",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^2.4.2",
+    "@microsoft/recognizers-text-number": "^1.1.4",
+    "config": "^3.0.1",
+    "dotenv": "^6.2.0",
+    "express-async-errors": "^3.1.1",
+    "extract-domain": "^2.0.4",
+    "ingredients-parser": "^1.4.0",
+    "is-tracking-domain": "^1.1.6",
+    "iso8601-duration": "^1.1.7",
+    "mime-types": "^2.1.22",
+    "neo4j-driver": "^1.7.2",
+    "node-fetch": "^2.3.0",
+    "pluralize": "^7.0.0",
+    "puppeteer": "^1.12.2",
+    "robots-txt-parser": "^1.0.1",
+    "shortid": "^2.2.14",
+    "string-similarity": "^3.0.0",
+    "uuid": "^3.3.2"
+  }
+}

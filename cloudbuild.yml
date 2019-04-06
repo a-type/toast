@@ -1,40 +1,40 @@
 steps:
+  # APP
+  #=======================================================
   - name: 'gcr.io/cloud-builders/npm'
-    id: 'Install dependencies'
+    id: 'App Install'
     args: ['install']
+    dir: 'app'
 
   - name: 'gcr.io/cloud-builders/npm'
-    id: 'Test'
+    id: 'App Test'
+    waitFor: 'App Install'
     args: ['run', 'test']
+    dir: 'app'
 
   - name: 'gcr.io/cloud-builders/npm'
-    id: 'Build'
+    id: 'App Build'
+    waitFor: 'App Install'
     args: ['run', 'build']
     env:
       - 'BUILD_ID=$BUILD_ID'
-
-  # Build snapshot images and push them to Cloud Registry
+    dir: 'app'
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'Build deployable image (commit tag)'
+    id: 'App Containerize'
+    waitFor: 'App Build'
     args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA', '.']
+    dir: 'app'
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push deployable image (commit tag)'
+    id: 'App Push'
+    waitFor: 'App Containerize'
     args: ['push', 'us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Build deployable image (latest tag)'
-    args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-web:latest', '.']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push deployable image (latest tag)'
-    args: ['push', 'us.gcr.io/$PROJECT_ID/toast-web:latest']
-
-  # Deployment
+    dir: 'app'
 
   - name: 'gcr.io/toast-cooking-0/helm'
-    id: 'Generate a new Ingress, Service and Deployment'
+    id: 'App Deploy'
+    waitFor: 'App Push'
     args:
       - 'upgrade'
       - '--install'
@@ -48,6 +48,136 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=toast-primary'
 
-images:
-  - 'us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA'
-  - 'us.gcr.io/$PROJECT_ID/toast-web:latest'
+  # CORE
+  #========================================================
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'Core Install'
+    waitFor: ['-']
+    args: ['install']
+    dir: 'core'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'Core Test'
+    waitFor: 'Core Install'
+    args: ['run', 'test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Core Containerize'
+    waitFor: 'Core Test'
+    args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA', '.']
+    dir: 'core'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Core Push'
+    waitFor: 'Core Containerize'
+    args: ['push', 'us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA']
+    dir: 'core'
+
+  - name: 'gcr.io/toast-cooking-0/helm'
+    id: 'Core Deploy'
+    waitFor: 'Core Push'
+    args:
+      - 'upgrade'
+      - '--install'
+      - '--set'
+      - 'image.tag=$SHORT_SHA'
+      - 'toast-core'
+      - './charts/toast-core'
+      - '--namespace=production'
+      - '--tiller-namespace=kube-system'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=toast-primary'
+
+  # PLANNING
+  #========================================================
+
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'Planning Install'
+    waitFor: ['-']
+    args: ['install']
+    dir: 'planning'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'Planning Test'
+    waitFor: 'Planning Install'
+    args: ['run', 'test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Planning Containerize'
+    waitFor: 'Planning Test'
+    args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA', '.']
+    dir: 'planning'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Planning Push'
+    waitFor: 'Planning Containerize'
+    args: ['push', 'us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA']
+    dir: 'planning'
+
+  - name: 'gcr.io/toast-cooking-0/helm'
+    id: 'Planning Deploy'
+    waitFor: 'Planning Push'
+    args:
+      - 'upgrade'
+      - '--install'
+      - '--set'
+      - 'image.tag=$SHORT_SHA'
+      - 'toast-planning'
+      - './charts/toast-planning'
+      - '--namespace=production'
+      - '--tiller-namespace=kube-system'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=toast-primary'
+
+  # SCANNING
+  #========================================================
+
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'Scanning Install'
+    waitFor: ['-']
+    args: ['install']
+    dir: 'scanning'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'Scanning Test'
+    waitFor: 'Scanning Install'
+    args: ['run', 'test']
+    dir: 'scanning'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Scanning Containerize'
+    waitFor: 'Scanning Test'
+    args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA', '.']
+    dir: 'scanning'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Scanning Push'
+    waitFor: 'Scanning Containerize'
+    args: ['push', 'us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA']
+    dir: 'scanning'
+
+  - name: 'gcr.io/toast-cooking-0/helm'
+    id: 'Scanning Deploy'
+    waitFor: 'Scanning Push'
+    args:
+      - 'upgrade'
+      - '--install'
+      - '--set'
+      - 'image.tag=$SHORT_SHA'
+      - 'toast-scanning'
+      - './charts/toast-scanning'
+      - '--namespace=production'
+      - '--tiller-namespace=kube-system'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=toast-primary'
+
+# images:
+#   - 'us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA'
+#   - 'us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA'
+#   - 'us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA'
+#   - 'us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA'
+
+timeout: 1800s

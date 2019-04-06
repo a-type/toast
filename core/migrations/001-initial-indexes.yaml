@@ -1,0 +1,80 @@
+# simple property index
+- kind: index
+  type: node_label_property
+  label: Recipe
+  properties:
+    - title
+
+# fulltext index (Neo4j 3.5+)
+- kind: index
+  type: node_fulltext
+  name: ingredients
+  labels:
+    - Ingredient
+  properties:
+    - name
+    - alternateNames
+
+- kind: index
+  type: node_fulltext
+  name: recipes
+  labels:
+    - Recipe
+  properties:
+    - title
+
+# unique property constraint
+- kind: constraint
+  type: node_unique_property
+  label: Recipe
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: Recipe
+  property: sourceUrl
+
+- kind: constraint
+  type: node_unique_property
+  label: User
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: Ingredient
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: Ingredient
+  property: name
+
+- kind: constraint
+  type: node_unique_property
+  label: Group
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: PlanDay
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: PlanMeal
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: RecipeIngredient
+  property: id
+
+- kind: constraint
+  type: node_unique_property
+  label: Step
+  property: id
+
+# example of arbitrary cypher migration, which may or may not be reversible
+# - kind: Cypher
+#   up: 'MATCH (p:Person) SET p.name = trim(p.name)'
+#   down: null

@@ -1,0 +1,35 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: toast-planning-sync
+  labels:
+    app.kubernetes.io/name: toast-planning-sync
+    helm.sh/chart: {{ include "toast-planning.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  schedule: "0 0 * * *" # midnight each day
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: "OnFailure"
+          containers:
+          - name: toast-planning-sync
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["npm", "run", "job:sync"]
+            env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: NEO4J_USERNAME
+              value: neo4j
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.creds.secretName }}
+                  key: neo4j-password
+            - name: NEO4J_BOLT_HOST
+              value: {{ .Values.db.hosts.bolt }}
+            - name: PLANNING_API_ENDPOINT
+              value: http://toast-planning.production.svc.cluster.local

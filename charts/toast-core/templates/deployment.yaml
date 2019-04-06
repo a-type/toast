@@ -1,0 +1,103 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "toast-core.fullname" . }}
+  labels:
+    chart: {{ template "toast-core.chart" . }}
+    app: {{ template "toast-core.name" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "toast-core.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "toast-core.name" . }}
+        release: {{ .Release.Name }}
+{{- if .Values.podAnnotations }}
+      annotations:
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.probePath }}
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.probePath }}
+            port: {{ .Values.service.internalPort }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        volumeMounts:
+          - name: service-account-secret
+            mountPath: /var/secrets/service-account
+          - name: firebase-service-account-secret
+            mountPath: /var/secrets/firebase-service-account
+        env:
+          - name: NODE_ENV
+            value: 'production'
+          - name: NEO4J_USERNAME
+            value: neo4j
+          - name: NEO4J_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.db.creds.secretName }}
+                key: neo4j-password
+          - name: NEO4J_BOLT_HOST
+            value: {{ .Values.db.hosts.bolt }}
+          - name: PORT
+            value: '{{ .Values.service.internalPort }}'
+          - name: GCLOUD_MEDIA_BUCKET
+            value: '{{ .Values.application.storage.bucketName }}'
+          - name: GCLOUD_PROJECT_ID
+            value: '{{ .Values.projectId }}'
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /var/secrets/service-account/key.json
+          - name: TOAST_PLANNING_HOST
+            value: '{{ .Values.application.services.planning.host }}'
+          - name: TOAST_SCANNING_HOST
+            value: '{{ .Values.application.services.scanning.host }}'
+          - name: FIREBASE_SERVICE_ACCOUNT_KEY_FILE
+            value: '/var/secrets/firebase-service-account/key.json'
+          - name: FIREBASE_DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: firebase-config
+                key: databaseUrl
+          - name: FIREBASE_MESSAGING_SERVER_KEY
+            valueFrom:
+              secretKeyRef:
+                name: firebase-config
+                key: messagingServerKey
+          - name: FIREBASE_MESSAGING_SENDER_ID
+            valueFrom:
+              secretKeyRef:
+                name: firebase-config
+                key: messagingSenderId
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      volumes:
+        - name: service-account-secret
+          secret:
+            secretName: toast-core-service-account
+        - name: firebase-service-account-secret
+          secret:
+            secretName: firebase-service-account

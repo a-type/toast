@@ -1,0 +1,48 @@
+# Default values for toast-scanning.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: us.gcr.io/toast-cooking-0/toast-scanning
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: "toast-scanning"
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+db:
+  creds:
+    secretName: neo4j-neo4j-secrets
+  hosts:
+    bolt: bolt+routing://neo4j-neo4j-core-0.neo4j-neo4j.production.svc.cluster.local:7687
+
+chrome:
+  args: '--no-sandbox --disable-setuid-sandbox --disable-notifications --disable-offer-store-unmasked-wallet-cards --disable-offer-upload-credit-cards --enable-async-dns --enable-simple-cache-backend --enable-tcp-fast-open --no-default-browser-check --no-pings --prerender-from-omnibox=disabled'
+  timeout: "60000"
+
+storage:
+  bucket: toast-media-prod

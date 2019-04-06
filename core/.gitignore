@@ -1,0 +1,5 @@
+node_modules/
+build/
+client/
+config/local.js
+.env

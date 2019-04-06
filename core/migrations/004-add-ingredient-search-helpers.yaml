@@ -1,0 +1,10 @@
+---
+- kind: index
+  type: node_fulltext
+  name: ingredients
+  labels:
+    - Ingredient
+  properties:
+    - name
+    - alternateNames
+    - searchHelpers
