@@ -35,18 +35,6 @@ const MainGrid = styled.div`
     grid-template-rows: 1fr auto;
     grid-template-columns: auto 1fr;
   }
-
-  & > *:nth-child(1) {
-    grid-area: nav;
-  }
-
-  & > *:nth-child(2) {
-    grid-area: content;
-  }
-
-  & > *:nth-child(3) {
-    grid-area: guides;
-  }
 `;
 
 const App: FC<{}> = () => (
@@ -61,11 +49,11 @@ const App: FC<{}> = () => (
                   <title>Toast</title>
                 </Helmet>
                 <MainGrid>
-                  <Sidebar />
-                  <MainContentBox width="100%">
+                  <Sidebar gridArea="nav" />
+                  <MainContentBox width="100%" gridArea="content">
                     <Routes />
                   </MainContentBox>
-                  <Guides />
+                  <Guides gridArea="guides" />
                 </MainGrid>
               </Suspense>
             </LinkerContextProvider>

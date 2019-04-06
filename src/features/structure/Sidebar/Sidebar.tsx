@@ -48,9 +48,11 @@ const SidebarContentBox = styled<
   }
 `;
 
-interface SidebarProps {}
+interface SidebarProps {
+  gridArea?: string;
+}
 
-const Sidebar: SFC<SidebarProps> = ({}) => {
+const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
   const isWide = useMedia(`(min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px)`);
   const [open, setOpen] = useState<boolean>(false);
   const hideSidebar = () => {
@@ -134,6 +136,7 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
 
   const content = (
     <SidebarContentBox
+      gridArea={isWide ? gridArea : null}
       height="100%"
       embedded={isWide}
       className="sidebar overlay-context"
@@ -161,7 +164,11 @@ const Sidebar: SFC<SidebarProps> = ({}) => {
       <SidebarGestureContainer open={open} setOpen={setOpen}>
         {content}
       </SidebarGestureContainer>
-      <HeaderBar open={open} onClick={() => setOpen(!open)} />
+      <HeaderBar
+        open={open}
+        onClick={() => setOpen(!open)}
+        gridArea={isWide ? null : gridArea}
+      />
     </React.Fragment>
   );
 };

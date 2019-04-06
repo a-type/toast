@@ -224,7 +224,7 @@ Object.keys(statusColors).forEach(color => {
   colors[`status-${color}`] = statusColors[color];
 });
 
-const hoverBorder = color =>
+export const hoverBorder = color =>
   css`
     &:hover {
       box-shadow: 0 0 0 2px ${color};
@@ -232,7 +232,7 @@ const hoverBorder = color =>
   `;
 hoverBorder.default = hoverBorder('var(--color-brand)');
 
-const focusShadow = color =>
+export const focusShadow = color =>
   css`
     &:focus {
       box-shadow: 0 0 0 4px ${color};

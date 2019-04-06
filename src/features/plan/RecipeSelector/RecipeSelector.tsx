@@ -1,6 +1,6 @@
 import React, { SFC, Suspense } from 'react';
 import { Layer, Button, Box } from 'grommet';
-import { PlanMealRecipeData } from '../../types';
+import { PlanMealRecipeData } from '../types';
 import RecipeSuggestions from './RecipeSuggestions';
 import { GlobalLoader } from 'components/generic/Loader';
 

@@ -1,10 +1,9 @@
 import React, { SFC, useContext, Fragment } from 'react';
-import { PlanMealRecipeData } from '../../types';
+import { PlanMealRecipeData } from '../types';
 import { RecipeCards } from 'features/recipes';
-import { HelpText, Link } from 'components/text';
+import { HelpText } from 'components/text';
 import { Heading, Box, Text, Paragraph, Button } from 'grommet';
 import gql from 'graphql-tag';
-import { useQuery } from 'react-apollo-hooks';
 import LinkerContext from 'contexts/LinkerContext';
 import useRecipeCollection from 'features/recipes/useRecipeCollection';
 import { Loader, Link as WrapLink } from 'components/generic';

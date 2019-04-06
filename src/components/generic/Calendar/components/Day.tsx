@@ -12,7 +12,11 @@ const Day = styled<DayProps, 'button'>('button')`
   cursor: pointer;
   border: 2px solid
     ${props =>
-      props.selected ? 'var(--color-brand)' : props.highlighted ? 'var(--color-positive)' : 'var(--color-gray-lightest)'};
+      props.selected
+        ? 'var(--color-brand)'
+        : props.highlighted
+        ? 'var(--color-positive)'
+        : 'var(--color-gray-lightest)'};
   background: ${props =>
     props.selected ? 'var(--color-brand)' : 'transparent'};
   border-radius: 100%;

@@ -2,7 +2,14 @@ import React, { SFC, useState } from 'react';
 import { Text, Box } from 'grommet';
 import { pathOr } from 'ramda';
 import DayView from './DayView/DayView';
-import { startOfDay, isSameDay, getDate, parse } from 'date-fns';
+import {
+  startOfDay,
+  isSameDay,
+  getDate,
+  parse,
+  isPast,
+  endOfDay,
+} from 'date-fns';
 import Calendar from 'components/generic/Calendar';
 import { CalendarDay } from 'components/generic/Calendar/Calendar';
 import { PlanDayData } from '../types';
@@ -37,7 +44,6 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
 
   const startDate = parse(planDays[0].date);
   const endDate = parse(planDays[planDays.length - 1].date);
-  console.log(startDate, endDate);
 
   return (
     <Box>
@@ -51,6 +57,7 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
           const planDay = planDays.find(day =>
             isSameDay(parse(day.date), date),
           );
+          const isInPast = isPast(endOfDay(date));
           const isCooking = isCookingSomething(planDay);
 
           return (
@@ -59,6 +66,7 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
               selected={selected}
               disabled={disabled}
               highlighted={isCooking}
+              faded={isInPast}
             >
               {getDate(date)}
             </CalendarDay>
