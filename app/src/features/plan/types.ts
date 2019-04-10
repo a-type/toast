@@ -7,9 +7,14 @@ export type PlanMealRecipeData = {
   };
 };
 
+export type PlanMealCookingEdge = {
+  servings: number;
+  recipe: PlanMealRecipeData;
+};
+
 export type PlanMealData = {
   id: string;
-  cooking: PlanMealRecipeData[];
+  cooking: PlanMealCookingEdge[];
 
   eating: PlanMealData[];
 };

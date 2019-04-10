@@ -5,17 +5,25 @@ import logger from 'logger';
 import { neo4jgraphql } from 'neo4j-graphql-js';
 
 export const typeDefs = gql`
+  type PlanMealCookingEdge
+    @relation(name: "PLANS_TO_COOK", from: "PlanMeal", to: "Recipe") {
+    servings: Int!
+    meal: PlanMeal!
+    recipe: Recipe!
+  }
+
   type PlanMeal {
     id: ID!
     note: String
 
-    cooking: [Recipe!]! @relation(name: "PLANS_TO_COOK", direction: "OUT")
+    cooking: [PlanMealCookingEdge!]!
     eating: [PlanMeal!]! @relation(name: "PLANS_TO_EAT", direction: "OUT")
   }
 
   input AssignPlanMealRecipeInput {
     planMealId: ID!
     recipeId: ID!
+    servings: Int!
   }
 
   input AssignPlanMealEatingInput {
@@ -53,7 +61,7 @@ export const typeDefs = gql`
           (recipe:Recipe{id:$input.recipeId})
         OPTIONAL MATCH (planMeal)-[oldRel:PLANS_TO_COOK]->()
         DELETE oldRel
-        MERGE (planMeal)-[:PLANS_TO_COOK]->(recipe)
+        MERGE (planMeal)-[:PLANS_TO_COOK {servings: $input.servings}]->(recipe)
         RETURN planMeal
         """
       )
@@ -86,5 +94,9 @@ export const resolvers = {
     dinner: parent => {
       return parent.dinner[0];
     },
+  },
+
+  PlanMealCookingEdge: {
+    servings: parent => parent.servings || 1,
   },
 };

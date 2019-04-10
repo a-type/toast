@@ -21,14 +21,20 @@ export const MealFragment = gql`
     id
 
     cooking {
-      ...MealRecipeFragment
+      servings
+      recipe {
+        ...MealRecipeFragment
+      }
     }
 
     eating {
       id
 
       cooking {
-        ...MealRecipeFragment
+        servings
+        recipe {
+          ...MealRecipeFragment
+        }
       }
     }
   }

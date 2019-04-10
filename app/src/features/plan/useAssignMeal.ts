@@ -4,9 +4,13 @@ import { PlanMealData } from './types';
 import { useMutation } from 'react-apollo-hooks';
 
 const AssignRecipeMutation = gql`
-  mutation AssignRecipe($planMealId: ID!, $recipeId: ID!) {
+  mutation AssignRecipe($planMealId: ID!, $recipeId: ID!, $servings: Int!) {
     assignPlanMealRecipe(
-      input: { planMealId: $planMealId, recipeId: $recipeId }
+      input: {
+        planMealId: $planMealId
+        recipeId: $recipeId
+        servings: $servings
+      }
     ) {
       id
       ...MealFragment
@@ -22,7 +26,14 @@ export type AssignRecipeMutationResult = {
 export default (): ((vars: {
   planMealId: string;
   recipeId: string;
+  servings: number;
 }) => Promise<any>) => {
   const mutate = useMutation<AssignRecipeMutationResult>(AssignRecipeMutation);
-  return vars => mutate({ variables: vars });
+  return ({ servings, ...rest }) =>
+    mutate({
+      variables: {
+        ...rest,
+        servings: Math.floor(servings),
+      },
+    });
 };

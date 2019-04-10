@@ -21,7 +21,7 @@ const PreviousMeal: FC<PreviousMealProps> = ({
   mealName,
   onClick,
 }) => {
-  const recipe = meal.cooking[0];
+  const recipe = meal.cooking[0].recipe;
 
   if (!recipe) {
     return null;

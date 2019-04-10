@@ -8,6 +8,7 @@ import usePlanActionSelection, {
 } from './usePlanActionSelection';
 import PlanMealDetailsStage from './DetailsStage';
 import { PlanMealData } from '../types';
+import { PlanActionType } from './types';
 
 const Border = styled<{}, 'button'>('button')`
   border-radius: var(--border-radius-lg);
@@ -39,7 +40,14 @@ export const EmptyMeal: FC<EmptyMealProps> = ({ meal }) => {
 
   return (
     <>
-      <Border onClick={begin}>
+      <Border
+        onClick={() => {
+          // normally we'd call begin() here, but
+          // until we actually have previous meal assignment ready, we can skip
+          // to recipe assign instead
+          selectActionType(PlanActionType.Cook);
+        }}
+      >
         <Icon name="plus-math" size="32px" color="var(--color-brand-dark)" />
       </Border>
       {stage !== SelectionStage.Initial && (

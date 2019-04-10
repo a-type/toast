@@ -1,8 +1,9 @@
 import React, { SFC } from 'react';
-import { PlanMealData } from '../types';
+import { PlanMealData, PlanMealRecipeData } from '../types';
 import { Card, Icon } from 'components/generic';
 import RecipeCard from 'features/recipes/RecipeCards/RecipeCard';
 import { Box } from 'grommet';
+import { path } from 'ramda';
 
 interface MealProps {
   meal: PlanMealData;
@@ -10,11 +11,21 @@ interface MealProps {
 
 const PlannedMeal: SFC<MealProps> = ({ meal }) => {
   if (meal.cooking.length) {
-    return <RecipeCard recipe={meal.cooking[0]} />;
-  } else if (meal.eating.length) {
+    const servings = path(['cooking', 0, 'servings'], meal);
     return (
       <RecipeCard
-        recipe={meal.eating[0].cooking[0]}
+        recipe={path(['cooking', 0, 'recipe'], meal)}
+        renderBadge={() => `${servings} serving${servings !== 1 ? 's' : ''}`}
+      />
+    );
+  } else if (meal.eating.length) {
+    const recipe = path(
+      ['eating', 0, 'cooking', 0, 'recipe'],
+      meal,
+    ) as PlanMealRecipeData;
+    return (
+      <RecipeCard
+        recipe={recipe}
         renderBadge={() => (
           <Box align="center" justify="center" direction="row">
             <Icon name="microwave" size="1.5em" />

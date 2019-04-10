@@ -1,11 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { PlanMealRecipeData } from '../types';
 import { RecipeCards } from 'features/recipes';
-import { HelpText } from 'components/text';
-import { Text, Paragraph, Button } from 'grommet';
+import { HelpText, Label } from 'components/text';
+import { Text, Paragraph, Button, Box, TextInput } from 'grommet';
 import useRecipeCollection from 'features/recipes/useRecipeCollection';
-import { Loader } from 'components/generic';
+import { Loader, Link, Field } from 'components/generic';
 import useAssignMeal from '../useAssignMeal';
+import useNumberInput from 'hooks/useNumberInput';
 
 interface AssignRecipeProps {
   onRecipeSelected(): void;
@@ -18,9 +19,10 @@ const AssignRecipe: FC<AssignRecipeProps> = ({
 }) => {
   const assign = useAssignMeal();
   const [collections, loading, error, result] = useRecipeCollection();
+  const [servings, servingsInputProps] = useNumberInput(2);
 
   const onSelected = async (recipe: PlanMealRecipeData) => {
-    await assign({ planMealId, recipeId: recipe.id });
+    await assign({ planMealId, recipeId: recipe.id, servings });
     onRecipeSelected();
   };
 
@@ -44,10 +46,20 @@ const AssignRecipe: FC<AssignRecipeProps> = ({
   const { likedRecipes } = collections;
 
   return likedRecipes.length ? (
-    <RecipeCards recipes={likedRecipes} onRecipeSelected={onSelected} />
+    <>
+      <Box margin={{ bottom: 'medium' }}>
+        <Field label="Servings" required>
+          <TextInput {...servingsInputProps} />
+        </Field>
+      </Box>
+      <RecipeCards recipes={likedRecipes} onRecipeSelected={onSelected} />
+    </>
   ) : (
     <HelpText margin={{ bottom: 'large' }}>
-      Like some recipes to make planning easier!
+      Find some recipes first so you can start planning!
+      <Link to="/recipes/find">
+        <Button label="Start adding recipes" />
+      </Link>
     </HelpText>
   );
 };
