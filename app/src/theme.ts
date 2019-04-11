@@ -5,7 +5,7 @@ import { deepMerge, normalizeColor } from 'grommet/utils';
 export const rhythmHeight = 24;
 
 export const fontSizes = {
-  sm: 12,
+  sm: 14,
   md: 16,
   lg: 20,
   xl: 24,
@@ -97,6 +97,9 @@ export const GlobalStyle = createGlobalStyle`
 
   --color-heading: var(--color-dark);
 
+  --color-effect-hover: var(--color-brand);
+  --color-effect-focus: var(--color-brand-light);
+
   --shadow-md: 0 4px 8px 0 #280f3420;
 
   --spacing-md: ${spaceSizes.md}px;
@@ -124,6 +127,17 @@ export const GlobalStyle = createGlobalStyle`
   --color-control-foreground: var(--color-dark);
   --color-link-foreground: var(--color-brand-dark);
   --color-link-active: var(--color-dark);
+}
+
+.neutral-content {
+  --color-control-background: var(--color-gray);
+  --color-control-foreground: var(--color-gray-dark);
+  --color-link-foreground: var(--color-brand-dark);
+  --color-link-active: var(--color-dark);
+  --color-field-background: var(--color-gray);
+  --color-field-foreground: var(--color-black);
+  --color-effect-hover: var(--color-gray-dark);
+  --color-effect-focus: var(--color-dark);
 }
 
 html, body {
@@ -230,7 +244,7 @@ export const hoverBorder = color =>
       box-shadow: 0 0 0 2px ${color};
     }
   `;
-hoverBorder.default = hoverBorder('var(--color-brand)');
+hoverBorder.default = hoverBorder('var(--color-effect-hover)');
 
 export const focusShadow = color =>
   css`
@@ -238,7 +252,7 @@ export const focusShadow = color =>
       box-shadow: 0 0 0 4px ${color};
     }
   `;
-focusShadow.default = focusShadow('var(--color-brand-light)');
+focusShadow.default = focusShadow('var(--color-effect-focus)');
 
 const base = generate(spaceSizes.lg, 12);
 

@@ -10,7 +10,7 @@ interface PlanMealSummaryProps {
 
 export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {
   if (meal.cooking.length) {
-    const firstRecipe = meal.cooking[0];
+    const firstRecipe = meal.cooking[0].recipe;
 
     return (
       <>
@@ -20,7 +20,7 @@ export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {
     );
   }
 
-  const firstRecipe = pathOr(null, ['eating', 0, 'cooking', 0], meal);
+  const firstRecipe = pathOr(null, ['eating', 0, 'cooking', 0, 'recipe'], meal);
 
   if (!firstRecipe) {
     return <Text>Nothing planned</Text>;

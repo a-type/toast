@@ -1,11 +1,12 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Link } from 'components/text';
-import LikeButton from 'features/recipes/LikeButton';
+import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
 import { Heading, Paragraph } from 'grommet';
 import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
+import { Icon } from 'components/generic';
 
 const truncate = (text: string, characters: number = 180) => {
   let trimmed = text.substr(0, characters);
@@ -20,9 +21,17 @@ const truncate = (text: string, characters: number = 180) => {
 };
 
 const Spotlight = ({ recipe }) => {
-  return recipe ? (
+  if (!recipe) {
+    return null;
+  }
+
+  const coverImage = path<string>(['coverImage', 'url'], recipe);
+
+  return (
     <Layout>
-      <Image src={path(['coverImage', 'url'], recipe)} data-grid-area="image" />
+      <Image src={coverImage} data-grid-area="image">
+        {!coverImage && <Icon name="chef-toque" size="100px" />}
+      </Image>
       <div data-grid-area="details">
         <Link to={`/recipes/${recipe.id}`}>
           <Heading margin={{ bottom: 'small', top: '0' }}>
@@ -37,10 +46,10 @@ const Spotlight = ({ recipe }) => {
             from {recipe.attribution}
           </Link>
         )}
-        <LikeButton recipe={recipe} />
+        <SaveButton id={recipe.id} />
       </div>
     </Layout>
-  ) : null;
+  );
 };
 
 Spotlight.Skeleton = () => (
@@ -67,9 +76,7 @@ Spotlight.fragments = {
         id
         url
       }
-      ...LikeButton
     }
-    ${LikeButton.fragments.recipe}
   `,
 };
 

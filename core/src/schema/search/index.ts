@@ -3,6 +3,9 @@ import { gql } from 'apollo-server-express';
 import { neo4jgraphql } from 'neo4j-graphql-js';
 import { pathOr } from 'ramda';
 
+const normalizeSearchTerm = (term: string) =>
+  term.replace(/[^a-zA-Z0-9 -]/, '');
+
 export const typeDefs = gql`
   input RecipeSearchInput {
     term: String
@@ -44,13 +47,18 @@ export const resolvers = {
   Query: {
     searchIngredients: async (_parent, args, ctx, info) =>
       args.input.term
-        ? neo4jgraphql(_parent, { match: args.input.term }, ctx, info)
+        ? neo4jgraphql(
+            _parent,
+            { match: normalizeSearchTerm(args.input.term) },
+            ctx,
+            info,
+          )
         : [],
     searchRecipes: async (_parent, args, ctx, info) =>
       neo4jgraphql(
         _parent,
         {
-          match: args.input.term,
+          match: normalizeSearchTerm(args.input.term),
           include: pathOr([], ['input', 'ingredients', 'include'], args),
           exclude: pathOr([], ['input', 'ingredients', 'exclude'], args),
         },

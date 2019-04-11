@@ -33,7 +33,7 @@ export const RecipeSearchForm: FC<RecipeSearchFormProps> = ({
           onChange={ev => onSearchTermChanged(ev.target.value)}
         />
       </Field>
-      <Box>
+      {/* <Box>
         <Heading level="5" margin={{ top: 'medium', bottom: 'small' }}>
           Include:
         </Heading>
@@ -64,7 +64,7 @@ export const RecipeSearchForm: FC<RecipeSearchFormProps> = ({
           onChange={addExcludeIngredient}
           value={{ id: 'empty', name: 'Choose ingredient' }}
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 };

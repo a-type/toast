@@ -6,4 +6,12 @@ export default styled<{ src?: string }, 'div'>('div')`
   background-color: var(--color-gray-light);
   background-image: ${props => (props.src ? `url(${props.src})` : 'none')};
   background-position: 50% 50%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  color: var(--color-gray);
+
+  & > * {
+    margin: auto;
+  }
 `;

@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Loader } from 'components/generic';
+import { Loader, Link } from 'components/generic';
 import { isSameDay, isBefore, setHours } from 'date-fns';
-import { Box } from 'grommet';
-import { Label, Link } from 'components/text';
+import { Box, Button } from 'grommet';
+import { Label } from 'components/text';
 import { PlanDayData } from '../types';
 import { sentence } from 'change-case';
 import { PlanMealSummary } from './MealSummary';
@@ -52,7 +52,9 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
       <Box margin={{ bottom: 'small' }}>
         <PlanMealSummary meal={meal} />
       </Box>
-      <Link to="/plan">Go to plan</Link>
+      <Link to="/plan">
+        <Button label="Go to plan" />
+      </Link>
     </Box>
   );
 };

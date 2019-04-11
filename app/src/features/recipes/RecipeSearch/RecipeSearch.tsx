@@ -5,12 +5,15 @@ import {
 } from 'contexts/RecipeSearchContext';
 import { useEffect, useState } from 'react';
 import { useApolloClient } from 'react-apollo-hooks';
-import useDebounce from 'hooks/useDebounce';
+import { useDebounce } from 'use-debounce';
 import gql from 'graphql-tag';
-import { Box, Heading, Paragraph } from 'grommet';
-import { Icon } from 'components/generic';
+import { CardGrid } from 'components/generic';
 import { RecipeSearchForm } from './RecipeSearchForm';
-import RecipeCards, { RecipeCardsSkeleton } from '../RecipeCards/RecipeCards';
+import RecipeCard from '../RecipeCards/RecipeCard';
+import { QueryResult } from 'react-apollo';
+import useReactRouter from 'use-react-router';
+import { CardSkeleton } from 'components/skeletons';
+import SaveButton from 'features/recipes/SaveButton/SaveButton';
 
 const SearchRecipesQuery = gql`
   query SearchRecipes($term: String, $include: [ID!], $exclude: [ID!]) {
@@ -22,22 +25,43 @@ const SearchRecipesQuery = gql`
     ) {
       id
       title
+      attribution
       coverImage {
         id
         url
         attribution
       }
+      saved {
+        collection
+      }
     }
   }
 `;
+
+type SearchRecipesQueryResult = {
+  searchRecipes: {
+    id: string;
+    title: string;
+    attribution: string;
+    coverImage?: {
+      id: string;
+      url: string;
+      attribution: string;
+    };
+    saved: {
+      collection: string;
+    }[];
+  }[];
+};
 
 const useRecipeResults = (
   term: string,
   includeIngredients: RecipeSearchIngredientFilterValue[],
   excludeIngredients: RecipeSearchIngredientFilterValue[],
-) => {
-  const debouncedTerm = useDebounce(term);
+): [QueryResult<SearchRecipesQueryResult>, boolean] => {
+  const [debouncedTerm] = useDebounce(term, 500);
   const client = useApolloClient();
+  const [loading, setLoading] = useState(false);
   const [queryResult, setQueryResult] = useState(null);
 
   useEffect(() => {
@@ -46,6 +70,8 @@ const useRecipeResults = (
       includeIngredients.length ||
       excludeIngredients.length
     ) {
+      setLoading(true);
+
       client
         .query({
           query: SearchRecipesQuery,
@@ -55,16 +81,32 @@ const useRecipeResults = (
             excludeIngredients,
           },
         })
-        .then(setQueryResult);
+        .then(setQueryResult)
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [term, includeIngredients, excludeIngredients]);
+  }, [debouncedTerm, includeIngredients, excludeIngredients]);
 
-  return queryResult;
+  return [queryResult, loading];
 };
 
-export const RecipeSearchResults = ({ data, loading, error }) => {
+export const RecipeSearchResults = ({
+  data,
+  loading,
+  error,
+  refetch,
+}: QueryResult<SearchRecipesQueryResult>) => {
+  const { history } = useReactRouter();
+
   if (loading) {
-    return <RecipeCardsSkeleton />;
+    return (
+      <CardGrid>
+        {new Array(10).fill(null).map((_, idx) => (
+          <CardSkeleton key={idx} />
+        ))}
+      </CardGrid>
+    );
   }
 
   if (error) {
@@ -75,12 +117,23 @@ export const RecipeSearchResults = ({ data, loading, error }) => {
     return null;
   }
 
-  return <RecipeCards recipes={data.searchRecipes} />;
+  return (
+    <CardGrid>
+      {data.searchRecipes.map(recipe => (
+        <RecipeCard
+          key={recipe.id}
+          recipe={recipe}
+          onClick={() => history.push(`/recipes/${recipe.id}`)}
+          actions={[() => <SaveButton id={recipe.id} />]}
+        />
+      ))}
+    </CardGrid>
+  );
 };
 
 export const RecipeSearch = () => {
   const search = useRecipeSearch();
-  const result = useRecipeResults(
+  const [result, loading] = useRecipeResults(
     search.searchTerm,
     search.includeIngredients,
     search.excludeIngredients,
@@ -98,7 +151,7 @@ export const RecipeSearch = () => {
         addExcludeIngredient={search.addExcludeIngredient}
         removeExcludeIngredient={search.removeExcludeIngredient}
       />
-      <RecipeSearchResults {...result} />
+      <RecipeSearchResults {...result} loading={loading} />
     </>
   );
 };

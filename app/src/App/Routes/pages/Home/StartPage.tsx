@@ -6,7 +6,7 @@ import RecipesSummary from 'features/recipes/Summary/Summary';
 import { Heading } from 'grommet';
 import usePlan from 'features/plan/usePlan';
 import useGroceryDay from 'features/plan/useGroceryDay';
-import useLikedRecipes from 'features/recipes/useLikedRecipes';
+import useSavedRecipes from 'features/recipes/useSavedRecipes';
 import OnboardingPage from './OnboardingPage';
 import { GlobalLoader } from 'components/generic/Loader';
 
@@ -16,12 +16,12 @@ export const StartPage: FC<StartPageProps> = ({}) => {
   const [plan, planLoading, planError, planResult] = usePlan();
   const [groceryDay, groceryDayLoading, groceryDayError] = useGroceryDay();
   const [
-    likedRecipes,
-    likedRecipesLoading,
-    likedRecipesError,
-  ] = useLikedRecipes();
+    savedRecipes,
+    savedRecipesLoading,
+    savedRecipesError,
+  ] = useSavedRecipes();
 
-  if (planLoading || groceryDayLoading || likedRecipesLoading) {
+  if (planLoading || groceryDayLoading || savedRecipesLoading) {
     return <GlobalLoader />;
   }
 
@@ -39,9 +39,9 @@ export const StartPage: FC<StartPageProps> = ({}) => {
       />
       <Heading level="3">Recipes</Heading>
       <RecipesSummary
-        likedRecipes={likedRecipes}
-        loading={likedRecipesLoading}
-        error={likedRecipesError}
+        savedRecipes={savedRecipes}
+        loading={savedRecipesLoading}
+        error={savedRecipesError}
       />
     </Column>
   );

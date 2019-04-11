@@ -6,12 +6,21 @@
     {
       "type": "npm",
       "script": "start",
-      "problemMatcher": ["$awesometsc"]
+      "problemMatcher": [
+        "$awesometsc"
+      ]
     },
     {
       "type": "npm",
       "script": "gen",
       "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "storybook",
+      "problemMatcher": [
+        "$awesometsc"
+      ]
     }
   ]
 }

@@ -7,9 +7,9 @@ export enum CardShape {
 }
 
 export enum CardLayoutMode {
-  Vertical,
-  Horizontal,
-  Compact,
+  Vertical = 'vertical',
+  Horizontal = 'horizontal',
+  Compact = 'compact',
 }
 
 export interface ShapedCardProps extends React.HTMLAttributes<HTMLDivElement> {

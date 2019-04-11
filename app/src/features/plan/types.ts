@@ -1,6 +1,9 @@
 export type PlanMealRecipeData = {
   id: string;
   title: string;
+  attribution: string;
+  description: string;
+  sourceUrl: string;
   coverImage: {
     id: string;
     url: string;

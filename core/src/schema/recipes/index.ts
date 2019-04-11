@@ -8,6 +8,12 @@ export const typeDefs = gql`
     FULL
   }
 
+  type RecipeSavedEdge @relation(name: "SAVED", from: "User", to: "Recipe") {
+    collection: String!
+    user: User!
+    recipe: Recipe!
+  }
+
   type Recipe {
     id: ID!
     title: String!
@@ -29,6 +35,8 @@ export const typeDefs = gql`
     views: Int!
 
     locked: Boolean!
+
+    saved: [RecipeSavedEdge!]!
   }
 
   enum RecipeLinkProblem {
@@ -56,6 +64,10 @@ export const typeDefs = gql`
 
   input RecipeLinkInput {
     url: String!
+  }
+
+  input RecipeSaveInput {
+    recipeId: ID!
   }
 
   input RecipeDetailsUpdateInput {
@@ -113,6 +125,25 @@ export const typeDefs = gql`
       @authenticated
     publishRecipe(id: ID!): Recipe @authenticated
     recordRecipeView(id: ID!): Recipe
+    saveRecipe(input: RecipeSaveInput!): Recipe!
+      @authenticated
+      @cypher(
+        statement: """
+        MATCH (recipe:Recipe{id:$input.recipeId}), (user:User{id:$cypherParams.userId})
+        MERGE (user)-[:SAVED{collection:'liked'}]->(recipe)
+        RETURN recipe
+        """
+      )
+    unsaveRecipe(input: RecipeSaveInput!): Recipe!
+      @authenticated
+      @cypher(
+        statement: """
+        MATCH (recipe:Recipe{id:$input.recipeId}), (user:User{id:$cypherParams.userId})
+        OPTIONAL MATCH (recipe)<-[rel:SAVED]-(user)
+        DELETE rel
+        RETURN recipe
+        """
+      )
   }
 
   extend type Ingredient {
@@ -130,8 +161,7 @@ export const typeDefs = gql`
       @cypher(
         statement: "MATCH (this)-[:AUTHOR_OF]->(r:Recipe {published: false}) RETURN r"
       )
-    likedRecipes(first: Int, offset: Int): [Recipe!]!
-      @relation(name: "LIKES", direction: "OUT")
+    savedRecipes(first: Int, offset: Int): [RecipeSavedEdge!]!
   }
 `;
 
@@ -162,6 +192,9 @@ export const resolvers = {
       ctx.graph.recipes.publish(args.id),
     recordRecipeView: (_parent, args, ctx) =>
       ctx.graph.recipes.recordView(args.id),
+
+    saveRecipe: neo4jgraphql,
+    unsaveRecipe: neo4jgraphql,
   },
   Recipe: {
     // default value of locked to true

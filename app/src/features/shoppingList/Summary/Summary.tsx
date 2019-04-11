@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
-import { Box, Text } from 'grommet';
-import { Label, Link } from 'components/text';
+import { Box, Text, Button } from 'grommet';
+import { Label } from 'components/text';
+import { Link } from 'components/generic';
 import getNextDay from 'utils/getNextDay';
 import { formatDay } from 'formatters/date';
 import { ApolloError } from 'apollo-boost';
@@ -30,7 +31,9 @@ export const ShoppingListSummary: FC<ShoppingListSummaryProps> = ({
     <Box align="start" margin={{ bottom: 'large' }}>
       <Label>Shopping</Label>
       <Text margin={{ bottom: 'small' }}>Grocery day: {nextGroceryDay}</Text>
-      <Link to="/shoppingList">Go to shopping list</Link>
+      <Link to="/shoppingList">
+        <Button label="Go to shopping list" />
+      </Link>
     </Box>
   );
 };

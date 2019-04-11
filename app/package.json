@@ -84,7 +84,9 @@
     "readable-fractions": "^0.1.0",
     "recompose": "^0.26.0",
     "styled-components": "^4.1.3",
+    "use-debounce": "^1.1.2",
     "use-react-router": "^1.0.5",
+    "use-throttle": "0.0.3",
     "uuid": "^3.3.2",
     "webpack-plugin-serve": "^0.7.2"
   },

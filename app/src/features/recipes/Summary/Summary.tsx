@@ -1,20 +1,21 @@
 import React, { FC } from 'react';
-import useLikedRecipes, { LikedRecipe } from '../useLikedRecipes';
-import { Box } from 'grommet';
+import { SavedRecipeEdge } from '../useSavedRecipes';
+import { Box, Button } from 'grommet';
 import { Loader } from 'components/generic';
-import { Label, Link } from 'components/text';
+import { Label } from 'components/text';
+import { Link } from 'components/generic';
 import { RecipeCards } from '..';
 import RecipeSummaryEmpty from './Empty';
 import { ApolloError } from 'apollo-boost';
 
 interface RecipesSummaryProps {
-  likedRecipes: LikedRecipe[];
+  savedRecipes: SavedRecipeEdge[];
   loading: boolean;
   error?: ApolloError;
 }
 
 export const RecipesSummary: FC<RecipesSummaryProps> = ({
-  likedRecipes,
+  savedRecipes,
   loading,
   error,
 }) => {
@@ -26,15 +27,17 @@ export const RecipesSummary: FC<RecipesSummaryProps> = ({
     return <div>{error.message}</div>;
   }
 
-  if (!likedRecipes.length) {
+  if (!savedRecipes.length) {
     return <RecipeSummaryEmpty />;
   }
 
   return (
     <Box margin={{ bottom: 'large' }} align="start">
       <Label>Your liked recipes</Label>
-      <RecipeCards recipes={likedRecipes} />
-      <Link to="/recipes/collection">Go to recipes</Link>
+      <RecipeCards recipes={savedRecipes.map(liked => liked.recipe)} />
+      <Link to="/recipes/collection">
+        <Button label="Go to recipes" />
+      </Link>
     </Box>
   );
 };
