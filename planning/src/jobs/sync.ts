@@ -1,6 +1,6 @@
 import neo4j from '../services/neo4j';
 import fetch from 'node-fetch';
-import { format, startOfWeek, addDays } from 'date-fns';
+import { addDays, getDay } from 'date-fns';
 
 const session = neo4j.session();
 const endpoint = process.env.PLANNING_API_ENDPOINT;
@@ -8,19 +8,25 @@ const endpoint = process.env.PLANNING_API_ENDPOINT;
 console.log('Syncing all plans');
 (async () => {
   try {
-    // basically assumes we'll never run this on saturday...
-    const startDate = format(startOfWeek(addDays(new Date(), 1)), 'YYYY-MM-DD');
+    const startDate = getDay(addDays(new Date(), 1));
+
+    console.log('for day index ' + startDate);
 
     const groups = await session.readTransaction(async tx => {
-      const result = await tx.run(`
-        MATCH (group:Group {groceryDay: date($startDate)})
+      const result = await tx.run(
+        `
+        MATCH (group:Group {groceryDay: $startDate})
         RETURN group {.id}
-      `, {
-        startDate
-      });
+      `,
+        {
+          startDate,
+        },
+      );
 
       return result.records.map(rec => rec.get('group').id);
     });
+
+    console.log('Found ' + groups.length + ' plans');
 
     // batch to reduce overload
     const batchSize = 100;
