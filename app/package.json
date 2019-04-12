@@ -88,7 +88,8 @@
     "use-react-router": "^1.0.5",
     "use-throttle": "0.0.3",
     "uuid": "^3.3.2",
-    "webpack-plugin-serve": "^0.7.2"
+    "webpack-plugin-serve": "^0.7.2",
+    "workbox-window": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",

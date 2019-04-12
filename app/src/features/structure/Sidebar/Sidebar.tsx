@@ -16,7 +16,7 @@ import Avatar from './Avatar';
 import { path } from 'ramda';
 import styled from 'styled-components';
 import browserHistory from 'browserHistory';
-import firebase from 'firebase';
+import firebase from 'services/firebase';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
 import ToggleButton from './ToggleButton';
 import SidebarContact from './Contact';
