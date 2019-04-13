@@ -1,6 +1,6 @@
 import neo4j from '../services/neo4j';
 import fetch from 'node-fetch';
-import { addDays, getDay } from 'date-fns';
+import { addDays, getDay, format } from 'date-fns';
 
 const session = neo4j.session();
 const endpoint = process.env.PLANNING_API_ENDPOINT;
@@ -8,18 +8,19 @@ const endpoint = process.env.PLANNING_API_ENDPOINT;
 console.log('Syncing all plans');
 (async () => {
   try {
-    const startDate = getDay(addDays(new Date(), 1));
+    const startDate = addDays(new Date(), 1);
+    const startDay = getDay(startDate);
 
-    console.log('for day index ' + startDate);
+    console.log('for day ' + startDate);
 
     const groups = await session.readTransaction(async tx => {
       const result = await tx.run(
         `
-        MATCH (group:Group {groceryDay: $startDate})
+        MATCH (group:Group {groceryDay: $startDay})
         RETURN group {.id}
       `,
         {
-          startDate,
+          startDay,
         },
       );
 
@@ -43,7 +44,7 @@ console.log('Syncing all plans');
             method: 'post',
             body: JSON.stringify({
               groupId,
-              startDate,
+              startDate: format(startDate, 'YYYY-MM-DD'),
               // todo: pass more stuff based on group config / plan
             }),
             headers: {
