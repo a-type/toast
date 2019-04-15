@@ -1,6 +1,6 @@
 import neo4j from '../services/neo4j';
 import fetch from 'node-fetch';
-import { addDays, getDay, format } from 'date-fns';
+import { addHours, getDay, format, startOfDay } from 'date-fns';
 
 const session = neo4j.session();
 const endpoint = process.env.PLANNING_API_ENDPOINT;
@@ -8,7 +8,8 @@ const endpoint = process.env.PLANNING_API_ENDPOINT;
 console.log('Syncing all plans');
 (async () => {
   try {
-    const startDate = addDays(new Date(), 1);
+    // assumes this is run at or around midnight
+    const startDate = startOfDay(addHours(new Date(), 1));
     const startDay = getDay(startDate);
 
     console.log('for day ' + startDate);
