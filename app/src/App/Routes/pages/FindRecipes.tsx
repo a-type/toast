@@ -12,7 +12,8 @@ const findUrl = (text: string | string[]) => {
   if (text instanceof Array) {
     return text.reduce<string>((match, item) => match || findUrl(item), null);
   }
-  const res = /(https?:\/\/.*)\s/.exec(text);
+  console.debug(`Searching for URL in ${text}`);
+  const res = /(https?:\/\/.*)\s?/.exec(text);
   return (res && res[1]) || null;
 };
 

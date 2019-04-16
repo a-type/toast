@@ -12,9 +12,10 @@ export default styled<{}, 'div'>('div')`
     grid-template-rows: 1fr;
     grid-template-columns: auto 1fr;
 
-    & > *[data-grid-area='image'] {
+    & > *[data-grid-area='image'] > *:first-child {
       height: 15vh;
       width: 15vh;
+      margin-bottom: var(--spacing-md);
     }
   }
 

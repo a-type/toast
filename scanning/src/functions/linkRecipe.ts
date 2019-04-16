@@ -106,7 +106,7 @@ export default async (req: Request, res: Response) => {
       await tx.run(
         `
         MATCH (user:User{id: $userId}), (recipe:Recipe{id: $recipeId})
-        CREATE (user)-[:LIKES]->(recipe)
+        CREATE (user)-[:SAVED {collection: "liked"}]->(recipe)
         `,
         {
           userId,
@@ -204,7 +204,7 @@ export default async (req: Request, res: Response) => {
         WITH recipe
         MATCH (user:User {id:$userId})
         CREATE (user)-[:DISCOVERER_OF]->(recipe)
-        CREATE (user)-[:LIKES]->(recipe)
+        CREATE (user)-[:SAVED {collection: "liked"}]->(recipe)
         RETURN recipe {.id}
         `,
         {
@@ -275,7 +275,7 @@ export default async (req: Request, res: Response) => {
           await tx.run(
             `
             MATCH (recipe:Recipe{id: $recipeId})
-            MERGE (recipe)-[:COVER_IMAGE]->(image:Image $props)
+            CREATE (recipe)-[:COVER_IMAGE]->(image:Image {id: $props.id, url: $props.url, attribution: $props.attribution})
             RETURN recipe {.id}
             `,
             {

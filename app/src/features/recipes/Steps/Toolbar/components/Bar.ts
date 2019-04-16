@@ -1,15 +1,12 @@
 import styled from 'styled-components';
 
 const Bar = styled.div`
-  background: var(--color-brand);
-  color: var(--color-dark);
+  background: var(--color-positive);
+  color: var(--color-white);
   display: flex;
   flex-direction: row;
 
-  padding-left: 64px;
-  padding-top: var(--spacing-md);
-  padding-bottom: var(--spacing-md);
-  padding-right: var(--spacing-md);
+  padding: var(--spacing-md);
 
   flex: 0 0 auto;
 

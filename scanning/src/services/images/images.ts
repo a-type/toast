@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { Readable } from 'stream';
 import { id } from '../../tools';
 import { Storage } from '@google-cloud/storage';
-import mime from 'mime-types';
+import { lookup } from 'mime-types';
 
 const projectId = process.env.GCLOUD_PROJECT_ID;
 const bucket = process.env.GCLOUD_IMAGE_BUCKET;
@@ -31,11 +31,12 @@ export const saveFromUrl = async (imageUrl: string) => {
   const gFile = storage.bucket(bucket).file(fileName);
 
   return await new Promise<{ id: string; url: string }>((resolve, reject) => {
+    const mime = lookup(fileExt);
     stream.pipe(
       gFile
         .createWriteStream({
           public: true,
-          metadata: { contentType: mime(fileExt) },
+          metadata: { contentType: mime || 'image/jpeg' },
         })
         .on('error', err => {
           console.error('GCloud image upload failure');

@@ -8,6 +8,7 @@ import { Disconnected } from 'components/generic';
 import logger from 'logger';
 import { pathOr } from 'ramda';
 import { Recipe } from 'generated/schema';
+import { Box } from 'grommet';
 
 export interface StepsProps {
   recipeId: string;
@@ -29,16 +30,16 @@ const Steps: React.SFC<StepsProps> = ({ recipeId }) => {
         }
 
         return (
-          <div
-            style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
-          >
-            {recipe.displayType === 'LINK' ? (
-              <LinkFrame src={recipe.sourceUrl} />
-            ) : (
-              <StepList steps={pathOr([], ['steps'], recipe)} />
-            )}
+          <Box height="100%">
+            <Box flex="grow">
+              {recipe.displayType === 'LINK' ? (
+                <LinkFrame src={recipe.sourceUrl} />
+              ) : (
+                <StepList steps={pathOr([], ['steps'], recipe)} />
+              )}
+            </Box>
             <Toolbar recipe={recipe} />
-          </div>
+          </Box>
         );
       }}
     </FullRecipeQuery>

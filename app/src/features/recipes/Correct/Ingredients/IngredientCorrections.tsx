@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { RecipeIngredientCorrectedValueInput, CorrectionType } from './types';
 import { AddIngredient } from './AddIngredient';
-import { Box } from 'grommet';
+import { Box, Heading } from 'grommet';
 
 interface IngredientCorrectionsProps {
   recipeIngredients: IngredientCorrectorRecipeIngredient[];
@@ -60,9 +60,27 @@ const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
       },
     });
 
+  const [candidates, seemFine] = recipeIngredients.reduce<
+    [
+      IngredientCorrectorRecipeIngredient[],
+      IngredientCorrectorRecipeIngredient[]
+    ]
+  >(
+    ([c, f], recipeIngredient) => {
+      if (!recipeIngredient.ingredient || !recipeIngredient.unit) {
+        c.push(recipeIngredient);
+      } else {
+        f.push(recipeIngredient);
+      }
+      return [c, f];
+    },
+    [[], []],
+  );
+
   return (
     <Box margin={{ bottom: 'large' }}>
-      {recipeIngredients.map(recipeIngredient => (
+      <Heading level="4">These might need help</Heading>
+      {candidates.map(recipeIngredient => (
         <IngredientCorrector
           key={recipeIngredient.id}
           recipeIngredient={recipeIngredient}
@@ -71,6 +89,15 @@ const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
         />
       ))}
       <AddIngredient submitAdd={submitAdd} />
+      <Heading level="4">These seem ok</Heading>
+      {seemFine.map(recipeIngredient => (
+        <IngredientCorrector
+          key={recipeIngredient.id}
+          recipeIngredient={recipeIngredient}
+          submit={submitCorrection}
+          requestDelete={requestDelete}
+        />
+      ))}
     </Box>
   );
 };

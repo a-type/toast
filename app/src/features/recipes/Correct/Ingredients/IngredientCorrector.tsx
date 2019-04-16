@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Icon } from 'components/generic';
-import { Button, Paragraph, Box, DropButton } from 'grommet';
+import { Button, Paragraph, Box, DropButton, Text } from 'grommet';
 import { HelpText } from 'components/text';
 import { IngredientCorrectionForm } from './CorrectionForm';
 import { toDisplay } from 'formatters/quantity';
@@ -59,10 +59,15 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
           <Paragraph margin={{ top: '0', bottom: 'small' }}>
             <HelpText>
               Quantity: {toDisplay(recipeIngredient.quantity)}, Unit:{' '}
-              {recipeIngredient.unit}, Ingredient:{' '}
-              {recipeIngredient.ingredient
-                ? recipeIngredient.ingredient.name
-                : 'Unknown'}
+              {recipeIngredient.unit || (
+                <Text color="status-warning">None</Text>
+              )}
+              , Ingredient:{' '}
+              {recipeIngredient.ingredient ? (
+                recipeIngredient.ingredient.name
+              ) : (
+                <Text color="status-error">Unknown</Text>
+              )}
             </HelpText>
           </Paragraph>
         </Box>

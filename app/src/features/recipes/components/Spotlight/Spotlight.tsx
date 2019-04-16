@@ -4,7 +4,7 @@ import { Link } from 'components/text';
 import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
-import { Heading, Paragraph } from 'grommet';
+import { Heading, Paragraph, Box } from 'grommet';
 import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
 import { Icon } from 'components/generic';
 
@@ -29,10 +29,13 @@ const Spotlight = ({ recipe }) => {
 
   return (
     <Layout>
-      <Image src={coverImage} data-grid-area="image">
-        {!coverImage && <Icon name="chef-toque" size="100px" />}
-      </Image>
-      <div data-grid-area="details">
+      <Box data-grid-area="image">
+        <Image src={coverImage}>
+          {!coverImage && <Icon name="chef-toque" size="100px" />}
+        </Image>
+        <SaveButton id={recipe.id} />
+      </Box>
+      <Box data-grid-area="details">
         <Link to={`/recipes/${recipe.id}`}>
           <Heading margin={{ bottom: 'small', top: '0' }}>
             {recipe.title}
@@ -46,8 +49,7 @@ const Spotlight = ({ recipe }) => {
             from {recipe.attribution}
           </Link>
         )}
-        <SaveButton id={recipe.id} />
-      </div>
+      </Box>
     </Layout>
   );
 };

@@ -11,10 +11,6 @@ const truncate = (text: string, length = 40) => {
 };
 
 const getShape = recipe => {
-  if (recipe.coverImage) {
-    return CardShape.Large;
-  }
-
   return CardShape.Normal;
 };
 

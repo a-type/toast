@@ -166,7 +166,7 @@ export const CardGrid = styled<{ loading?: boolean }, 'div'>('div')`
   align-self: stretch;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   grid-auto-rows: minmax(250px, 10vh);
 
   grid-gap: var(--spacing-md);
@@ -184,7 +184,6 @@ export const CardGrid = styled<{ loading?: boolean }, 'div'>('div')`
   }
 
   & > *[data-card-shape='large'] {
-    grid-column-end: span 2;
     grid-row-end: span 2;
   }
 

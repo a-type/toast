@@ -35,9 +35,14 @@ class TokenProvider extends React.Component {
     const token = user ? await user.getIdTokenResult() : null;
 
     if (token) {
-      await client.mutate({
-        mutation: MergeUser,
-      });
+      try {
+        await client.mutate({
+          mutation: MergeUser,
+        });
+      } catch (err) {
+        console.error(err);
+        // continue on...
+      }
     }
 
     this.setState({
