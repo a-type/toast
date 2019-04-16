@@ -5,6 +5,7 @@ import { Link } from 'components/generic';
 import getNextDay from 'utils/getNextDay';
 import { formatDay } from 'formatters/date';
 import { ApolloError } from 'apollo-boost';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 interface ShoppingListSummaryProps {
   groceryDay: { index: number; name: string };
@@ -24,12 +25,11 @@ export const ShoppingListSummary: FC<ShoppingListSummaryProps> = ({
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <ErrorMessage error={error} />;
   }
 
   return (
     <Box align="start" margin={{ bottom: 'large' }}>
-      <Label>Shopping</Label>
       <Text margin={{ bottom: 'small' }}>Grocery day: {nextGroceryDay}</Text>
       <Link to="/shoppingList">
         <Button label="Go to shopping list" />

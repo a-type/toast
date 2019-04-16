@@ -3,6 +3,7 @@ import { Text, Box, Heading } from 'grommet';
 import RecipeCards from '../RecipeCards';
 import { Loader } from 'components/generic';
 import useSavedRecipes from '../useSavedRecipes';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 export const RecipeCollection: FC<{}> = ({}) => {
   const [saved, loading, error] = useSavedRecipes();
@@ -12,7 +13,7 @@ export const RecipeCollection: FC<{}> = ({}) => {
   }
 
   if (error) {
-    return <Text>Sorry, we couldn't load your recipes</Text>;
+    return <ErrorMessage error={error} />;
   }
 
   return (

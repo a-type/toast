@@ -1,12 +1,12 @@
 import * as React from 'react';
 import FullRecipeQuery from '../queries/FullRecipeQuery';
-import { Loader, Disconnected, Link } from 'components/generic';
+import { Loader, Link } from 'components/generic';
 import { Button } from 'grommet';
-import logger from 'logger';
 import { Spotlight } from 'features/recipes/components';
 import IngredientCorrections from './Ingredients';
 import { pathOr } from 'ramda';
 import { Heading } from 'grommet';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 export interface CorrectRecipeProps {
   recipeId: string;
@@ -21,8 +21,7 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
         }
 
         if (error) {
-          logger.fatal(error);
-          return <Disconnected />;
+          return <ErrorMessage error={error} />;
         }
 
         const recipeIngredients = pathOr([], ['recipe', 'ingredients'], data);

@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Card } from 'features/ingredients';
 import { CardShape, CardGrid } from 'components/generic/Card';
 import { CardSkeleton } from 'components/skeletons';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 const GetRecentIngredients = gql`
   query RecentIngredients {
@@ -31,7 +32,7 @@ export default class RecentIngredients extends React.Component {
           }
 
           if (error) {
-            return error.message;
+            return <ErrorMessage error={error} />;
           }
 
           return (

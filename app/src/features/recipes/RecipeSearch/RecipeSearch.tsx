@@ -14,6 +14,7 @@ import { QueryResult } from 'react-apollo';
 import useReactRouter from 'use-react-router';
 import { CardSkeleton } from 'components/skeletons';
 import SaveButton from 'features/recipes/SaveButton/SaveButton';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 const SearchRecipesQuery = gql`
   query SearchRecipes($term: String, $include: [ID!], $exclude: [ID!]) {
@@ -110,7 +111,7 @@ export const RecipeSearchResults = ({
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <ErrorMessage error={error} />;
   }
 
   if (!data) {

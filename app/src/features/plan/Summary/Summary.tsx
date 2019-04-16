@@ -7,6 +7,7 @@ import { PlanDayData } from '../types';
 import { sentence } from 'change-case';
 import { PlanMealSummary } from './MealSummary';
 import { ApolloError } from 'apollo-boost';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 interface PlanSummaryProps {
   planDays: PlanDayData[];
@@ -24,7 +25,7 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <ErrorMessage error={error} />;
   }
 
   const today = planDays.find(day =>

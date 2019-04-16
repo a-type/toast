@@ -1,13 +1,13 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Disconnected } from 'components/generic';
 import {
   RecipeCards,
   RecipeCardsSkeleton,
 } from 'features/recipes/RecipeCards/RecipeCards';
 import { Spotlight } from 'features/recipes/components';
 import { Heading } from 'grommet';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 const FeaturedRecipes = gql`
   query FeaturedRecipes($count: Int!) {
@@ -43,7 +43,7 @@ const FeaturedRecipe: React.SFC<{}> = () => (
         return (
           <React.Fragment>
             <Spotlight.Skeleton />
-            <Disconnected />
+            <ErrorMessage error={error} />
           </React.Fragment>
         );
       }

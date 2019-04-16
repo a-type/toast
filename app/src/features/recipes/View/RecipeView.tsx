@@ -9,6 +9,7 @@ import { Spotlight } from 'features/recipes/components';
 import { StepsLink } from './components';
 import { Heading } from 'grommet';
 import { useAuth } from 'contexts/AuthContext';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 export interface RecipeViewProps {
   recipeId: string;
@@ -36,7 +37,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
         }
 
         if (error) {
-          return <div>{error.message}</div>;
+          return <ErrorMessage error={error} />;
         }
 
         const recipe = pathOr(null, ['recipe'], data);

@@ -17,6 +17,7 @@ import { PlanDayData } from '../types';
 import usePlan from '../usePlan';
 import useGroceryDay from '../useGroceryDay';
 import getNextDay from 'utils/getNextDay';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 const isCookingSomething = (day: PlanDayData) =>
   !!pathOr(0, ['breakfast', 'cooking', 'length'], day) ||
@@ -46,7 +47,7 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
   }
 
   if (error) {
-    return <Text>Dang. We couldn't load the plan.</Text>;
+    return <ErrorMessage error={error} />;
   }
 
   const selectedDay = planDays.find(planDay => {

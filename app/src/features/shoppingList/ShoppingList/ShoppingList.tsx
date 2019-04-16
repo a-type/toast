@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import gql from 'graphql-tag';
-import { Disconnected } from 'components/generic';
-import logger from 'logger';
-import { Box, Heading } from 'grommet';
+import { Heading } from 'grommet';
 import { HelpText } from 'components/text';
 import { format } from 'date-fns';
 import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListItemList } from './components/ShoppingListItemList';
+import ErrorMessage from 'components/generic/ErrorMessage';
+import { Loader } from 'components/generic';
 
 const GetShoppingListQuery = gql`
   query GetShoppingListQuery {
@@ -111,7 +111,9 @@ const MarkUnpurchasedMutation = gql`
 export interface ShoppingListProps {}
 
 export const ShoppingList: FC<ShoppingListProps> = () => {
-  const { data, error } = useQuery<GetShoppingListResult>(GetShoppingListQuery);
+  const { data, error, loading } = useQuery<GetShoppingListResult>(
+    GetShoppingListQuery,
+  );
 
   const markPurchasedMutation = useMutation(MarkPurchasedMutation);
   const markUnpurchasedMutation = useMutation(MarkUnpurchasedMutation);
@@ -122,13 +124,12 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
   const unmarkPurchased = (input: { shoppingListItemId: string }) =>
     markUnpurchasedMutation({ variables: { input } });
 
-  if (!data || !data.me) {
-    return null;
+  if (loading) {
+    return <Loader />;
   }
 
   if (error) {
-    logger.fatal(error);
-    return <Disconnected />;
+    return <ErrorMessage error={error} />;
   }
 
   const {

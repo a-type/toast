@@ -32,6 +32,7 @@ export const StartPage: FC<StartPageProps> = ({}) => {
   return (
     <Column>
       <PlanSummary loading={planLoading} planDays={plan} error={planError} />
+      <Heading level="3">Shopping</Heading>
       <ShoppingListSummary
         loading={groceryDayLoading}
         groceryDay={groceryDay}

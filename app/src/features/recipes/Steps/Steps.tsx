@@ -4,11 +4,10 @@ import LinkFrame from './LinkFrame';
 import StepList from './StepList';
 import Toolbar from './Toolbar';
 import GlobalLoader from 'components/generic/Loader/GlobalLoader';
-import { Disconnected } from 'components/generic';
-import logger from 'logger';
 import { pathOr } from 'ramda';
 import { Recipe } from 'generated/schema';
 import { Box } from 'grommet';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 export interface StepsProps {
   recipeId: string;
@@ -24,9 +23,7 @@ const Steps: React.SFC<StepsProps> = ({ recipeId }) => {
 
         const recipe = pathOr<Recipe>(null, ['recipe'], data) as Recipe;
         if (error || !recipe) {
-          logger.fatal(error);
-          // TODO: still show link to recipe
-          return <Disconnected />;
+          return <ErrorMessage error={error} />;
         }
 
         return (

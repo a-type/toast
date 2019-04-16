@@ -5,6 +5,7 @@ import { HelpText } from 'components/text';
 import { Loader } from 'components/generic';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo-hooks';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 const IngredientPickerSuggestionsQuery = gql`
   query IngredientPickerSuggestions($input: IngredientSearchInput!) {
@@ -48,7 +49,7 @@ export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
   );
 
   if (loading) return <Loader size="64px" />;
-  if (error) return <div>Error</div>;
+  if (error) return <ErrorMessage error={error} />;
   if (hasNoResults(data)) {
     if (canCreate && term.length > 3) {
       return renderCreate(term, getItemProps, 0, highlightedIndex);

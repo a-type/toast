@@ -4,6 +4,7 @@ import { CorrectionStatus } from 'generated/schema';
 import gql from 'graphql-tag';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import { Loader } from 'components/generic';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 export const AcceptRecipeIngredientCorrectionMutation = gql`
   mutation AcceptRecipeIngredientCorrection($id: ID!) {
@@ -77,7 +78,7 @@ export const ManageRecipeIngredients: React.SFC<
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <ErrorMessage error={error} />;
   }
 
   const { recipeIngredientCorrections } = data;

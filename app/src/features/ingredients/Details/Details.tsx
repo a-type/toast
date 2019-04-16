@@ -2,7 +2,7 @@ import React from 'react';
 import { RecipeCards } from 'features/recipes';
 import { sentence } from 'change-case';
 import ManageSection from './ManageSection';
-import { Disconnected } from 'components/generic';
+import ErrorMessage from 'components/generic/ErrorMessage';
 import IngredientDetailsQuery from './IngredientDetailsQuery';
 import { Heading, Paragraph } from 'grommet';
 import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
@@ -20,7 +20,7 @@ export default ({ ingredientId }) => (
       }
 
       if (error) {
-        return <Disconnected />;
+        return <ErrorMessage error={error} />;
       }
 
       const {

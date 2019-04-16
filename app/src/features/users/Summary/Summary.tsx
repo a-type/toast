@@ -4,6 +4,7 @@ import { Loader } from 'components/generic';
 import gql from 'graphql-tag';
 import { RecipeCards } from 'features/recipes';
 import { Heading } from 'grommet';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 interface UserSummaryProps {
   userId: string;
@@ -66,7 +67,7 @@ export default class extends React.Component<UserSummaryProps> {
         {({ data, loading, error }) => {
           if (loading) return <Loader size="72px" />;
           if (error) {
-            return <div>{error.message}</div>;
+            return <ErrorMessage error={error} />;
           }
 
           const {

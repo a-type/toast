@@ -7,6 +7,7 @@ import { Link } from 'components/generic';
 import { RecipeCards } from '..';
 import RecipeSummaryEmpty from './Empty';
 import { ApolloError } from 'apollo-boost';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 interface RecipesSummaryProps {
   savedRecipes: SavedRecipeEdge[];
@@ -24,7 +25,7 @@ export const RecipesSummary: FC<RecipesSummaryProps> = ({
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <ErrorMessage error={error} />;
   }
 
   if (!savedRecipes.length) {
