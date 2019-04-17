@@ -23,8 +23,8 @@ module.exports = {
     'resize-observer-polyfill',
     './thirdParty/mixpanel.js',
     './src/index.tsx',
-    'webpack-plugin-serve/client',
-  ],
+    process.env.NODE_ENV !== production ? 'webpack-plugin-serve/client' : false,
+  ].filter(Boolean),
   output: {
     publicPath: '/',
     path: outputPath,
