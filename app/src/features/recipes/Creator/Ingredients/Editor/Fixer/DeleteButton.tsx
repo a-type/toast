@@ -19,7 +19,7 @@ export default ({ ingredientId }: { ingredientId: string }) => (
   <Mutation mutation={DeleteIngredient} variables={{ id: ingredientId }}>
     {deleteIngredient => (
       <Button
-        icon={<Icon name="delete-button" />}
+        icon={<Icon name="delete" />}
         onClick={() => deleteIngredient()}
       />
     )}

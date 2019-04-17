@@ -31,7 +31,7 @@ const HeaderBar: SFC<BoxProps & { open?: boolean; onClick(): void }> = ({
         onClick={onClick}
         icon={
           <Icon
-            name={open ? 'next-page' : 'three-dots-symbol'}
+            name={open ? 'arrow_forward_ios' : 'more_vert'}
             rotation={open ? 180 : 0}
             size="24px"
           />

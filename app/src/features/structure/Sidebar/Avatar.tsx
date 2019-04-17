@@ -30,7 +30,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 const Avatar = React.forwardRef(
   ({ onClick, avatarUrl, ...rest }: AvatarProps, ref) => (
     <Circle avatarUrl={avatarUrl} onClick={onClick} ref={ref as any} {...rest}>
-      {!avatarUrl && <Icon name="chef-toque" color="white" size="28px" />}
+      {!avatarUrl && <Icon name="account_circle" color="white" size="28px" />}
     </Circle>
   ),
 );

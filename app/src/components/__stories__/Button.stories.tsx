@@ -15,6 +15,6 @@ storiesOf('Button', module)
   ))
   .add('icon', () => (
     <Box pad="large" align="start">
-      <Button label="Icon" icon={<Icon name="beach" />} />
+      <Button label="Icon" icon={<Icon name="receipt" />} />
     </Box>
   ));

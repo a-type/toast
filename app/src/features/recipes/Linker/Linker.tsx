@@ -9,7 +9,7 @@ interface LinkerProps {}
 const Linker: SFC<LinkerProps> = ({}) => {
   const { open, working, setOpen } = useLinker();
 
-  const icon = working ? <Loader size="1em" /> : <Icon name="plus-math" />;
+  const icon = working ? <Loader size="1em" /> : <Icon name="add" />;
   const label = working ? 'Scanning...' : 'Add recipe';
 
   return (

@@ -23,7 +23,7 @@ const ExpandOuterButton = styled.button`
 
 const ExpandButton = props => (
   <ExpandOuterButton {...props}>
-    <Icon name="expand-arrow" rotation={props.expanded ? 180 : 0} />
+    <Icon name="expand_more" rotation={props.expanded ? 180 : 0} />
   </ExpandOuterButton>
 );
 

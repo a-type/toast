@@ -14,7 +14,7 @@ const DemoCard = ({ noImage }: { noImage?: boolean }) => (
     actions={[
       {
         name: 'Save',
-        icon: 'plus-math',
+        icon: 'add',
         onSelected() {},
       },
       {

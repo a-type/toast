@@ -69,7 +69,7 @@ export const GuideMessage: FC<GuideMessageProps & RouteComponentProps> = ({
           style={{ padding: 0 }}
           margin={{ right: 'medium', left: 'small' }}
           onClick={() => setExpanded(!expanded)}
-          icon={<Icon name="expand-arrow" rotation={expanded ? 0 : 180} />}
+          icon={<Icon name="expand_more" rotation={expanded ? 0 : 180} />}
         />
         <Text>{guide.summary}</Text>
       </Box>
@@ -82,7 +82,7 @@ export const GuideMessage: FC<GuideMessageProps & RouteComponentProps> = ({
   ) : (
     <ActionLink to={guide.page} primary>
       <span>
-        {guide.action} <Icon name="expand-arrow" rotation={270} />
+        {guide.action} <Icon name="expand_more" rotation={270} />
       </span>
     </ActionLink>
   );
@@ -91,7 +91,7 @@ export const GuideMessage: FC<GuideMessageProps & RouteComponentProps> = ({
     <MessageBox direction="row" align="stretch">
       {content}
       <ActionLink onClick={dismiss} primary={isOnPage}>
-        <Icon name="green-check-mark" />
+        <Icon name="done" />
       </ActionLink>
     </MessageBox>
   );

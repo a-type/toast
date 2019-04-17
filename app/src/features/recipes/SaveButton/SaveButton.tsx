@@ -37,7 +37,7 @@ const LikeButton = ({ id }) => {
   if (loading || error || !data) {
     return (
       <IsLoggedIn>
-        <Button disabled label="Save" icon={<Icon name="heart-outline" />} />
+        <Button disabled label="Save" icon={<Icon name="favorite_border" />} />
       </IsLoggedIn>
     );
   }
@@ -45,7 +45,7 @@ const LikeButton = ({ id }) => {
   return (
     <IsLoggedIn>
       <Button
-        icon={<Icon name={isSaved ? 'heart' : 'heart-outline'} />}
+        icon={<Icon name={isSaved ? 'favorite' : 'favorite_border'} />}
         label={isSaved ? 'Saved' : 'Save'}
         onClick={onClick}
       />

@@ -31,7 +31,7 @@ const Spotlight = ({ recipe }) => {
     <Layout>
       <Box data-grid-area="image">
         <Image src={coverImage}>
-          {!coverImage && <Icon name="chef-toque" size="100px" />}
+          {!coverImage && <Icon name="local_dining" size="100px" />}
         </Image>
         <SaveButton id={recipe.id} />
       </Box>

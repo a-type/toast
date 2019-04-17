@@ -76,7 +76,7 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
             <HelpText>Correction submitted</HelpText>
           ) : (
             <DropButton
-              icon={<Icon name="three-dots-symbol" />}
+              icon={<Icon name="more_vert" />}
               dropAlign={{ right: 'right', top: 'top' }}
               dropContent={
                 <Box pad="medium" round background="white">

@@ -28,7 +28,7 @@ const PlannedMeal: SFC<MealProps> = ({ meal }) => {
         recipe={recipe}
         renderBadge={() => (
           <Box align="center" justify="center" direction="row">
-            <Icon name="microwave" size="1.5em" />
+            <Icon name="autorenew" size="1.5em" />
             <span>&nbsp;&nbsp;Leftovers</span>
           </Box>
         )}

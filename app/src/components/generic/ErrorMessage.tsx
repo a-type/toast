@@ -12,9 +12,9 @@ const getIcon = (error: ApolloError): GenericIconName => {
   switch (error.name) {
     case 'UserInputError':
     case 'ForbiddenError':
-      return 'warn';
+      return 'warning';
     default:
-      return 'unavailable-cloud';
+      return 'cloud_off';
   }
 };
 

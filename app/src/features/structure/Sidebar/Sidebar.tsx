@@ -64,7 +64,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
       <SidebarLink
         nav
         label="Join or log in"
-        icon="chef-toque"
+        icon="local_dining"
         to="/login"
         onMouseUp={hideSidebar}
       />
@@ -79,7 +79,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
         nav
         exact
         label="Home"
-        icon="chef-toque"
+        icon="home"
         to="/"
         onMouseUp={hideSidebar}
       />
@@ -88,7 +88,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
         nav
         exact
         label="Plan"
-        icon="calendar"
+        icon="calendar_today"
         to="/plan"
         onMouseUp={hideSidebar}
       />
@@ -103,14 +103,14 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
       <SidebarLink
         nav
         label="Your recipes"
-        icon="copybook"
+        icon="bookmarks"
         to="/recipes/collection"
         onMouseDown={hideSidebar}
       />
       <SidebarLink
         nav
         label="Shopping list"
-        icon="check-list"
+        icon="list"
         to="/shoppingList"
         onMouseUp={hideSidebar}
       />
@@ -118,7 +118,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
       <SidebarLink
         nav
         label="Settings"
-        icon="more"
+        icon="settings"
         to="/settings"
         onMouseUp={hideSidebar}
       />
@@ -126,7 +126,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
       <Box align="center" pad="medium">
         <Button
           label="Log out"
-          icon={<Icon name="login" rotation={180} />}
+          icon={<Icon name="meeting_room" />}
           onClick={async () => {
             await firebase.auth().signOut();
             browserHistory.push('/');

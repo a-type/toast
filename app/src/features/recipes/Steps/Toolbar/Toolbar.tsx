@@ -13,7 +13,7 @@ const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
   return (
     <Bar>
       <Link to={`/recipes/${recipe.id}`}>
-        <Button icon={<Icon name="next-page" rotation={180} />} />
+        <Button icon={<Icon name="arrow_downward" />} />
       </Link>
       <div>
         <HelpText>Cooking</HelpText>

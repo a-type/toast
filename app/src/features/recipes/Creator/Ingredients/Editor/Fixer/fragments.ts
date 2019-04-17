@@ -8,9 +8,9 @@ export const recipeIngredient = gql`
     unit
     unitStart
     unitEnd
-    value
-    valueStart
-    valueEnd
+    quantity
+    quantityStart
+    quantityEnd
     ingredientStart
     ingredientEnd
     ingredient {

@@ -1,152 +1,151 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classnames from 'classnames';
-import icons from './Toast2.min.svg';
-import foodIcons from './Food2.svg';
 
 export type GenericIconName =
-  | 'beach'
-  | 'calendar-delete'
-  | 'calendar-plus'
-  | 'calendar'
-  | 'check-list'
-  | 'chef-toque'
-  | 'copybook'
-  | 'delete-button'
-  | 'draft'
-  | 'edit'
-  | 'expand-arrow'
-  | 'green-check-mark'
-  | 'heart-outline'
-  | 'heart'
-  | 'image'
-  | 'index'
-  | 'link'
-  | 'list-view'
-  | 'login'
-  | 'microwave'
-  | 'more'
-  | 'next-page'
-  | 'plus-math'
-  | 'run'
-  | 'sand-timer'
+  | 'account_circle'
+  | 'add_shopping_cart'
+  | 'alarm'
+  | 'alarm_add'
+  | 'alarm_off'
+  | 'alarm_on'
+  | 'assessment'
+  | 'autorenew'
+  | 'backup'
+  | 'book'
+  | 'bookmark'
+  | 'bookmarks'
+  | 'calendar_today'
+  | 'contact_support'
+  | 'copyright'
+  | 'credit_card'
+  | 'date_range'
+  | 'delete'
+  | 'description'
+  | 'done'
+  | 'done_all'
+  | 'drag_indicator'
+  | 'event'
+  | 'exit_to_app'
+  | 'explore'
+  | 'favorite'
+  | 'favorite_border'
+  | 'feedback'
+  | 'help'
+  | 'history'
+  | 'home'
+  | 'hourglass_empty'
+  | 'hourglass_full'
+  | 'label'
+  | 'label_off'
+  | 'launch'
+  | 'list'
+  | 'open_in_browser'
+  | 'print'
+  | 'receipt'
+  | 'redeem'
+  | 'remove_shopping_cart'
+  | 'report_problem'
+  | 'schedule'
   | 'search'
-  | 'skip-this-track'
-  | 'star'
-  | 'three-dots-symbol'
-  | 'timer-2'
-  | 'timer'
-  | 'unavailable-cloud'
-  | 'view-more'
-  | 'waiter'
-  | 'walk'
-  | 'warn';
+  | 'settings'
+  | 'shopping_basket'
+  | 'shopping_cart'
+  | 'today'
+  | 'timeline'
+  | 'add_alert'
+  | 'error'
+  | 'error_outline'
+  | 'notification_important'
+  | 'warning'
+  | 'playlist_add'
+  | 'playlist_add_check'
+  | 'playlist_play'
+  | 'queue'
+  | 'shuffle'
+  | 'skip_next'
+  | 'skip_previous'
+  | 'add'
+  | 'add_circle'
+  | 'add_circle_outline'
+  | 'archive'
+  | 'ballot'
+  | 'block'
+  | 'clear'
+  | 'create'
+  | 'filter_list'
+  | 'flag'
+  | 'link'
+  | 'link_off'
+  | 'redo'
+  | 'remove'
+  | 'sort'
+  | 'cloud'
+  | 'cloud_off'
+  | 'folder'
+  | 'create_new_folder'
+  | 'folder_open'
+  | 'cloud_done'
+  | 'keyboard_arrow_down'
+  | 'keyboard_arrow_left'
+  | 'keyboard_arrow_right'
+  | 'keyboard_arrow_up'
+  | 'smartphone'
+  | 'tablet'
+  | 'add_photo_alternate'
+  | 'camera_alt'
+  | 'expand_more'
+  | 'expand_less'
+  | 'arrow_back'
+  | 'arrow_back_ios'
+  | 'arrow_downward'
+  | 'arrow_forward'
+  | 'arrow_forward_ios'
+  | 'fullscreen'
+  | 'more_vert'
+  | 'more_horiz'
+  | 'refresh'
+  | 'room_service'
+  | 'free_breakfast'
+  | 'group'
+  | 'group_add'
+  | 'share'
+  | 'local_dining'
+  | 'local_bar'
+  | 'fastfood'
+  | 'local_cafe'
+  | 'kitchen'
+  | 'meeting_room';
 
-export type FoodIconName =
-  | 'avocado'
-  | 'beet'
-  | 'bread'
-  | 'carrot'
-  | 'cheese'
-  | 'cheeseburger'
-  | 'cherry'
-  | 'chinese-fried-rice'
-  | 'croissant'
-  | 'eggs'
-  | 'fish-food'
-  | 'food'
-  | 'food-and-wine'
-  | 'food-basket'
-  | 'food-wrapper'
-  | 'garlic'
-  | 'ham'
-  | 'italian-pizza'
-  | 'leaf-outline'
-  | 'olive'
-  | 'olive-oil'
-  | 'pancake'
-  | 'peanuts'
-  | 'pear'
-  | 'pie'
-  | 'piece-of-lemon-cake'
-  | 'potato'
-  | 'prawn'
-  | 'sandwich'
-  | 'sandwich-with-fried-egg'
-  | 'slice-of-bread-outline'
-  | 'soup-plate'
-  | 'soy'
-  | 'steak'
-  | 'sushi'
-  | 'taco'
-  | 'tapas'
-  | 'tomato'
-  | 'vegan-food'
-  | 'watermelon';
-
-const iconGroups = {
-  food: foodIcons,
-  generic: icons,
-};
-
-export type IconStyleProps = React.HTMLAttributes<HTMLSpanElement> & {
+export type IconProps = React.HTMLAttributes<HTMLSpanElement> & {
   size?: string;
   color?: string;
   onClick?(event: React.MouseEvent<HTMLElement>): void;
   rotation?: number;
-};
-
-export type BaseIconProps = IconStyleProps & {
-  name: string;
-  className?: string;
-  iconGroup?: 'generic' | 'food';
-};
-
-const Svg = styled.svg`
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-`;
-
-const IconStyles = styled<IconStyleProps, 'i'>('i')`
-  fill: ${props => props.color || 'currentColor'};
-  transform: ${props =>
-    props.rotation ? `rotate(${props.rotation}deg)` : 'none'};
-  display: inline-block;
-  width: ${props => (props.size ? props.size : '1em')};
-  height: ${props => (props.size ? props.size : '1em')};
-  vertical-align: -0.1em;
-  transition: 0.2s ease transform;
-  position: relative;
-`;
-
-export const BaseIcon = ({
-  name,
-  className,
-  iconGroup = 'generic',
-  ...rest
-}: BaseIconProps) => (
-  <IconStyles {...rest} className={classnames(`icon-${name}`, className)}>
-    <Svg>
-      <use xlinkHref={`${iconGroups[iconGroup]}#icon-${name}`} />
-    </Svg>
-  </IconStyles>
-);
-
-export type IconProps = IconStyleProps & {
   name: GenericIconName;
   className?: string;
+  inactive?: boolean;
 };
-export const Icon = (props: IconProps) => (
-  <BaseIcon {...props} iconGroup="generic" />
-);
 
-export type FoodIconProps = IconStyleProps & {
-  name: FoodIconName;
-  className?: string;
-};
-export const FoodIcon = (props: FoodIconProps) => (
-  <BaseIcon {...props} iconGroup="food" />
+const I = styled<{ rotation?: number; size?: string; color?: string }, 'i'>(
+  'i',
+)`
+  transform: rotate(${props => props.rotation || 0}deg);
+  font-size: ${props => props.size || 'inherit'};
+  color: ${props => props.color || 'inherit'};
+`;
+
+export const Icon = (props: IconProps) => (
+  <I
+    {...props}
+    className={classnames(
+      props.className,
+      'material-icons',
+      props.inactive ? 'md-inactive' : '',
+    )}
+  >
+    {props.name}
+  </I>
 );
 
 export default Icon;

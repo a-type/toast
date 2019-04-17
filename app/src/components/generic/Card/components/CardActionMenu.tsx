@@ -18,7 +18,7 @@ export const CardActionMenu: FC<CardActionMenuProps> = ({
   return (
     <DropButton
       {...{ className: 'card-action-menu' } as any}
-      icon={<Icon name="three-dots-symbol" />}
+      icon={<Icon name="more_vert" />}
       dropProps={{
         plain: true,
         style: {

@@ -48,7 +48,7 @@ export const EmptyMeal: FC<EmptyMealProps> = ({ meal }) => {
           selectActionType(PlanActionType.Cook);
         }}
       >
-        <Icon name="plus-math" size="32px" color="var(--color-brand-dark)" />
+        <Icon name="add" size="32px" color="var(--color-brand-dark)" />
       </Border>
       {stage !== SelectionStage.Initial && (
         <Popup onClose={cancel}>

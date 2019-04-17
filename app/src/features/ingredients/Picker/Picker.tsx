@@ -38,7 +38,7 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
       <Button
         onClick={() => setPopupOpen(!isPopupOpen)}
         disabled={disabled}
-        icon={<Icon name="edit" />}
+        icon={<Icon name="create" />}
         label={sentence(pathOr('Unknown Ingredient', ['name'], value))}
       />
       {isPopupOpen && (
