@@ -51,18 +51,22 @@ const Wave = styled.div`
   }
 `;
 
-const Circle = styled<{ size: string }, 'div'>('div')`
+const Circle = styled<{ size: string; inline?: boolean }, 'div'>('div')`
   position: relative;
   border-radius: 100%;
   overflow: hidden;
   width: ${props => props.size};
   height: ${props => props.size};
   transition: 0.25s ease width, 0.25s ease height;
+  display: ${props => (props.inline ? 'inline-block' : 'block')};
 `;
 
-export const Loader: FC<{ size?: string }> = ({ size = '32px' }) => {
+export const Loader: FC<{ size?: string; inline?: boolean }> = ({
+  size = '32px',
+  inline,
+}) => {
   return (
-    <Circle size={size}>
+    <Circle size={size} inline={inline}>
       <Wave />
       <Wave />
       <Wave />

@@ -80,7 +80,12 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   }, [prefilledValue]);
 
   if (working) {
-    return <Loader />;
+    return (
+      <>
+        <Loader inline size="1em" />
+        <Paragraph>Scanning your recipe...</Paragraph>
+      </>
+    );
   }
 
   if (lastResult) {

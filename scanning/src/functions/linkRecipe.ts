@@ -23,13 +23,13 @@ type RecipeIngredient = {
   id?: string;
   text: string;
   unit: string;
-  value: number;
+  quantity: number;
   ingredientStart: number;
   ingredientEnd: number;
   unitStart: number;
   unitEnd: number;
-  valueStart: number;
-  valueEnd: number;
+  quantityStart: number;
+  quantityEnd: number;
   comments: string[];
   preparations: string[];
   ingredientId?: string;
@@ -47,9 +47,9 @@ const parsedToRecipeIngredient = (
     unit: parsed.unit.normalized,
     unitStart: getOrNull(parsed.unit.range, 0),
     unitEnd: getOrNull(parsed.unit.range, 1),
-    value: parsed.value.normalized,
-    valueStart: getOrNull(parsed.value.range, 0),
-    valueEnd: getOrNull(parsed.value.range, 1),
+    quantity: parsed.value.normalized,
+    quantityStart: getOrNull(parsed.value.range, 0),
+    quantityEnd: getOrNull(parsed.value.range, 1),
     ingredientStart: getOrNull(parsed.ingredient.range, 0),
     ingredientEnd: getOrNull(parsed.ingredient.range, 1),
     text: parsed.original,

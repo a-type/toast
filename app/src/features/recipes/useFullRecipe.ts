@@ -44,9 +44,6 @@ export const FullRecipeQuery = gql`
         url
         attribution
       }
-
-      ...RecipeDetails
-      ...RecipeSpotlight
     }
   }
 `;

@@ -10,14 +10,14 @@ export default class ManagePage extends React.Component {
     return (
       <Column>
         <IsAdmin>
+          <Heading level="2">Corrections</Heading>
+          <Corrections />
           <Heading level="2">Recent Ingredients</Heading>
           <Recent />
           <Heading level="2">Bulk Upload Ingredients</Heading>
           <BulkCreate />
           <Heading level="2">Create Ingredient</Heading>
           <Create />
-          <Heading level="2">Corrections</Heading>
-          <Corrections />
         </IsAdmin>
       </Column>
     );

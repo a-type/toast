@@ -44,7 +44,7 @@ export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
     <Button
       {...getItemProps({ item: { name: term }, index })}
       active={index === highlightedIndex}
-      label={`${term} (create)`}
+      label={`Create new ingredient: "${term}"`}
     />
   );
 
@@ -61,7 +61,7 @@ export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
   const items = data.searchIngredients;
 
   return (
-    <Box>
+    <Box pad="small" margin={{ top: 'small' }}>
       <HelpText>Choose one:</HelpText>
       <Box margin={{ bottom: 'medium' }}>
         {items.map((ingredient, index) => (

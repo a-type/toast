@@ -2,6 +2,7 @@ import microdata from './extractors/microdata';
 import { toSeconds, parse } from 'iso8601-duration';
 import { Page } from 'puppeteer';
 import tasty from './extractors/tasty';
+import kitchenStories from './extractors/kitchenStories';
 
 const extractNumber = (numberOrString: number | string) => {
   if (typeof numberOrString === 'number') {
@@ -50,14 +51,27 @@ const isoToMinutes = (isoDuration: string) => {
 };
 
 const run = async (page: Page) => {
-  const allMicrodata = await microdata(page, 'http://schema.org/Recipe');
-  let data = allMicrodata[0];
-  if (!data) {
-    // fallback, try tasty
-    data = await tasty(page);
+  let data: any;
+  const pageUrl = page.url();
+
+  if (pageUrl.includes('kitchenstories')) {
+    // specialized parser for a favorite site...
+    data = await kitchenStories(page);
   }
-  if (!data) {
-    data = {};
+
+  if (!data || !data.name) {
+    const allMicrodata = await microdata(page, 'http://schema.org/Recipe');
+    data = allMicrodata[0];
+    if (
+      !data ||
+      !(data.name || (data.recipeIngredient && data.recipeIngredient.length))
+    ) {
+      // fallback, try blog formatters
+      data = await tasty(page);
+    }
+    if (!data) {
+      data = {};
+    }
   }
 
   console.info('Extracted data:');

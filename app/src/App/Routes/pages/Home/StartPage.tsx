@@ -51,7 +51,7 @@ export const StartPage: FC<StartPageProps> = ({}) => {
 
   return (
     <Column>
-      {anyLoading && <GlobalLoader full={allLoading} />}
+      {anyLoading && <GlobalLoader />}
       {mainContent}
     </Column>
   );

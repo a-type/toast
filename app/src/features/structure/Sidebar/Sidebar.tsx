@@ -21,6 +21,7 @@ import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
 import ToggleButton from './ToggleButton';
 import SidebarContact from './Contact';
 import SidebarGestureContainer from './GestureContainer';
+import { IsAdmin } from 'features/auth/gates';
 
 const SidebarContentBox = styled<
   { embedded: boolean } & BoxProps & HTMLAttributes<HTMLDivElement>
@@ -122,6 +123,16 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
         to="/settings"
         onMouseUp={hideSidebar}
       />
+
+      <IsAdmin>
+        <SidebarLink
+          nav
+          label="Manage"
+          icon="warning"
+          to="/manage"
+          onMouseUp={hideSidebar}
+        />
+      </IsAdmin>
 
       <Box align="center" pad="medium">
         <Button
