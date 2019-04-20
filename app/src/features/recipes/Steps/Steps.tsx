@@ -3,7 +3,7 @@ import FullRecipeQuery from 'features/recipes/queries/FullRecipeQuery';
 import LinkFrame from './LinkFrame';
 import StepList from './StepList';
 import Toolbar from './Toolbar';
-import GlobalLoader from 'components/generic/Loader/GlobalLoader';
+import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
 import { pathOr } from 'ramda';
 import { Recipe } from 'generated/schema';
 import { Box } from 'grommet';

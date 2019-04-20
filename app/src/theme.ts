@@ -49,7 +49,7 @@ export const GlobalStyle = createGlobalStyle`
   --bold: 600;
 
   --color-white: #fefeff;
-  --color-black: #161616;
+  --color-black: #161626;
 
   --color-gray-lightest: #eaeaff;
   --color-gray-light: #d8d8fa;

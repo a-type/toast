@@ -8,7 +8,8 @@ import usePlan from 'features/plan/usePlan';
 import useGroceryDay from 'features/plan/useGroceryDay';
 import useSavedRecipes from 'features/recipes/useSavedRecipes';
 import OnboardingPage from './OnboardingPage';
-import { GlobalLoader } from 'components/generic/Loader';
+import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 interface StartPageProps {}
 
@@ -22,7 +23,15 @@ export const StartPage: FC<StartPageProps> = ({}) => {
   ] = useSavedRecipes();
 
   if (planLoading || groceryDayLoading || savedRecipesLoading) {
-    return <GlobalLoader />;
+    return (
+      <GlobalLoader
+        full={planLoading && groceryDayLoading && savedRecipesLoading}
+      />
+    );
+  }
+
+  if (planError) {
+    return <ErrorMessage full error={planError} />;
   }
 
   if (!plan.length) {

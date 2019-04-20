@@ -56,6 +56,7 @@ const Circle = styled<{ size: string }, 'div'>('div')`
   width: ${props => props.size};
   height: ${props => props.size};
   background: var(--color-positive-light);
+  transition: 0.25s ease width, 0.25s ease height;
 `;
 
 export const Loader: FC<{ size?: string }> = ({ size = '24px' }) => {

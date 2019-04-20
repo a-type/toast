@@ -1,11 +1,20 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { ApolloError } from 'apollo-boost';
-import { Box, Text, Button } from 'grommet';
+import { Box, Text, Button, Paragraph } from 'grommet';
 import Icon, { GenericIconName } from './Icon';
 import logger from 'logger';
+import { differenceInMinutes } from 'date-fns';
+import Link from './Link';
+
+const LAST_ERROR_REFRESH_KEY = 'lastErrorRefresh';
+const UNKNOWN_MESSAGE =
+  'Something went wrong on our end. Reloading might help.';
+const REPEAT_MESSAGE =
+  "Looks like reloading didn't solve the problem. This might be a temporary issue, but feel free to contact us if it persists.";
 
 export interface ErrorMessageProps {
   error?: ApolloError;
+  full?: boolean;
 }
 
 const getIcon = (error: ApolloError): GenericIconName => {
@@ -18,9 +27,12 @@ const getIcon = (error: ApolloError): GenericIconName => {
   }
 };
 
-const getText = (error: ApolloError): string => {
+const getText = (error: ApolloError, isRepeatError: boolean): string => {
   if (!error) {
-    return "Something went wrong on our end. That's our fault. Reloading might help.";
+    if (isRepeatError) {
+      return REPEAT_MESSAGE;
+    }
+    return UNKNOWN_MESSAGE;
   }
 
   switch (error.name) {
@@ -29,28 +41,71 @@ const getText = (error: ApolloError): string => {
     case 'ForbiddenError':
       return "Sorry, you're not able to do that.";
     default:
-      return "Something went wrong on our end. That's our fault. Reloading might help.";
+      if (isRepeatError) {
+        return REPEAT_MESSAGE;
+      }
+      return UNKNOWN_MESSAGE;
   }
 };
 
-export const ErrorMessage: FC<ErrorMessageProps> = ({ error }) => {
+export const ErrorMessage: FC<ErrorMessageProps> = ({ error, full }) => {
+  const [isDismissed, setDismissed] = useState(false);
+
   useEffect(() => {
     logger.fatal(error);
+    setDismissed(false);
   }, [error]);
 
+  const lastErrorRefreshTime = sessionStorage.getItem(LAST_ERROR_REFRESH_KEY);
+
+  const saveLastErrorRefreshTime = () => {
+    sessionStorage.setItem(LAST_ERROR_REFRESH_KEY, new Date().toISOString());
+  };
+
+  const isRepeatError =
+    lastErrorRefreshTime &&
+    Math.abs(differenceInMinutes(lastErrorRefreshTime, new Date())) < 2;
+
+  if (isDismissed) {
+    return null;
+  }
+
   return (
-    <Box direction="row">
-      <Icon name={getIcon(error)} size="4em" />
-      <Box flex="grow">
-        <Text>{getText(error)}</Text>
-        {!error ||
-          (!['ForbiddenError', 'UserInputError'].includes(error.name) && (
-            <Button
-              margin={{ top: 'medium' }}
-              onClick={() => window.location.reload()}
-              label="Refresh"
-            />
-          ))}
+    <Box
+      direction="row"
+      pad="small"
+      align="center"
+      width={full ? '100%' : 'auto'}
+      height={full ? '100%' : 'auto'}
+      background="light-2"
+      className="neutral-content"
+      justify="center"
+      margin={full ? '0' : 'small'}
+      round={!full}
+    >
+      <Icon name={getIcon(error)} size="4em" color="var(--color-gray)" />
+      <Box margin={{ left: 'medium' }} align="start">
+        <Paragraph>{getText(error, isRepeatError)}</Paragraph>
+        <Box direction="row" justify="start">
+          {!error ||
+            (!['ForbiddenError', 'UserInputError'].includes(error.name) ? (
+              <Button
+                onClick={() => {
+                  saveLastErrorRefreshTime();
+                  window.location.reload();
+                }}
+                margin={{ right: 'small', left: '0' }}
+                label="Reload"
+              />
+            ) : (
+              <Button label="Dismiss" onClick={() => setDismissed(true)} />
+            ))}
+          {isRepeatError && (
+            <Link to="mailto:support@toastcooking.app">
+              <Button label="Contact support" />
+            </Link>
+          )}
+        </Box>
       </Box>
     </Box>
   );
