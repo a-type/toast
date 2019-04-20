@@ -12,7 +12,7 @@ export default styled.div`
   border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
   transition: ${DURATION / 1000.0}s ease-in all;
   pointer-events: initial;
-  box-shadow: 0 -4px 8px 0 #280f3420;
+  box-shadow: 0 -6px 16px 0 var(--color-shadow-dark);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
