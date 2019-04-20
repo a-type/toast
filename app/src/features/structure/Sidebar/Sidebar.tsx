@@ -111,7 +111,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
       <SidebarLink
         nav
         label="Shopping list"
-        icon="list"
+        icon="shopping_cart"
         to="/shoppingList"
         onMouseUp={hideSidebar}
       />

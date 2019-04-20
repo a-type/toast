@@ -13,7 +13,11 @@ export default new GraphQLScalarType({
       return parse(value);
     }
   },
-  serialize: (value: v1.Date) => {
+  serialize: (value: v1.Date | Date) => {
+    if (value instanceof Date) {
+      return format(value, 'YYYY-MM-DD');
+    }
+
     const date = new Date(
       (value.year as any) as number,
       ((value.month as any) as number) - 1,

@@ -7,7 +7,8 @@ import { format } from 'date-fns';
 import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListItemList } from './components/ShoppingListItemList';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import { Loader } from 'components/generic';
+import ShoppingListEmptyState from './components/EmptyState';
+import { GlobalLoader } from 'components/generic/Loader';
 
 const GetShoppingListQuery = gql`
   query GetShoppingListQuery {
@@ -125,7 +126,7 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
     markUnpurchasedMutation({ variables: { input } });
 
   if (loading) {
-    return <Loader />;
+    return <GlobalLoader full />;
   }
 
   if (error) {
@@ -156,6 +157,7 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
             />
           </li>
         ))}
+        {!items.length && <ShoppingListEmptyState />}
       </ShoppingListItemList>
     </>
   );
