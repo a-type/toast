@@ -21,41 +21,47 @@ export const SidebarGestureContainer: FC<SidebarGestureContainerProps> = ({
     config: { mass: 1, tension: 500, friction: 50 },
     x: naturalPosition,
   }));
-  const bind = useGesture(
-    ({ down, x: gestureX, xInitial, args: [element, isCurrentlyOpen] }) => {
-      const isWindow = element === 'window';
+  const bind = useGesture(gesture => {
+    const {
+      down,
+      x: gestureX,
+      xInitial,
+      args: [element, isCurrentlyOpen],
+    } = gesture;
+    const isWindow = element === 'window';
 
-      const wasTapOutside =
-        isCurrentlyOpen &&
-        isWindow &&
-        !down &&
-        gestureX > WIDTH &&
-        xInitial > WIDTH &&
-        Math.abs(gestureX - xInitial) < 15;
+    const wasTapOutside =
+      isCurrentlyOpen &&
+      isWindow &&
+      !down &&
+      gestureX > WIDTH &&
+      xInitial > WIDTH &&
+      Math.abs(gestureX - xInitial) < 15;
 
-      const validGestureStart = isCurrentlyOpen
-        ? xInitial - WIDTH + 25 > 0
-        : xInitial < 25;
+    const validGestureStart = isCurrentlyOpen
+      ? xInitial - WIDTH + 25 > 0
+      : xInitial < 25;
 
-      const validGestureMovement = isCurrentlyOpen
-        ? gestureX - xInitial < 25 || (gestureX > WIDTH && xInitial > WIDTH)
-        : gestureX - xInitial > 25;
+    const validGestureMovement = isCurrentlyOpen
+      ? gestureX - xInitial < 25 || (gestureX > WIDTH && xInitial > WIDTH)
+      : gestureX - xInitial > 25;
 
-      if (!validGestureStart || !validGestureMovement) {
-        return;
-      }
+    if (!validGestureStart || !validGestureMovement) {
+      return;
+    }
 
-      let xOffset = Math.max(-WIDTH, Math.min(0, gestureX - WIDTH));
+    let xOffset = Math.max(-WIDTH, Math.min(0, gestureX - WIDTH));
+    const totalDelta = gestureX - xInitial;
 
-      if (down) {
-        set({ x: xOffset });
-      } else {
-        const becomeClosed = wasTapOutside || Math.abs(xOffset + WIDTH) < 25;
-        setOpen(!becomeClosed);
-        set({ x: getNaturalPosition(!becomeClosed) });
-      }
-    },
-  );
+    if (down) {
+      set({ x: xOffset });
+    } else {
+      const becomeClosed =
+        wasTapOutside || Math.abs(xOffset + WIDTH) < 50 || totalDelta < -200;
+      setOpen(!becomeClosed);
+      set({ x: getNaturalPosition(!becomeClosed) });
+    }
+  });
 
   useEffect(() => {
     set({ x: getNaturalPosition(open) });
