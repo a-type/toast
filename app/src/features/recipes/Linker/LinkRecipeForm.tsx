@@ -146,6 +146,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
           value={url}
           onChange={ev => setUrl(ev.target.value)}
           name="recipeUrl"
+          type="url"
         />
       </Field>
       <Button
@@ -155,7 +156,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
         primary
         margin={{ right: 'medium' }}
       />
-      <Button label="Cancel" type="reset" onClick={reset} />
+      {url && <Button label="Clear" type="reset" onClick={() => setUrl('')} />}
     </form>
   );
 };
