@@ -77,6 +77,7 @@ export const GlobalStyle = createGlobalStyle`
 
   --color-dark: #280f34;
   --color-shadow: #280f3420;
+  --color-shadow-dark: #280f3460;
 
   --color-field-background: var(--color-gray-light);
   --color-field-foreground: var(--color-dark);
@@ -85,6 +86,8 @@ export const GlobalStyle = createGlobalStyle`
   --color-control-foreground: var(--color-dark);
   --color-control-background-active: var(--color-brand-light);
   --color-control-foreground-active: var(--color-dark);
+  --color-control-primary-background: var(--color-positive);
+  --color-control-primary-foreground: var(--color-white);
 
   --color-link-foreground: var(--color-brand);
   --color-link-active: var(--color-brand-dark);
@@ -138,6 +141,32 @@ export const GlobalStyle = createGlobalStyle`
   --color-field-foreground: var(--color-black);
   --color-effect-hover: var(--color-gray-dark);
   --color-effect-focus: var(--color-dark);
+}
+
+.positive-content {
+  --color-control-background: var(--color-positive-light);
+  --color-control-foreground: var(--color-white);
+  --color-control-primary-background: var(--color-positive-light);
+  --color-control-primary-foreground: var(--color-dark);
+  --color-link-foreground: var(--color-positive-light);
+  --color-link-active: var(--color-positive-dark);
+  --color-field-background: var(--color-positive-dark);
+  --color-field-foreground: var(--color-white);
+  --color-effect-hover: #ffffff60;
+  --color-effect-focus: #ffffff80;
+}
+
+.negative-content {
+  --color-control-background: var(--color-negative-light);
+  --color-control-foreground: var(--color-white);
+  --color-control-primary-background: var(--color-negative-light);
+  --color-control-primary-foreground: var(--color-white);
+  --color-link-foreground: var(--color-negative-light);
+  --color-link-active: var(--color-negative-dark);
+  --color-field-background: var(--color-negative-dark);
+  --color-field-foreground: var(--color-white);
+  --color-effect-hover: #ffffff60;
+  --color-effect-focus: #ffffff80;
 }
 
 html, body {
@@ -306,10 +335,7 @@ export const grommetTheme = deepMerge(base, {
       };
 
       ${primary &&
-        `border-color: ${normalizeColor(
-          'accent-1',
-          theme,
-        )}; color: ${normalizeColor('light-1', theme)};`}
+        `background: var(--color-control-primary-background); border-color: var(--color-control-primary-background); color: var(--color-control-primary-foreground);`}
 
         /* divider */
 

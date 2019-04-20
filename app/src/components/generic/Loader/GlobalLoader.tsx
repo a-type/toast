@@ -7,7 +7,6 @@ const GlobalContainer = styled.div`
   bottom: var(--spacing-lg);
   right: var(--spacing-lg);
   pointer-events: none;
-  opacity: 0.5;
 `;
 
 export default props => (

@@ -15,6 +15,9 @@ import Helmet from 'react-helmet';
 import Guides from 'features/guides/Guides/Guides';
 import styled from 'styled-components';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
+import { positions, transitions, Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'components/generic/Alert';
+import UpdateChecker from './UpdateChecker';
 
 const MainContentBox = styled(Box)`
   overflow-y: auto;
@@ -37,29 +40,39 @@ const MainGrid = styled.div`
   }
 `;
 
+const alertOptions = {
+  position: positions.BOTTOM_RIGHT,
+  timeout: 10000,
+  offset: '30px',
+  transition: transitions.FADE,
+};
+
 const App: FC<{}> = () => (
   <ApolloProvider client={apolloClient}>
     <ApolloHooksProvider client={apolloClient}>
       <Grommet theme={grommetTheme} full>
-        <Router history={history}>
-          <TokenContext.Provider>
-            <LinkerContextProvider>
-              <Suspense fallback={<GlobalLoader />}>
-                <Helmet>
-                  <title>Toast</title>
-                </Helmet>
-                <MainGrid>
-                  <Sidebar gridArea="nav" />
-                  <MainContentBox width="100%" gridArea="content">
-                    <Routes />
-                  </MainContentBox>
-                  <Guides gridArea="guides" />
-                </MainGrid>
-              </Suspense>
-            </LinkerContextProvider>
-          </TokenContext.Provider>
-        </Router>
-        <GlobalStyle />
+        <AlertProvider {...alertOptions} template={AlertTemplate}>
+          <Router history={history}>
+            <TokenContext.Provider>
+              <LinkerContextProvider>
+                <Suspense fallback={<GlobalLoader />}>
+                  <Helmet>
+                    <title>Toast</title>
+                  </Helmet>
+                  <MainGrid>
+                    <Sidebar gridArea="nav" />
+                    <MainContentBox width="100%" gridArea="content">
+                      <Routes />
+                    </MainContentBox>
+                    <Guides gridArea="guides" />
+                  </MainGrid>
+                </Suspense>
+              </LinkerContextProvider>
+            </TokenContext.Provider>
+          </Router>
+          <GlobalStyle />
+          <UpdateChecker />
+        </AlertProvider>
       </Grommet>
     </ApolloHooksProvider>
   </ApolloProvider>

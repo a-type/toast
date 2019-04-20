@@ -21,6 +21,21 @@
       "problemMatcher": [
         "$awesometsc"
       ]
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": [
+        "$awesometsc"
+      ]
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "path": "server/",
+      "problemMatcher": [
+        "$awesometsc"
+      ]
     }
   ]
 }

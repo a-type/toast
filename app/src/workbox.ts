@@ -1,15 +1,9 @@
 import { Workbox } from 'workbox-window';
 
+let wb: Workbox = null;
+
 if ('serviceWorker' in navigator) {
-  const wb = new Workbox('/service-worker.js');
-
-  wb.addEventListener('message', event => {
-    if (event.data.type === 'CACHE_UPDATE') {
-      const { updatedURL } = event.data.payload;
-
-      console.log(`A newer version of ${updatedURL} is available!`);
-    }
-  });
+  wb = new Workbox('/service-worker.js');
 
   wb.register()
     .then(() => {
@@ -19,3 +13,5 @@ if ('serviceWorker' in navigator) {
       console.warn('ServiceWorker registration failed', err);
     });
 }
+
+export default wb;
