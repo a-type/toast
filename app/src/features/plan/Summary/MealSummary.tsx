@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { PlanMealData } from '../types';
 import { Text } from 'grommet';
-import { Spotlight } from 'features/recipes/components';
+import { Spotlight } from 'features/recipes/components/Spotlight';
 import { pathOr } from 'ramda';
 
 interface PlanMealSummaryProps {
@@ -18,20 +18,31 @@ export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {
         <Spotlight recipe={firstRecipe} />
       </>
     );
+  } else if (meal.eating.length) {
+    const firstRecipe = pathOr(
+      null,
+      ['eating', 0, 'cooking', 0, 'recipe'],
+      meal,
+    );
+
+    return (
+      <>
+        <Text>Leftovers</Text>
+        <Spotlight recipe={firstRecipe} />
+      </>
+    );
+  } else {
+    const fakeRecipe = {
+      title: 'Nothing planned',
+      description: "You didn't make any plans for your next meal.",
+    };
+
+    return (
+      <>
+        <Spotlight recipe={fakeRecipe} />
+      </>
+    );
   }
-
-  const firstRecipe = pathOr(null, ['eating', 0, 'cooking', 0, 'recipe'], meal);
-
-  if (!firstRecipe) {
-    return <Text>Nothing planned</Text>;
-  }
-
-  return (
-    <>
-      <Text>Leftovers</Text>
-      <Spotlight recipe={firstRecipe} />
-    </>
-  );
 };
 
 export default PlanMealSummary;

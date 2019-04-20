@@ -7,9 +7,9 @@ import { Heading } from 'grommet';
 import usePlan from 'features/plan/usePlan';
 import useGroceryDay from 'features/plan/useGroceryDay';
 import useSavedRecipes from 'features/recipes/useSavedRecipes';
-import OnboardingPage from './OnboardingPage';
 import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { PlanSetup } from 'features/plan/Setup/Setup';
 
 interface StartPageProps {}
 
@@ -22,24 +22,17 @@ export const StartPage: FC<StartPageProps> = ({}) => {
     savedRecipesError,
   ] = useSavedRecipes();
 
-  if (planLoading || groceryDayLoading || savedRecipesLoading) {
-    return (
-      <GlobalLoader
-        full={planLoading && groceryDayLoading && savedRecipesLoading}
-      />
-    );
-  }
+  const anyLoading = planLoading || groceryDayLoading || savedRecipesLoading;
+  const allLoading = planLoading && groceryDayLoading && savedRecipesLoading;
 
   if (planError) {
     return <ErrorMessage full error={planError} />;
   }
 
-  if (!plan.length) {
-    return <OnboardingPage onCreated={planResult.refetch} />;
-  }
-
-  return (
-    <Column>
+  const mainContent = allLoading ? null : !planLoading && !plan.length ? (
+    <PlanSetup onCreated={planResult.refetch} />
+  ) : (
+    <>
       <PlanSummary loading={planLoading} planDays={plan} error={planError} />
       <Heading level="3">Shopping</Heading>
       <ShoppingListSummary
@@ -53,6 +46,13 @@ export const StartPage: FC<StartPageProps> = ({}) => {
         loading={savedRecipesLoading}
         error={savedRecipesError}
       />
+    </>
+  );
+
+  return (
+    <Column>
+      {anyLoading && <GlobalLoader full={allLoading} />}
+      {mainContent}
     </Column>
   );
 };

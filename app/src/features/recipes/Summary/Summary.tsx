@@ -8,6 +8,7 @@ import { RecipeCards } from '..';
 import RecipeSummaryEmpty from './Empty';
 import { ApolloError } from 'apollo-boost';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { RecipeCardsSkeleton } from '../RecipeCards/RecipeCards';
 
 interface RecipesSummaryProps {
   savedRecipes: SavedRecipeEdge[];
@@ -21,7 +22,15 @@ export const RecipesSummary: FC<RecipesSummaryProps> = ({
   error,
 }) => {
   if (loading) {
-    return <Loader />;
+    return (
+      <Box margin={{ bottom: 'large' }} align="start">
+        <Label>Your liked recipes</Label>
+        <RecipeCardsSkeleton count={10} />
+        <Link to="/recipes/collection">
+          <Button label="Go to recipes" />
+        </Link>
+      </Box>
+    );
   }
 
   if (error) {

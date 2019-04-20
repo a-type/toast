@@ -25,11 +25,13 @@ const animation = keyframes`
 `;
 
 const Wave = styled.div`
-  animation: ${animation} 6s infinite ease-in-out;
+  animation: ${animation} 4s infinite ease-in-out;
   position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 100%;
+  animation-fill-mode: forwards;
+  transform: translate(-50%, -50%) scale(0);
 
   &:nth-child(1) {
     animation-delay: 0;
@@ -44,7 +46,7 @@ const Wave = styled.div`
     background: var(--color-brand);
   }
   &:nth-child(4) {
-    animation-delay: 4s;
+    animation-delay: 3s;
     background: var(--color-positive-light);
   }
 `;
@@ -55,11 +57,10 @@ const Circle = styled<{ size: string }, 'div'>('div')`
   overflow: hidden;
   width: ${props => props.size};
   height: ${props => props.size};
-  background: var(--color-positive-light);
   transition: 0.25s ease width, 0.25s ease height;
 `;
 
-export const Loader: FC<{ size?: string }> = ({ size = '24px' }) => {
+export const Loader: FC<{ size?: string }> = ({ size = '32px' }) => {
   return (
     <Circle size={size}>
       <Wave />

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Loader from './Loader';
 import styled from 'styled-components';
+import { useDebounce } from 'use-debounce';
 
 const GlobalContainer = styled<{ full?: boolean }, 'div'>('div')`
   position: fixed;
@@ -12,15 +13,17 @@ const GlobalContainer = styled<{ full?: boolean }, 'div'>('div')`
     props.full ? 'translate(-50%, -50%)' : 'translate(0, 0)'};
   pointer-events: none;
   transition: 0.25s ease all;
-  transition-delay: 0.1s;
 `;
 
 export type GlobalLoaderProps = {
   full?: boolean;
 };
 
-export const GlobalLoader: React.FC<GlobalLoaderProps> = props => (
-  <GlobalContainer {...props}>
-    <Loader size={props.full ? '20vw' : '7vw'} />
-  </GlobalContainer>
-);
+export const GlobalLoader: React.FC<GlobalLoaderProps> = props => {
+  const [debouncedFull] = useDebounce(props.full, 500);
+  return (
+    <GlobalContainer full={debouncedFull}>
+      <Loader size={debouncedFull ? '20vw' : '7vw'} />
+    </GlobalContainer>
+  );
+};

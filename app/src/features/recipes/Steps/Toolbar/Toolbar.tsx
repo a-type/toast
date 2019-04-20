@@ -2,11 +2,14 @@ import * as React from 'react';
 import { Bar } from './components';
 import { Link, Icon } from 'components/generic';
 import { HelpText } from 'components/text';
-import { Recipe } from 'generated/schema';
 import { Heading, Button } from 'grommet';
 
 export interface ToolbarProps {
-  recipe: Recipe;
+  recipe: {
+    id: string;
+    title: string;
+    sourceUrl: string;
+  };
 }
 
 const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {

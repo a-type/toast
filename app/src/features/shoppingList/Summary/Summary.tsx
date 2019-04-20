@@ -6,6 +6,7 @@ import getNextDay from 'utils/getNextDay';
 import { formatDay } from 'formatters/date';
 import { ApolloError } from 'apollo-boost';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { BoxSkeleton } from 'components/skeletons/Box';
 
 interface ShoppingListSummaryProps {
   groceryDay: { index: number; name: string };
@@ -21,7 +22,7 @@ export const ShoppingListSummary: FC<ShoppingListSummaryProps> = ({
   const nextGroceryDay = formatDay(getNextDay(new Date(), index));
 
   if (loading) {
-    return null;
+    return <BoxSkeleton height="80px" />;
   }
 
   if (error) {

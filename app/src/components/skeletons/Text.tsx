@@ -1,6 +1,7 @@
-import React, { SFC, useRef } from 'react';
+import React, { useRef, FC } from 'react';
 import styled from 'styled-components';
 import { Heading, HeadingProps, ParagraphProps, Paragraph } from 'grommet';
+import { Label } from 'components/text';
 
 export type TextSkeletonProps = {
   size?: number;
@@ -15,7 +16,7 @@ const Blob = styled<{ charCount: number }, 'span'>('span')`
   margin-right: 1em;
 `;
 
-export const TextSkeleton: SFC<TextSkeletonProps> = ({ size }) => {
+export const TextSkeleton: FC<TextSkeletonProps> = ({ size }) => {
   const { current: charCount } = useRef(
     size || Math.floor(Math.random() * 4) + 2,
   );
@@ -23,7 +24,7 @@ export const TextSkeleton: SFC<TextSkeletonProps> = ({ size }) => {
   return <Blob charCount={charCount} />;
 };
 
-export const HeadingSkeleton: SFC<HeadingProps & TextSkeletonProps> = ({
+export const HeadingSkeleton: FC<HeadingProps & TextSkeletonProps> = ({
   size,
   ...rest
 }) => {
@@ -34,7 +35,7 @@ export const HeadingSkeleton: SFC<HeadingProps & TextSkeletonProps> = ({
   );
 };
 
-export const ParagraphSkeleton: SFC<
+export const ParagraphSkeleton: FC<
   ParagraphProps & TextSkeletonProps & { words?: number }
 > = ({ size, words, ...rest }) => {
   const { current: wordCount } = useRef(
@@ -49,3 +50,9 @@ export const ParagraphSkeleton: SFC<
     </Paragraph>
   );
 };
+
+export const LabelSkeleton: FC<TextSkeletonProps> = ({ size }) => (
+  <Label>
+    <TextSkeleton size={size} />
+  </Label>
+);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import gql from 'graphql-tag';
 import { Link } from 'components/text';
 import SaveButton from 'features/recipes/SaveButton/SaveButton';
@@ -10,17 +10,31 @@ import { Icon } from 'components/generic';
 
 const truncate = (text: string, characters: number = 180) => {
   let trimmed = text.substr(0, characters);
-  trimmed = trimmed.substr(
-    0,
-    Math.min(trimmed.length, trimmed.lastIndexOf(' ')),
-  );
+  trimmed =
+    trimmed.length < text.length
+      ? trimmed.substr(0, Math.min(trimmed.length, trimmed.lastIndexOf(' ')))
+      : trimmed;
   if (trimmed.length < text.length) {
     trimmed += '...';
   }
   return trimmed;
 };
 
-const Spotlight = ({ recipe }) => {
+export interface SpotlightProps {
+  showSave?: boolean;
+  recipe: {
+    coverImage?: {
+      url: string;
+    };
+    id?: string;
+    sourceUrl?: string;
+    title: string;
+    description: string;
+    attribution?: string;
+  };
+}
+
+export const Spotlight: FC<SpotlightProps> = ({ recipe, showSave }) => {
   if (!recipe) {
     return null;
   }
@@ -33,10 +47,10 @@ const Spotlight = ({ recipe }) => {
         <Image src={coverImage}>
           {!coverImage && <Icon name="local_dining" size="100px" />}
         </Image>
-        <SaveButton id={recipe.id} />
+        {showSave && <SaveButton id={recipe.id} />}
       </Box>
       <Box data-grid-area="details">
-        <Link to={`/recipes/${recipe.id}`}>
+        <Link to={!!recipe.id && `/recipes/${recipe.id}`}>
           <Heading margin={{ bottom: 'small', top: '0' }}>
             {recipe.title}
           </Heading>
@@ -54,17 +68,21 @@ const Spotlight = ({ recipe }) => {
   );
 };
 
-Spotlight.Skeleton = () => (
+export const SpotlightSkeleton = () => (
   <Layout>
-    <Image data-grid-area="image" />
-    <div data-grid-area="details">
+    <Box data-grid-area="image">
+      <Image>
+        <Icon name="local_dining" size="100px" />
+      </Image>
+    </Box>
+    <Box data-grid-area="details">
       <HeadingSkeleton />
       <ParagraphSkeleton />
-    </div>
+    </Box>
   </Layout>
 );
 
-Spotlight.fragments = {
+export const SpotlightFragments = {
   recipe: gql`
     fragment RecipeSpotlight on Recipe {
       description

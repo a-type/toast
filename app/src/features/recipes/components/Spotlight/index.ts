@@ -1,1 +1,1 @@
-export { default } from './Spotlight';
+export * from './Spotlight';

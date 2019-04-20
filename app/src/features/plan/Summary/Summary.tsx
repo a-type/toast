@@ -8,6 +8,9 @@ import { sentence } from 'change-case';
 import { PlanMealSummary } from './MealSummary';
 import { ApolloError } from 'apollo-boost';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { BoxSkeleton } from 'components/skeletons/Box';
+import { LabelSkeleton } from 'components/skeletons';
+import { SpotlightSkeleton } from 'features/recipes/components/Spotlight';
 
 interface PlanSummaryProps {
   planDays: PlanDayData[];
@@ -21,7 +24,15 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
   error,
 }) => {
   if (loading) {
-    return <Loader />;
+    return (
+      <Box align="start" margin={{ bottom: 'large' }}>
+        <LabelSkeleton />
+        <SpotlightSkeleton />
+        <Link to="/plan">
+          <Button label="Go to plan" />
+        </Link>
+      </Box>
+    );
   }
 
   if (error) {

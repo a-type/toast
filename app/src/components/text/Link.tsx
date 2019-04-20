@@ -55,10 +55,15 @@ const LinkText = styled(Text)`
   color: var(--color-brand-dark);
 `;
 
-const Link: React.SFC<TextLinkProps> = ({ children, ...props }) => (
-  <LinkWrap {...props}>
-    <LinkText>{children}</LinkText>
-  </LinkWrap>
-);
+const Link: React.SFC<TextLinkProps> = ({ children, to, ...props }) =>
+  to ? (
+    <LinkWrap to={to} {...props}>
+      <LinkText>{children}</LinkText>
+    </LinkWrap>
+  ) : (
+    <span {...props}>
+      <LinkText>{children}</LinkText>
+    </span>
+  );
 
 export default Link;
