@@ -31,7 +31,7 @@ const MainGrid = styled.div`
   display: grid;
   grid-template-areas: 'nav' 'content' 'guides';
   grid-template-rows: auto 1fr auto;
-  grid-template-columns: 1fr;
+  grid-template-columns: 100%;
 
   @media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px) {
     grid-template-areas: 'nav content' 'nav guides';

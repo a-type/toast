@@ -53,13 +53,10 @@ export const typeDefs = gql`
   input RecipeCreateInput {
     title: String!
     description: String
-    attribution: String
-    sourceUrl: String
     servings: Int
     cookTime: Int
     prepTime: Int
     unattendedTime: Int
-    displayType: RecipeDisplayType
   }
 
   input RecipeLinkInput {
@@ -70,12 +67,9 @@ export const typeDefs = gql`
     recipeId: ID!
   }
 
-  input RecipeDetailsUpdateInput {
+  input RecipeUpdateInput {
     title: String
     description: String
-    attribution: String
-    sourceUrl: String
-    displayType: RecipeDisplayType
     servings: Int
     cookTime: Int
     prepTime: Int
@@ -119,12 +113,44 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    createRecipe(input: RecipeCreateInput!): Recipe! @authenticated
-    linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated
-    updateRecipeDetails(id: ID!, input: RecipeDetailsUpdateInput!): Recipe
+    createRecipe(input: RecipeCreateInput!): Recipe!
       @authenticated
-    publishRecipe(id: ID!): Recipe @authenticated
+      @generateId(fromArg: "input.title")
+      @cypher(
+        statement: """
+        MATCH (user:User{id:$cypherParams.userId})
+        CREATE (recipe:Recipe {id: $id})<-[:AUTHOR_OF]-(user)
+        CREATE (recipe)<-[:SAVED{collection:'liked'}]-(user)
+        SET recipe += $input
+        SET recipe.displayType = 'FULL'
+        SET recipe.published = false
+        RETURN recipe
+        """
+      )
+
+    linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated
+
+    updateRecipe(id: ID!, input: RecipeUpdateInput!): Recipe
+      @authenticated
+      @cypher(
+        statement: """
+        MATCH (:User{id:$cypherParams.userId})-[:AUTHOR_OF]->(recipe:Recipe{id:$id})
+        SET recipe += $input
+        RETURN recipe
+        """
+      )
+
+    publishRecipe(id: ID!): Recipe
+      @authenticated
+      @cypher(
+        statement: """
+        MATCH (:User{id:$cypherParams.userId})-[:AUTHOR_OF]->(recipe:Recipe{id:$id})
+        SET recipe.published = true
+        RETURN recipe
+        """
+      )
     recordRecipeView(id: ID!): Recipe
+
     saveRecipe(input: RecipeSaveInput!): Recipe!
       @authenticated
       @cypher(
@@ -134,6 +160,7 @@ export const typeDefs = gql`
         RETURN recipe
         """
       )
+
     unsaveRecipe(input: RecipeSaveInput!): Recipe!
       @authenticated
       @cypher(
@@ -155,12 +182,15 @@ export const typeDefs = gql`
       @cypher(
         statement: "MATCH (this)-[:AUTHOR_OF]->(r:Recipe {published: true}) RETURN r"
       )
+
     discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
       @relation(name: "DISCOVERER_OF", direction: "OUT")
+
     draftRecipes(pagination: ListPaginationInput): [Recipe!]!
       @cypher(
         statement: "MATCH (this)-[:AUTHOR_OF]->(r:Recipe {published: false}) RETURN r"
       )
+
     savedRecipes(first: Int, offset: Int): [RecipeSavedEdge!]!
   }
 `;
@@ -168,11 +198,12 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     recipe: neo4jgraphql,
+
     recipes: neo4jgraphql,
   },
   Mutation: {
-    createRecipe: (_parent, args, ctx: Context) =>
-      ctx.graph.recipes.create(args.input),
+    createRecipe: neo4jgraphql,
+
     linkRecipe: async (_parent, args, ctx: Context) => {
       const linkResult = await ctx.scanning.linkRecipe(
         args.input.url,
@@ -186,14 +217,16 @@ export const resolvers = {
         problems: linkResult.problems,
       };
     },
-    updateRecipeDetails: (_parent, args, ctx, info) =>
-      ctx.graph.recipes.updateDetails(args.id, args.input),
-    publishRecipe: (_parent, args, ctx, info) =>
-      ctx.graph.recipes.publish(args.id),
+
+    updateRecipe: neo4jgraphql,
+
+    publishRecipe: neo4jgraphql,
+
     recordRecipeView: (_parent, args, ctx) =>
       ctx.graph.recipes.recordView(args.id),
 
     saveRecipe: neo4jgraphql,
+
     unsaveRecipe: neo4jgraphql,
   },
   Recipe: {

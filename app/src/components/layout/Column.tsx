@@ -1,5 +1,16 @@
 import React, { SFC } from 'react';
 import { Box, Grid } from 'grommet';
+import styled from 'styled-components';
+
+const CenterArea = styled(Box)`
+  width: 100%;
+  max-width: 100%;
+  flex-shrink: 0;
+
+  @media (min-width: 900px) {
+    max-width: 900px;
+  }
+`;
 
 export const Column = ({ children }) => (
   <Box
@@ -8,16 +19,12 @@ export const Column = ({ children }) => (
     align="center"
     width="100%"
     pad="large"
-    style={{ overflowY: 'auto' }}
+    style={{ overflowY: 'auto', overflowX: 'hidden' }}
     className="layout-column"
   >
-    <Box
-      margin={{ horizontal: 'auto', top: 'large', bottom: '120px' }}
-      width="100%"
-      style={{ maxWidth: '900px', flexShrink: 0 }}
-    >
+    <CenterArea margin={{ horizontal: 'auto', top: 'large', bottom: '120px' }}>
       {children}
-    </Box>
+    </CenterArea>
   </Box>
 );
 

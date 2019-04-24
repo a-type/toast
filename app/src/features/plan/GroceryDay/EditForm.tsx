@@ -31,7 +31,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
   return (
     <SetGroceryDayMutation>
       {mutate => (
-        <Formik<{}, { groceryDay: { value: number; label: string } }>
+        <Formik<{ groceryDay: { value: number; label: string } }>
           initialValues={{
             groceryDay: { value: groceryDay, label: `${Day[groceryDay]}` },
           }}
