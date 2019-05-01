@@ -3,6 +3,7 @@ import { toSeconds, parse } from 'iso8601-duration';
 import { Page } from 'puppeteer';
 import tasty from './extractors/tasty';
 import kitchenStories from './extractors/kitchenStories';
+import wprm from './extractors/wprm';
 
 const extractNumber = (numberOrString: number | string) => {
   if (typeof numberOrString === 'number') {
@@ -68,6 +69,9 @@ const run = async (page: Page) => {
     ) {
       // fallback, try blog formatters
       data = await tasty(page);
+      if (!data) {
+        data = await wprm(page);
+      }
     }
     if (!data) {
       data = {};

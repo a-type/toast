@@ -16,11 +16,12 @@ const tasty = async (page: Page) => {
         return null;
       }
 
-      var result = /((\d+)\s+(hour)\s+)?(\d+)\s+(mins)?/.exec(minsString);
+      var hoursResult = /(\d+)\s+(hours?)/.exec(minsString);
+      var minutesResult = /(\d+)\s+(mins?)/i.exec(minsString);
 
-      if (result) {
-        var hours = result[2];
-        var mins = result[4];
+      if (hoursResult || minutesResult) {
+        var hours = hoursResult && hoursResult[1];
+        var mins = minutesResult && minutesResult[1];
 
         var duration = 'PT';
         if (hours) {
