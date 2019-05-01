@@ -22,6 +22,27 @@ export type RecipeUpdateInput = {
   unattendedTime?: number;
 };
 
+export type EditRecipeIngredient = {
+  id: string;
+  name: string;
+};
+
+export type EditRecipeRecipeIngredient = {
+  id: string;
+  text: string;
+  unit?: string;
+  quantity?: number;
+  ingredient: EditRecipeIngredient;
+  unitStart?: number;
+  unitEnd?: number;
+  quantityStart?: number;
+  quantityEnd?: number;
+  ingredientStart?: number;
+  ingredientEnd?: number;
+  comments: string[];
+  preparations: string[];
+};
+
 export type EditRecipeRecipe = {
   id: string;
   title: string;
@@ -31,7 +52,33 @@ export type EditRecipeRecipe = {
   prepTime: number;
   unattendedTime: number;
   published: boolean;
+  ingredients: EditRecipeRecipeIngredient[];
 };
+
+export type EditRecipeCreateIngredientInput = {
+  ingredientText: string;
+};
+
+const EditRecipeRecipeIngredientFragment = gql`
+  fragment EditRecipeRecipeIngredient on RecipeIngredient {
+    id
+    text
+    unit
+    quantity
+    unitStart
+    unitEnd
+    quantityStart
+    quantityEnd
+    ingredientStart
+    ingredientEnd
+    comments
+    preparations
+    ingredient {
+      id
+      name
+    }
+  }
+`;
 
 const EditRecipeRecipeFragment = gql`
   fragment EditRecipeRecipe on Recipe {
@@ -43,7 +90,12 @@ const EditRecipeRecipeFragment = gql`
     prepTime
     unattendedTime
     published
+    ingredients {
+      ...EditRecipeRecipeIngredient
+    }
   }
+
+  ${EditRecipeRecipeIngredientFragment}
 `;
 
 const CreateRecipeMutation = gql`
@@ -76,19 +128,23 @@ const GetRecipeQuery = gql`
   ${EditRecipeRecipeFragment}
 `;
 
-export default ({
-  recipeId,
-}: {
-  recipeId?: string;
-}): {
-  recipe: EditRecipeRecipe;
-  initializing: boolean;
-  saving: boolean;
-  error: ApolloError;
-  save: (values: EditRecipeRecipe) => Promise<void>;
-} => {
+const CreateRecipeIngredientMutation = gql`
+  mutation CreateRecipeIngredient($recipeId: ID!, $ingredientText: String!) {
+    createRecipeIngredient(
+      recipeId: $recipeId
+      input: { text: $ingredientText }
+    ) {
+      id
+      ...EditRecipeRecipeIngredient
+    }
+  }
+
+  ${EditRecipeRecipeIngredientFragment}
+`;
+
+export default ({ recipeId }: { recipeId?: string }) => {
   const isCreate = !recipeId;
-  const Mutation = isCreate ? CreateRecipeMutation : UpdateRecipeMutation;
+  const SaveMutation = isCreate ? CreateRecipeMutation : UpdateRecipeMutation;
 
   const { data, loading, error } = useQuery<{ recipe: EditRecipeRecipe }>(
     GetRecipeQuery,
@@ -98,7 +154,7 @@ export default ({
     },
   );
 
-  const mutate = useMutation(Mutation);
+  const saveMutate = useMutation(SaveMutation);
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<ApolloError>(null);
@@ -107,7 +163,7 @@ export default ({
     async ({ id, published, ...values }: EditRecipeRecipe) => {
       setSaving(true);
       try {
-        const result = await mutate({
+        const result = await saveMutate({
           variables: {
             id: recipeId,
             input: values,
@@ -122,7 +178,35 @@ export default ({
         setSaving(false);
       }
     },
-    [mutate],
+    [saveMutate],
+  );
+
+  const createIngredientMutate = useMutation(CreateRecipeIngredientMutation);
+  const createIngredient = useCallback(
+    async ({ ingredientText }: EditRecipeCreateIngredientInput) => {
+      setSaving(true);
+      try {
+        await createIngredientMutate({
+          variables: {
+            recipeId,
+            ingredientText,
+          },
+          update: async (cache, { data }) => {
+            const { recipe } = cache.readQuery<{ recipe: EditRecipeRecipe }>({
+              query: GetRecipeQuery,
+              variables: { id: recipeId },
+            });
+            recipe.ingredients.push(data.createRecipeIngredient);
+            cache.writeQuery({ query: GetRecipeQuery, data: { recipe } });
+          },
+        });
+      } catch (err) {
+        setSaveError(err);
+      } finally {
+        setSaving(false);
+      }
+    },
+    [createIngredientMutate],
   );
 
   return {
@@ -131,5 +215,6 @@ export default ({
     initializing: loading,
     error: error || saveError,
     save,
+    createIngredient,
   };
 };

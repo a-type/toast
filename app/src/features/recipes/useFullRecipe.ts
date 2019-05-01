@@ -44,6 +44,9 @@ export const FullRecipeQuery = gql`
         url
         attribution
       }
+      author {
+        id
+      }
     }
   }
 `;

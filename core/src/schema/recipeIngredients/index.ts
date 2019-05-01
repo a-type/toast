@@ -19,7 +19,7 @@ export const typeDefs = gql`
     preparations: [String!]!
   }
 
-  input RecipeIngredientParseInput {
+  input RecipeIngredientCreateInput {
     text: String!
   }
 
@@ -43,20 +43,21 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    addRecipeIngredient(
+    createRecipeIngredient(
       recipeId: ID!
-      ingredientText: String!
+      input: RecipeIngredientCreateInput!
     ): RecipeIngredient!
       @authenticated
       @generateId(type: "recipeIngredient")
       @cypher(
         statement: """
-        MATCH (:User{id:$cypherParams.userId})-[:AUTHOR_OF]->(recipe:Recipe{id:$recipeId}),
-          (ingredient:Ingredient{id:$ingredientId})
+        MATCH (:User{id:$cypherParams.userId})-[:AUTHOR_OF]->(recipe:Recipe{id:$recipeId})
+        OPTIONAL MATCH (ingredient:Ingredient{id:$ingredientId})
         CREATE (recipeIngredient:RecipeIngredient {id:$id})
-        CREATE (recipeIngredient)<-[:USED_IN]-(ingredient)
         CREATE (recipe)<-[:INGREDIENT_OF]-(recipeIngredient)
         SET recipeIngredient += $parsed
+        WITH recipeIngredient, ingredient
+        CALL apoc.do.when(ingredient IS NOT NULL, 'CREATE (recipeIngredient)<-[:USED_IN]-(ingredient) RETURN recipeIngredient', '', {recipeIngredient:recipeIngredient, ingredient:ingredient}) YIELD value
         RETURN recipeIngredient
         """
       )
@@ -72,7 +73,7 @@ export const typeDefs = gql`
         SET recipeIngredient += $input
         WITH recipeIngredient
         MATCH (ingredient:Ingredient{id:$input.ingredientId}), (recipeIngredient)<-[oldRel:USED_IN]-()
-        CALL apoc.when(ingredient IS NOT NULL, 'DELETE oldRel; CREATE (recipeIngredient)<-[:USED_IN]-(ingredient)', '', {recipeIngredient:recipeIngredient, ingredient:ingredient, oldRel:oldRel}) YIELD value
+        CALL apoc.do.when(ingredient IS NOT NULL, 'DELETE oldRel; CREATE (recipeIngredient)<-[:USED_IN]-(ingredient)', '', {recipeIngredient:recipeIngredient, ingredient:ingredient, oldRel:oldRel}) YIELD value
         WITH recipeIngredient
         RETURN recipeIngredient
         """
@@ -116,12 +117,38 @@ export const resolvers = {
   },
 
   Mutation: {
-    addRecipeIngredient: async (parent, args, ctx: Context, info) => {
-      const [parsed] = await ctx.scanning.parseIngredients([
-        args.ingredientText,
+    createRecipeIngredient: async (parent, args, ctx: Context, info) => {
+      const [parsedResult] = await ctx.scanning.parseIngredients([
+        args.input.text,
       ]);
 
-      return neo4jgraphql(parent, { ...args, parsed }, ctx, info);
+      const parsed = {
+        text: parsedResult.original,
+        unit: parsedResult.unit && parsedResult.unit.normalized,
+        unitStart: parsedResult.unit && parsedResult.unit.range[0],
+        unitEnd: parsedResult.unit && parsedResult.unit.range[1],
+        quantity: parsedResult.quantity && parsedResult.quantity.normalized,
+        quantityStart: parsedResult.quantity && parsedResult.quantity.range[0],
+        quantityEnd: parsedResult.quantity && parsedResult.quantity.range[1],
+        ingredientStart:
+          parsedResult.ingredient && parsedResult.ingredient.range[0],
+        ingredientEnd:
+          parsedResult.ingredient && parsedResult.ingredient.range[1],
+        comments: parsedResult.comments,
+        preparations: parsedResult.preparations,
+      };
+
+      return await neo4jgraphql(
+        parent,
+        {
+          ...args,
+          parsed,
+          ingredientId:
+            (parsedResult.ingredient && parsedResult.ingredient.id) || '',
+        },
+        ctx,
+        info,
+      );
     },
 
     deleteRecipeIngredient: neo4jgraphql,

@@ -14,7 +14,10 @@ export interface ParseEntity<T> {
 
 export type IngredientParseResult = {
   original: string;
-  ingredient: ParseEntity<string>;
+  ingredient: ParseEntity<string> & {
+    id?: string;
+    name?: string;
+  };
   unit: ParseEntity<string>;
   quantity: ParseEntity<number>;
   preparations: string[];

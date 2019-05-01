@@ -12,9 +12,13 @@ const SavedRecipeQuery = gql`
         recipe {
           id
           title
+          published
           coverImage {
             id
             url
+          }
+          author {
+            id
           }
         }
       }
@@ -27,6 +31,7 @@ export type SavedRecipeEdge = {
   recipe: {
     id: string;
     title: string;
+    published: string;
     coverImage?: {
       id: string;
       url: string;
