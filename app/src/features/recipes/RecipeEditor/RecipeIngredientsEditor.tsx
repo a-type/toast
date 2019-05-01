@@ -18,7 +18,11 @@ export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
 }) => {
   return (
     <Box>
-      <div>{JSON.stringify(recipe.ingredients)}</div>
+      <ul>
+        {recipe.ingredients.map(recipeIngredient => (
+          <li key={recipeIngredient.id}>{recipeIngredient.text}</li>
+        ))}
+      </ul>
       <Formik
         onSubmit={createIngredient}
         initialValues={{ ingredientText: '' }}

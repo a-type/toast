@@ -81,10 +81,13 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
       </Box>
 
       {recipe && (
-        <RecipeIngredientsEditor
-          recipe={recipe}
-          createIngredient={createIngredient}
-        />
+        <>
+          <Heading level="3">Ingredients</Heading>
+          <RecipeIngredientsEditor
+            recipe={recipe}
+            createIngredient={createIngredient}
+          />
+        </>
       )}
     </Box>
   );
