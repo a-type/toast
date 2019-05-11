@@ -1,15 +1,29 @@
 {
-  "presets": [["@babel/preset-env", {}], "@babel/preset-react"],
-  "plugins": [
-    "@babel/plugin-proposal-object-rest-spread",
-    "@babel/plugin-proposal-class-properties",
-    "graphql-tag",
-    "styled-components"
-  ],
   "env": {
+    "production": {
+      "presets": [["@babel/preset-env", {}], "@babel/preset-react"],
+      "plugins": [
+        "emotion",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-proposal-class-properties",
+        "graphql-tag",
+        "styled-components"
+      ]
+    },
+    "development": {
+      "presets": [["@babel/preset-env", {}], "@babel/preset-react"],
+      "plugins": [
+        ["emotion", { "sourceMap": true }],
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-proposal-class-properties",
+        "graphql-tag",
+        "styled-components"
+      ]
+    },
     "test": {
       "presets": ["env", "react"],
       "plugins": [
+        "emotion",
         "@babel/plugin-proposal-object-rest-spread",
         "@babel/plugin-proposal-class-properties",
         "graphql-tag",

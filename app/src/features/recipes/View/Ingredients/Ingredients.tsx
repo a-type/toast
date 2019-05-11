@@ -11,8 +11,8 @@ export default ({
   servings: number;
 }) => (
   <List>
-    {ingredients.map((ingredient: RecipeIngredient) => (
-      <Item {...ingredient} key={ingredient.id} servings={servings} />
+    {ingredients.map((ingredient: RecipeIngredient, index) => (
+      <Item {...ingredient} key={ingredient.id + index} servings={servings} />
     ))}
   </List>
 );

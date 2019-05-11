@@ -31,7 +31,7 @@ export type EditRecipeRecipeIngredient = {
   id: string;
   text: string;
   unit?: string;
-  quantity?: number;
+  quantity: number;
   ingredient: EditRecipeIngredient;
   unitStart?: number;
   unitEnd?: number;

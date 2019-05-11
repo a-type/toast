@@ -3,6 +3,10 @@ import { EditRecipeRecipe } from './useEditRecipe';
 import { Box, TextArea, Button } from 'grommet';
 import { Formik } from 'formik';
 import { Field } from 'components/generic';
+import IngredientCorrector, {
+  IngredientCorrectorMessages,
+} from 'features/recipes/Correct/Ingredients/IngredientCorrector';
+import { useCorrectIngredient } from '../Correct/useCorrectIngredient';
 
 export interface RecipeIngredientsEditorProps {
   recipe: EditRecipeRecipe;
@@ -12,17 +16,34 @@ export interface RecipeIngredientsEditorProps {
   }) => Promise<void>;
 }
 
+const CORRECTOR_MESSAGES: IngredientCorrectorMessages = {
+  suggestChange: 'Change',
+  suggestDelete: 'Delete',
+  correctionSubmitted: 'Saved',
+  submitCorrection: 'Save',
+};
+
 export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
   recipe,
   createIngredient,
 }) => {
+  const { submitChange, submitDelete } = useCorrectIngredient({
+    recipeId: recipe.id,
+  });
+
   return (
     <Box>
-      <ul>
+      <Box>
         {recipe.ingredients.map(recipeIngredient => (
-          <li key={recipeIngredient.id}>{recipeIngredient.text}</li>
+          <IngredientCorrector
+            key={recipeIngredient.id}
+            recipeIngredient={recipeIngredient}
+            submit={submitChange}
+            requestDelete={submitDelete}
+            messages={CORRECTOR_MESSAGES}
+          />
         ))}
-      </ul>
+      </Box>
       <Formik
         onSubmit={createIngredient}
         initialValues={{ ingredientText: '' }}

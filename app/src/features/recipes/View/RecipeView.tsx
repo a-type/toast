@@ -28,11 +28,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
     return <ErrorMessage error={error} />;
   }
 
-  console.log(recipe, user);
-
   if (recipe && !recipe.published) {
-    console.log(pathOr('none', ['author', 'id'], recipe));
-    console.log(path(['uid'], user));
     if (pathOr('none', ['author', 'id'], recipe) === path(['uid'], user)) {
       return <Redirect to={`/recipes/${recipeId}/edit`} />;
     }

@@ -58,7 +58,7 @@ export const typeDefs = gql`
 
   input RecipeIngredientCorrectionSubmitInput {
     recipeIngredientId: String
-    recipeId: String
+    recipeId: String!
     correctionType: CorrectionType!
     correctedValue: RecipeIngredientCorrectedValueInput
   }
@@ -86,6 +86,25 @@ export const typeDefs = gql`
   }
 `;
 
+const applyCorrection = async (
+  correction: RecipeIngredientCorrection,
+  ctx: Context,
+) => {
+  if (correction.correctionType === CorrectionType.Change) {
+    await ctx.graph.recipeIngredients.update(
+      correction.recipeIngredientId,
+      removeUndefined(correction.correctedValue),
+    );
+  } else if (correction.correctionType === CorrectionType.Delete) {
+    await ctx.graph.recipeIngredients.delete(correction.recipeIngredientId);
+  } else if (correction.correctionType === CorrectionType.Add) {
+    await ctx.graph.recipeIngredients.create(
+      correction.recipeId,
+      removeUndefined(correction.correctedValue),
+    );
+  }
+};
+
 export const resolvers = {
   Query: {
     recipeIngredientCorrections: async (_parent, args, ctx: Context) => {
@@ -107,6 +126,15 @@ export const resolvers = {
         correctionType: args.input.correctionType,
         recipeId: args.input.recipeId,
       });
+
+      const recipe = await ctx.graph.recipes.get(args.input.recipeId);
+      if (!recipe.published) {
+        // for unpublished or private recipes (private: TODO), skip approval process
+        await applyCorrection(correction, ctx);
+        correction.status = CorrectionStatus.Accepted;
+        return correction;
+      }
+
       const result = await ctx.firestore.recipeIngredientCorrections.set(
         correction,
       );
@@ -118,19 +146,7 @@ export const resolvers = {
         id,
       );
 
-      if (correction.correctionType === CorrectionType.Change) {
-        await ctx.graph.recipeIngredients.update(
-          correction.recipeIngredientId,
-          removeUndefined(correction.correctedValue),
-        );
-      } else if (correction.correctionType === CorrectionType.Delete) {
-        await ctx.graph.recipeIngredients.delete(correction.recipeIngredientId);
-      } else if (correction.correctionType === CorrectionType.Add) {
-        await ctx.graph.recipeIngredients.create(
-          correction.recipeId,
-          removeUndefined(correction.correctedValue),
-        );
-      }
+      await applyCorrection(correction, ctx);
 
       correction.status = CorrectionStatus.Accepted;
       await ctx.firestore.recipeIngredientCorrections.set(correction);

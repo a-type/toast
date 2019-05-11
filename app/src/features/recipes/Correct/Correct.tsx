@@ -30,7 +30,10 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
       <Heading level="2">Suggest Recipe Corrections</Heading>
       <Spotlight recipe={recipe} />
       <Heading level="3">Ingredients ({recipeIngredients.length})</Heading>
-      <IngredientCorrections recipeIngredients={recipeIngredients} />
+      <IngredientCorrections
+        recipeId={recipeId}
+        recipeIngredients={recipeIngredients}
+      />
       <Link to={`/recipes/${recipeId}`}>
         <Button label="Done" />
       </Link>
