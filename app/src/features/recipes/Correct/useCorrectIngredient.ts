@@ -25,54 +25,72 @@ const CorrectIngredientMutation = gql`
     submitRecipeIngredientCorrection(input: $input) {
       id
       status
+      recipeIngredient {
+        id
+        text
+        unit
+        unitStart
+        unitEnd
+        quantity
+        quantityStart
+        quantityEnd
+        ingredient {
+          id
+          name
+        }
+        ingredientStart
+        ingredientEnd
+        comments
+        preparations
+      }
     }
   }
 `;
 
-export const useCorrectIngredient = ({ recipeId }: { recipeId: string }) => {
+export const useCorrectIngredient = ({
+  recipeId,
+  refetch,
+}: {
+  recipeId: string;
+  refetch?: () => any;
+}) => {
   const mutate = useMutation<
     CorrectIngredientMutationResult,
     { input: RecipeIngredientCorrectionSubmitInput }
   >(CorrectIngredientMutation);
 
-  const submitCorrection = (input: RecipeIngredientCorrectionSubmitInput) =>
-    mutate({ variables: { input } });
+  const submitCorrection = async (
+    input: RecipeIngredientCorrectionSubmitInput,
+  ) => {
+    await mutate({ variables: { input } });
+    if (refetch) {
+      return refetch();
+    }
+  };
 
   const submitChange = (
     recipeIngredientId: string,
     correctedValue: RecipeIngredientCorrectedValueInput,
   ) =>
-    mutate({
-      variables: {
-        input: {
-          recipeId,
-          recipeIngredientId,
-          correctedValue,
-          correctionType: CorrectionType.Change,
-        },
-      },
+    submitCorrection({
+      recipeId,
+      recipeIngredientId,
+      correctedValue,
+      correctionType: CorrectionType.Change,
     });
 
   const submitAdd = (correctedValue: RecipeIngredientCorrectedValueInput) =>
-    mutate({
-      variables: {
-        input: {
-          recipeId,
-          correctedValue,
-          correctionType: CorrectionType.Add,
-        },
-      },
+    submitCorrection({
+      recipeId,
+      correctedValue,
+      correctionType: CorrectionType.Add,
     });
 
   const submitDelete = (recipeIngredientId: string) =>
-    mutate({
-      variables: {
-        input: {
-          recipeId,
-          recipeIngredientId,
-          correctionType: CorrectionType.Delete,
-        },
-      },
+    submitCorrection({
+      recipeId,
+      recipeIngredientId,
+      correctionType: CorrectionType.Delete,
     });
 
   return {

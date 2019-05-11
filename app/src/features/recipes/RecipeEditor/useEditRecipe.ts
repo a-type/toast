@@ -146,13 +146,12 @@ export default ({ recipeId }: { recipeId?: string }) => {
   const isCreate = !recipeId;
   const SaveMutation = isCreate ? CreateRecipeMutation : UpdateRecipeMutation;
 
-  const { data, loading, error } = useQuery<{ recipe: EditRecipeRecipe }>(
-    GetRecipeQuery,
-    {
-      variables: { id: recipeId },
-      skip: isCreate,
-    },
-  );
+  const { data, loading, error, refetch } = useQuery<{
+    recipe: EditRecipeRecipe;
+  }>(GetRecipeQuery, {
+    variables: { id: recipeId },
+    skip: isCreate,
+  });
 
   const saveMutate = useMutation(SaveMutation);
 
@@ -216,5 +215,6 @@ export default ({ recipeId }: { recipeId?: string }) => {
     error: error || saveError,
     save,
     createIngredient,
+    refetchRecipe: refetch,
   };
 };

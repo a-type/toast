@@ -9,6 +9,7 @@ import {
 } from 'models/RecipeIngredientCorrection';
 import { neo4jgraphql } from 'neo4j-graphql-js';
 import logger from 'logger';
+import { GraphQLResolveInfo } from 'graphql';
 
 export const typeDefs = gql`
   enum CorrectionStatus {
@@ -41,6 +42,20 @@ export const typeDefs = gql`
     correctionType: CorrectionType!
     recipeIngredientId: String!
     correctedValue: RecipeIngredientCorrectedValue
+    recipe: Recipe
+      @cypher(
+        statement: """
+        MATCH (recipe:Recipe{id:$recipeId})
+        RETURN recipe
+        """
+      )
+    recipeIngredient: RecipeIngredient
+      @cypher(
+        statement: """
+        MATCH (recipeIngredient:RecipeIngredient{id:$recipeIngredientId})
+        RETURN recipeIngredient
+        """
+      )
   }
 
   input RecipeIngredientCorrectedValueInput {
@@ -182,6 +197,39 @@ export const resolvers = {
       correction.status = CorrectionStatus.Rejected;
       await ctx.firestore.recipeIngredientCorrections.set(correction);
       return correction;
+    },
+  },
+
+  RecipeIngredientCorrection: {
+    recipe: (parent, args, ctx, info) => {
+      // if (!parent.recipeId) {
+      //   return null;
+      // }
+      // return neo4jgraphql(
+      //   parent,
+      //   { ...args, recipeId: parent.recipeId },
+      //   ctx,
+      //   info,
+      // );
+      // FIXME... https://github.com/neo4j-graphql/neo4j-graphql-js/issues/241
+      return null;
+    },
+    recipeIngredient: (parent, args, ctx, info: GraphQLResolveInfo) => {
+      // if (!parent.recipeIngredientId) {
+      //   return null;
+      // }
+
+      // info.operation.operation = 'query'; // trick neo4jgraphl?
+
+      // return neo4jgraphql(
+      //   parent,
+      //   { ...args, recipeIngredientId: parent.recipeIngredientId },
+      //   ctx,
+      //   info,
+      // );
+
+      // FIXME... https://github.com/neo4j-graphql/neo4j-graphql-js/issues/241
+      return null;
     },
   },
 };

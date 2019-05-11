@@ -32,6 +32,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
     save,
     error,
     createIngredient,
+    refetchRecipe,
   } = useEditRecipe({
     recipeId,
   });
@@ -86,6 +87,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
           <RecipeIngredientsEditor
             recipe={recipe}
             createIngredient={createIngredient}
+            refetchRecipe={refetchRecipe}
           />
         </>
       )}

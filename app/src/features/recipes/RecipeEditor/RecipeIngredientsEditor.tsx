@@ -14,6 +14,7 @@ export interface RecipeIngredientsEditorProps {
     recipeId: string;
     ingredientText: string;
   }) => Promise<void>;
+  refetchRecipe: () => Promise<any>;
 }
 
 const CORRECTOR_MESSAGES: IngredientCorrectorMessages = {
@@ -26,9 +27,11 @@ const CORRECTOR_MESSAGES: IngredientCorrectorMessages = {
 export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
   recipe,
   createIngredient,
+  refetchRecipe,
 }) => {
   const { submitChange, submitDelete } = useCorrectIngredient({
     recipeId: recipe.id,
+    refetch: refetchRecipe,
   });
 
   return (
