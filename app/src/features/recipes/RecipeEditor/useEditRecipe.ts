@@ -1,146 +1,15 @@
-import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'react-apollo-hooks';
 import { useCallback, useState } from 'react';
 import { ApolloError } from 'apollo-boost';
 import useRouter from 'use-react-router';
-
-export type RecipeCreateInput = {
-  title: string;
-  description?: string;
-  servings?: number;
-  cookTime?: number;
-  prepTime?: number;
-  unattendedTime?: number;
-};
-
-export type RecipeUpdateInput = {
-  title?: string;
-  description?: string;
-  servings?: number;
-  cookTime?: number;
-  prepTime?: number;
-  unattendedTime?: number;
-};
-
-export type EditRecipeIngredient = {
-  id: string;
-  name: string;
-};
-
-export type EditRecipeRecipeIngredient = {
-  id: string;
-  text: string;
-  unit?: string;
-  quantity: number;
-  ingredient: EditRecipeIngredient;
-  unitStart?: number;
-  unitEnd?: number;
-  quantityStart?: number;
-  quantityEnd?: number;
-  ingredientStart?: number;
-  ingredientEnd?: number;
-  comments: string[];
-  preparations: string[];
-};
-
-export type EditRecipeRecipe = {
-  id: string;
-  title: string;
-  description: string;
-  servings: number;
-  cookTime: number;
-  prepTime: number;
-  unattendedTime: number;
-  published: boolean;
-  ingredients: EditRecipeRecipeIngredient[];
-};
-
-export type EditRecipeCreateIngredientInput = {
-  ingredientText: string;
-};
-
-const EditRecipeRecipeIngredientFragment = gql`
-  fragment EditRecipeRecipeIngredient on RecipeIngredient {
-    id
-    text
-    unit
-    quantity
-    unitStart
-    unitEnd
-    quantityStart
-    quantityEnd
-    ingredientStart
-    ingredientEnd
-    comments
-    preparations
-    ingredient {
-      id
-      name
-    }
-  }
-`;
-
-const EditRecipeRecipeFragment = gql`
-  fragment EditRecipeRecipe on Recipe {
-    id
-    title
-    description
-    servings
-    cookTime
-    prepTime
-    unattendedTime
-    published
-    ingredients {
-      ...EditRecipeRecipeIngredient
-    }
-  }
-
-  ${EditRecipeRecipeIngredientFragment}
-`;
-
-const CreateRecipeMutation = gql`
-  mutation CreateRecipe($input: RecipeCreateInput!) {
-    createRecipe(input: $input) {
-      ...EditRecipeRecipe
-    }
-  }
-
-  ${EditRecipeRecipeFragment}
-`;
-
-const UpdateRecipeMutation = gql`
-  mutation UpdateRecipe($id: ID!, $input: RecipeUpdateInput!) {
-    updateRecipe(id: $id, input: $input) {
-      ...EditRecipeRecipe
-    }
-  }
-
-  ${EditRecipeRecipeFragment}
-`;
-
-const GetRecipeQuery = gql`
-  query EditGetRecipe($id: ID!) {
-    recipe(id: $id) {
-      ...EditRecipeRecipe
-    }
-  }
-
-  ${EditRecipeRecipeFragment}
-`;
-
-const CreateRecipeIngredientMutation = gql`
-  mutation CreateRecipeIngredient($recipeId: ID!, $ingredientText: String!) {
-    createRecipeIngredient(
-      recipeId: $recipeId
-      input: { text: $ingredientText }
-    ) {
-      id
-      ...EditRecipeRecipeIngredient
-    }
-  }
-
-  ${EditRecipeRecipeIngredientFragment}
-`;
+import {
+  CreateRecipeMutation,
+  UpdateRecipeMutation,
+  EditRecipeRecipe,
+  GetRecipeQuery,
+  CreateRecipeIngredientMutation,
+  EditRecipeCreateIngredientInput,
+} from './queries';
 
 export default ({ recipeId }: { recipeId?: string }) => {
   const isCreate = !recipeId;

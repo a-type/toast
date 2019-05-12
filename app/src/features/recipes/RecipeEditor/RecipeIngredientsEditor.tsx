@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { EditRecipeRecipe } from './useEditRecipe';
+import { EditRecipeRecipe } from './queries';
 import { Box, TextArea, Button } from 'grommet';
 import { Formik } from 'formik';
 import { Field } from 'components/generic';
@@ -60,7 +60,7 @@ export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
                 name="ingredientText"
               />
             </Field>
-            <Button type="submit" primary label="Add" />
+            <Button type="submit" label="Add ingredient" />
           </form>
         )}
       </Formik>

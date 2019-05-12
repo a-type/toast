@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import useEditRecipe, { EditRecipeRecipe } from './useEditRecipe';
+import useEditRecipe from './useEditRecipe';
+import { EditRecipeRecipe } from './queries';
 import { Box, Heading, Form, TextInput, TextArea, Button } from 'grommet';
 import { pathOr } from 'ramda';
 import { Formik } from 'formik';
@@ -7,6 +8,7 @@ import { Field } from 'components/generic';
 import RecipeIngredientsEditor from './RecipeIngredientsEditor';
 import { GlobalLoader } from 'components/generic/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { RecipeStepsEditor } from './RecipeStepsEditor';
 
 export interface RecipeEditorProps {
   recipeId?: string;
@@ -22,6 +24,7 @@ const emptyRecipe: EditRecipeRecipe = {
   unattendedTime: 0,
   published: false,
   ingredients: [],
+  steps: [],
 };
 
 export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
@@ -89,6 +92,8 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
             createIngredient={createIngredient}
             refetchRecipe={refetchRecipe}
           />
+          <Heading level="3">Steps</Heading>
+          <RecipeStepsEditor recipe={recipe} />
         </>
       )}
     </Box>
