@@ -10,7 +10,7 @@ import {
   Button,
   Paragraph,
 } from 'grommet';
-import { pathOr } from 'ramda';
+import { path } from 'ramda';
 import { Formik } from 'formik';
 import { Field, Icon } from 'components/generic';
 import RecipeIngredientsEditor from './RecipeIngredientsEditor';
@@ -53,13 +53,15 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
     return <GlobalLoader />;
   }
 
+  const published = !!path(['published'], recipe);
+
   return (
     <Box>
       {error && <ErrorMessage error={error} />}
       <Box>
         <Heading level="2">
           {!recipeId ? 'Create recipe' : 'Edit recipe'}
-          {!recipe.published && (
+          {!published && (
             <span
               css={{
                 marginLeft: 'var(--spacing-md)',
@@ -71,7 +73,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
             </span>
           )}
         </Heading>
-        {!recipe.published && (
+        {!recipe && published && (
           <Box>
             <Button primary onClick={publish} label="Publish" />
             <Paragraph>
