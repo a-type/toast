@@ -33,10 +33,8 @@ export const FullRecipeQuery = gql`
       }
       steps {
         id
-        step {
-          id
-          text
-        }
+        index
+        text
       }
       coverImage {
         id
@@ -78,10 +76,8 @@ export type FullRecipe = {
   }[];
   steps: {
     id: string;
-    step: {
-      id: string;
-      text: string;
-    };
+    index: number;
+    text: string;
   }[];
   coverImage?: {
     id: string;
