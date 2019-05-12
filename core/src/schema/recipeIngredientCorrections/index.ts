@@ -9,6 +9,7 @@ import {
 } from 'models/RecipeIngredientCorrection';
 import { neo4jgraphql } from 'neo4j-graphql-js';
 import logger from 'logger';
+import { GraphQLResolveInfo } from 'graphql';
 
 export const typeDefs = gql`
   enum CorrectionStatus {
@@ -41,6 +42,20 @@ export const typeDefs = gql`
     correctionType: CorrectionType!
     recipeIngredientId: String!
     correctedValue: RecipeIngredientCorrectedValue
+    recipe: Recipe
+      @cypher(
+        statement: """
+        MATCH (recipe:Recipe{id:$recipeId})
+        RETURN recipe
+        """
+      )
+    recipeIngredient: RecipeIngredient
+      @cypher(
+        statement: """
+        MATCH (recipeIngredient:RecipeIngredient{id:$recipeIngredientId})
+        RETURN recipeIngredient
+        """
+      )
   }
 
   input RecipeIngredientCorrectedValueInput {
@@ -58,7 +73,7 @@ export const typeDefs = gql`
 
   input RecipeIngredientCorrectionSubmitInput {
     recipeIngredientId: String
-    recipeId: String
+    recipeId: String!
     correctionType: CorrectionType!
     correctedValue: RecipeIngredientCorrectedValueInput
   }
@@ -86,6 +101,25 @@ export const typeDefs = gql`
   }
 `;
 
+const applyCorrection = async (
+  correction: RecipeIngredientCorrection,
+  ctx: Context,
+) => {
+  if (correction.correctionType === CorrectionType.Change) {
+    await ctx.graph.recipeIngredients.update(
+      correction.recipeIngredientId,
+      removeUndefined(correction.correctedValue),
+    );
+  } else if (correction.correctionType === CorrectionType.Delete) {
+    await ctx.graph.recipeIngredients.delete(correction.recipeIngredientId);
+  } else if (correction.correctionType === CorrectionType.Add) {
+    await ctx.graph.recipeIngredients.create(
+      correction.recipeId,
+      removeUndefined(correction.correctedValue),
+    );
+  }
+};
+
 export const resolvers = {
   Query: {
     recipeIngredientCorrections: async (_parent, args, ctx: Context) => {
@@ -107,6 +141,15 @@ export const resolvers = {
         correctionType: args.input.correctionType,
         recipeId: args.input.recipeId,
       });
+
+      const recipe = await ctx.graph.recipes.get(args.input.recipeId);
+      if (!recipe.published) {
+        // for unpublished or private recipes (private: TODO), skip approval process
+        await applyCorrection(correction, ctx);
+        correction.status = CorrectionStatus.Accepted;
+        return correction;
+      }
+
       const result = await ctx.firestore.recipeIngredientCorrections.set(
         correction,
       );
@@ -118,19 +161,7 @@ export const resolvers = {
         id,
       );
 
-      if (correction.correctionType === CorrectionType.Change) {
-        await ctx.graph.recipeIngredients.update(
-          correction.recipeIngredientId,
-          removeUndefined(correction.correctedValue),
-        );
-      } else if (correction.correctionType === CorrectionType.Delete) {
-        await ctx.graph.recipeIngredients.delete(correction.recipeIngredientId);
-      } else if (correction.correctionType === CorrectionType.Add) {
-        await ctx.graph.recipeIngredients.create(
-          correction.recipeId,
-          removeUndefined(correction.correctedValue),
-        );
-      }
+      await applyCorrection(correction, ctx);
 
       correction.status = CorrectionStatus.Accepted;
       await ctx.firestore.recipeIngredientCorrections.set(correction);
@@ -166,6 +197,39 @@ export const resolvers = {
       correction.status = CorrectionStatus.Rejected;
       await ctx.firestore.recipeIngredientCorrections.set(correction);
       return correction;
+    },
+  },
+
+  RecipeIngredientCorrection: {
+    recipe: (parent, args, ctx, info) => {
+      // if (!parent.recipeId) {
+      //   return null;
+      // }
+      // return neo4jgraphql(
+      //   parent,
+      //   { ...args, recipeId: parent.recipeId },
+      //   ctx,
+      //   info,
+      // );
+      // FIXME... https://github.com/neo4j-graphql/neo4j-graphql-js/issues/241
+      return null;
+    },
+    recipeIngredient: (parent, args, ctx, info: GraphQLResolveInfo) => {
+      // if (!parent.recipeIngredientId) {
+      //   return null;
+      // }
+
+      // info.operation.operation = 'query'; // trick neo4jgraphl?
+
+      // return neo4jgraphql(
+      //   parent,
+      //   { ...args, recipeIngredientId: parent.recipeIngredientId },
+      //   ctx,
+      //   info,
+      // );
+
+      // FIXME... https://github.com/neo4j-graphql/neo4j-graphql-js/issues/241
+      return null;
     },
   },
 };

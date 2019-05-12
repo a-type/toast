@@ -5,7 +5,6 @@ import * as recipes from './recipes';
 import * as recipeIngredients from './recipeIngredients';
 import * as recipeSteps from './recipeSteps';
 import * as search from './search';
-import * as steps from './steps';
 import * as users from './users';
 import * as groups from './groups';
 import * as planDays from './planDays';
@@ -68,7 +67,6 @@ export const typeDefs = [
   recipeIngredients.typeDefs,
   recipeSteps.typeDefs,
   search.typeDefs,
-  steps.typeDefs,
   users.typeDefs,
   groups.typeDefs,
   recipeIngredientCorrections.typeDefs,
@@ -84,7 +82,6 @@ export const resolvers = [
   recipeIngredients.resolvers,
   recipeSteps.resolvers,
   search.resolvers,
-  steps.resolvers,
   users.resolvers,
   groups.resolvers,
   recipeIngredientCorrections.resolvers,

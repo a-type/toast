@@ -25,12 +25,26 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     console.error(`[Network error]: ${networkError}`);
   }
 });
+
+// HACK!
+const userReadyPromise = new Promise(resolve => {
+  firebase.auth().onAuthStateChanged(ev => {
+    console.log('user ready', ev);
+    resolve();
+  });
+  setTimeout(() => {
+    console.log('timed out');
+    resolve();
+  }, 5000);
+});
+
 const requestHandler = new ApolloLink(
   (operation, forward) =>
     new Observable(observer => {
       let handle;
       (async () => {
         try {
+          await userReadyPromise;
           const token =
             firebase.auth().currentUser &&
             (await firebase.auth().currentUser.getIdToken(true));

@@ -7,7 +7,8 @@ export default (name?: string) =>
         .toLowerCase()
         .split(/\s/)
         .map(s => s.replace(/\W/g, ''))
-        .join('-') +
+        .join('-')
+        .slice(0, 24) +
       '-' +
       shortid.generate()
     : uuid();

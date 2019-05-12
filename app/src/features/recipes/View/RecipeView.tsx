@@ -10,6 +10,7 @@ import { Heading } from 'grommet';
 import { useAuth } from 'contexts/AuthContext';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';
+import { GlobalLoader } from 'components/generic/Loader';
 
 export interface RecipeViewProps {
   recipeId: string;
@@ -19,15 +20,18 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
   const { user } = useAuth();
   const [recipe, loading, error] = useFullRecipe(recipeId);
 
-  if (!loading && recipe && !recipe.published) {
-    if (pathOr('none', ['author', 'id'], recipe) === path(['id'], user)) {
-      return <Redirect to={`/recipes/edit/${recipeId}`} />;
-    }
-    return <Redirect to="/" />;
+  if (loading) {
+    return <GlobalLoader />;
   }
 
   if (error) {
     return <ErrorMessage error={error} />;
+  }
+
+  if (recipe && !recipe.published) {
+    if (pathOr('none', ['author', 'id'], recipe) === path(['uid'], user)) {
+      return <Redirect to={`/recipes/${recipeId}/edit`} />;
+    }
   }
 
   return (

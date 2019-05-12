@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import Correct from './Correct';
 import Column from 'components/layout/Column';
 import Fullscreen from 'components/layout/Fullscreen';
+import RecipeEditor from 'features/recipes/RecipeEditor/RecipeEditor';
 
 const RecipePage = ({ match: { params } }) => (
   <Column>
@@ -18,8 +19,18 @@ const RecipeStepsPage = ({ match: { params } }) => (
   </Fullscreen>
 );
 
+const EditRecipePage = ({ match: { params } }) => (
+  <Column>
+    <RecipeEditor recipeId={params.recipeId || null} />
+  </Column>
+);
+
 export default () => (
   <Switch>
+    <Route
+      path={['/recipes/create', '/recipes/:recipeId/edit'] as any}
+      component={EditRecipePage}
+    />
     <Route path="/recipes/:recipeId/steps" component={RecipeStepsPage} />
     <Route path="/recipes/:recipeId/correct" component={Correct} />
     <Route path="/recipes/:recipeId" component={RecipePage} />

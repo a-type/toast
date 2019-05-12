@@ -1,64 +1,22 @@
-import React, { FC, useState } from 'react';
-import IngredientCorrector, {
-  IngredientCorrectorRecipeIngredient,
-} from './IngredientCorrector';
-import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
-import { RecipeIngredientCorrectedValueInput, CorrectionType } from './types';
+import React, { FC } from 'react';
+import IngredientCorrector from './IngredientCorrector';
+import { IngredientCorrectorRecipeIngredient } from '../types';
 import { AddIngredient } from './AddIngredient';
 import { Box, Heading } from 'grommet';
+import { useCorrectIngredient } from '../useCorrectIngredient';
 
 interface IngredientCorrectionsProps {
+  recipeId: string;
   recipeIngredients: IngredientCorrectorRecipeIngredient[];
 }
 
-const CorrectIngredientMutation = gql`
-  mutation CorrectIngredient($input: RecipeIngredientCorrectionSubmitInput!) {
-    submitRecipeIngredientCorrection(input: $input) {
-      id
-      status
-    }
-  }
-`;
-
 const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
   recipeIngredients,
+  recipeId,
 }) => {
-  const mutate = useMutation(CorrectIngredientMutation);
-
-  const submitCorrection = (
-    id: string,
-    correction: RecipeIngredientCorrectedValueInput,
-  ) =>
-    mutate({
-      variables: {
-        input: {
-          recipeIngredientId: id,
-          correctedValue: correction,
-          correctionType: CorrectionType.Change,
-        },
-      },
-    });
-
-  const submitAdd = (add: RecipeIngredientCorrectedValueInput) =>
-    mutate({
-      variables: {
-        input: {
-          correctedValue: add,
-          correctionType: CorrectionType.Add,
-        },
-      },
-    });
-
-  const requestDelete = (id: string) =>
-    mutate({
-      variables: {
-        input: {
-          recipeIngredientId: id,
-          correctionType: CorrectionType.Delete,
-        },
-      },
-    });
+  const { submitChange, submitAdd, submitDelete } = useCorrectIngredient({
+    recipeId,
+  });
 
   const [candidates, seemFine] = recipeIngredients.reduce<
     [
@@ -84,8 +42,8 @@ const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
         <IngredientCorrector
           key={recipeIngredient.id}
           recipeIngredient={recipeIngredient}
-          submit={submitCorrection}
-          requestDelete={requestDelete}
+          submit={submitChange}
+          requestDelete={submitDelete}
         />
       ))}
       <AddIngredient submitAdd={submitAdd} />
@@ -94,8 +52,8 @@ const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
         <IngredientCorrector
           key={recipeIngredient.id}
           recipeIngredient={recipeIngredient}
-          submit={submitCorrection}
-          requestDelete={requestDelete}
+          submit={submitChange}
+          requestDelete={submitDelete}
         />
       ))}
     </Box>

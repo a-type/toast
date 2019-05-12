@@ -1,12 +1,12 @@
 import React from 'react';
-import List from './List';
+import { Paragraph } from 'grommet';
 
 export default ({ steps }) => (
-  <List>
-    {steps.map(({ index, step: { id, text } }) => (
+  <ol css={{ margin: 'var(--spacing-md)', fontSize: 'var(--font-size-lg)' }}>
+    {steps.map(({ id, index, text }) => (
       <li key={id}>
-        {index ? index + 1 : 1}. {text}
+        <Paragraph size="large">{text}</Paragraph>
       </li>
     ))}
-  </List>
+  </ol>
 );

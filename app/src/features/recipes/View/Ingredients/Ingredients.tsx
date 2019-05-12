@@ -1,18 +1,17 @@
 import React from 'react';
 import List from './List';
 import Item from './Item';
-import { RecipeIngredient } from 'generated/schema';
 
 export default ({
   ingredients,
   servings,
 }: {
-  ingredients: RecipeIngredient[];
+  ingredients: any[]; // FIXME
   servings: number;
 }) => (
   <List>
-    {ingredients.map((ingredient: RecipeIngredient) => (
-      <Item {...ingredient} key={ingredient.id} servings={servings} />
+    {ingredients.map((ingredient: any, index) => (
+      <Item {...ingredient} key={ingredient.id + index} servings={servings} />
     ))}
   </List>
 );

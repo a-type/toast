@@ -1,7 +1,17 @@
 import * as React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import gql from 'graphql-tag';
-import { GroceryDay } from 'generated/schema';
+
+export type GroceryDayVariables = {};
+export type GroceryDayQuery = {
+  me: {
+    id: string;
+    group?: {
+      id: string;
+      groceryDay: number;
+    };
+  };
+};
 
 export const Document = gql`
   query GroceryDay {
@@ -16,15 +26,15 @@ export const Document = gql`
 `;
 
 interface GroceryDayQueryProps {
-  variables?: GroceryDay.Variables;
+  variables?: GroceryDayVariables;
   skip?: boolean;
   children(
-    result: QueryResult<GroceryDay.Query, GroceryDay.Variables>,
+    result: QueryResult<GroceryDayQuery, GroceryDayVariables>,
   ): React.ReactNode;
 }
 
 const GroceryDayQuery: React.SFC<GroceryDayQueryProps> = props => (
-  <Query<GroceryDay.Query, GroceryDay.Variables> query={Document} {...props} />
+  <Query<GroceryDayQuery, GroceryDayVariables> query={Document} {...props} />
 );
 
 export default GroceryDayQuery;

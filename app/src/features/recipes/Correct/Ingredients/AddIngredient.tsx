@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { RecipeIngredientCorrectedValueInput } from './types';
+import { RecipeIngredientCorrectedValueInput } from 'features/recipes/Correct/types';
 import { Button } from 'grommet';
 import { IngredientCorrectionForm } from './CorrectionForm';
 

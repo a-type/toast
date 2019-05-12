@@ -16,16 +16,26 @@ export interface IngredientCorrectionFormRecipeIngredient {
   ingredientEnd?: number;
 }
 
+export type IngredientCorrectionFormMessages = {
+  submitCorrection: string;
+};
+
 export interface IngredientCorrectionFormProps {
   initialValue?: IngredientCorrectionFormRecipeIngredient;
   onCancel(): void;
   onSubmit(newValue: IngredientCorrectionFormRecipeIngredient): void;
+  messages?: IngredientCorrectionFormMessages;
 }
+
+export const DEFAULT_MESSAGES: IngredientCorrectionFormMessages = {
+  submitCorrection: 'Submit correction',
+};
 
 export const IngredientCorrectionForm: FC<IngredientCorrectionFormProps> = ({
   initialValue,
   onCancel,
   onSubmit,
+  messages = DEFAULT_MESSAGES,
 }) => {
   const ingredientSearchText =
     initialValue.text &&
@@ -74,7 +84,7 @@ export const IngredientCorrectionForm: FC<IngredientCorrectionFormProps> = ({
             <Button
               primary
               type="submit"
-              label="Submit correction"
+              label={messages.submitCorrection}
               margin={{ right: 'medium' }}
             />
             <Button onClick={onCancel} label="Cancel" />

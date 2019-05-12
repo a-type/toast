@@ -6,7 +6,6 @@ import PlanPage from './pages/Plan';
 import RecipePage from './pages/Recipe';
 import UserPage from './pages/User';
 import IngredientPage from './pages/Ingredient';
-import EditRecipePage from './pages/EditRecipe';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
@@ -25,15 +24,10 @@ export default () => (
     <PrivateRoute path="/shoppingList" component={ShoppingList} />
     <PrivateRoute path="/joinGroup" exact component={JoinGroupPage} />
 
-    <PrivateRoute path="/recipes/create" component={EditRecipePage} />
     <PrivateRoute path="/recipes/find" component={FindRecipes} />
     <PrivateRoute path="/recipes/collection" component={RecipeCollection} />
-    <PrivateRoute
-      exact
-      path="/recipes/:recipeId/edit"
-      component={EditRecipePage}
-    />
-    <Route path="/recipes/:recipeId" component={RecipePage} />
+
+    <Route path="/recipes" component={RecipePage} />
 
     <Route path="/users/:userId" component={UserPage} />
 

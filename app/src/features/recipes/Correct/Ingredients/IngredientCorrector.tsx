@@ -2,49 +2,41 @@ import React, { FC, useState } from 'react';
 import { Icon } from 'components/generic';
 import { Button, Paragraph, Box, DropButton, Text } from 'grommet';
 import { HelpText } from 'components/text';
-import { IngredientCorrectionForm } from './CorrectionForm';
+import {
+  IngredientCorrectionForm,
+  IngredientCorrectionFormMessages,
+} from './CorrectionForm';
 import { toDisplay } from 'formatters/quantity';
+import {
+  IngredientCorrectorRecipeIngredient,
+  RecipeIngredientCorrectedValueInput,
+} from 'features/recipes/Correct/types';
 
-export interface IngredientCorrectorRecipeIngredient {
-  id?: string;
-  text: string;
-  unit?: string;
-  unitStart?: number;
-  unitEnd?: number;
-  quantity: number;
-  quantityStart?: number;
-  quantityEnd?: number;
-  ingredient?: {
-    id: string;
-    name: string;
-  };
-  ingredientStart?: number;
-  ingredientEnd?: number;
-}
-
-export interface RecipeIngredientCorrectedValueInput {
-  unit?: string;
-  unitStart?: number;
-  unitEnd?: number;
-  quantity?: number;
-  quantityStart?: number;
-  quantityEnd?: number;
-  ingredientId?: string;
-  ingredientStart?: number;
-  ingredientEnd?: number;
-  text?: string;
-}
+export type IngredientCorrectorMessages = IngredientCorrectionFormMessages & {
+  correctionSubmitted: string;
+  suggestChange: string;
+  suggestDelete: string;
+};
 
 interface IngredientCorrectorProps {
   recipeIngredient: IngredientCorrectorRecipeIngredient;
   submit(id: string, correction: RecipeIngredientCorrectedValueInput): void;
   requestDelete(id: string): void;
+  messages?: IngredientCorrectorMessages;
 }
+
+export const DEFAULT_MESSAGES: IngredientCorrectorMessages = {
+  submitCorrection: 'Submit correction',
+  correctionSubmitted: 'Correction submitted',
+  suggestChange: 'Suggest change',
+  suggestDelete: 'Suggest delete',
+};
 
 const IngredientCorrector: FC<IngredientCorrectorProps> = ({
   recipeIngredient,
   submit,
   requestDelete,
+  messages = DEFAULT_MESSAGES,
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -73,7 +65,7 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
         </Box>
         <Box justify="center">
           {hasSubmitted ? (
-            <HelpText>Correction submitted</HelpText>
+            <HelpText>{messages.correctionSubmitted}</HelpText>
           ) : (
             <DropButton
               icon={<Icon name="more_vert" />}
@@ -81,14 +73,17 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
               dropContent={
                 <Box pad="medium" round background="white">
                   <Button
-                    label="Suggest Change"
+                    label={messages.suggestChange}
                     onClick={() => setShowForm(true)}
                     margin={{ bottom: 'small' }}
                   />
                   <Button
                     color="status-critical"
-                    onClick={() => requestDelete(recipeIngredient.id)}
-                    label="Suggest Delete"
+                    onClick={async () => {
+                      await requestDelete(recipeIngredient.id);
+                      setHasSubmitted(true);
+                    }}
+                    label={messages.suggestDelete}
                   />
                 </Box>
               }
@@ -123,6 +118,9 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
         setHasSubmitted(true);
       }}
       onCancel={() => setShowForm(false)}
+      messages={{
+        submitCorrection: messages.submitCorrection,
+      }}
     />
   );
 };

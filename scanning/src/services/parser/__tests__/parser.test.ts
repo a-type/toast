@@ -14,7 +14,7 @@ describe('ingredient parser', () => {
         normalized: 'cup',
         range: [2, 5],
       },
-      value: {
+      quantity: {
         raw: '1',
         normalized: 1,
         range: [0, 1],
@@ -36,7 +36,7 @@ describe('ingredient parser', () => {
         normalized: 'tablespoon',
         range: [4, 14],
       },
-      value: {
+      quantity: {
         raw: '1/3',
         normalized: 0.333333333333333,
         range: [0, 3],
@@ -59,7 +59,7 @@ describe('ingredient parser', () => {
         normalized: 'slice',
         range: [5, 11],
       },
-      value: {
+      quantity: {
         raw: 'four',
         normalized: 4,
         range: [0, 4],
@@ -72,7 +72,7 @@ describe('ingredient parser', () => {
 
   test('four', () => {
     expect(parse('four')).toEqual({
-      value: {
+      quantity: {
         raw: 'four',
         normalized: 4,
         range: [0, 4],
@@ -95,7 +95,7 @@ describe('ingredient parser', () => {
 
   test('1 egg', () => {
     expect(parse('1 egg')).toEqual({
-      value: {
+      quantity: {
         raw: '1',
         normalized: 1,
         range: [0, 1],
@@ -118,7 +118,7 @@ describe('ingredient parser', () => {
 
   test('2 eggs', () => {
     expect(parse('2 eggs')).toEqual({
-      value: {
+      quantity: {
         raw: '2',
         normalized: 2,
         range: [0, 1],
@@ -141,7 +141,7 @@ describe('ingredient parser', () => {
 
   test('3 tbsp flour', () => {
     expect(parse('3 tbsp flour')).toEqual({
-      value: {
+      quantity: {
         raw: '3',
         normalized: 3,
         range: [0, 1],
@@ -164,7 +164,7 @@ describe('ingredient parser', () => {
 
   test('1 slice of Bread', () => {
     expect(parse('1 slice of Bread')).toEqual({
-      value: {
+      quantity: {
         raw: '1',
         normalized: 1,
         range: [0, 1],
@@ -187,7 +187,7 @@ describe('ingredient parser', () => {
 
   test('2 tsp sesame or vegetable oil', () => {
     expect(parse('2 tsp sesame or vegetable oil')).toEqual({
-      value: {
+      quantity: {
         raw: '2',
         normalized: 2,
         range: [0, 1],
@@ -210,7 +210,7 @@ describe('ingredient parser', () => {
 
   test('kosher salt, to season', () => {
     expect(parse('kosher salt, to season')).toEqual({
-      value: {
+      quantity: {
         raw: null,
         normalized: null,
         range: [],
@@ -233,7 +233,7 @@ describe('ingredient parser', () => {
 
   test('1 (15 ounce) can kidney beans, drained and rinsed', () => {
     expect(parse('1 (15 ounce) can kidney beans, drained and rinsed')).toEqual({
-      value: {
+      quantity: {
         raw: '1',
         normalized: 1,
         range: [0, 1],
@@ -258,7 +258,7 @@ describe('ingredient parser', () => {
     expect(
       parse('1 pound skinless, boneless chicken thighs, quartered'),
     ).toEqual({
-      value: {
+      quantity: {
         raw: '1',
         normalized: 1,
         range: [0, 1],
@@ -304,7 +304,7 @@ describe('ingredient parser', () => {
         normalized: 'pound',
         range: [6, 12],
       },
-      value: {
+      quantity: {
         raw: '1 1/2',
         normalized: 1.5,
         range: [0, 5],

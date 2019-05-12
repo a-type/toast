@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { FullRecipe } from 'generated/schema';
 import { useQuery, QueryHookResult } from 'react-apollo-hooks';
 import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
@@ -34,15 +33,16 @@ export const FullRecipeQuery = gql`
       }
       steps {
         id
-        step {
-          id
-          text
-        }
+        index
+        text
       }
       coverImage {
         id
         url
         attribution
+      }
+      author {
+        id
       }
     }
   }
@@ -76,10 +76,8 @@ export type FullRecipe = {
   }[];
   steps: {
     id: string;
-    step: {
-      id: string;
-      text: string;
-    };
+    index: number;
+    text: string;
   }[];
   coverImage?: {
     id: string;

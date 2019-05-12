@@ -1,7 +1,16 @@
 import * as React from 'react';
 import { Mutation, MutationFn } from 'react-apollo';
 import gql from 'graphql-tag';
-import { AcceptGroupInvitation } from 'generated/schema';
+
+export type AcceptGroupInvitationVariables = {
+  id: string;
+};
+
+export type AcceptGroupInvitationMutation = {
+  acceptGroupInvitation?: {
+    id: string;
+  };
+};
 
 export const Document = gql`
   mutation AcceptGroupInvitation($id: String!) {
@@ -12,12 +21,12 @@ export const Document = gql`
 `;
 
 interface AcceptGroupInvitationMutationProps {
-  variables?: AcceptGroupInvitation.Variables;
+  variables?: AcceptGroupInvitationVariables;
   skip?: boolean;
   children(
     mutateFn: MutationFn<
-      AcceptGroupInvitation.Mutation,
-      AcceptGroupInvitation.Variables
+      AcceptGroupInvitationMutation,
+      AcceptGroupInvitationVariables
     >,
   ): React.ReactNode;
 }
@@ -25,7 +34,7 @@ interface AcceptGroupInvitationMutationProps {
 const AcceptGroupInvitationMutation: React.SFC<
   AcceptGroupInvitationMutationProps
 > = props => (
-  <Mutation<AcceptGroupInvitation.Mutation, AcceptGroupInvitation.Variables>
+  <Mutation<AcceptGroupInvitationMutation, AcceptGroupInvitationVariables>
     mutation={Document}
     {...props}
   />

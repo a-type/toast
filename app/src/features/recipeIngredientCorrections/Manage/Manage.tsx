@@ -1,10 +1,15 @@
 import * as React from 'react';
 import Correction from './Correction';
-import { CorrectionStatus } from 'generated/schema';
 import gql from 'graphql-tag';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import { Loader } from 'components/generic';
 import ErrorMessage from 'components/generic/ErrorMessage';
+
+enum CorrectionStatus {
+  Submitted = 'Submitted',
+  Accepted = 'Accepted',
+  Rejected = 'Rejected',
+}
 
 export const AcceptRecipeIngredientCorrectionMutation = gql`
   mutation AcceptRecipeIngredientCorrection($id: ID!) {

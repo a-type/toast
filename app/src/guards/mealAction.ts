@@ -1,12 +1,87 @@
-import {
-  MealAction,
-  MealActionType,
-  MealActionCook,
-  MealActionEat,
-  MealActionEatOut,
-  MealActionSkip,
-  MealActionReadyMade,
-} from 'generated/schema';
+import { MealActionType } from 'formatters/actionType';
+
+export enum MealRecipeType {
+  QUICK = 'QUICK',
+  BIG = 'BIG',
+  FANCY = 'FANCY',
+  NORMAL = 'NORMAL',
+}
+
+export interface MealAction {
+  id: string;
+
+  type: MealActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+}
+
+export interface MealActionCook extends MealAction {
+  id: string;
+
+  type: MealActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
+  servings: number;
+
+  recipeType: MealRecipeType;
+
+  recipe?: any | null;
+
+  recipeId?: string | null;
+}
+
+export interface MealActionEat extends MealAction {
+  id: string;
+
+  type: MealActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
+  leftovers: boolean;
+
+  cookAction?: MealActionCook | null;
+}
+
+export interface MealActionEatOut extends MealAction {
+  id: string;
+
+  type: MealActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
+  note?: string | null;
+}
+
+export interface MealActionReadyMade extends MealAction {
+  id: string;
+
+  type: MealActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+
+  note?: string | null;
+}
+
+export interface MealActionSkip extends MealAction {
+  id: string;
+
+  type: MealActionType;
+
+  dayIndex?: number | null;
+
+  mealIndex?: number | null;
+}
 
 export function isCookAction(action: MealAction): action is MealActionCook {
   return action.type === MealActionType.COOK;

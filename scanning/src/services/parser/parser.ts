@@ -18,7 +18,7 @@ export interface ParseResult {
   original: string;
   ingredient: ParseEntity<string>;
   unit: ParseEntity<string>;
-  value: ParseEntity<number>;
+  quantity: ParseEntity<number>;
   preparations: string[];
   comments: string[];
 }
@@ -38,9 +38,9 @@ export default (text: string): ParseResult => {
 
   const unitNormalized = unabbreviate(depluralize(lowercase(unitRaw)));
 
-  const valueRaw = (parsed.amount || '').trim();
+  const quantityRaw = (parsed.amount || '').trim();
 
-  const valueNormalized = getNumber(valueRaw);
+  const quantityNormalized = getNumber(quantityRaw);
 
   const ingredientRaw = (parsed.ingredient || '').trim();
 
@@ -58,10 +58,10 @@ export default (text: string): ParseResult => {
       normalized: unitNormalized || null,
       range: getRange(text, unitRaw),
     },
-    value: {
-      raw: valueRaw || null,
-      normalized: valueNormalized || null,
-      range: getRange(text, valueRaw),
+    quantity: {
+      raw: quantityRaw || null,
+      normalized: quantityNormalized || null,
+      range: getRange(text, quantityRaw),
     },
     preparations,
     comments,

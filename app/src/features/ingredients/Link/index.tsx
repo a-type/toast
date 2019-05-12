@@ -2,12 +2,11 @@ import React from 'react';
 import { Tip } from 'components/generic';
 import { Link } from 'components/text';
 import { sentence } from 'change-case';
-import { Ingredient } from 'generated/schema';
 import { pathOr } from 'ramda';
 import { Text } from 'grommet';
 
 export interface IngredientLinkProps {
-  ingredient: Ingredient;
+  ingredient: any; // FIXME
   isHighlighted?: boolean;
 }
 

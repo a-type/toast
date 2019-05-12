@@ -1,7 +1,17 @@
 import * as React from 'react';
 import { Mutation, MutationFn } from 'react-apollo';
 import gql from 'graphql-tag';
-import { PickerCreateIngredient } from 'generated/schema';
+
+export type PickerCreateIngredientVariables = {
+  name: string;
+};
+
+export type PickerCreateIngredientMutation = {
+  createIngredient: {
+    id: string;
+    name: string;
+  };
+};
 
 export const Document = gql`
   mutation PickerCreateIngredient($name: String!) {
@@ -13,12 +23,12 @@ export const Document = gql`
 `;
 
 interface PickerCreateIngredientMutationProps {
-  variables?: PickerCreateIngredient.Variables;
+  variables?: PickerCreateIngredientVariables;
   skip?: boolean;
   children(
     mutateFn: MutationFn<
-      PickerCreateIngredient.Mutation,
-      PickerCreateIngredient.Variables
+      PickerCreateIngredientMutation,
+      PickerCreateIngredientVariables
     >,
   ): React.ReactNode;
 }
@@ -26,7 +36,7 @@ interface PickerCreateIngredientMutationProps {
 const PickerCreateIngredientMutation: React.SFC<
   PickerCreateIngredientMutationProps
 > = props => (
-  <Mutation<PickerCreateIngredient.Mutation, PickerCreateIngredient.Variables>
+  <Mutation<PickerCreateIngredientMutation, PickerCreateIngredientVariables>
     mutation={Document}
     {...props}
   />

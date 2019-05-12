@@ -2,7 +2,6 @@ import React from 'react';
 import { toDisplay } from 'formatters/quantity';
 import IngredientLink from 'features/ingredients/Link';
 import pluralize from 'pluralize';
-import { Ingredient } from 'generated/schema';
 import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
 
 export interface IngredientItemProps {
@@ -13,7 +12,7 @@ export interface IngredientItemProps {
   unit?: string;
   unitStart?: number;
   unitEnd?: number;
-  ingredient: Ingredient;
+  ingredient: any; // FIXME
   ingredientStart?: number;
   ingredientEnd?: number;
   text: string;

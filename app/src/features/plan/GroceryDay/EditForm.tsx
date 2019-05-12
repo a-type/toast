@@ -1,23 +1,9 @@
 import * as React from 'react';
 import { Formik } from 'formik';
 import SetGroceryDayMutation from './SetGroceryDayMutation';
-import styled from 'styled-components';
 import { Field } from 'components/generic';
 import { Day } from 'types/Day';
 import { Button, Select } from 'grommet';
-
-const HorizontalForm = styled.form`
-  display: flex;
-  flex-direction: row;
-
-  & > * {
-    margin-top: auto;
-
-    * + & {
-      margin-left: var(--spacing-md);
-    }
-  }
-`;
 
 export interface GroceryDayEditFormProps {
   groceryDay: number;
@@ -31,7 +17,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
   return (
     <SetGroceryDayMutation>
       {mutate => (
-        <Formik<{}, { groceryDay: { value: number; label: string } }>
+        <Formik
           initialValues={{
             groceryDay: { value: groceryDay, label: `${Day[groceryDay]}` },
           }}
