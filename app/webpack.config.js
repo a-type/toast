@@ -56,7 +56,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: ['babel-loader', 'awesome-typescript-loader'],
+        use: ['babel-loader'],
       },
       {
         test: /\.html$/,

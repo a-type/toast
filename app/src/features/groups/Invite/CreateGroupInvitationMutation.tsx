@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { Mutation, MutationFn } from 'react-apollo';
 import gql from 'graphql-tag';
-import { CreateGroupInvitation } from 'generated/schema';
+
+export type CreateGroupInvitationMutation = {
+  createGroupInvitation: string;
+};
+
+export type CreateGroupInvitationVariables = {};
 
 export const Document = gql`
   mutation CreateGroupInvitation {
@@ -10,12 +15,12 @@ export const Document = gql`
 `;
 
 interface CreateGroupInvitationMutationProps {
-  variables?: CreateGroupInvitation.Variables;
+  variables?: CreateGroupInvitationVariables;
   skip?: boolean;
   children(
     mutateFn: MutationFn<
-      CreateGroupInvitation.Mutation,
-      CreateGroupInvitation.Variables
+      CreateGroupInvitationMutation,
+      CreateGroupInvitationVariables
     >,
   ): React.ReactNode;
 }
@@ -23,7 +28,7 @@ interface CreateGroupInvitationMutationProps {
 const CreateGroupInvitationMutation: React.SFC<
   CreateGroupInvitationMutationProps
 > = props => (
-  <Mutation<CreateGroupInvitation.Mutation, CreateGroupInvitation.Variables>
+  <Mutation<CreateGroupInvitationMutation, CreateGroupInvitationVariables>
     mutation={Document}
     {...props}
   />

@@ -1,10 +1,18 @@
 import React, { FC } from 'react';
 import useEditRecipe from './useEditRecipe';
 import { EditRecipeRecipe } from './queries';
-import { Box, Heading, Form, TextInput, TextArea, Button } from 'grommet';
+import {
+  Box,
+  Heading,
+  Form,
+  TextInput,
+  TextArea,
+  Button,
+  Paragraph,
+} from 'grommet';
 import { pathOr } from 'ramda';
 import { Formik } from 'formik';
-import { Field } from 'components/generic';
+import { Field, Icon } from 'components/generic';
 import RecipeIngredientsEditor from './RecipeIngredientsEditor';
 import { GlobalLoader } from 'components/generic/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
@@ -36,6 +44,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
     error,
     createIngredient,
     refetchRecipe,
+    publish,
   } = useEditRecipe({
     recipeId,
   });
@@ -48,6 +57,28 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
     <Box>
       {error && <ErrorMessage error={error} />}
       <Box>
+        <Heading level="2">
+          {!recipeId ? 'Create recipe' : 'Edit recipe'}
+          {!recipe.published && (
+            <span
+              css={{
+                marginLeft: 'var(--spacing-md)',
+                fontSize: '14px',
+                color: 'var(--color-negative)',
+              }}
+            >
+              <Icon name="label" /> Draft
+            </span>
+          )}
+        </Heading>
+        {!recipe.published && (
+          <Box>
+            <Button primary onClick={publish} label="Publish" />
+            <Paragraph>
+              Your recipe is unpublished. Publish it so you can start using it!
+            </Paragraph>
+          </Box>
+        )}
         <Formik
           initialValues={recipe || emptyRecipe}
           enableReinitialize
@@ -55,9 +86,6 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
         >
           {({ values, handleChange, handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
-              <Heading level="2">
-                {!recipeId ? 'Create recipe' : 'Edit recipe'}
-              </Heading>
               <Field label="Title" required>
                 <TextInput
                   size="xlarge"
@@ -74,11 +102,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
                 />
               </Field>
 
-              <Button
-                type="submit"
-                primary
-                label={!recipeId ? 'Continue' : 'Save'}
-              />
+              <Button type="submit" label={!recipeId ? 'Continue' : 'Save'} />
             </Form>
           )}
         </Formik>

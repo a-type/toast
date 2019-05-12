@@ -3,7 +3,6 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Picker } from 'features/ingredients';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Ingredient } from 'generated/schema';
 import { Layer, Box, Button, Heading } from 'grommet';
 
 const MergeIngredients = gql`
@@ -22,7 +21,7 @@ export interface IngredientMergerProps extends RouteComponentProps {
 
 interface IngredientMergerState {
   showModal: boolean;
-  value: Ingredient;
+  value: any; // FIXME
   error: Error;
 }
 

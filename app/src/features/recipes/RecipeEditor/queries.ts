@@ -198,3 +198,14 @@ export const DeleteRecipeStepMutation = gql`
 
   ${EditRecipeRecipeStepFragment}
 `;
+
+export const PublishRecipeMutation = gql`
+  mutation PublishRecipe($recipeId: ID!) {
+    publishRecipe(id: $recipeId) {
+      id
+      ...EditRecipeRecipe
+    }
+  }
+
+  ${EditRecipeRecipeFragment}
+`;

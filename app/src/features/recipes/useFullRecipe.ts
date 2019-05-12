@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { FullRecipe } from 'generated/schema';
 import { useQuery, QueryHookResult } from 'react-apollo-hooks';
 import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';

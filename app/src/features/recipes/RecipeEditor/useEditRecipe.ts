@@ -9,6 +9,7 @@ import {
   GetRecipeQuery,
   CreateRecipeIngredientMutation,
   EditRecipeCreateIngredientInput,
+  PublishRecipeMutation,
 } from './queries';
 
 export default ({ recipeId }: { recipeId?: string }) => {
@@ -77,6 +78,17 @@ export default ({ recipeId }: { recipeId?: string }) => {
     [createIngredientMutate],
   );
 
+  const publishMutate = useMutation(PublishRecipeMutation);
+  const publish = useCallback(
+    () =>
+      publishMutate({
+        variables: {
+          recipeId,
+        },
+      }),
+    [publishMutate],
+  );
+
   return {
     recipe: (data && data.recipe) || null,
     saving,
@@ -85,5 +97,6 @@ export default ({ recipeId }: { recipeId?: string }) => {
     save,
     createIngredient,
     refetchRecipe: refetch,
+    publish,
   };
 };

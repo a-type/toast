@@ -1,12 +1,14 @@
 import * as React from 'react';
 import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
-import {
-  ListRecipeIngredientCorrections,
-  CorrectionType,
-} from 'generated/schema';
 import { Ingredient, Unit, Value } from './components';
 import { Button } from 'grommet';
 import { pathOr } from 'ramda';
+
+enum CorrectionType {
+  Delete = 'Delete',
+  Change = 'Change',
+  Add = 'Add',
+}
 
 export interface ManageRecipeIngredientCorrectionsCorrectionProps {
   correction: any;

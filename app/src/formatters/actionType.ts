@@ -1,4 +1,10 @@
-import { MealActionType } from 'generated/schema';
+export enum MealActionType {
+  EAT_OUT = 'EAT_OUT',
+  COOK = 'COOK',
+  EAT = 'EAT',
+  READY_MADE = 'READY_MADE',
+  SKIP = 'SKIP',
+}
 
 export default (actionType: MealActionType): string => {
   switch (actionType) {

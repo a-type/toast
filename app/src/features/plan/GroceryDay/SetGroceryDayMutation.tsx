@@ -1,7 +1,17 @@
 import * as React from 'react';
 import { Mutation, MutationFn } from 'react-apollo';
 import gql from 'graphql-tag';
-import { SetGroceryDay } from 'generated/schema';
+
+export type SetGroceryDayVariables = {
+  groceryDay: number;
+};
+
+export type SetGroceryDayMutation = {
+  setGroceryDay: {
+    id: string;
+    groceryDay: number;
+  };
+};
 
 export const Document = gql`
   mutation SetGroceryDay($groceryDay: Int!) {
@@ -13,15 +23,15 @@ export const Document = gql`
 `;
 
 interface SetGroceryDayMutationProps {
-  variables?: SetGroceryDay.Variables;
+  variables?: SetGroceryDayVariables;
   skip?: boolean;
   children(
-    mutateFn: MutationFn<SetGroceryDay.Mutation, SetGroceryDay.Variables>,
+    mutateFn: MutationFn<SetGroceryDayMutation, SetGroceryDayVariables>,
   ): React.ReactNode;
 }
 
 const SetGroceryDayMutation: React.SFC<SetGroceryDayMutationProps> = props => (
-  <Mutation<SetGroceryDay.Mutation, SetGroceryDay.Variables>
+  <Mutation<SetGroceryDayMutation, SetGroceryDayVariables>
     mutation={Document}
     {...props}
   />

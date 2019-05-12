@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import { Field } from 'components/generic';
 import { Formik } from 'formik';
 import { pick } from 'ramda';
-import { Ingredient } from 'generated/schema';
 import { TextArea, Button, Layer, Box, TextInput } from 'grommet';
 
 const EditIngredient = gql`
@@ -20,7 +19,7 @@ const EditIngredient = gql`
 `;
 
 export interface IngredientEditProps {
-  ingredient: Ingredient;
+  ingredient: any; // FIXME
 }
 
 interface IngredientEditState {
