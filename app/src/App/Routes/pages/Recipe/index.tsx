@@ -3,16 +3,38 @@ import Recipe from 'features/recipes/View';
 import Steps from 'features/recipes/Steps';
 import { Route, Switch } from 'react-router-dom';
 import Correct from './Correct';
-import Column from 'components/layout/Column';
 import Fullscreen from 'components/layout/Fullscreen';
 import RecipeEditor from 'features/recipes/RecipeEditor/RecipeEditor';
-import RecipeCollection from '../RecipeCollection';
 import PrivateRoute from '../../PrivateRoute';
+import PageWithActions, {
+  PageContent,
+  Actions,
+} from 'components/layout/PageWithActions';
+import { RecipeCollection } from 'features/recipes/RecipeCollection/RecipeCollection';
+import Action from 'components/generic/Action';
+
+const RecipeCollectionPage = () => (
+  <PageWithActions pageTitle="Collection">
+    <Actions>
+      <Action to="/find" icon="search">
+        Find more recipes
+      </Action>
+      <Action to="/recipes/create" icon="add">
+        Add your own recipe
+      </Action>
+    </Actions>
+    <PageContent>
+      <RecipeCollection />
+    </PageContent>
+  </PageWithActions>
+);
 
 const RecipePage = ({ match: { params } }) => (
-  <Column>
-    <Recipe recipeId={params.recipeId} />
-  </Column>
+  <PageWithActions>
+    <PageContent>
+      <Recipe recipeId={params.recipeId} />
+    </PageContent>
+  </PageWithActions>
 );
 
 const RecipeStepsPage = ({ match: { params } }) => (
@@ -22,9 +44,11 @@ const RecipeStepsPage = ({ match: { params } }) => (
 );
 
 const EditRecipePage = ({ match: { params } }) => (
-  <Column>
-    <RecipeEditor recipeId={params.recipeId || null} />
-  </Column>
+  <PageWithActions>
+    <PageContent>
+      <RecipeEditor recipeId={params.recipeId || null} />
+    </PageContent>
+  </PageWithActions>
 );
 
 export default () => (
@@ -36,6 +60,6 @@ export default () => (
     <Route path="/recipes/:recipeId/steps" component={RecipeStepsPage} />
     <Route path="/recipes/:recipeId/correct" component={Correct} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
-    <PrivateRoute path="/recipes" exact component={RecipeCollection} />
+    <PrivateRoute path="/recipes" exact component={RecipeCollectionPage} />
   </Switch>
 );

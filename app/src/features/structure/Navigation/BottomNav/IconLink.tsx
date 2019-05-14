@@ -30,7 +30,7 @@ export const IconLink: FC<IconLinkProps> = ({ label, icon, ...props }) => {
     >
       <Icon
         name={icon}
-        css={{ margin: 'auto', marginBottom: '2px' }}
+        css={{ margin: 'auto', marginBottom: '0' }}
         size="22px"
       />
       <Text

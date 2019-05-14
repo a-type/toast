@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import gql from 'graphql-tag';
-import { Heading } from 'grommet';
 import { HelpText } from 'components/text';
 import { format } from 'date-fns';
 import { ShoppingListItem } from './ShoppingListItem';
@@ -143,7 +142,6 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
 
   return (
     <>
-      <Heading margin={{ bottom: 'medium' }}>Shopping List</Heading>
       <HelpText margin={{ bottom: 'large' }}>
         Week of {format(new Date(startDate), 'MMMM Do')}
       </HelpText>

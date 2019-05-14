@@ -7,6 +7,11 @@ import { parse } from 'query-string';
 import { RecipeSearch } from 'features/recipes/RecipeSearch/RecipeSearch';
 import { Provider } from 'contexts/RecipeSearchContext';
 import { Icon } from 'components/generic';
+import PageWithActions, {
+  PageContent,
+  Actions,
+} from 'components/layout/PageWithActions';
+import Action from 'components/generic/Action';
 
 const findUrl = (text: string | string[]) => {
   if (text instanceof Array) {
@@ -52,9 +57,19 @@ export const SearchRecipe = () => {
 
 export default (props: RouteComponentProps<{}>) => (
   <Provider>
-    <Column>
-      <ScanRecipe {...props} />
-      <SearchRecipe />
-    </Column>
+    <PageWithActions pageTitle="Explore">
+      <Actions>
+        <Action to="/recipes" icon="bookmarks">
+          Your collection
+        </Action>
+        <Action to="/recipes/create" icon="add">
+          Add your own recipe
+        </Action>
+      </Actions>
+      <PageContent>
+        <ScanRecipe {...props} />
+        <SearchRecipe />
+      </PageContent>
+    </PageWithActions>
   </Provider>
 );
