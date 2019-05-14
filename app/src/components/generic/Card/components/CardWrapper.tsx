@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const CardWrapper = styled<{ imageSrc?: string; onClick?: any }, 'div'>('div')`
+  background-color: var(--color-gray-light);
   background-image: ${props =>
     props.imageSrc ? `url(${props.imageSrc})` : 'none'};
   background-size: cover;

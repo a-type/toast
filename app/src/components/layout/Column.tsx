@@ -12,7 +12,7 @@ const CenterArea = styled(Box)`
   }
 `;
 
-export const Column = ({ children }) => (
+export const Column = ({ children, ...rest }) => (
   <Box
     direction="column"
     justify="start"
@@ -21,10 +21,9 @@ export const Column = ({ children }) => (
     pad="large"
     style={{ overflowY: 'auto', overflowX: 'hidden' }}
     className="layout-column"
+    {...rest}
   >
-    <CenterArea margin={{ horizontal: 'auto', top: 'large', bottom: '120px' }}>
-      {children}
-    </CenterArea>
+    <CenterArea margin={{ horizontal: 'auto' }}>{children}</CenterArea>
   </Box>
 );
 

@@ -6,6 +6,8 @@ import Correct from './Correct';
 import Column from 'components/layout/Column';
 import Fullscreen from 'components/layout/Fullscreen';
 import RecipeEditor from 'features/recipes/RecipeEditor/RecipeEditor';
+import RecipeCollection from '../RecipeCollection';
+import PrivateRoute from '../../PrivateRoute';
 
 const RecipePage = ({ match: { params } }) => (
   <Column>
@@ -34,5 +36,6 @@ export default () => (
     <Route path="/recipes/:recipeId/steps" component={RecipeStepsPage} />
     <Route path="/recipes/:recipeId/correct" component={Correct} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
+    <PrivateRoute path="/recipes" exact component={RecipeCollection} />
   </Switch>
 );

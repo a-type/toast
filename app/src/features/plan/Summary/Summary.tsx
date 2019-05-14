@@ -43,10 +43,6 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
     isSameDay(new Date(), day.date),
   ) as PlanDayData;
 
-  if (!today) {
-    return null;
-  }
-
   const now = new Date();
   const breakfastTime = setHours(now, 9);
   const lunchTime = setHours(now, 12);
@@ -56,7 +52,7 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
     ? 'lunch'
     : 'dinner';
 
-  const meal = today[nextMeal];
+  const meal = (today && today[nextMeal]) || null;
 
   return (
     <Box align="start" margin={{ bottom: 'large' }}>

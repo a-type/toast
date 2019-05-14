@@ -3,17 +3,23 @@ import PlanSummary from 'features/plan/Summary/Summary';
 import Column from 'components/layout/Column';
 import ShoppingListSummary from 'features/shoppingList/Summary/Summary';
 import RecipesSummary from 'features/recipes/Summary/Summary';
-import { Heading } from 'grommet';
+import { Heading, Button } from 'grommet';
 import usePlan from 'features/plan/usePlan';
 import useGroceryDay from 'features/plan/useGroceryDay';
 import useSavedRecipes from 'features/recipes/useSavedRecipes';
 import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { PlanSetup } from 'features/plan/Setup/Setup';
+import { BackdropArt, Logo } from 'components/brand';
+import { Icon, Link } from 'components/generic';
+import useMedia from 'hooks/useMedia';
+import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
 
 interface StartPageProps {}
 
 export const StartPage: FC<StartPageProps> = ({}) => {
+  const isMobile = useMedia(`(max-width: ${NAV_SIDEBAR_MIN_WIDTH_PX - 1}px)`);
+
   const [plan, planLoading, planError, planResult] = usePlan();
   const [groceryDay, groceryDayLoading, groceryDayError] = useGroceryDay();
   const [
@@ -50,7 +56,40 @@ export const StartPage: FC<StartPageProps> = ({}) => {
   );
 
   return (
-    <Column>
+    <Column css={{ position: 'relative' }}>
+      {isMobile && (
+        <>
+          <BackdropArt
+            fade
+            css={{
+              height: '60vh',
+            }}
+          />
+          <Logo
+            size="5vh"
+            css={{
+              marginRight: 'auto',
+              marginBottom: 'var(--spacing-lg)',
+              boxShadow: '0 2px 4px 0 var(--color-shadow)',
+            }}
+          />
+          <Link
+            to="/settings"
+            css={{
+              position: 'absolute',
+              top: 'var(--spacing-sm)',
+              right: 'var(--spacing-sm)',
+            }}
+          >
+            <Button
+              icon={
+                <Icon name="settings" color="var(--color-white)" size="24px" />
+              }
+              aria-label="Settings"
+            />
+          </Link>
+        </>
+      )}
       {anyLoading && <GlobalLoader />}
       {mainContent}
     </Column>

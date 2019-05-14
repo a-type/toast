@@ -5,11 +5,22 @@ import { Spotlight } from 'features/recipes/components/Spotlight';
 import { pathOr } from 'ramda';
 
 interface PlanMealSummaryProps {
-  meal: PlanMealData;
+  meal: PlanMealData | null;
 }
 
 export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {
-  if (meal.cooking.length) {
+  if (!meal || !meal.cooking.length || !meal.eating.length) {
+    const fakeRecipe = {
+      title: 'Nothing planned',
+      description: "You didn't make any plans for your next meal.",
+    };
+
+    return (
+      <>
+        <Spotlight recipe={fakeRecipe} />
+      </>
+    );
+  } else if (meal.cooking.length) {
     const firstRecipe = meal.cooking[0].recipe;
 
     return (
@@ -31,18 +42,9 @@ export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {
         <Spotlight recipe={firstRecipe} />
       </>
     );
-  } else {
-    const fakeRecipe = {
-      title: 'Nothing planned',
-      description: "You didn't make any plans for your next meal.",
-    };
-
-    return (
-      <>
-        <Spotlight recipe={fakeRecipe} />
-      </>
-    );
   }
+
+  return null;
 };
 
 export default PlanMealSummary;

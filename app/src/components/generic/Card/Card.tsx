@@ -7,7 +7,7 @@ import CardWrapper from './components/CardWrapper';
 import { CardContents } from './components/CardContents';
 import { CardBadge } from './components/CardBadge';
 import CardActionMenu from './components/CardActionMenu';
-import { Heading, Box, Button, Paragraph } from 'grommet';
+import { Heading, Box, Button, Paragraph, Text } from 'grommet';
 import Icon, { GenericIconName } from '../Icon';
 import { BackdropArt } from 'components/brand';
 
@@ -108,7 +108,6 @@ export const Card: SFC<CardProps> = ({
       imageSrc={imageSrc}
       {...props}
     >
-      {!imageSrc && <BackdropArt />}
       {renderBadge && (
         <CardBadge className="card-badge">{renderBadge()}</CardBadge>
       )}
@@ -118,14 +117,12 @@ export const Card: SFC<CardProps> = ({
         className="card-contents"
       >
         {title && (
-          <Heading
-            level="4"
+          <Text
             className="card-title"
             margin={{ horizontal: 'medium', vertical: 'small' }}
-            responsive={false}
           >
             {title}
-          </Heading>
+          </Text>
         )}
         {showDetails && (
           <Paragraph

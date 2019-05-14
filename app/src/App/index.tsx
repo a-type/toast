@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom';
 import history from 'browserHistory';
 import { GlobalStyle, grommetTheme } from 'theme';
 import { Grommet, Box } from 'grommet';
-import Sidebar from 'features/structure/Sidebar';
+import Navigation from 'features/structure/Navigation/Navigation';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { GlobalLoader } from 'components/generic/Loader';
 import Helmet from 'react-helmet';
@@ -29,8 +29,8 @@ const MainGrid = styled.div`
   height: 100%;
 
   display: grid;
-  grid-template-areas: 'nav' 'content' 'guides';
-  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 'content' 'guides' 'nav';
+  grid-template-rows: 1fr auto auto;
   grid-template-columns: 100%;
 
   @media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px) {
@@ -60,7 +60,7 @@ const App: FC<{}> = () => (
                     <title>Toast</title>
                   </Helmet>
                   <MainGrid>
-                    <Sidebar gridArea="nav" />
+                    <Navigation gridArea="nav" />
                     <MainContentBox width="100%" gridArea="content">
                       <Routes />
                     </MainContentBox>
