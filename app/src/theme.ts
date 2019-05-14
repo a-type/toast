@@ -5,6 +5,7 @@ import { deepMerge, normalizeColor } from 'grommet/utils';
 export const rhythmHeight = 24;
 
 export const fontSizes = {
+  xs: 12,
   sm: 14,
   md: 16,
   lg: 20,
@@ -39,6 +40,7 @@ export const GlobalStyle = createGlobalStyle`
   --font-default: "Noto Serif", serif;
   --font-logo: "Pacifico", serif;
 
+  --font-size-xs: ${fontSizes.xs}px;
   --font-size-md: ${fontSizes.md}px;
   --font-size-sm: ${fontSizes.sm}px;
   --font-size-lg: ${fontSizes.lg}px;
