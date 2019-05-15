@@ -16,9 +16,6 @@ import Action from 'components/generic/Action';
 const RecipeCollectionPage = () => (
   <PageWithActions pageTitle="Collection">
     <Actions>
-      <Action to="/find" icon="search">
-        Find more recipes
-      </Action>
       <Action to="/recipes/create" icon="add">
         Add your own recipe
       </Action>
