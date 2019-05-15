@@ -7,9 +7,8 @@ import CardWrapper from './components/CardWrapper';
 import { CardContents } from './components/CardContents';
 import { CardBadge } from './components/CardBadge';
 import CardActionMenu from './components/CardActionMenu';
-import { Heading, Box, Button, Paragraph, Text } from 'grommet';
+import { Box, Button, Paragraph, Text } from 'grommet';
 import Icon, { GenericIconName } from '../Icon';
-import { BackdropArt } from 'components/brand';
 
 type RenderProp = () => ReactElement;
 export type CardAction =

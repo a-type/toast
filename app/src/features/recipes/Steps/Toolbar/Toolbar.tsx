@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Bar } from './components';
 import { Link, Icon } from 'components/generic';
-import { HelpText } from 'components/text';
-import { Heading, Button } from 'grommet';
+import { HelpText, Heading } from 'components/text';
+import { Button } from 'grommet';
 
 export interface ToolbarProps {
   recipe: {
@@ -20,7 +20,7 @@ const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
       </Link>
       <div>
         <HelpText>Cooking</HelpText>
-        <Heading margin="0" level="3">
+        <Heading css={{ margin: '0' }} level="3">
           {recipe.title}
         </Heading>
       </div>

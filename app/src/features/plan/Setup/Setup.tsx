@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Heading, Paragraph, Button } from 'grommet';
+import { Paragraph, Button } from 'grommet';
+import { Heading } from 'components/text';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { Loader } from 'components/generic';

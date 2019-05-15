@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { Text, Box, Heading, Button } from 'grommet';
+import { Text, Box, Button } from 'grommet';
+import { Heading } from 'components/text';
 import RecipeCards from '../RecipeCards';
 import useSavedRecipes from '../useSavedRecipes';
 import ErrorMessage from 'components/generic/ErrorMessage';

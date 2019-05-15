@@ -1,15 +1,8 @@
 import React, { FC } from 'react';
 import useEditRecipe from './useEditRecipe';
 import { EditRecipeRecipe } from './queries';
-import {
-  Box,
-  Heading,
-  Form,
-  TextInput,
-  TextArea,
-  Button,
-  Paragraph,
-} from 'grommet';
+import { Box, Form, TextInput, TextArea, Button, Paragraph } from 'grommet';
+import { Heading } from 'components/text';
 import { path } from 'ramda';
 import { Formik } from 'formik';
 import { Field, Icon } from 'components/generic';

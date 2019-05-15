@@ -10,9 +10,8 @@ import {
   startOfWeek,
   isWithinRange,
 } from 'date-fns';
-import { Label } from 'components/text';
+import { Label, Heading } from 'components/text';
 import { MONTH_NAMES, WEEKDAY_ABBREVIATIONS } from './constants';
-import { Heading } from 'grommet';
 
 export interface DateProps {
   title: string;

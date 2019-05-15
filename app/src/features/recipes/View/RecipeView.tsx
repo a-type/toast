@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import ViewSpy from './ViewSpy';
 import { Spotlight } from 'features/recipes/components/Spotlight';
 import { StepsLink } from './components';
-import { Heading } from 'grommet';
+import { Heading } from 'components/text';
 import { useAuth } from 'contexts/AuthContext';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';

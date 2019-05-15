@@ -4,7 +4,8 @@ import Downshift from 'downshift';
 import { Popup } from 'components/generic';
 import PickerCreateIngredientMutation from './PickerCreateIngredientMutation';
 import Suggestions from './Suggestions';
-import { Heading, TextInput } from 'grommet';
+import { TextInput } from 'grommet';
+import { Heading } from 'components/text';
 
 const ingredientToString = ingredient => {
   if (!ingredient) {

@@ -4,7 +4,8 @@ import { sentence } from 'change-case';
 import ManageSection from './ManageSection';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import IngredientDetailsQuery from './IngredientDetailsQuery';
-import { Heading, Paragraph } from 'grommet';
+import { Paragraph } from 'grommet';
+import { Heading } from 'components/text';
 import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
 
 export default ({ ingredientId }) => (

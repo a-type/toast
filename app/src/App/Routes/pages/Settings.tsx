@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import Column from 'components/layout/Column';
 import { GroceryDay } from 'features/plan';
 import Invite from 'features/groups/Invite';
-import { Heading, Box } from 'grommet';
+import { Box } from 'grommet';
+import { Heading } from 'components/text';
 import LogoutButton from 'features/structure/LogoutButton';
 
 export interface SettingsPageProps {}

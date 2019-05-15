@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Heading, Box } from 'grommet';
+import { Box } from 'grommet';
+import { Heading } from 'components/text';
 
 storiesOf('Heading', module).add('kinds', () => (
   <Box>

@@ -8,7 +8,7 @@ import {
 } from './components';
 import { Consumer } from './Context';
 import CrossFade from '../CrossFade/CrossFade';
-import { Heading } from 'grommet';
+import { Heading } from 'components/text';
 
 export interface StageProps {
   title: string;

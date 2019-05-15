@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Text, Box, Heading, Paragraph } from 'grommet';
+import { Paragraph } from 'grommet';
 import { RecipeSearch } from 'features/recipes/RecipeSearch/RecipeSearch';
 import { Provider } from 'contexts/RecipeSearchContext';
 import PageWithActions, {

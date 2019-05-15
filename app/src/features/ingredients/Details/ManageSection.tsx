@@ -1,7 +1,7 @@
 import React from 'react';
 import { Merge, Edit } from 'features/ingredients/manage';
 import { IsAdmin } from 'features/auth/gates';
-import { Heading } from 'grommet';
+import { Heading } from 'components/text';
 
 export default ({ ingredient }) => (
   <IsAdmin>

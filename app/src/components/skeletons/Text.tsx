@@ -1,7 +1,7 @@
 import React, { useRef, FC } from 'react';
 import styled from 'styled-components';
-import { Heading, HeadingProps, ParagraphProps, Paragraph } from 'grommet';
-import { Label } from 'components/text';
+import { ParagraphProps, Paragraph } from 'grommet';
+import { Label, Heading, HeadingProps } from 'components/text';
 
 export type TextSkeletonProps = {
   size?: number;

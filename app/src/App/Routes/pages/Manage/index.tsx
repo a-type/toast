@@ -2,7 +2,7 @@ import React from 'react';
 import { IsAdmin } from 'features/auth/gates';
 import { Recent, BulkCreate, Create } from 'features/ingredients/manage';
 import { Manage as Corrections } from 'features/recipeIngredientCorrections';
-import { Heading } from 'grommet';
+import { Heading } from 'components/text';
 import Column from 'components/layout/Column';
 
 export default class ManagePage extends React.Component {

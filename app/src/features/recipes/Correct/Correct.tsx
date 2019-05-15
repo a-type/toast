@@ -4,7 +4,7 @@ import { Button } from 'grommet';
 import { Spotlight } from 'features/recipes/components/Spotlight';
 import IngredientCorrections from './Ingredients';
 import { pathOr } from 'ramda';
-import { Heading } from 'grommet';
+import { Heading } from 'components/text';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';
 

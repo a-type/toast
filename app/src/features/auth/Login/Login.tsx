@@ -2,7 +2,8 @@ import * as React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'services/firebase';
 import { Layout } from './components';
-import { Heading, Paragraph } from 'grommet';
+import { Paragraph } from 'grommet';
+import { Heading } from 'components/text';
 
 export interface LoginProps {
   returnTo?: string;

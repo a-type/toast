@@ -1,6 +1,7 @@
 import React, { SFC } from 'react';
 import { PlanDayData } from '../../types';
-import { Heading, Box } from 'grommet';
+import { Box } from 'grommet';
+import { Heading } from 'components/text';
 import { formatDay } from 'formatters/date';
 import MealGrid from './MealGrid';
 import Meal, { MealSkeleton } from 'features/plan/PlanMeal/PlanMeal';
@@ -29,7 +30,7 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
 
   return (
     <Box>
-      <Heading>{formatDay(parse(date))}</Heading>
+      <Heading level="2">{formatDay(parse(date))}</Heading>
       <MealGrid>
         <Meal meal={breakfast} mealName="Breakfast" />
         <Meal meal={lunch} mealName="Lunch" />

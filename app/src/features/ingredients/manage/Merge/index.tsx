@@ -3,7 +3,8 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Picker } from 'features/ingredients';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Layer, Box, Button, Heading } from 'grommet';
+import { Layer, Box, Button } from 'grommet';
+import { Heading } from 'components/text';
 
 const MergeIngredients = gql`
   mutation MergeIngredients($primary: ID!, $secondary: ID!) {

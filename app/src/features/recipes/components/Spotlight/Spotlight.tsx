@@ -4,7 +4,8 @@ import { Link } from 'components/text';
 import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
-import { Heading, Paragraph, Box } from 'grommet';
+import { Paragraph, Box } from 'grommet';
+import { Heading } from 'components/text';
 import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
 import { Icon } from 'components/generic';
 

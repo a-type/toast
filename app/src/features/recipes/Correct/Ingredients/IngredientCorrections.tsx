@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import IngredientCorrector from './IngredientCorrector';
 import { IngredientCorrectorRecipeIngredient } from '../types';
 import { AddIngredient } from './AddIngredient';
-import { Box, Heading } from 'grommet';
+import { Box } from 'grommet';
+import { Heading } from 'components/text';
 import { useCorrectIngredient } from '../useCorrectIngredient';
 
 interface IngredientCorrectionsProps {

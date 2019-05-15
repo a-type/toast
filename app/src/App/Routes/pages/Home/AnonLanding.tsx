@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'components/generic';
-import { Button, Heading, Paragraph, Box } from 'grommet';
+import { Button, Paragraph } from 'grommet';
+import { Heading } from 'components/text';
 import { RecipeCards } from 'features/recipes';
 import { useQuery, QueryHookResult } from 'react-apollo-hooks';
 import gql from 'graphql-tag';

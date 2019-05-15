@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import RecipeSuggestions from './AssignRecipe';
 import { PlanActionType } from './types';
 import { PlanMealData } from '../types';
-import { Box, Heading } from 'grommet';
+import { Box } from 'grommet';
+import { Heading } from 'components/text';
 import ChoosePreviousMeal from './ChoosePreviousMeal';
 
 export interface PlanMealDetailsStageProps {

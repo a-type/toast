@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { Heading, Button } from 'grommet';
+import { Button } from 'grommet';
+import { Heading } from 'components/text';
 import { SIDE_ACTIONS_MIN_WIDTH_PX } from 'constants/breakpoints';
 import { Link, Icon } from 'components/generic';
 

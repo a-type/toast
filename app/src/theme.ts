@@ -9,8 +9,18 @@ export const fontSizes = {
   sm: 14,
   md: 16,
   lg: 20,
-  xl: 24,
+  xl: 26,
+  xxl: 36,
 };
+
+export const fontSizeArray = [
+  fontSizes.xs,
+  fontSizes.sm,
+  fontSizes.md,
+  fontSizes.lg,
+  fontSizes.xl,
+  fontSizes.xxl,
+];
 
 export const capHeights = {
   sm: 0.7142857142857143,
@@ -32,12 +42,14 @@ export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'auto' | '0';
 export const getSize = (sizeName: Size | string = '0px'): string =>
   spaceSizes[sizeName] ? `${spaceSizes[sizeName]}px` : sizeName;
 
+const baseFont = '"PT Serif"';
+
 export const GlobalStyle = createGlobalStyle`
 :root {
   --rhythm: ${rhythmHeight}px;
 
-  --font-fancy: "Merriweather", serif;
-  --font-default: "Noto Serif", serif;
+  --font-fancy: "Playfair Display", serif;
+  --font-default: ${baseFont}, serif;
   --font-logo: "Pacifico", serif;
 
   --font-size-xs: ${fontSizes.xs}px;
@@ -45,10 +57,11 @@ export const GlobalStyle = createGlobalStyle`
   --font-size-sm: ${fontSizes.sm}px;
   --font-size-lg: ${fontSizes.lg}px;
   --font-size-xl: ${fontSizes.xl}px;
+  --font-size-xxl: ${fontSizes.xxl}px;
 
   --normal: 400;
   --light: 200;
-  --bold: 600;
+  --bold: 700;
 
   --color-white: #fefeff;
   --color-black: #161626;
@@ -62,7 +75,7 @@ export const GlobalStyle = createGlobalStyle`
   --color-disabled: #727282;
 
   --color-brand: #f6c667;
-  --color-brand-light: #ffe1bb;
+  --color-brand-light: #ffe6bd;
   --color-brand-dark: #ab5f0f;
   --color-brand-highlighter: #ffe1bb32;
 
@@ -100,7 +113,7 @@ export const GlobalStyle = createGlobalStyle`
   --color-popover-background: var(--color-white);
   --color-popover-foreground: var(--color-black);
 
-  --color-heading: var(--color-dark);
+  --color-heading: var(--color-gray-dark);
 
   --color-effect-hover: var(--color-brand);
   --color-effect-focus: var(--color-brand-light);
@@ -114,8 +127,8 @@ export const GlobalStyle = createGlobalStyle`
   --spacing-xl: ${spaceSizes.xl}px;
 
   --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 14px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 18px;
 
   --border-width-sm: 1px;
   --border-width-md: 2px;
@@ -294,7 +307,7 @@ export const grommetTheme = deepMerge(base, {
       duration: '0.3s',
     },
     font: {
-      face: 'Noto Serif, serif',
+      face: `${baseFont}, serif`,
     },
     control: {
       border: {
@@ -380,10 +393,18 @@ export const grommetTheme = deepMerge(base, {
     font: {
       family: 'var(--font-fancy)',
     },
-    weight: 400,
+    weight: 700,
     extend: ({ level }: any) => css`
       opacity: ${level > 1 ? '0.93' : '1'};
-      font-weight: ${level > 3 ? 'var(--bold)' : 'var(--normal)'};
+      font-weight: ${level < 3 ? 'var(--bold)' : 'var(--normal)'};
+      font-size: ${[
+        'var(--font-size-xl)',
+        'var(--font-size-lg)',
+        'var(--font-size-md)',
+        'var(--font-size-md)',
+        'var(--font-size-md)',
+        'var(--font-size-md)',
+      ][level]};
       line-height: 1.5;
     `,
   },

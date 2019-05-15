@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
 import { RecipeSearchIngredientFilterValue } from 'contexts/RecipeSearchContext';
-import { Box, TextInput, Heading, Button } from 'grommet';
+import { Box, TextInput } from 'grommet';
 import { Field } from 'components/generic';
-import { Picker } from 'features/ingredients';
 
 export interface RecipeSearchFormProps {
   searchTerm: string;

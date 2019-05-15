@@ -3,7 +3,8 @@ import Servings from './Servings';
 import gql from 'graphql-tag';
 import Time from './Time';
 import { Link } from 'components/text';
-import { Heading, Box, Text, Button } from 'grommet';
+import { Box, Text, Button } from 'grommet';
+import { Heading } from 'components/text';
 
 const RecipeDetails = ({ recipe }) => {
   if (!recipe) {

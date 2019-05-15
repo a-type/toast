@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import { Loader } from 'components/generic';
 import gql from 'graphql-tag';
 import { RecipeCards } from 'features/recipes';
-import { Heading } from 'grommet';
+import { Heading } from 'components/text';
 import ErrorMessage from 'components/generic/ErrorMessage';
 
 interface UserSummaryProps {
