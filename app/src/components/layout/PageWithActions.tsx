@@ -1,14 +1,17 @@
 import React, { FC } from 'react';
-import { Heading } from 'grommet';
+import { Heading, Button } from 'grommet';
 import { SIDE_ACTIONS_MIN_WIDTH_PX } from 'constants/breakpoints';
+import { Link, Icon } from 'components/generic';
 
 export const CLASS_NAMES = {
   ACTIONS: 'actions',
   PAGE_CONTENT: 'page-content',
+  BACK_BUTTON: 'back-button',
 };
 
 export interface PageWithActionsProps {
   pageTitle?: string;
+  backPath?: string;
 }
 
 export const Actions: FC<{}> = ({ children }) => {
@@ -16,7 +19,7 @@ export const Actions: FC<{}> = ({ children }) => {
     <aside
       css={{
         gridArea: 'actions',
-        padding: 'var(--spacing-lg)',
+        padding: '0 var(--spacing-lg)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
@@ -64,6 +67,7 @@ export const PageContent: FC<{}> = ({ children }) => {
 export const PageWithActions: FC<PageWithActionsProps> = ({
   children,
   pageTitle,
+  backPath,
 }) => {
   return (
     <div
@@ -85,10 +89,14 @@ export const PageWithActions: FC<PageWithActionsProps> = ({
           gridTemplateAreas: '"title title" "content actions"',
           gridTemplateColumns: '1fr 320px',
           gridTemplateRows: 'auto 1fr',
+
+          [`& > .${CLASS_NAMES.BACK_BUTTON}`]: {
+            display: 'none',
+          },
         },
       }}
     >
-      {pageTitle && (
+      {!!(pageTitle || backPath) && (
         <Heading
           level="1"
           css={{
@@ -97,6 +105,15 @@ export const PageWithActions: FC<PageWithActionsProps> = ({
             gridArea: 'title',
           }}
         >
+          {backPath && (
+            <Link
+              to={backPath}
+              className={CLASS_NAMES.BACK_BUTTON}
+              css={{ display: 'inline' }}
+            >
+              <Button icon={<Icon name="arrow_back_ios" />} />
+            </Link>
+          )}
           {pageTitle}
         </Heading>
       )}

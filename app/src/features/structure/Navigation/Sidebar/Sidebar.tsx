@@ -56,7 +56,7 @@ const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
 
       <SidebarLink nav exact label="Home" icon="home" to="/" />
       <SidebarLink nav exact label="Plan" icon="calendar_today" to="/plan" />
-      <SidebarLink nav exact label="Explore" icon="search" to="/find" />
+      <SidebarLink nav exact label="Explore" icon="search" to="/explore" />
       <SidebarLink nav label="Collection" icon="bookmarks" to="/recipes" />
 
       <SidebarLink nav label="Settings" icon="settings" to="/settings" />

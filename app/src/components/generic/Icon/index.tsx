@@ -130,7 +130,7 @@ export type IconProps = React.HTMLAttributes<HTMLSpanElement> & {
 const I = styled<{ rotation?: number; size?: string; color?: string }, 'i'>(
   'i',
 )`
-  transform: rotate(${props => props.rotation || 0}deg);
+  transform: rotate(${props => props.rotation || 0}deg) translateY(10%);
   font-size: ${props => props.size || 'inherit'};
   color: ${props => props.color || 'inherit'};
 `;

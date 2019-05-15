@@ -11,7 +11,7 @@ import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
 import LoginPage from './pages/Login';
 import JoinGroupPage from './pages/JoinGroup';
-import FindRecipes from './pages/FindRecipes';
+import Explore from './pages/Explore';
 import SettingsPage from './pages/Settings';
 
 export default () => (
@@ -23,7 +23,7 @@ export default () => (
     <PrivateRoute path="/shoppingList" component={ShoppingList} />
     <PrivateRoute path="/joinGroup" exact component={JoinGroupPage} />
 
-    <PrivateRoute path="/find" component={FindRecipes} />
+    <PrivateRoute path="/explore" component={Explore} />
 
     <Route path="/recipes" component={RecipePage} />
 

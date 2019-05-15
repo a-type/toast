@@ -20,7 +20,7 @@ export const BottomNav: FC<BottomNavProps> = ({ gridArea }) => {
     <>
       <IconLink to="/" exact icon="home" label="Home" />
       <IconLink to="/plan" icon="calendar_today" label="Plan" />
-      <IconLink to="/find" icon="search" label="Explore" />
+      <IconLink to="/explore" icon="search" label="Explore" />
       <IconLink to="/recipes" icon="bookmarks" label="Collection" />
     </>
   );

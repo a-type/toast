@@ -23,6 +23,13 @@
       "problemMatcher": [
         "$awesometsc"
       ]
+    },
+    {
+      "type": "npm",
+      "script": "job:sync",
+      "problemMatcher": [
+        "$awesometsc"
+      ]
     }
   ]
 }
