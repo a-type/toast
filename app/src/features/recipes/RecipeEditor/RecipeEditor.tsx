@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import useEditRecipe from './useEditRecipe';
 import { EditRecipeRecipe } from './queries';
 import {
@@ -9,8 +9,9 @@ import {
   Button,
   Paragraph,
   CheckBox,
+  Collapsible,
 } from 'grommet';
-import { Heading, HelpText } from 'components/text';
+import { Heading, HelpText, Link } from 'components/text';
 import { path } from 'ramda';
 import { Formik } from 'formik';
 import { Field, Icon } from 'components/generic';
@@ -49,6 +50,8 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
   } = useEditRecipe({
     recipeId,
   });
+
+  const [showOptional, setShowOptional] = useState(false);
 
   if (initializing) {
     return <GlobalLoader />;
@@ -101,6 +104,14 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
                   value={values.description}
                 />
               </Field>
+              <Field label="Servings" required>
+                <TextInput
+                  type="number"
+                  name="servings"
+                  onChange={handleChange}
+                  value={values.servings}
+                />
+              </Field>
               <Field>
                 <CheckBox
                   name="private"
@@ -113,6 +124,41 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
                   your plan
                 </HelpText>
               </Field>
+
+              <Link onClick={() => setShowOptional(!showOptional)}>
+                {showOptional ? 'Hide' : 'Show'} optional fields
+              </Link>
+              <Collapsible open={showOptional}>
+                <Field label="Cook time (minutes)">
+                  <TextInput
+                    type="number"
+                    name="cookTime"
+                    onChange={handleChange}
+                    value={values.cookTime}
+                  />
+                </Field>
+                <Field label="Prep time (minutes)">
+                  <TextInput
+                    type="number"
+                    name="prepTime"
+                    onChange={handleChange}
+                    value={values.prepTime}
+                  />
+                </Field>
+                <Field label="Unattended time (minutes)">
+                  <TextInput
+                    type="number"
+                    name="unattendedTime"
+                    onChange={handleChange}
+                    value={values.unattendedTime}
+                  />
+                  <HelpText>
+                    Unattended time is any time you spend slow cooking, baking,
+                    sous vide... any time you don't have to actively do anything
+                    during cooking.
+                  </HelpText>
+                </Field>
+              </Collapsible>
 
               <Button type="submit" label={!recipeId ? 'Continue' : 'Save'} />
             </Form>
