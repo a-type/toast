@@ -10,6 +10,8 @@ import {
   CreateRecipeIngredientMutation,
   EditRecipeCreateIngredientInput,
   PublishRecipeMutation,
+  RecipeUpdateInput,
+  RecipeCreateInput,
 } from './queries';
 
 export default ({ recipeId }: { recipeId?: string }) => {
@@ -23,7 +25,10 @@ export default ({ recipeId }: { recipeId?: string }) => {
     skip: isCreate,
   });
 
-  const saveMutate = useMutation(SaveMutation);
+  const saveMutate = useMutation<{
+    id?: string;
+    input: RecipeUpdateInput | RecipeCreateInput;
+  }>(SaveMutation);
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<ApolloError>(null);
@@ -35,7 +40,15 @@ export default ({ recipeId }: { recipeId?: string }) => {
         const result = await saveMutate({
           variables: {
             id: recipeId,
-            input: values,
+            input: {
+              title: values.title,
+              description: values.description,
+              servings: values.servings,
+              cookTime: values.cookTime,
+              prepTime: values.prepTime,
+              unattendedTime: values.unattendedTime,
+              private: values.private,
+            },
           },
         });
         if (result.data.createRecipe) {

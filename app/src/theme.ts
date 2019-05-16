@@ -389,6 +389,12 @@ export const grommetTheme = deepMerge(base, {
     `,
   },
 
+  textArea: {
+    extend: () => ({ theme }: any) => css`
+      font-family: ${theme.global.font.face};
+    `,
+  },
+
   heading: {
     font: {
       family: 'var(--font-fancy)',

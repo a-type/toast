@@ -92,6 +92,7 @@ export default async (req: Request, res: Response) => {
     const existing = await tx.run(
       `
       MATCH (recipe:Recipe {sourceUrl: $sourceUrl})
+      WHERE coalesce(recipe.published, false) = true AND coalesce(recipe.private, false) = false
       RETURN recipe {.id}
       `,
       {
@@ -200,7 +201,7 @@ export default async (req: Request, res: Response) => {
       const createResult = await tx.run(
         `
         MERGE (recipe:Recipe {sourceUrl:$sourceUrl})
-          ON CREATE SET recipe += $input, recipe.id = $id
+          ON CREATE SET recipe += $input, recipe.id = $id, recipe.private = false, recipe.published = true
         WITH recipe
         MATCH (user:User {id:$userId})
         CREATE (user)-[:DISCOVERER_OF]->(recipe)

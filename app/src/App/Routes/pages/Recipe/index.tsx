@@ -41,7 +41,7 @@ const RecipeStepsPage = ({ match: { params } }) => (
 );
 
 const EditRecipePage = ({ match: { params } }) => (
-  <PageWithActions>
+  <PageWithActions pageTitle={params.recipeId ? 'Edit recipe' : 'New recipe'}>
     <PageContent>
       <RecipeEditor recipeId={params.recipeId || null} />
     </PageContent>

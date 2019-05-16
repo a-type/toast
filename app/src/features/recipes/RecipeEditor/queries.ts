@@ -7,6 +7,7 @@ export type RecipeCreateInput = {
   cookTime?: number;
   prepTime?: number;
   unattendedTime?: number;
+  private?: boolean;
 };
 
 export type RecipeUpdateInput = {
@@ -16,6 +17,7 @@ export type RecipeUpdateInput = {
   cookTime?: number;
   prepTime?: number;
   unattendedTime?: number;
+  private?: boolean;
 };
 
 export type EditRecipeIngredient = {
@@ -54,6 +56,7 @@ export type EditRecipeRecipe = {
   prepTime: number;
   unattendedTime: number;
   published: boolean;
+  private: boolean;
   ingredients: EditRecipeRecipeIngredient[];
   steps: EditRecipeRecipeStep[];
 };
@@ -110,6 +113,7 @@ export const EditRecipeRecipeFragment = gql`
     prepTime
     unattendedTime
     published
+    private
     ingredients {
       ...EditRecipeRecipeIngredient
     }

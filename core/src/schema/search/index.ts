@@ -29,7 +29,8 @@ export const typeDefs = gql`
         WITH node as recipe, score
         WHERE none(x in $exclude WHERE exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Ingredient {id:x})))
         AND all(c in $include WHERE exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Ingredient{id:c})))
-        AND recipe.published = true
+        AND coalesce(recipe.published, false) = true
+        AND coalesce(recipe.private, false) = false
         RETURN recipe ORDER BY score DESC
         """
       )

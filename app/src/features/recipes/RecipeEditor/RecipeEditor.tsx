@@ -1,8 +1,16 @@
 import React, { FC } from 'react';
 import useEditRecipe from './useEditRecipe';
 import { EditRecipeRecipe } from './queries';
-import { Box, Form, TextInput, TextArea, Button, Paragraph } from 'grommet';
-import { Heading } from 'components/text';
+import {
+  Box,
+  Form,
+  TextInput,
+  TextArea,
+  Button,
+  Paragraph,
+  CheckBox,
+} from 'grommet';
+import { Heading, HelpText } from 'components/text';
 import { path } from 'ramda';
 import { Formik } from 'formik';
 import { Field, Icon } from 'components/generic';
@@ -52,21 +60,18 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
     <Box>
       {error && <ErrorMessage error={error} />}
       <Box>
-        <Heading level="2">
-          {!recipeId ? 'Create recipe' : 'Edit recipe'}
-          {!published && (
-            <span
-              css={{
-                marginLeft: 'var(--spacing-md)',
-                fontSize: '14px',
-                color: 'var(--color-negative)',
-              }}
-            >
-              <Icon name="label" /> Draft
-            </span>
-          )}
-        </Heading>
-        {!recipe && published && (
+        {!!(!published && recipeId) && (
+          <span
+            css={{
+              fontSize: '18px',
+              color: 'var(--color-negative)',
+              marginBottom: 'var(--spacing-md)',
+            }}
+          >
+            <Icon name="label" /> Draft
+          </span>
+        )}
+        {!published && (
           <Box>
             <Button primary onClick={publish} label="Publish" />
             <Paragraph>
@@ -95,6 +100,18 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
                   onChange={handleChange}
                   value={values.description}
                 />
+              </Field>
+              <Field>
+                <CheckBox
+                  name="private"
+                  onChange={handleChange}
+                  checked={values.private}
+                  label="Private recipe"
+                />
+                <HelpText>
+                  Private recipes can only be seen by you and other members of
+                  your plan
+                </HelpText>
               </Field>
 
               <Button type="submit" label={!recipeId ? 'Continue' : 'Save'} />

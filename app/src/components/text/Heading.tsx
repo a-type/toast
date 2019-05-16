@@ -30,6 +30,7 @@ export const Heading: FC<HeadingProps> = ({
         fontSize: sizes[levelInt],
         color: 'var(--color-heading)',
         opacity: levelInt < 3 ? 1 : 0.8,
+        lineHeight: '1.25',
       }}
       {...rest}
     >
