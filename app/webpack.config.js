@@ -109,7 +109,7 @@ module.exports = {
       ],
       gcm_sender_id: '103953800507',
       share_target: {
-        action: '/recipes/find',
+        action: '/explore/scan',
         params: {
           title: 'title',
           text: 'text',
