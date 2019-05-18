@@ -1,17 +1,12 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'context';
 import { neo4jgraphql } from 'neo4j-graphql-js';
+import { returnRecipeIfUserHasAccess } from 'cypherFragments';
 
 export const typeDefs = gql`
   enum RecipeDisplayType {
     LINK
     FULL
-  }
-
-  type RecipeSavedEdge @relation(name: "SAVED", from: "User", to: "Recipe") {
-    collection: String!
-    user: User!
-    recipe: Recipe!
   }
 
   type Recipe {
@@ -37,7 +32,12 @@ export const typeDefs = gql`
     locked: Boolean!
     private: Boolean!
 
-    saved: [RecipeSavedEdge!]!
+    containedInViewerCollections(first: Int = 10, offset: Int = 0): [RecipeCollection!]! @authenticated
+      @cypher(statement: """
+      MATCH (this)-[:COLLECTED_IN]->(collection:RecipeCollection)<-[:HAS_COLLECTION]-(:Group)<-[:MEMBER_OF]-(:User{id:$cypherParams.userId})
+      RETURN collection
+      """
+      )
   }
 
   enum RecipeLinkProblem {
@@ -65,8 +65,9 @@ export const typeDefs = gql`
     url: String!
   }
 
-  input RecipeSaveInput {
+  input RecipeCollectInput {
     recipeId: ID!
+    collectionId: ID!
   }
 
   input RecipeUpdateInput {
@@ -94,12 +95,7 @@ export const typeDefs = gql`
       @cypher(
         statement: """
         MATCH (recipe:Recipe {id:$id})
-        OPTIONAL MATCH (author:User)-[:AUTHOR_OF]->(recipe)
-        RETURN CASE
-          WHEN author.id = $cypherParams.userId OR (NOT recipe.private AND recipe.published)
-            THEN recipe
-          ELSE NULL
-        END
+        ${returnRecipeIfUserHasAccess()}
         """
       )
 
@@ -110,7 +106,8 @@ export const typeDefs = gql`
     ): [Recipe!]!
       @cypher(
         statement: """
-        MATCH (recipe:Recipe) RETURN recipe
+        MATCH (recipe:Recipe)
+        ${returnRecipeIfUserHasAccess()}
         """
       )
   }
@@ -123,7 +120,6 @@ export const typeDefs = gql`
         statement: """
         MATCH (user:User{id:$cypherParams.userId})
         CREATE (recipe:Recipe {id: $id})<-[:AUTHOR_OF]-(user)
-        CREATE (recipe)<-[:SAVED{collection:'liked'}]-(user)
         SET recipe += $input
         SET recipe.displayType = 'FULL'
         SET recipe.published = false
@@ -154,22 +150,23 @@ export const typeDefs = gql`
       )
     recordRecipeView(id: ID!): Recipe
 
-    saveRecipe(input: RecipeSaveInput!): Recipe!
+    collectRecipe(input: RecipeCollectInput!): Recipe!
       @authenticated
       @cypher(
         statement: """
-        MATCH (recipe:Recipe{id:$input.recipeId}), (user:User{id:$cypherParams.userId})
-        MERGE (user)-[:SAVED{collection:'liked'}]->(recipe)
+        MATCH (recipe:Recipe{id:$input.recipeId}),
+          (user:User{id:$cypherParams.userId})-[:MEMBER_OF]->(group:Group)-[:HAS_COLLECTION]->(collection:RecipeCollection{id:$input.collectionId})
+        MERGE (collection)<-[:COLLECTED_IN]-(recipe)
         RETURN recipe
         """
       )
 
-    unsaveRecipe(input: RecipeSaveInput!): Recipe!
+    uncollectRecipe(input: RecipeCollectInput!): Recipe!
       @authenticated
       @cypher(
         statement: """
-        MATCH (recipe:Recipe{id:$input.recipeId}), (user:User{id:$cypherParams.userId})
-        OPTIONAL MATCH (recipe)<-[rel:SAVED]-(user)
+        MATCH (recipe:Recipe{id:$input.recipeId})
+        OPTIONAL MATCH (user:User{id:$cypherParams.userId})-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->(:RecipeCollection)<-[rel:COLLECTED_IN]-(recipe)
         DELETE rel
         RETURN recipe
         """
@@ -181,20 +178,22 @@ export const typeDefs = gql`
   }
 
   extend type User {
-    authoredRecipes(pagination: ListPaginationInput): [Recipe!]!
+    authoredRecipes(first: Int = 10, offset: Int = 0): [Recipe!]!
       @cypher(
         statement: "MATCH (this)-[:AUTHOR_OF]->(r:Recipe {published: true}) RETURN r"
       )
 
-    discoveredRecipes(pagination: ListPaginationInput): [Recipe!]!
+    discoveredRecipes(first: Int = 10, offset: Int = 0): [Recipe!]!
       @relation(name: "DISCOVERER_OF", direction: "OUT")
 
-    draftRecipes(pagination: ListPaginationInput): [Recipe!]!
+    draftRecipes(first: Int = 10, offset: Int = 0): [Recipe!]!
       @cypher(
         statement: "MATCH (this)-[:AUTHOR_OF]->(r:Recipe {published: false}) RETURN r"
       )
+  }
 
-    savedRecipes(first: Int, offset: Int): [RecipeSavedEdge!]!
+  extend type RecipeCollection {
+    recipes(first: Int = 10, offset: Int = 0): [Recipe!]! @relation(name: "COLLECTED_IN", direction: "IN")
   }
 `;
 
@@ -228,9 +227,9 @@ export const resolvers = {
     recordRecipeView: (_parent, args, ctx) =>
       ctx.graph.recipes.recordView(args.id),
 
-    saveRecipe: neo4jgraphql,
+    collectRecipe: neo4jgraphql,
 
-    unsaveRecipe: neo4jgraphql,
+    uncollectRecipe: neo4jgraphql,
   },
   Recipe: {
     // default value of locked to true

@@ -13,11 +13,15 @@ const REPEAT_MESSAGE =
   "Looks like reloading didn't solve the problem. This might be a temporary issue, but feel free to contact us if it persists.";
 
 export interface ErrorMessageProps {
-  error?: ApolloError;
+  error?: ApolloError | string;
   full?: boolean;
 }
 
-const getIcon = (error: ApolloError): GenericIconName => {
+const getIcon = (error: ApolloError | string): GenericIconName => {
+  if (typeof error === 'string') {
+    return 'warning';
+  }
+
   switch (error.name) {
     case 'UserInputError':
     case 'ForbiddenError':
@@ -27,12 +31,19 @@ const getIcon = (error: ApolloError): GenericIconName => {
   }
 };
 
-const getText = (error: ApolloError, isRepeatError: boolean): string => {
+const getText = (
+  error: ApolloError | string,
+  isRepeatError: boolean,
+): string => {
   if (!error) {
     if (isRepeatError) {
       return REPEAT_MESSAGE;
     }
     return UNKNOWN_MESSAGE;
+  }
+
+  if (typeof error === 'string') {
+    return error;
   }
 
   switch (error.name) {
@@ -88,7 +99,8 @@ export const ErrorMessage: FC<ErrorMessageProps> = ({ error, full }) => {
         <Paragraph>{getText(error, isRepeatError)}</Paragraph>
         <Box direction="row" justify="start">
           {!error ||
-            (!['ForbiddenError', 'UserInputError'].includes(error.name) ? (
+            (typeof error !== 'string' &&
+            !['ForbiddenError', 'UserInputError'].includes(error.name) ? (
               <Button
                 onClick={() => {
                   saveLastErrorRefreshTime();

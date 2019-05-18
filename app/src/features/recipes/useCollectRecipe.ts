@@ -2,37 +2,37 @@ import { useCallback } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 
-const SaveRecipeRecipeFragment = gql`
-  fragment SaveRecipeRecipe on Recipe {
+const CollectRecipeRecipeFragment = gql`
+  fragment CollectRecipeRecipe on Recipe {
     id
     title
-    saved {
-      collection
+    containedInViewerCollections {
+      id
     }
   }
 `;
 
-const SaveRecipeMutation = gql`
-  mutation SaveRecipe($input: RecipeSaveInput!) {
-    saveRecipe(input: $input) {
-      ...SaveRecipeRecipe
+const CollectRecipeMutation = gql`
+  mutation CollectRecipe($input: RecipeCollectInput!) {
+    collectRecipe(input: $input) {
+      ...CollectRecipeRecipe
     }
   }
 
-  ${SaveRecipeRecipeFragment}
+  ${CollectRecipeRecipeFragment}
 `;
 
 const UnsaveRecipeMutation = gql`
-  mutation UnsaveRecipe($input: RecipeSaveInput!) {
-    unsaveRecipe(input: $input) {
-      ...SaveRecipeRecipe
+  mutation UnsaveRecipe($input: RecipeCollectInput!) {
+    uncollectRecipe(input: $input) {
+      ...CollectRecipeRecipe
     }
   }
 
-  ${SaveRecipeRecipeFragment}
+  ${CollectRecipeRecipeFragment}
 `;
 
-type SaveRecipeRecipe = {
+type CollectRecipeRecipe = {
   id: string;
   title: string;
   saved?: {
@@ -40,36 +40,38 @@ type SaveRecipeRecipe = {
   }[];
 };
 
-type SaveRecipeMutationResult = {
-  saveRecipe: SaveRecipeRecipe;
+type CollectRecipeMutationResult = {
+  collectRecipe: CollectRecipeRecipe;
 };
 
 type UnsaveRecipeMutationResult = {
-  unsaveRecipe: SaveRecipeRecipe;
+  uncollectRecipe: CollectRecipeRecipe;
 };
 
 export default ({ refetchQueries }: { refetchQueries?: any[] } = {}) => {
-  const mutateSave = useMutation<SaveRecipeMutationResult>(SaveRecipeMutation);
+  const mutateSave = useMutation<CollectRecipeMutationResult>(
+    CollectRecipeMutation,
+  );
   const mutateUnsave = useMutation<UnsaveRecipeMutationResult>(
     UnsaveRecipeMutation,
   );
 
   const save = useCallback(
-    (input: { recipeId: string }) =>
+    (input: { recipeId: string; collectionId: string }) =>
       mutateSave({
         variables: { input },
         update: (cache, { data }) => {
           // apollo cache adds a typename to the id
-          const id = `Recipe:${data.saveRecipe.id}`;
-          const saved = data.saveRecipe.saved;
-          const current = cache.readFragment<SaveRecipeRecipe>({
+          const id = `Recipe:${data.collectRecipe.id}`;
+          const saved = data.collectRecipe.saved;
+          const current = cache.readFragment<CollectRecipeRecipe>({
             id,
-            fragment: SaveRecipeRecipeFragment,
+            fragment: CollectRecipeRecipeFragment,
           });
           if (current) {
             current.saved = saved;
             cache.writeFragment({
-              fragment: SaveRecipeRecipeFragment,
+              fragment: CollectRecipeRecipeFragment,
               id: current.id,
               data: current,
             });
@@ -89,16 +91,16 @@ export default ({ refetchQueries }: { refetchQueries?: any[] } = {}) => {
       mutateUnsave({
         variables: { input },
         update: (cache, { data }) => {
-          const id = `Recipe:${data.unsaveRecipe.id}`;
-          const saved = data.unsaveRecipe.saved;
-          const current = cache.readFragment<SaveRecipeRecipe>({
+          const id = `Recipe:${data.uncollectRecipe.id}`;
+          const saved = data.uncollectRecipe.saved;
+          const current = cache.readFragment<CollectRecipeRecipe>({
             id,
-            fragment: SaveRecipeRecipeFragment,
+            fragment: CollectRecipeRecipeFragment,
           });
           if (current) {
             current.saved = saved;
             cache.writeFragment({
-              fragment: SaveRecipeRecipeFragment,
+              fragment: CollectRecipeRecipeFragment,
               id,
               data: current,
             });

@@ -1,4 +1,3 @@
-import { searchIngredients, searchRecipes } from './service';
 import { gql } from 'apollo-server-express';
 import { neo4jgraphql } from 'neo4j-graphql-js';
 import { pathOr } from 'ramda';

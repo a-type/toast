@@ -9,11 +9,11 @@ import { pathOr } from 'ramda';
  */
 export default class GenerateIdDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
-    const { type, fromArg } = this.args;
+    const { type, fromArg, argName = 'id' } = this.args;
     const { resolve = defaultFieldResolver } = field;
     field.resolve = async (parent, args, ctx, info) => {
       const idBase = fromArg ? pathOr(null, fromArg.split('.'), args) : type;
-      return resolve(parent, { id: id(idBase), ...args }, ctx, info);
+      return resolve(parent, { [argName]: id(idBase), ...args }, ctx, info);
     };
   }
 }

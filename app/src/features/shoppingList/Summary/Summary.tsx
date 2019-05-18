@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Box, Text, Button } from 'grommet';
-import { Label } from 'components/text';
 import { Link } from 'components/generic';
 import getNextDay from 'utils/getNextDay';
 import { formatDay } from 'formatters/date';

@@ -1,29 +1,33 @@
+import { gql } from 'apollo-server-express';
 import gcloudStorage from 'services/gcloudStorage';
-import uuid from 'uuid';
-import fetch from 'node-fetch';
-import { Readable } from 'stream';
-import mime from 'mime-types';
 import { UserInputError } from 'apollo-server-express';
+
+export const typeDefs = gql`
+  type Image {
+    id: ID!
+    url: String!
+    attribution: String
+  }
+
+  extend type Recipe {
+    coverImage: Image @relation(name: "COVER_IMAGE", direction: "OUT")
+  }
+
+  input ImageCreateInput {
+    file: Upload
+    url: String
+    attribution: String
+  }
+
+  extend type Mutation {
+    updateRecipeCoverImage(id: ID!, input: ImageCreateInput!): Recipe!
+      @authenticated
+  }
+`;
 
 export const IMAGE_FIELDS = `.id, .url, .attribution`;
 
-export const getRecipeCoverImage = async (id, ctx) => {
-  return ctx.transaction(async tx => {
-    const coverImage = await tx.run(
-      `
-        MATCH (i:Image)<-[:COVER_IMAGE]-(:Recipe {id: $id})
-        RETURN i { ${IMAGE_FIELDS} }
-      `,
-      { id },
-    );
-
-    return coverImage.records.length > 0
-      ? coverImage.records[0].get('i')
-      : null;
-  });
-};
-
-export const updateRecipeCoverImage = async (id, input, ctx) => {
+const updateRecipeCoverImage = async (id, input, ctx) => {
   let file = await input.file;
   if (!file && input.url) {
     file = await ctx.recipeScraper.getImagePseudoFile(input.url);
@@ -73,4 +77,11 @@ export const updateRecipeCoverImage = async (id, input, ctx) => {
       return recipe;
     });
   }
+};
+
+export const resolvers = {
+  Mutation: {
+    updateRecipeCoverImage: (parent, args, ctx, info) =>
+      updateRecipeCoverImage(args.id, args.input, ctx),
+  },
 };

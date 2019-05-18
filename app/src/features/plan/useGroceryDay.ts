@@ -7,6 +7,7 @@ import { ApolloError } from 'apollo-boost';
 export const GetGroceryDayQuery = gql`
   query GroceryDay {
     me {
+      id
       group {
         id
         groceryDay
@@ -17,6 +18,7 @@ export const GetGroceryDayQuery = gql`
 
 export type GroceryDayQueryResult = {
   me: {
+    id: string;
     group?: {
       id: string;
       groceryDay: number;

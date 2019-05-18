@@ -32,9 +32,6 @@ const SearchRecipesQuery = gql`
         url
         attribution
       }
-      saved {
-        collection
-      }
     }
   }
 `;
@@ -49,9 +46,6 @@ type SearchRecipesQueryResult = {
       url: string;
       attribution: string;
     };
-    saved: {
-      collection: string;
-    }[];
   }[];
 };
 

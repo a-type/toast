@@ -12,6 +12,7 @@ import * as planMeals from './planMeals';
 import * as recipeIngredientCorrections from './recipeIngredientCorrections';
 import * as groupInvitations from './groupInvitations';
 import * as shoppingList from './shoppingList';
+import * as recipeCollections from './recipeCollections';
 
 import * as directives from './directives';
 import * as scalars from './scalars';
@@ -74,6 +75,7 @@ export const typeDefs = [
   planDays.typeDefs,
   planMeals.typeDefs,
   shoppingList.typeDefs,
+  recipeCollections.typeDefs,
 ];
 export const resolvers = [
   images.resolvers,
@@ -89,5 +91,6 @@ export const resolvers = [
   planDays.resolvers,
   planMeals.resolvers,
   shoppingList.resolvers,
+  recipeCollections.resolvers,
   scalars,
 ].reduce(mergeDeepRight, globalResolvers);

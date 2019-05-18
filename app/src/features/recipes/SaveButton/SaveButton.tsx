@@ -1,38 +1,58 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import gql from 'graphql-tag';
 import { IsLoggedIn } from 'features/auth/gates';
-import useSaveRecipe from '../useSaveRecipe';
+import useCollectRecipe from '../useCollectRecipe';
 import { useQuery } from 'react-apollo-hooks';
 import { Button } from 'grommet';
 import { Icon } from 'components/generic';
 import { path } from 'ramda';
+import Popup from 'components/generic/Popup';
+import RecipeCollections from 'features/collections/RecipeCollections';
 
 const RecipeSaveButtonQuery = gql`
   query RecipeSaveButton($id: ID!) {
     recipe(id: $id) {
       id
-      saved {
-        collection
+      containedInViewerCollections {
+        id
       }
     }
   }
 `;
 
 const LikeButton = ({ id }) => {
-  const { save, unsave } = useSaveRecipe();
+  const { save, unsave } = useCollectRecipe({
+    refetchQueries: ['RecipeSaveButton'],
+  });
   const { data, loading, error } = useQuery(RecipeSaveButtonQuery, {
     variables: { id },
   });
+  const [showCollectionModal, setShowCollectionModal] = useState<boolean>(
+    false,
+  );
 
-  const isSaved = !!path(['recipe', 'saved', 'length'], data);
+  console.log(data);
+
+  const isSaved = !!path(
+    ['recipe', 'containedInViewerCollections', 'length'],
+    data,
+  );
 
   const onClick = useCallback(() => {
     if (isSaved) {
       unsave({ recipeId: id });
     } else {
-      save({ recipeId: id });
+      setShowCollectionModal(true);
     }
-  }, [isSaved, save, unsave]);
+  }, [isSaved, save, unsave, id]);
+
+  const handleCollectionSelected = useCallback(
+    async collection => {
+      await save({ recipeId: id, collectionId: collection.id });
+      setShowCollectionModal(false);
+    },
+    [save, id],
+  );
 
   if (loading || error || !data) {
     return (
@@ -49,6 +69,11 @@ const LikeButton = ({ id }) => {
         label={isSaved ? 'Saved' : 'Save'}
         onClick={onClick}
       />
+      {showCollectionModal && (
+        <Popup onClose={() => setShowCollectionModal(false)}>
+          <RecipeCollections onCollectionSelected={handleCollectionSelected} />
+        </Popup>
+      )}
     </IsLoggedIn>
   );
 };

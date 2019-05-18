@@ -22,6 +22,17 @@ export const typeDefs = gql`
   extend type Mutation {
     setGroceryDay(groceryDay: Int!): Group!
     createGroup: Group!
+      @authenticated
+      @generateId(type: "group")
+      @generateId(type: "recipeCollection", argName: "collectionId")
+      @cypher(
+        statement: """
+        MATCH (user:User {id: $cypherParams.userId})
+        CREATE (group:Group {id: $id, groceryDay: 0})<-[:MEMBER_OF]-(user)
+        CREATE (group)-[:HAS_COLLECTION]->(:RecipeCollection {id: $collectionId, name: "Saved", default: true})
+        RETURN group
+        """
+      )
   }
 `;
 
@@ -36,8 +47,8 @@ export const resolvers = {
     setGroceryDay(_parent, { groceryDay }, ctx: Context) {
       return ctx.graph.groups.mergeMine({ groceryDay });
     },
-    async createGroup(_parent, _args, ctx: Context) {
-      const group = await ctx.graph.groups.mergeMine({ groceryDay: 0 });
+    async createGroup(parent, args, ctx: Context, info) {
+      const group = await neo4jgraphql(parent, args, ctx, info);
       await ctx.planning.syncPlan(group.id);
       ctx.storeGroupId(group.id);
       return group;

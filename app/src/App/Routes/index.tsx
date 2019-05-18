@@ -13,6 +13,7 @@ import LoginPage from './pages/Login';
 import JoinGroupPage from './pages/JoinGroup';
 import Explore from './pages/Explore';
 import SettingsPage from './pages/Settings';
+import Collections from './pages/Collections';
 
 export default () => (
   <Switch>
@@ -26,6 +27,8 @@ export default () => (
     <PrivateRoute path="/explore" component={Explore} />
 
     <Route path="/recipes" component={RecipePage} />
+
+    <PrivateRoute path="/collections" component={Collections} />
 
     <Route path="/users/:userId" component={UserPage} />
 

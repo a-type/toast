@@ -2,12 +2,10 @@ import React, { FC } from 'react';
 import PlanSummary from 'features/plan/Summary/Summary';
 import Column from 'components/layout/Column';
 import ShoppingListSummary from 'features/shoppingList/Summary/Summary';
-import RecipesSummary from 'features/recipes/Summary/Summary';
 import { Button } from 'grommet';
 import { Heading } from 'components/text';
 import usePlan from 'features/plan/usePlan';
 import useGroceryDay from 'features/plan/useGroceryDay';
-import useSavedRecipes from 'features/recipes/useSavedRecipes';
 import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { PlanSetup } from 'features/plan/Setup/Setup';
@@ -23,14 +21,9 @@ export const StartPage: FC<StartPageProps> = ({}) => {
 
   const [plan, planLoading, planError, planResult] = usePlan();
   const [groceryDay, groceryDayLoading, groceryDayError] = useGroceryDay();
-  const [
-    savedRecipes,
-    savedRecipesLoading,
-    savedRecipesError,
-  ] = useSavedRecipes();
 
-  const anyLoading = planLoading || groceryDayLoading || savedRecipesLoading;
-  const allLoading = planLoading && groceryDayLoading && savedRecipesLoading;
+  const anyLoading = planLoading || groceryDayLoading;
+  const allLoading = planLoading && groceryDayLoading;
 
   if (planError) {
     return <ErrorMessage full error={planError} />;
@@ -48,11 +41,6 @@ export const StartPage: FC<StartPageProps> = ({}) => {
         error={groceryDayError}
       />
       <Heading level="3">Recipes</Heading>
-      <RecipesSummary
-        savedRecipes={savedRecipes}
-        loading={savedRecipesLoading}
-        error={savedRecipesError}
-      />
     </>
   );
 

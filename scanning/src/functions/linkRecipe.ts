@@ -107,7 +107,9 @@ export default async (req: Request, res: Response) => {
       await tx.run(
         `
         MATCH (user:User{id: $userId}), (recipe:Recipe{id: $recipeId})
+        OPTIONAL MATCH (user)-[:MEMBER_OF]->(group:Group)
         CREATE (user)-[:SAVED {collection: "liked"}]->(recipe)
+        CREATE (group)-[:COLLECTED_RECIPE {collection: "default"}]->(recipe)
         `,
         {
           userId,
@@ -204,8 +206,10 @@ export default async (req: Request, res: Response) => {
           ON CREATE SET recipe += $input, recipe.id = $id, recipe.private = false, recipe.published = true
         WITH recipe
         MATCH (user:User {id:$userId})
+        OPTIONAL MATCH (user)-[:MEMBER_OF]->(group:Group)
         CREATE (user)-[:DISCOVERER_OF]->(recipe)
         CREATE (user)-[:SAVED {collection: "liked"}]->(recipe)
+        CREATE (group)-[:COLLECTED_RECIPE {collection: "default"}]->(recipe)
         RETURN recipe {.id}
         `,
         {
