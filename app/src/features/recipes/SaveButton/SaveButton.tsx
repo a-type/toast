@@ -31,8 +31,6 @@ const LikeButton = ({ id }) => {
     false,
   );
 
-  console.log(data);
-
   const isSaved = !!path(
     ['recipe', 'containedInViewerCollections', 'length'],
     data,

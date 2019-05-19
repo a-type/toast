@@ -1,0 +1,11 @@
+---
+- kind: index
+  type: node_label_property
+  label: RecipeCollection
+  properties:
+    - default
+
+- kind: constraint
+  type: node_unique_property
+  label: RecipeCollection
+  property: id
