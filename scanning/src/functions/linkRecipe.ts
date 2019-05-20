@@ -83,6 +83,40 @@ export default async (req: Request, res: Response) => {
   const session = neo4j.session();
   const time = timestamp();
 
+  let defaultCollectionId = await session.readTransaction(async tx => {
+    const result = await tx.run(
+      `
+      MATCH (:User{id: $userId})-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->(collection:RecipeCollection{default:true})
+      RETURN collection {.id}
+      `,
+      { userId },
+    );
+
+    if (!result.records.length) {
+      return null;
+    }
+
+    return result.records[0].get('collection').id;
+  });
+
+  if (!defaultCollectionId) {
+    defaultCollectionId = await session.writeTransaction(async tx => {
+      const result = await tx.run(
+        `
+        MATCH (:User{id: $userId})-[:MEMBER_OF]->(group:Group)
+        CREATE (group)-[:HAS_COLLECTION]->(collection:RecipeCollection{default: true, id: $collectionId, name: "Saved"})
+        RETURN collection {.id}
+        `,
+        {
+          userId,
+          collectionId: id('recipeCollection'),
+        },
+      );
+
+      return result.records[0].get('collection').id;
+    });
+  }
+
   const existingRecipeId = await session.readTransaction(async tx => {
     let recipeId: string;
 
@@ -106,14 +140,13 @@ export default async (req: Request, res: Response) => {
 
       await tx.run(
         `
-        MATCH (user:User{id: $userId}), (recipe:Recipe{id: $recipeId})
-        OPTIONAL MATCH (user)-[:MEMBER_OF]->(group:Group)
-        CREATE (user)-[:SAVED {collection: "liked"}]->(recipe)
-        CREATE (group)-[:COLLECTED_RECIPE {collection: "default"}]->(recipe)
+        MATCH (recipe:Recipe{id: $recipeId}), (recipeCollection:Collection{id:$collectionId})
+        CREATE (collection)<-[:COLLECTED_IN]-(recipe)
         `,
         {
           userId,
           recipeId,
+          collectionId: defaultCollectionId,
         },
       );
 
@@ -205,11 +238,9 @@ export default async (req: Request, res: Response) => {
         MERGE (recipe:Recipe {sourceUrl:$sourceUrl})
           ON CREATE SET recipe += $input, recipe.id = $id, recipe.private = false, recipe.published = true
         WITH recipe
-        MATCH (user:User {id:$userId})
-        OPTIONAL MATCH (user)-[:MEMBER_OF]->(group:Group)
+        MATCH (user:User {id:$userId}), (collection:RecipeCollection{id: $collectionId})
         CREATE (user)-[:DISCOVERER_OF]->(recipe)
-        CREATE (user)-[:SAVED {collection: "liked"}]->(recipe)
-        CREATE (group)-[:COLLECTED_RECIPE {collection: "default"}]->(recipe)
+        CREATE (collection)<-[:COLLECTED_IN]-(recipe)
         RETURN recipe {.id}
         `,
         {
@@ -224,6 +255,7 @@ export default async (req: Request, res: Response) => {
           },
           id: id(scraped.title || 'recipe'),
           userId,
+          collectionId: defaultCollectionId,
         },
       );
 
