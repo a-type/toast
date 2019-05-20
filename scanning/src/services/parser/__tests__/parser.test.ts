@@ -4,6 +4,7 @@ describe('ingredient parser', () => {
   test('1 cup of oats', () => {
     expect(parse('1 cup of oats')).toEqual({
       original: '1 cup of oats',
+      sanitized: '1 cup of oats',
       ingredient: {
         raw: 'oats',
         normalized: 'oat',
@@ -44,6 +45,7 @@ describe('ingredient parser', () => {
       comments: [],
       preparations: [],
       original: '1/3 tablespoon chopped onion',
+      sanitized: '1/3 tablespoon chopped onion',
     });
   });
 
@@ -65,6 +67,7 @@ describe('ingredient parser', () => {
         range: [0, 4],
       },
       original: 'four slices of white bread',
+      sanitized: 'four slices of white bread',
       comments: [],
       preparations: [],
     });
@@ -90,6 +93,7 @@ describe('ingredient parser', () => {
       comments: [],
       preparations: [],
       original: 'four',
+      sanitized: 'four',
     });
   });
 
@@ -113,6 +117,7 @@ describe('ingredient parser', () => {
       comments: [],
       preparations: [],
       original: '1 egg',
+      sanitized: '1 egg',
     });
   });
 
@@ -136,6 +141,7 @@ describe('ingredient parser', () => {
       comments: [],
       preparations: [],
       original: '2 eggs',
+      sanitized: '2 eggs',
     });
   });
 
@@ -159,6 +165,7 @@ describe('ingredient parser', () => {
       comments: [],
       preparations: [],
       original: '3 tbsp flour',
+      sanitized: '3 tbsp flour',
     });
   });
 
@@ -182,6 +189,7 @@ describe('ingredient parser', () => {
       comments: [],
       preparations: [],
       original: '1 slice of Bread',
+      sanitized: '1 slice of Bread',
     });
   });
 
@@ -203,6 +211,7 @@ describe('ingredient parser', () => {
         range: [6, 29],
       },
       original: '2 tsp sesame or vegetable oil',
+      sanitized: '2 tsp sesame or vegetable oil',
       preparations: [],
       comments: [],
     });
@@ -228,6 +237,7 @@ describe('ingredient parser', () => {
       comments: ['to season'],
       preparations: [],
       original: 'kosher salt, to season',
+      sanitized: 'kosher salt, to season',
     });
   });
 
@@ -250,6 +260,7 @@ describe('ingredient parser', () => {
       },
       original: '1 (15 ounce) can kidney beans, drained and rinsed',
       comments: ['15 ounce'],
+      sanitized: '1 (15 ounce) can kidney beans, drained and rinsed',
       preparations: ['drained and rinsed'],
     });
   });
@@ -274,6 +285,7 @@ describe('ingredient parser', () => {
         range: [8, 41],
       },
       original: '1 pound skinless, boneless chicken thighs, quartered',
+      sanitized: '1 pound skinless, boneless chicken thighs, quartered',
       comments: [],
       preparations: ['quartered'],
     });
@@ -286,6 +298,8 @@ describe('ingredient parser', () => {
       ),
     ).toEqual({
       original:
+        '1 1/2 pounds (700 grams) large boneless and skinless chicken breasts halved horizontally to make 4 fillets (I use 2 large breasts -- 12 oz or 350 grams each)',
+      sanitized:
         '1 1/2 pounds (700 grams) large boneless and skinless chicken breasts halved horizontally to make 4 fillets (I use 2 large breasts -- 12 oz or 350 grams each)',
       comments: [
         '700 grams',
@@ -308,6 +322,32 @@ describe('ingredient parser', () => {
         raw: '1 1/2',
         normalized: 1.5,
         range: [0, 5],
+      },
+    });
+  });
+
+  test('½ cup grated Parmesan cheese (plus additional for serving)', () => {
+    expect(
+      parse('½ cup grated Parmesan cheese (plus additional for serving)'),
+    ).toEqual({
+      original: '½ cup grated Parmesan cheese (plus additional for serving)',
+      sanitized: '1/2 cup grated Parmesan cheese (plus additional for serving)',
+      comments: ['plus additional for serving'],
+      preparations: [],
+      ingredient: {
+        raw: 'grated Parmesan cheese',
+        normalized: 'grated parmesan cheese',
+        range: [8, 30],
+      },
+      unit: {
+        raw: 'cup',
+        normalized: 'cup',
+        range: [4, 7],
+      },
+      quantity: {
+        raw: '1/2',
+        normalized: 0.5,
+        range: [0, 3],
       },
     });
   });

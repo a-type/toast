@@ -7,6 +7,7 @@ import sanitize from './sanitize';
 import unabbreviate from './unabbreviate';
 import removePreparations from './removePreparations';
 import removeComments from './removeComments';
+import { replaceUnicodeFractions } from './unicodeFractions';
 
 export interface ParseEntity<T> {
   raw: string;
@@ -16,6 +17,7 @@ export interface ParseEntity<T> {
 
 export interface ParseResult {
   original: string;
+  sanitized: string;
   ingredient: ParseEntity<string>;
   unit: ParseEntity<string>;
   quantity: ParseEntity<number>;
@@ -24,7 +26,7 @@ export interface ParseResult {
 }
 
 export default (text: string): ParseResult => {
-  const sanitized = sanitize(text);
+  const sanitized = replaceUnicodeFractions(sanitize(text));
   const { text: withoutPreparations, preparations } = removePreparations(
     sanitized,
   );
@@ -48,20 +50,21 @@ export default (text: string): ParseResult => {
 
   return {
     original: text,
+    sanitized,
     ingredient: {
       raw: ingredientRaw || null,
       normalized: ingredientNormalized || null,
-      range: getRange(text, ingredientRaw),
+      range: getRange(sanitized, ingredientRaw),
     },
     unit: {
       raw: unitRaw || null,
       normalized: unitNormalized || null,
-      range: getRange(text, unitRaw),
+      range: getRange(sanitized, unitRaw),
     },
     quantity: {
       raw: quantityRaw || null,
       normalized: quantityNormalized || null,
-      range: getRange(text, quantityRaw),
+      range: getRange(sanitized, quantityRaw),
     },
     preparations,
     comments,
