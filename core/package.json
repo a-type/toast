@@ -65,7 +65,7 @@
     "mime-types": "^2.1.18",
     "minimist": "^1.2.0",
     "neo4j-driver": "^1.7.1",
-    "neo4j-graphql-js": "^2.4.1",
+    "neo4j-graphql-js": "^2.6.1",
     "node-fetch": "^2.2.0",
     "parse-unit": "^1.0.1",
     "ramda": "^0.25.0",
