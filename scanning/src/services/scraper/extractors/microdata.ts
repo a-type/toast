@@ -1,6 +1,9 @@
 import { Page } from 'puppeteer';
 
-const microdata = async (page: Page, it: string) => {
+const microdata = async (page: Page) => {
+  console.log('trying microdata');
+  const it = 'http://schema.org/Recipe';
+
   return await page.evaluate(itemtype => {
     /**
      * All extraction code must go inside this block
@@ -65,7 +68,7 @@ const microdata = async (page: Page, it: string) => {
     for (var i = 0, len = elems.length; i < len; i++)
       arr.push(extract(elems[i]));
 
-    return arr;
+    return arr[0];
   }, it);
 };
 

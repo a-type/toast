@@ -1,6 +1,7 @@
 import { Page } from 'puppeteer';
 
 const kitchenStories = async (page: Page) => {
+  console.log('trying kitchen stories');
   return await page.evaluate(() => {
     function textContent(el) {
       return el && el.textContent;

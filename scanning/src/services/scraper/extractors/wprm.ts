@@ -1,7 +1,9 @@
 import { Page } from 'puppeteer';
 
 const wprm = async (page: Page) => {
+  console.log('trying wprm');
   return await page.evaluate(() => {
+    debugger;
     /**
      * All extraction code must go inside this block
      * to be sent to the browser.
@@ -45,21 +47,23 @@ const wprm = async (page: Page) => {
       return null;
     }
 
-    var titleElement = wprmRoot.querySelector('.wprm-recipe-name');
-    var authorElement = wprmRoot.querySelector('.wprm-recipe-author');
-    var prepTimeElement = wprmRoot.querySelector(
+    var titleElement = document.querySelector('.wprm-recipe-name');
+    var authorElement = document.querySelector('.wprm-recipe-author');
+    var prepTimeElement = document.querySelector(
       '.wprm-recipe-prep-time-container',
     );
-    var cookTimeElement = wprmRoot.querySelector(
+    var cookTimeElement = document.querySelector(
       '.wprm-recipe-cook-time-container',
     );
-    var totalTimeElement = wprmRoot.querySelector(
+    var totalTimeElement = document.querySelector(
       '.wprm-recipe-total-time-container',
     );
-    var servingsElement = wprmRoot.querySelector('.wprm-recipe-servings');
-    var ingredientsList = wprmRoot.querySelectorAll('.wprm-recipe-ingredient');
-    var stepsList = wprmRoot.querySelectorAll('.wprm-recipe-instruction');
-    var imageElement = wprmRoot.querySelector('.wprm-recipe-image img');
+    var servingsElement = document.querySelector('.wprm-recipe-servings');
+    var ingredientsList = document.querySelectorAll('.wprm-recipe-ingredient');
+    var stepsList = document.querySelectorAll('.wprm-recipe-instruction');
+    var imageElement =
+      document.querySelector('.wprm-recipe-image img') ||
+      document.querySelector('.wprm-recipe img');
 
     var ingredientsText = [];
     ingredientsList.forEach(function(el) {

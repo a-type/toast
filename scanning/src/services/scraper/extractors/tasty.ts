@@ -1,6 +1,7 @@
 import { Page } from 'puppeteer';
 
 const tasty = async (page: Page) => {
+  console.log('trying tasty');
   return await page.evaluate(() => {
     /**
      * All extraction code must go inside this block
@@ -34,6 +35,13 @@ const tasty = async (page: Page) => {
       }
 
       return null;
+    }
+
+    function toYield(yieldStr) {
+      if (!yieldStr) {
+        return null;
+      }
+      return parseInt(yieldStr);
     }
 
     var tastyRoot = document.querySelector('.tasty-recipes');
@@ -79,7 +87,7 @@ const tasty = async (page: Page) => {
       prepTime: prepTime,
       cookTime: cookTime,
       totalTime: totalTime,
-      recipeYield: textContent(servingsElement),
+      recipeYield: toYield(textContent(servingsElement)),
       recipeIngredient: ingredientsText,
       recipeInstructions: stepsText,
       copyrightHolder: textContent(authorElement),
