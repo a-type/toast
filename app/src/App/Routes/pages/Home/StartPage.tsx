@@ -40,7 +40,6 @@ export const StartPage: FC<StartPageProps> = ({}) => {
         groceryDay={groceryDay}
         error={groceryDayError}
       />
-      <Heading level="3">Recipes</Heading>
     </>
   );
 

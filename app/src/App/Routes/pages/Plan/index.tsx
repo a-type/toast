@@ -16,7 +16,9 @@ const PlanPage = () => (
       </Action>
     </Actions>
     <PageContent>
-      <PlanView />
+      <Column>
+        <PlanView />
+      </Column>
     </PageContent>
   </PageWithActions>
 );

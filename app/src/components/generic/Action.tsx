@@ -16,6 +16,9 @@ export const Action: FC<ActionProps> = ({ children, icon, ...rest }) => {
         color: 'var(--color-dark)',
         padding: 'var(--spacing-sm) var(--spacing-lg)',
         cursor: 'pointer',
+        '&:focus': {
+          boxShadow: '0 0 0 4px var(--color-effect-focus)',
+        },
       }}
     >
       {icon && <Icon name={icon} css={{ marginRight: '1em' }} />}

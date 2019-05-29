@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
 import useCollections from './useCollections';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import { Loader, Link } from 'components/generic';
-import { Box } from 'grommet';
+import { Loader, Link, CardGrid } from 'components/generic';
 import { Collection } from './useCollections';
 
 export interface RecipeCollectionsProps {
@@ -23,7 +22,7 @@ export const RecipeCollections: FC<RecipeCollectionsProps> = ({
   }
 
   return (
-    <Box>
+    <CardGrid>
       {collections.map(collection => (
         <Link
           key={collection.id}
@@ -35,11 +34,37 @@ export const RecipeCollections: FC<RecipeCollectionsProps> = ({
               onCollectionSelected(collection);
             }
           }}
+          css={{
+            borderRadius: 'var(--border-radius-lg)',
+            '&:focus': {
+              boxShadow: '0 0 0 4px var(--color-gray)',
+            },
+          }}
         >
-          {collection.name}
+          <div
+            css={{
+              display: 'flex',
+              borderRadius: 'var(--border-radius-lg)',
+              background: 'var(--color-gray-lightest)',
+              padding: 'var(--spacing-lg)',
+              width: '100%',
+              height: '100%',
+              fontFamily: 'var(--font-fancy)',
+              textAlign: 'center',
+              fontWeight: 'var(--bold)',
+              fontSize: 'var(--font-size-lg)',
+            }}
+          >
+            <span
+              css={{ margin: 'auto' }}
+              id={`collection-label-${collection.id}`}
+            >
+              {collection.name}
+            </span>
+          </div>
         </Link>
       ))}
-    </Box>
+    </CardGrid>
   );
 };
 
