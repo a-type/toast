@@ -20,6 +20,13 @@ export const typeDefs = gql`
     eating: [PlanMeal!]! @relation(name: "PLANS_TO_EAT", direction: "OUT")
   }
 
+  type PlanMealEdge
+    @relation(name: "HAS_PLAN_MEAL", from: "PlanDay", to: "PlanMeal") {
+    mealName: String!
+    meal: PlanMeal!
+    day: PlanDay!
+  }
+
   input AssignPlanMealRecipeInput {
     planMealId: ID!
     recipeId: ID!
@@ -32,6 +39,7 @@ export const typeDefs = gql`
   }
 
   extend type PlanDay {
+    meals: [PlanMealEdge!]!
     breakfast: PlanMeal!
       @cypher(
         statement: """
