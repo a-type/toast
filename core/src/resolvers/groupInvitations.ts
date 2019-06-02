@@ -1,17 +1,9 @@
-import { gql } from 'apollo-server-express';
 import { Context } from 'context';
 import GroupInvitation from 'models/GroupInvitation';
 import logger from 'logger';
 import { NotFoundError } from 'errors';
 
-export const typeDefs = gql`
-  extend type Mutation {
-    createGroupInvitation: String! @authenticated
-    acceptGroupInvitation(id: String!): Group @authenticated
-  }
-`;
-
-export const resolvers = {
+export default {
   Mutation: {
     createGroupInvitation: async (_parent, _args, ctx: Context) => {
       const group = await ctx.graph.groups.getForUser(ctx.user.id);
@@ -56,7 +48,9 @@ export const resolvers = {
         logger.fatal(err);
       }
 
-      return group;
+      return {
+        groupId: group.id,
+      };
     },
   },
 };

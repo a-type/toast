@@ -1,0 +1,60 @@
+# import Ingredient, RecipeIngredient from 'ingredients.gql'
+# import Recipe from 'recipes.gql'
+
+type ShoppingListItem {
+  id: ID!
+  totalQuantity: Float!
+  purchasedQuantity: Float!
+  unit: String
+  ingredientId: String
+  displayName: String!
+
+  plannedUses: [ShoppingListItemUsage!]!
+
+  ingredient: Ingredient
+    @cypher(
+      match: "(ingredient:Ingredient{id: parent.ingredientId})"
+      return: "ingredient"
+    )
+}
+
+"""
+Provides a snapshot of the usage of an ingredient from the shopping
+list in the week's planned recipes. Expand edges to fetch more data.
+"""
+type ShoppingListItemUsage {
+  recipeIngredientText: String
+  recipeTitle: String
+  recipeId: String
+
+  recipeIngredient: RecipeIngredient
+    @cypher(
+      match: "(ri:RecipeIngredient{id: parent.recipeIngredientId})"
+      return "ri"
+    )
+  recipe: Recipe
+    @cypher(
+      match: "(recipe:Recipe{id: parent.recipeId})"
+      return: "recipe"
+    )
+}
+
+type ShoppingList {
+  id: ID!
+  startDate: Date!
+  endDate: Date!
+  items: [ShoppingListItem!]!
+}
+
+input ShoppingListMarkItemInput {
+  shoppingListItemId: ID!
+}
+
+input ShoppingListUnmarkItemInput {
+  shoppingListItemId: ID!
+}
+
+type Mutation {
+  markShoppingListItem(input: ShoppingListMarkItemInput!): ShoppingListItem!
+  unmarkShoppingListItem(input: ShoppingListUnmarkItemInput!): ShoppingListItem!
+}

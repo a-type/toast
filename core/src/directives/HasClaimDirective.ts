@@ -1,9 +1,6 @@
 import { defaultFieldResolver } from 'graphql';
-import {
-  ForbiddenError,
-  AuthenticationError,
-  SchemaDirectiveVisitor,
-} from 'apollo-server-express';
+import { ForbiddenError, AuthenticationError } from 'apollo-server-express';
+import { SchemaDirectiveVisitor } from 'graphql-tools';
 
 export default class HasClaimDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {

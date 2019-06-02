@@ -1,5 +1,5 @@
 import { defaultFieldResolver } from 'graphql';
-import { SchemaDirectiveVisitor } from 'apollo-server-express';
+import { SchemaDirectiveVisitor } from 'graphql-tools';
 import { id } from 'tools';
 import { pathOr } from 'ramda';
 

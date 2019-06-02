@@ -1,0 +1,73 @@
+# import Recipe from 'recipes.gql'
+# import Ingredient from 'ingredients.gql'
+
+type RecipeSearchConnection @cypherVirtual {
+  # this is nodes because I can't figure out how to make the Cypher work...
+  nodes: [Recipe!]!
+    # TODO: normalize search term... replace /[^a-zA-Z0-9 -]/ with ''
+    @cypherCustom(
+      statement: """
+      CALL db.index.fulltext.queryNodes('recipes', $virtual.input.match + '~') YIELD node AS recipe, score
+      WHERE none(
+        x in $virtual.input.ingredients.exclude WHERE
+          exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Ingredient{id:x}))
+      )
+      AND all(
+        c in $virtual.input.ingredients.include WHERE
+          exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Ingredient{id:c}))
+      )
+      AND coalesce(recipe.published, false) = true
+      AND coalesce(recipe.private, false) = false
+      RETURN recipe
+      ORDER BY score
+      DESC
+      SKIP $virtual.input.pagination.offset
+      LIMIT $virtual.input.pagination.first
+      """
+    )
+}
+
+type IngredientSearchConnection @cypherVirtual {
+  nodes: [Ingredient!]!
+    # TODO: normalize search term... replace /[^a-zA-Z0-9 -]/ with ''
+    @cypherCustom(
+      statement: """
+      CALL db.index.fulltext.queryNodes('ingredients', $virtual.input.match + '~') YIELD node as ingredient, score
+      RETURN ingredient
+      ORDER BY score
+      SKIP $virtual.input.pagination.offset
+      LIMIT $virtual.input.pagination.first
+      """
+    )
+}
+
+input RecipeSearchPaginationInput {
+  first: Int
+  offset: Int
+}
+
+input RecipeSearchInput {
+  term: String
+  ingredients: RecipeSearchIngredientFilterInput
+  pagination: RecipeSearchPaginationInput = { first: 10, offset: 0 }
+}
+
+input RecipeSearchIngredientFilterInput {
+  include: [ID!]!
+  exclude: [ID!]!
+}
+
+input IngredientSearchPaginationInput {
+  first: Int
+  offset: Int
+}
+
+input IngredientSearchInput {
+  term: String
+  pagination: IngredientSearchPaginationInput = { first: 10, offset: 0 }
+}
+
+type Query {
+  searchRecipes(input: RecipeSearchInput!): RecipeSearchConnection!
+  searchIngredients(input: IngredientSearchInput!): IngredientSearchConnection!
+}

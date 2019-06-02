@@ -1,7 +1,6 @@
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, gql } from 'apollo-server-express';
 import config from 'config';
-import { typeDefs, resolvers, mocks, directives } from './schema';
 import { createContext } from './context';
 import { info, warn } from 'logger';
 import minimist from 'minimist';
@@ -9,12 +8,18 @@ import { path as get } from 'ramda';
 import mockAuthMiddleware from 'mocks/mockAuthMiddleware';
 import firebase from 'services/firebase';
 import cors from 'cors';
+import { importSchema } from 'graphql-import';
+import resolvers from './resolvers';
+import * as directives from './directives';
+import { makeExecutableSchema } from 'graphql-tools';
+import { applyMiddleware } from 'graphql-middleware';
+import { directives as cypherDirectives, middleware } from 'graphql-cypher';
+
+const typeDefs = gql`
+  ${importSchema('./schema/schema.gql')}
+`;
 
 const argv = minimist(process.argv.slice(2));
-
-if (argv.mock) {
-  warn.important('USING MOCK DATA');
-}
 
 const app = express();
 
@@ -52,10 +57,20 @@ app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
+const schema = applyMiddleware(
+  makeExecutableSchema({
+    typeDefs,
+    resolvers,
+    schemaDirectives: {
+      ...directives,
+      ...cypherDirectives,
+    },
+  }),
+  middleware,
+);
+
 const apollo = new ApolloServer({
-  typeDefs,
-  resolvers,
-  schemaDirectives: directives,
+  schema,
   context: async ({ req }) => {
     const context = await createContext(req);
     return context;
@@ -69,7 +84,6 @@ const apollo = new ApolloServer({
 
     return error;
   },
-  mocks: argv.mock ? mocks : false,
 });
 
 apollo.applyMiddleware({ app, path: '/api', cors: false });

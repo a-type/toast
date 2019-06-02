@@ -1,0 +1,6 @@
+# import Query.*, Mutation.* from 'groups.gql'
+# import Mutation.* from 'plan.gql'
+# import Query.*, Mutation.* from 'recipes.gql'
+# import Mutation.* from 'ingredients.gql'
+# import Query.* from 'search.gql'
+# import Mutation.* from 'shoppingList.gql'

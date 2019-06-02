@@ -16,12 +16,11 @@ export interface RecipeIngredientCorrectedValue {
   unit: string;
   unitStart: number;
   unitEnd: number;
-  value: number;
-  valueStart: number;
-  valueEnd: number;
+  quantity: number;
+  quantityStart: number;
+  quantityEnd: number;
   ingredientStart: number;
   ingredientEnd: number;
-  text: string;
   ingredientId: string;
 }
 
@@ -30,6 +29,7 @@ export interface RecipeIngredientCorrectionData {
   recipeIngredientId: string;
   recipeId: string;
   correctedValue: RecipeIngredientCorrectedValue;
+  correctedText: string;
   reportingUserId: string;
   status: CorrectionStatus;
   correctionType: CorrectionType;
@@ -68,6 +68,10 @@ export default class RecipeIngredientCorrection {
 
   get correctionType() {
     return this.data.correctionType;
+  }
+
+  get correctedText() {
+    return this.data.correctedText;
   }
 
   set status(status: CorrectionStatus) {

@@ -1,5 +1,6 @@
 import { defaultFieldResolver } from 'graphql';
-import { ForbiddenError, SchemaDirectiveVisitor } from 'apollo-server-express';
+import { ForbiddenError } from 'apollo-server-express';
+import { SchemaDirectiveVisitor } from 'graphql-tools';
 
 export default class AuthenticatedDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {

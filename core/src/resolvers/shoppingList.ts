@@ -1,60 +1,13 @@
-import { gql } from 'apollo-server-express';
 import { Context } from 'context';
 import { addQuantities, convertQuantity } from 'tools/quantities';
 import { startOfWeek, addDays, format } from 'date-fns';
 import { PurchaseList } from 'models';
 
-export const typeDefs = gql`
-  type ShoppingListItem {
-    id: ID!
-    totalQuantity: Float!
-    purchasedQuantity: Float!
-    unit: String
-    ingredient: Ingredient
-    plannedUses: [RecipeIngredient!]!
-    displayName: String!
-  }
-
-  type ShoppingList {
-    id: ID!
-    startDate: Date!
-    endDate: Date!
-    items: [ShoppingListItem!]!
-  }
-
-  input MarkPurchasedItemInput {
-    shoppingListItemId: String!
-  }
-
-  input MarkUnpurchasedItemInput {
-    shoppingListItemId: String!
-  }
-
-  extend type Group {
-    shoppingList: ShoppingList! @neo4j_ignore
-  }
-
-  extend type Mutation {
-    markPurchasedItem(input: MarkPurchasedItemInput!): ShoppingListItem!
-    markUnpurchasedItem(input: MarkUnpurchasedItemInput!): ShoppingListItem!
-  }
-`;
-
-type Recipe = {
-  id: string;
-  title: string;
-};
-
-type RecipeIngredient = {
-  text: string;
-  unit?: string;
-  quantity: number;
-  recipe: Recipe;
-};
-
-type Ingredient = {
-  id: string;
-  name: string;
+type ShoppingListItemUsage = {
+  recipeIngredientText: string;
+  recipeTitle: string;
+  recipeId: string;
+  recipeIngredientId: string;
 };
 
 type ShoppingListItem = {
@@ -62,8 +15,8 @@ type ShoppingListItem = {
   totalQuantity: number;
   purchasedQuantity: number;
   unit: string | null;
-  plannedUses: RecipeIngredient[];
-  ingredient: Ingredient;
+  plannedUses: ShoppingListItemUsage[];
+  ingredientId: string;
   displayName: string;
 };
 
@@ -91,8 +44,11 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
   } = await ctx.readTransaction(async tx => {
     const result = await tx.run(
       `
-      MATCH (:Group {id:$groupId})-[:HAS_PLAN_DAY]->(day:PlanDay)-[:HAS_PLAN_MEAL]->(:PlanMeal)-[:PLANS_TO_COOK]->(recipe:Recipe)<-[:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient)
-      WHERE duration.between(date($startDate), day.date).days > 0 AND duration.between(date($startDate), day.date).days < 7
+      MATCH (:Group {id:$groupId})-[:HAS_PLAN_MEAL]->
+        (:PlanMeal)-[:PLANS_TO_COOK]->(recipe:Recipe)
+        <-[:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient)
+      WHERE duration.between(date($startDate), day.date).days > 0
+      AND duration.between(date($startDate), day.date).days < 7
       OPTIONAL MATCH (recipeIngredient)<-[:USED_IN]-(ingredient:Ingredient)
       RETURN recipe {.id,.title}, recipeIngredient {.id,.text,.quantity,.unit}, ingredient {.id,.name}
     `,
@@ -106,7 +62,7 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
     return result.records.reduce((byIngredient, record) => {
       const ingredient = record.get('ingredient') || null;
       const recipeIngredient = record.get('recipeIngredient');
-      recipeIngredient.recipe = record.get('recipe');
+      const recipe = record.get('recipe');
 
       const shoppingListItemId = ingredient
         ? ingredient.id
@@ -121,7 +77,7 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
         purchasedQuantity: 0,
         unit: null,
         plannedUses: [],
-        ingredient,
+        ingredientId: ingredient && ingredient.id,
         displayName,
       };
       const sum = addQuantities(
@@ -136,7 +92,12 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
       );
       ingredientEntry.totalQuantity = sum.value || 0;
       ingredientEntry.unit = sum.unit;
-      ingredientEntry.plannedUses.push(recipeIngredient);
+      ingredientEntry.plannedUses.push({
+        recipeIngredientText: recipeIngredient.text,
+        recipeTitle: recipe.title,
+        recipeId: recipe.id,
+        recipeIngredientId: recipeIngredient.id,
+      });
       byIngredient[shoppingListItemId] = ingredientEntry;
       return byIngredient;
     }, {});
@@ -144,27 +105,27 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
 
   const purchaseList = await getListOrEphemeral(ctx, [startDate, endDate]);
 
-  const ingredientsWithPurchased = Object.keys(aggregatedIngredients).map(
-    shoppingListItemId => {
-      const ingredientEntry = aggregatedIngredients[shoppingListItemId];
-      const purchased = purchaseList.getIngredient(shoppingListItemId);
-      if (!purchased) {
-        ingredientEntry.purchasedQuantity = 0;
-        return ingredientEntry;
-      }
-
-      const convertedPurchased = convertQuantity(
-        {
-          value: purchased.quantity,
-          unit: purchased.unit,
-        },
-        ingredientEntry.unit,
-      );
-
-      ingredientEntry.purchasedQuantity = convertedPurchased.value;
+  const ingredientsWithPurchased: ShoppingListItem[] = Object.keys(
+    aggregatedIngredients,
+  ).map(shoppingListItemId => {
+    const ingredientEntry = aggregatedIngredients[shoppingListItemId];
+    const purchased = purchaseList.getIngredient(shoppingListItemId);
+    if (!purchased) {
+      ingredientEntry.purchasedQuantity = 0;
       return ingredientEntry;
-    },
-  );
+    }
+
+    const convertedPurchased = convertQuantity(
+      {
+        value: purchased.quantity,
+        unit: purchased.unit,
+      },
+      ingredientEntry.unit,
+    );
+
+    ingredientEntry.purchasedQuantity = convertedPurchased.value;
+    return ingredientEntry;
+  });
 
   return {
     id: 'shoppingList-' + startDate.toDateString(),
@@ -175,7 +136,7 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
   };
 };
 
-export const resolvers = {
+export default {
   Group: {
     shoppingList({ id: groupId }, _args, ctx: Context) {
       return loadShoppingList(groupId, ctx);
