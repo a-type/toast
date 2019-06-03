@@ -8,16 +8,12 @@ import { path as get } from 'ramda';
 import mockAuthMiddleware from 'mocks/mockAuthMiddleware';
 import firebase from 'services/firebase';
 import cors from 'cors';
-import { importSchema } from 'graphql-import';
 import resolvers from './resolvers';
 import * as directives from './directives';
 import { makeExecutableSchema } from 'graphql-tools';
 import { applyMiddleware } from 'graphql-middleware';
-import { directives as cypherDirectives, middleware } from 'graphql-cypher';
-
-const typeDefs = gql`
-  ${importSchema('./schema/schema.gql')}
-`;
+import { middleware } from 'graphql-cypher';
+import typeDefs from './schema/schema';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -63,7 +59,6 @@ const schema = applyMiddleware(
     resolvers,
     schemaDirectives: {
       ...directives,
-      ...cypherDirectives,
     },
   }),
   middleware,

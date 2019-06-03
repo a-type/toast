@@ -14,4 +14,11 @@ export default [
   groupInvitations,
   shoppingList,
   scalars,
-].reduce(mergeDeepRight, {});
+].reduce(mergeDeepRight, {
+  Query: {
+    foo: () => false,
+  },
+  Mutation: {
+    ping: () => 'pong',
+  },
+});

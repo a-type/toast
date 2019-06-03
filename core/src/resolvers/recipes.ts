@@ -53,6 +53,17 @@ export default {
 
       return recipe;
     },
+    linkRecipe: async (_parent, args, ctx: Context) => {
+      const linkResult = await ctx.scanning.linkRecipe(
+        args.input.url,
+        ctx.user.id,
+      );
+
+      return {
+        recipeId: linkResult.recipeId,
+        problems: linkResult.problems,
+      };
+    },
   },
 
   Recipe: {
