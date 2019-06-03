@@ -18,7 +18,7 @@ export interface ParseEntity<T> {
 export interface ParseResult {
   original: string;
   sanitized: string;
-  ingredient: ParseEntity<string>;
+  food: ParseEntity<string>;
   unit: ParseEntity<string>;
   quantity: ParseEntity<number>;
   preparations: string[];
@@ -44,17 +44,17 @@ export default (text: string): ParseResult => {
 
   const quantityNormalized = getNumber(quantityRaw);
 
-  const ingredientRaw = (parsed.ingredient || '').trim();
+  const foodRaw = (parsed.ingredient || '').trim();
 
-  const ingredientNormalized = depluralize(lowercase(ingredientRaw));
+  const foodNormalized = depluralize(lowercase(foodRaw));
 
   return {
     original: text,
     sanitized,
-    ingredient: {
-      raw: ingredientRaw || null,
-      normalized: ingredientNormalized || null,
-      range: getRange(sanitized, ingredientRaw),
+    food: {
+      raw: foodRaw || null,
+      normalized: foodNormalized || null,
+      range: getRange(sanitized, foodRaw),
     },
     unit: {
       raw: unitRaw || null,

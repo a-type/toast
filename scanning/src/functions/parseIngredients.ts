@@ -11,14 +11,14 @@ export default async (req, res) => {
   const session = neo4j.session();
   const found = await lookupIngredients(
     session,
-    parsed.map(p => p.ingredient.normalized),
+    parsed.map(p => p.food.normalized),
   );
 
   res.send(
     parsed.map((p, idx) => ({
       ...p,
-      ingredient: {
-        ...p.ingredient,
+      food: {
+        ...p.food,
         ...(found[idx] || {}),
       },
     })),

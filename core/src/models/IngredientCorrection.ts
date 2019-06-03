@@ -12,33 +12,33 @@ export enum CorrectionType {
   Add = 'Add',
 }
 
-export interface RecipeIngredientCorrectedValue {
+export interface IngredientCorrectedValue {
   unit: string;
   unitStart: number;
   unitEnd: number;
   quantity: number;
   quantityStart: number;
   quantityEnd: number;
-  ingredientStart: number;
-  ingredientEnd: number;
-  ingredientId: string;
+  foodStart: number;
+  foodEnd: number;
+  foodId: string;
 }
 
-export interface RecipeIngredientCorrectionData {
+export interface IngredientCorrectionData {
   id: string;
-  recipeIngredientId: string;
+  ingredientId: string;
   recipeId: string;
-  correctedValue: RecipeIngredientCorrectedValue;
+  correctedValue: IngredientCorrectedValue;
   correctedText: string;
   reportingUserId: string;
   status: CorrectionStatus;
   correctionType: CorrectionType;
 }
 
-export default class RecipeIngredientCorrection {
-  private data: RecipeIngredientCorrectionData;
+export default class IngredientCorrection {
+  private data: IngredientCorrectionData;
 
-  constructor(data: RecipeIngredientCorrectionData) {
+  constructor(data: IngredientCorrectionData) {
     this.data = data;
   }
 
@@ -46,8 +46,8 @@ export default class RecipeIngredientCorrection {
     return this.data.id;
   }
 
-  get recipeIngredientId() {
-    return this.data.recipeIngredientId;
+  get ingredientId() {
+    return this.data.ingredientId;
   }
 
   get recipeId() {
@@ -83,6 +83,6 @@ export default class RecipeIngredientCorrection {
   }
 
   static fromJSON(data) {
-    return new RecipeIngredientCorrection(data);
+    return new IngredientCorrection(data);
   }
 }

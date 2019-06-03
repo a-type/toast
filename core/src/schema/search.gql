@@ -1,5 +1,5 @@
 # import Recipe from 'recipes.gql'
-# import Ingredient from 'ingredients.gql'
+# import Food from 'foods.gql'
 
 type RecipeSearchConnection @cypherVirtual {
   # this is nodes because I can't figure out how to make the Cypher work...
@@ -9,12 +9,12 @@ type RecipeSearchConnection @cypherVirtual {
       statement: """
       CALL db.index.fulltext.queryNodes('recipes', $virtual.input.match + '~') YIELD node AS recipe, score
       WHERE none(
-        x in $virtual.input.ingredients.exclude WHERE
-          exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Ingredient{id:x}))
+        x in $virtual.input.foods.exclude WHERE
+          exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Food{id:x}))
       )
       AND all(
-        c in $virtual.input.ingredients.include WHERE
-          exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Ingredient{id:c}))
+        c in $virtual.input.foods.include WHERE
+          exists((recipe)<-[:INGREDIENT_OF]-()<-[:USED_IN]-(:Food{id:c}))
       )
       AND coalesce(recipe.published, false) = true
       AND coalesce(recipe.private, false) = false
@@ -27,13 +27,13 @@ type RecipeSearchConnection @cypherVirtual {
     )
 }
 
-type IngredientSearchConnection @cypherVirtual {
-  nodes: [Ingredient!]!
+type FoodSearchConnection @cypherVirtual {
+  nodes: [Food!]!
     # TODO: normalize search term... replace /[^a-zA-Z0-9 -]/ with ''
     @cypherCustom(
       statement: """
-      CALL db.index.fulltext.queryNodes('ingredients', $virtual.input.match + '~') YIELD node as ingredient, score
-      RETURN ingredient
+      CALL db.index.fulltext.queryNodes('foods', $virtual.input.match + '~') YIELD node as food, score
+      RETURN food
       ORDER BY score
       SKIP $virtual.input.pagination.offset
       LIMIT $virtual.input.pagination.first
@@ -48,26 +48,26 @@ input RecipeSearchPaginationInput {
 
 input RecipeSearchInput {
   term: String
-  ingredients: RecipeSearchIngredientFilterInput
+  foods: RecipeSearchFoodFilterInput
   pagination: RecipeSearchPaginationInput = { first: 10, offset: 0 }
 }
 
-input RecipeSearchIngredientFilterInput {
+input RecipeSearchFoodFilterInput {
   include: [ID!]!
   exclude: [ID!]!
 }
 
-input IngredientSearchPaginationInput {
+input FoodSearchPaginationInput {
   first: Int
   offset: Int
 }
 
-input IngredientSearchInput {
+input FoodSearchInput {
   term: String
-  pagination: IngredientSearchPaginationInput = { first: 10, offset: 0 }
+  pagination: FoodSearchPaginationInput = { first: 10, offset: 0 }
 }
 
 type Query {
   searchRecipes(input: RecipeSearchInput!): RecipeSearchConnection!
-  searchIngredients(input: IngredientSearchInput!): IngredientSearchConnection!
+  searchFoods(input: FoodSearchInput!): FoodSearchConnection!
 }

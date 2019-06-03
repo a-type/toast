@@ -15,7 +15,7 @@ export interface ParseEntity<T> {
 export type IngredientParseResult = {
   original: string;
   sanitized: string;
-  ingredient: ParseEntity<string> & {
+  food: ParseEntity<string> & {
     id?: string;
     name?: string;
   };
@@ -70,10 +70,10 @@ export default {
     quantity: parsed.quantity && parsed.quantity.normalized,
     quantityStart: parsed.quantity && parsed.quantity.range[0],
     quantityEnd: parsed.quantity && parsed.quantity.range[1],
-    ingredientStart: parsed.ingredient && parsed.ingredient.range[0],
-    ingredientEnd: parsed.ingredient && parsed.ingredient.range[1],
+    foodStart: parsed.food && parsed.food.range[0],
+    foodEnd: parsed.food && parsed.food.range[1],
     comments: parsed.comments,
     preparations: parsed.preparations,
-    ingredientId: parsed.ingredient && parsed.ingredient.id,
+    foodId: parsed.food && parsed.food.id,
   }),
 };

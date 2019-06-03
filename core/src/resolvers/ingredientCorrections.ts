@@ -1,15 +1,12 @@
 import { Context } from 'context';
-import { RecipeIngredientCorrection } from 'models';
-import { id, removeUndefined } from 'tools';
-import {
-  CorrectionStatus,
-  CorrectionType,
-} from 'models/RecipeIngredientCorrection';
+import { IngredientCorrection } from 'models';
+import { id } from 'tools';
+import { CorrectionStatus, CorrectionType } from 'models/IngredientCorrection';
 import logger from 'logger';
 import { NotFoundError } from 'errors';
 
 const applyCorrection = async (
-  correction: RecipeIngredientCorrection,
+  correction: IngredientCorrection,
   ctx: Context,
 ) => {
   if (correction.correctionType === CorrectionType.Change) {
@@ -21,30 +18,30 @@ const applyCorrection = async (
       correctedFields = ctx.scanning.parsedIngredientToRecipeIngredient(parsed);
     }
     await ctx.writeTransaction(async tx => {
-      const { ingredientId, ...rest } = correctedFields;
-      if (ingredientId) {
+      const { foodId, ...rest } = correctedFields;
+      if (foodId) {
         await tx.run(
           `
-          MATCH (ri:RecipeIngredient{id:$id}), (ing:Ingredient {id:$ingredientId})
-          OPTIONAL MATCH (ri)<-[oldRel:USED_IN]-()
+          MATCH (ing:Ingredient{id:$id}), (food:Food {id:$foodId})
+          OPTIONAL MATCH (ing)<-[oldRel:USED_IN]-()
           DELETE oldRel
-          MERGE (ri)<-[:USED_IN]-(ing)
+          MERGE (ing)<-[:USED_IN]-(food)
           `,
           {
-            id: correction.recipeIngredientId,
-            ingredientId,
+            id: correction.ingredientId,
+            foodId,
           },
         );
       }
 
       await tx.run(
         `
-        MATCH (ri:RecipeIngredient{id:$id})
+        MATCH (ri:Ingredient{id:$id})
         SET ri += $rest
         RETURN ri {.id}
         `,
         {
-          id: correction.recipeIngredientId,
+          id: correction.ingredientId,
           rest,
         },
       );
@@ -53,7 +50,7 @@ const applyCorrection = async (
     await ctx.writeTransaction(async tx => {
       await tx.run(
         `
-      MATCH (ri:RecipeIngredient{id:$id})
+      MATCH (ri:Ingredient{id:$id})
       DETACH DELETE ri
       `,
         {
@@ -69,29 +66,29 @@ const applyCorrection = async (
       parsed,
     );
     await ctx.writeTransaction(async tx => {
-      const { ingredientId, ...rest } = correctedFields;
-      const recipeIngredientId = id('recipeIngredient');
+      const { foodId, ...rest } = correctedFields;
+      const ingredientId = id('ingredient');
 
       await tx.run(
         `
-        CREATE (ri:RecipeIngredient{id:$id})
+        CREATE (ri:Ingredient{id:$id})
         SET ri += $rest
         `,
         {
-          id: recipeIngredientId,
+          id: ingredientId,
           rest,
         },
       );
 
-      if (ingredientId) {
+      if (foodId) {
         await tx.run(
           `
-          MATCH (ri:RecipeIngredient{id:$id}), (ing:Ingredient {id:$ingredientId})
-          CREATE (ri)<-[:USED_IN]-(ing)
+          MATCH (ri:Ingredient{id:$id}), (food:Food {id:$foodId})
+          CREATE (ri)<-[:USED_IN]-(food)
           `,
           {
-            id: recipeIngredientId,
-            ingredientId,
+            id: ingredientId,
+            foodId,
           },
         );
       }
@@ -101,8 +98,8 @@ const applyCorrection = async (
 
 export default {
   Query: {
-    recipeIngredientCorrections: async (_parent, args, ctx: Context) => {
-      return ctx.firestore.recipeIngredientCorrections.list(
+    ingredientCorrections: async (_parent, args, ctx: Context) => {
+      return ctx.firestore.ingredientCorrections.list(
         args.pagination,
         args.filter,
       );
@@ -110,10 +107,10 @@ export default {
   },
 
   Mutation: {
-    submitRecipeIngredientCorrection: async (_parent, args, ctx: Context) => {
-      const correction = new RecipeIngredientCorrection({
-        id: id('recipeIngredientCorrection'),
-        recipeIngredientId: args.input.recipeIngredientId,
+    submitIngredientCorrection: async (_parent, args, ctx: Context) => {
+      const correction = new IngredientCorrection({
+        id: id('ingredientCorrection'),
+        ingredientId: args.input.ingredientId,
         correctedValue: args.input.correctedValue,
         correctedText: args.input.correctedText,
         status: CorrectionStatus.Submitted,
@@ -143,42 +140,38 @@ export default {
         return correction;
       }
 
-      const result = await ctx.firestore.recipeIngredientCorrections.set(
-        correction,
-      );
+      const result = await ctx.firestore.ingredientCorrections.set(correction);
       return result;
     },
 
-    acceptRecipeIngredientCorrection: async (_parent, { id }, ctx: Context) => {
-      const correction = await ctx.firestore.recipeIngredientCorrections.get(
-        id,
-      );
+    acceptIngredientCorrection: async (_parent, { id }, ctx: Context) => {
+      const correction = await ctx.firestore.ingredientCorrections.get(id);
 
       await applyCorrection(correction, ctx);
 
       correction.status = CorrectionStatus.Accepted;
-      await ctx.firestore.recipeIngredientCorrections.set(correction);
+      await ctx.firestore.ingredientCorrections.set(correction);
 
       // update ingredient to improve matching
       try {
         if (
-          correction.correctedValue.ingredientId &&
-          correction.correctedValue.ingredientStart &&
-          correction.correctedValue.ingredientEnd
+          correction.correctedValue.foodId &&
+          correction.correctedValue.foodStart &&
+          correction.correctedValue.foodEnd
         ) {
-          const ingredientText = correction.correctedText.slice(
-            correction.correctedValue.ingredientStart,
-            correction.correctedValue.ingredientEnd,
+          const foodText = correction.correctedText.slice(
+            correction.correctedValue.foodStart,
+            correction.correctedValue.foodEnd,
           );
           await ctx.writeTransaction(async tx => {
             await tx.run(
               `
-              MATCH (ingredient:Ingredient{id:$ingredientId})
-              SET ingredient.searchHelpers = coalesce(ingredient.searchHelpers, []) + $searchHelper
+              MATCH (food:Food{id:$foodId})
+              SET food.searchHelpers = coalesce(food.searchHelpers, []) + $searchHelper
               `,
               {
-                ingredientId: correction.correctedValue.ingredientId,
-                searchHelper: ingredientText,
+                foodId: correction.correctedValue.foodId,
+                searchHelper: foodText,
               },
             );
           });
@@ -191,12 +184,10 @@ export default {
       return correction;
     },
 
-    rejectRecipeIngredientCorrection: async (_parent, { id }, ctx: Context) => {
-      const correction = await ctx.firestore.recipeIngredientCorrections.get(
-        id,
-      );
+    rejectIngredientCorrection: async (_parent, { id }, ctx: Context) => {
+      const correction = await ctx.firestore.ingredientCorrections.get(id);
       correction.status = CorrectionStatus.Rejected;
-      await ctx.firestore.recipeIngredientCorrections.set(correction);
+      await ctx.firestore.ingredientCorrections.set(correction);
       return correction;
     },
   },

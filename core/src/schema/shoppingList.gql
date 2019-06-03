@@ -1,4 +1,5 @@
-# import Ingredient, RecipeIngredient from 'ingredients.gql'
+# import Food from 'foods.gql'
+# import Ingredient from 'ingredients.gql'
 # import Recipe from 'recipes.gql'
 
 type ShoppingListItem {
@@ -6,15 +7,15 @@ type ShoppingListItem {
   totalQuantity: Float!
   purchasedQuantity: Float!
   unit: String
-  ingredientId: String
+  foodId: String
   displayName: String!
 
   plannedUses: [ShoppingListItemUsage!]!
 
-  ingredient: Ingredient
+  food: Food
     @cypher(
-      match: "(ingredient:Ingredient{id: parent.ingredientId})"
-      return: "ingredient"
+      match: "(food:Food{id: parent.foodId})"
+      return: "food"
     )
 }
 
@@ -23,13 +24,13 @@ Provides a snapshot of the usage of an ingredient from the shopping
 list in the week's planned recipes. Expand edges to fetch more data.
 """
 type ShoppingListItemUsage {
-  recipeIngredientText: String
+  ingredientText: String
   recipeTitle: String
   recipeId: String
 
-  recipeIngredient: RecipeIngredient
+  ingredient: Ingredient
     @cypher(
-      match: "(ri:RecipeIngredient{id: parent.recipeIngredientId})"
+      match: "(ri:Ingredient{id: parent.ingredientId})"
       return "ri"
     )
   recipe: Recipe

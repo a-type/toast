@@ -1,4 +1,4 @@
-# import RecipeIngredient from 'ingredients.gql'
+# import Ingredient from 'ingredients.gql'
 
 type Recipe {
   id: ID!
@@ -28,7 +28,7 @@ type Recipe {
   locked: Boolean!
 
   steps: [String!]!
-  ingredientsConnection: RecipeRecipeIngredientConnection!
+  ingredientsConnection: RecipeIngredientConnection!
 
   containedInViewerCollectionsConnection: RecipeRecipeCollectionConnection! @authenticated
 }
@@ -72,16 +72,16 @@ type RecipeCollectionRecipeEdge {
     )
 }
 
-type RecipeRecipeIngredientConnection @cypherVirtual {
-  edges: [RecipeRecipeIngredientEdge!]!
+type RecipeIngredientConnection @cypherVirtual {
+  edges: [RecipeIngredientEdge!]!
     @cypherRelationship(
       type: "INGREDIENT_OF"
       direction: IN
     )
 }
 
-type RecipeRecipeIngredientEdge {
-  node: RecipeIngredient! @cypherNode(relationship: "INGREDIENT_OF", direction: IN)
+type RecipeIngredientEdge {
+  node: Ingredient! @cypherNode(relationship: "INGREDIENT_OF", direction: IN)
 }
 
 input RecipeGetInput {

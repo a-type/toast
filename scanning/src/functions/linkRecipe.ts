@@ -24,21 +24,21 @@ type RecipeIngredient = {
   text: string;
   unit: string;
   quantity: number;
-  ingredientStart: number;
-  ingredientEnd: number;
+  foodStart: number;
+  foodEnd: number;
   unitStart: number;
   unitEnd: number;
   quantityStart: number;
   quantityEnd: number;
   comments: string[];
   preparations: string[];
-  ingredientId?: string;
-  ingredientText: string;
+  foodId?: string;
+  foodText: string;
 };
 
 const parsedToRecipeIngredient = (
   parsed: ParseResult,
-  ingredientId: string,
+  foodId: string,
 ): RecipeIngredient => {
   const getOrNull = (range: [number, number] | [], index: number): number =>
     range[index] !== undefined ? range[index] : null;
@@ -50,13 +50,13 @@ const parsedToRecipeIngredient = (
     quantity: parsed.quantity.normalized,
     quantityStart: getOrNull(parsed.quantity.range, 0),
     quantityEnd: getOrNull(parsed.quantity.range, 1),
-    ingredientStart: getOrNull(parsed.ingredient.range, 0),
-    ingredientEnd: getOrNull(parsed.ingredient.range, 1),
+    foodStart: getOrNull(parsed.food.range, 0),
+    foodEnd: getOrNull(parsed.food.range, 1),
     text: parsed.original,
-    ingredientId,
+    foodId,
     comments: parsed.comments,
     preparations: parsed.preparations,
-    ingredientText: parsed.ingredient && parsed.ingredient.normalized,
+    foodText: parsed.food && parsed.food.normalized,
   };
 };
 
@@ -198,21 +198,18 @@ export default async (req: Request, res: Response) => {
       // parse strings
       const parsedIngredients = scraped.ingredients.map(parser);
       // search db for matches or null
-      const foundIngredients = await lookupIngredients(
+      const fondFoods = await lookupIngredients(
         session,
-        parsedIngredients.map(parsed => parsed.ingredient.normalized),
+        parsedIngredients.map(parsed => parsed.food.normalized),
       );
 
       // if any null, add problem
-      if (foundIngredients.some(ingredient => !ingredient)) {
+      if (fondFoods.some(food => !food)) {
         result.problems.push(RecipeLinkProblem.IncompleteIngredients);
       }
 
       ingredients = parsedIngredients.map((parsed, idx) =>
-        parsedToRecipeIngredient(
-          parsed,
-          foundIngredients[idx] && foundIngredients[idx].id,
-        ),
+        parsedToRecipeIngredient(parsed, fondFoods[idx] && fondFoods[idx].id),
       );
     }
 
@@ -267,30 +264,30 @@ export default async (req: Request, res: Response) => {
         await session.writeTransaction(async tx => {
           await Promise.all(
             ingredients.map(async found => {
-              const { ingredientId, ...rest } = found;
+              const { foodId, ...rest } = found;
 
-              const query = ingredientId
+              const query = foodId
                 ? `
-                MATCH (recipe:Recipe {id: $recipeId}), (ingredient:Ingredient {id: $ingredientId})
+                MATCH (recipe:Recipe {id: $recipeId}), (food:Food {id: $foodId})
                 OPTIONAL MATCH (recipe)<-[allRels:INGREDIENT_OF]-()
-                WITH recipe, count(allRels) as index, ingredient
-                CREATE (recipe)<-[rel:INGREDIENT_OF { index: index }]-(recipeIngredient:RecipeIngredient $props)<-[:USED_IN]-(ingredient)
-                RETURN recipeIngredient {.id}
+                WITH recipe, count(allRels) as index, food
+                CREATE (recipe)<-[rel:INGREDIENT_OF { index: index }]-(ingredient:Ingredient $props)<-[:USED_IN]-(food)
+                RETURN ingredient {.id}
                 `
                 : `
                 MATCH (recipe:Recipe {id: $recipeId})
                 OPTIONAL MATCH (recipe)<-[allRels:INGREDIENT_OF]-()
                 WITH recipe, count(allRels) as index
-                CREATE (recipe)<-[rel:INGREDIENT_OF { index: index }]-(recipeIngredient:RecipeIngredient $props)
-                RETURN recipeIngredient {.id}
+                CREATE (recipe)<-[rel:INGREDIENT_OF { index: index }]-(ingredient:Ingredient $props)
+                RETURN ingredient {.id}
             `;
 
               await tx.run(query, {
                 recipeId: result.recipeId,
-                ingredientId,
+                foodId,
                 props: {
                   ...rest,
-                  id: id('recipeIngredient'),
+                  id: id('ingredient'),
                 },
               });
             }),
@@ -312,7 +309,7 @@ export default async (req: Request, res: Response) => {
           await tx.run(
             `
             MATCH (recipe:Recipe{id: $recipeId})
-            CREATE (recipe)-[:COVER_IMAGE]->(image:Image {id: $props.id, url: $props.url, attribution: $props.attribution})
+            SET recipe.coverImageId = $props.id, recipe.coverImageUrl = $props.url, recipe.coverImageAttribution = $props.attribution
             RETURN recipe {.id}
             `,
             {

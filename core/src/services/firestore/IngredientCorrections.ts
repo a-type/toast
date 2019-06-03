@@ -1,7 +1,7 @@
 import { Firestore } from '@google-cloud/firestore';
-import RecipeIngredientCorrection, {
+import IngredientCorrection, {
   CorrectionStatus,
-} from 'models/RecipeIngredientCorrection';
+} from 'models/IngredientCorrection';
 
 const COLLECTION = 'recipeIngredientCorrections';
 
@@ -14,7 +14,7 @@ export type ListPagination = {
   limit: number;
 };
 
-export default class RecipeIngredientCorrections {
+export default class IngredientCorrections {
   firestore: Firestore;
 
   constructor(service: { firestore: Firestore }) {
@@ -34,12 +34,12 @@ export default class RecipeIngredientCorrections {
 
     const snapshots = await query.get();
     const corrections = snapshots.docs.map(doc =>
-      RecipeIngredientCorrection.fromJSON(doc.data()),
+      IngredientCorrection.fromJSON(doc.data()),
     );
     return corrections;
   };
 
-  set = async (correction: RecipeIngredientCorrection) => {
+  set = async (correction: IngredientCorrection) => {
     const document = this.firestore.doc(`${COLLECTION}/${correction.id}`);
     await document.set(correction.toJSON());
     return correction;
@@ -49,7 +49,7 @@ export default class RecipeIngredientCorrections {
     const document = this.firestore.doc(`${COLLECTION}/${id}`);
     const ref = await document.get();
     if (ref.exists) {
-      return RecipeIngredientCorrection.fromJSON(ref.data());
+      return IngredientCorrection.fromJSON(ref.data());
     }
     return null;
   };

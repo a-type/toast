@@ -7,7 +7,7 @@ type ShoppingListItemUsage = {
   recipeIngredientText: string;
   recipeTitle: string;
   recipeId: string;
-  recipeIngredientId: string;
+  ingredientId: string;
 };
 
 type ShoppingListItem = {
@@ -16,7 +16,7 @@ type ShoppingListItem = {
   purchasedQuantity: number;
   unit: string | null;
   plannedUses: ShoppingListItemUsage[];
-  ingredientId: string;
+  foodId: string;
   displayName: string;
 };
 
@@ -39,18 +39,18 @@ const getListOrEphemeral = async (ctx: Context, [startDate, endDate]) => {
 const loadShoppingList = async (groupId: string, ctx: Context) => {
   const [startDate, endDate] = getListWeek();
 
-  const aggregatedIngredients: {
-    [ingredientId: string]: ShoppingListItem;
+  const aggregatedFoods: {
+    [foodId: string]: ShoppingListItem;
   } = await ctx.readTransaction(async tx => {
     const result = await tx.run(
       `
       MATCH (:Group {id:$groupId})-[:HAS_PLAN_MEAL]->
         (:PlanMeal)-[:PLANS_TO_COOK]->(recipe:Recipe)
-        <-[:INGREDIENT_OF]-(recipeIngredient:RecipeIngredient)
+        <-[:INGREDIENT_OF]-(ing:Ingredient)
       WHERE duration.between(date($startDate), day.date).days > 0
       AND duration.between(date($startDate), day.date).days < 7
-      OPTIONAL MATCH (recipeIngredient)<-[:USED_IN]-(ingredient:Ingredient)
-      RETURN recipe {.id,.title}, recipeIngredient {.id,.text,.quantity,.unit}, ingredient {.id,.name}
+      OPTIONAL MATCH (ing)<-[:USED_IN]-(food:Food)
+      RETURN recipe {.id,.title}, ing {.id,.text,.quantity,.unit}, food {.id,.name}
     `,
       {
         groupId,
@@ -59,60 +59,56 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
       },
     );
 
-    return result.records.reduce((byIngredient, record) => {
-      const ingredient = record.get('ingredient') || null;
-      const recipeIngredient = record.get('recipeIngredient');
+    return result.records.reduce((byFood, record) => {
+      const food = record.get('food') || null;
+      const ingredient = record.get('ingredient');
       const recipe = record.get('recipe');
 
-      const shoppingListItemId = ingredient
-        ? ingredient.id
-        : recipeIngredient.id;
-      const displayName = ingredient ? ingredient.name : recipeIngredient.text;
+      const shoppingListItemId = food ? food.id : ingredient.id;
+      const displayName = food ? food.name : ingredient.text;
 
-      const ingredientEntry: ShoppingListItem = byIngredient[
-        shoppingListItemId
-      ] || {
+      const foodEntry: ShoppingListItem = byFood[shoppingListItemId] || {
         id: shoppingListItemId,
         totalQuantity: 0,
         purchasedQuantity: 0,
         unit: null,
         plannedUses: [],
-        ingredientId: ingredient && ingredient.id,
+        foodId: food && food.id,
         displayName,
       };
       const sum = addQuantities(
         {
-          value: ingredientEntry.totalQuantity,
-          unit: ingredientEntry.unit,
+          value: foodEntry.totalQuantity,
+          unit: foodEntry.unit,
         },
         {
-          value: recipeIngredient.quantity,
-          unit: recipeIngredient.unit,
+          value: ingredient.quantity,
+          unit: ingredient.unit,
         },
       );
-      ingredientEntry.totalQuantity = sum.value || 0;
-      ingredientEntry.unit = sum.unit;
-      ingredientEntry.plannedUses.push({
-        recipeIngredientText: recipeIngredient.text,
+      foodEntry.totalQuantity = sum.value || 0;
+      foodEntry.unit = sum.unit;
+      foodEntry.plannedUses.push({
+        recipeIngredientText: ingredient.text,
         recipeTitle: recipe.title,
         recipeId: recipe.id,
-        recipeIngredientId: recipeIngredient.id,
+        ingredientId: ingredient.id,
       });
-      byIngredient[shoppingListItemId] = ingredientEntry;
-      return byIngredient;
+      byFood[shoppingListItemId] = foodEntry;
+      return byFood;
     }, {});
   });
 
   const purchaseList = await getListOrEphemeral(ctx, [startDate, endDate]);
 
   const ingredientsWithPurchased: ShoppingListItem[] = Object.keys(
-    aggregatedIngredients,
+    aggregatedFoods,
   ).map(shoppingListItemId => {
-    const ingredientEntry = aggregatedIngredients[shoppingListItemId];
+    const foodEntry = aggregatedFoods[shoppingListItemId];
     const purchased = purchaseList.getIngredient(shoppingListItemId);
     if (!purchased) {
-      ingredientEntry.purchasedQuantity = 0;
-      return ingredientEntry;
+      foodEntry.purchasedQuantity = 0;
+      return foodEntry;
     }
 
     const convertedPurchased = convertQuantity(
@@ -120,11 +116,11 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
         value: purchased.quantity,
         unit: purchased.unit,
       },
-      ingredientEntry.unit,
+      foodEntry.unit,
     );
 
-    ingredientEntry.purchasedQuantity = convertedPurchased.value;
-    return ingredientEntry;
+    foodEntry.purchasedQuantity = convertedPurchased.value;
+    return foodEntry;
   });
 
   return {
@@ -144,7 +140,7 @@ export default {
   },
 
   Mutation: {
-    async markPurchasedItem(
+    async markShoppingListItem(
       _parent,
       { input },
       ctx: Context,
@@ -167,7 +163,7 @@ export default {
       };
     },
 
-    async markUnpurchasedItem(
+    async unmarkShoppingListItem(
       _parent,
       { input },
       ctx: Context,

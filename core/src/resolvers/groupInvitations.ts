@@ -6,7 +6,19 @@ import { NotFoundError } from 'errors';
 export default {
   Mutation: {
     createGroupInvitation: async (_parent, _args, ctx: Context) => {
-      const group = await ctx.graph.groups.getForUser(ctx.user.id);
+      const group = await ctx.readTransaction(async tx => {
+        const result = await tx.run(
+          `
+          MATCH (group:Group)<-[:MEMBER_OF]-(:User {id: $userId})
+          RETURN group {.id}
+          `,
+          {
+            userId: ctx.user.id,
+          },
+        );
+
+        return result.records[0].get('group');
+      });
 
       const invitation = await GroupInvitation.create(group.id);
       await ctx.firestore.groupInvitations.set(invitation);
@@ -36,10 +48,42 @@ export default {
         throw new NotFoundError('GroupInvitation');
       }
 
-      const group = await ctx.graph.groups.addUser(
-        invitation.groupId,
-        ctx.user.id,
-      );
+      const group = await ctx.writeTransaction(async tx => {
+        const oldGroupResult = await tx.run(
+          `
+          MATCH (:User{id:$userId})-[oldRel:MEMBER_OF]->(oldGroup:Group)
+          WITH collect(oldRel) as oldRels, oldGroup
+          FOREACH (r in oldRels | DELETE r)
+          RETURN oldGroup
+          `,
+          {
+            userId: ctx.user.id,
+          },
+        );
+
+        if (oldGroupResult.records.length) {
+          logger.info(
+            `Moving user ${ctx.user.id} from group ${
+              oldGroupResult.records[0].get('oldGroup').id
+            } to ${invitation.groupId}
+            `,
+          );
+        }
+
+        const result = await tx.run(
+          `
+          MATCH (user:User{id:$userId}), (group:Group{id:$groupId})
+          MERGE (user)-[:MEMBER_OF]->(group)
+          RETURN group
+          `,
+          {
+            userId: ctx.user.id,
+            groupId: invitation.groupId,
+          },
+        );
+
+        return result.records[0].get('group');
+      });
 
       try {
         logger.info(`Cleaning used invitation ${invitation.id}`);

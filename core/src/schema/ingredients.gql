@@ -1,10 +1,11 @@
 # import Recipe from 'recipes.gql'
+# import Food from 'foods.gql'
 
-type RecipeIngredient {
+type Ingredient {
   id: ID!
   text: String!
-  ingredientStart: Int
-  ingredientEnd: Int
+  foodStart: Int
+  foodEnd: Int
   unit: String
   unitStart: Int
   unitEnd: Int
@@ -14,48 +15,48 @@ type RecipeIngredient {
   comments: [String!]!
   preparations: [String!]!
 
-  ingredient: Ingredient! @cypherNode(relationship: "USED_IN", direction: IN)
+  food: Food! @cypherNode(relationship: "USED_IN", direction: IN)
   recipe: Recipe! @cypherNode(relationship: "INGREDIENT_OF", direction: OUT)
 }
 
-type RecipeIngredientCreateResult {
-  recipeIngredient: RecipeIngredient!
+type IngredientCreateResult {
+  recipeIngredient: Ingredient!
     @cypher(
-      match: "(recipeIngredient:RecipeIngredient{id:$parent.recipeIngredientId})"
+      match: "(recipeIngredient:Ingredient{id:$parent.recipeIngredientId})"
       return: "recipeIngredient"
     )
 }
 
-type RecipeIngredientUpdateResult {
-  recipeIngredient: RecipeIngredient
+type IngredientUpdateResult {
+  recipeIngredient: Ingredient
     @cypher(
-      match: "(recipeIngredient:RecipeIngredient{id:$parent.recipeIngredientId})"
+      match: "(recipeIngredient:Ingredient{id:$parent.recipeIngredientId})"
       return: "recipeIngredient"
     )
 }
 
-type RecipeIngredientDeleteResult {
+type RecipeFoodDeleteResult {
   # empty type... perhaps one day we will return something.
 }
 
-enum RecipeIngredientCorrectionStatus {
+enum IngredientCorrectionStatus {
   Submitted
   Accepted
   Rejected
 }
 
-enum RecipeIngredientCorrectionType {
+enum IngredientCorrectionType {
   Change
   Delete
   Add
 }
 
 # this type is backed by Firestore, not Neo4j
-type RecipeIngredientCorrection {
+type IngredientCorrection {
   id: ID!
-  status: RecipeIngredientCorrectionStatus!
-  correctionType: RecipeIngredientCorrectionType!
-  correctedFields: RecipeIngredientCorrectedFields
+  status: IngredientCorrectionStatus!
+  correctionType: IngredientCorrectionType!
+  correctedFields: IngredientCorrectedFields
   correctedText: String
 
   recipe: Recipe!
@@ -63,141 +64,63 @@ type RecipeIngredientCorrection {
       match: "(recipe:Recipe{id: parent.recipeId})"
       return: "recipe"
     )
-  recipeIngredient: RecipeIngredient
+  recipeIngredient: Ingredient
     @cypher(
-      match: "(recipeIngredient:RecipeIngredient{id: parent.recipeIngredientId})"
+      match: "(recipeIngredient:Ingredient{id: parent.recipeIngredientId})"
       return: "recipeIngredient"
     )
 }
 
-type RecipeIngredientCorrectedFields {
+type IngredientCorrectedFields {
   unit: String
   unitStart: Int
   unitEnd: Int
   quantity: Float
   quantityStart: Int
   quantityEnd: Int
-  ingredientStart: Int
-  ingredientEnd: Int
+  foodStart: Int
+  foodEnd: Int
 }
 
-type Ingredient {
-  id: ID!
-  name: String!
-  description: String
-  attribution: String
-  alternateNames: [String!]!
-}
-
-type IngredientDeleteResult {
-  # empty type...
-}
-
-input RecipeIngredientCorrectionSubmitInput {
+input IngredientCorrectionSubmitInput {
   recipeIngredientId: ID
   recipeId: String!
-  correctionType: RecipeIngredientCorrectionType!
+  correctionType: IngredientCorrectionType!
   correctedText: String
-  correctedValue: RecipeIngredientCorrectedFieldsInput
+  correctedValue: IngredientCorrectedFieldsInput
 }
 
-input RecipeIngredientCorrectedFieldsInput {
+input IngredientCorrectedFieldsInput {
   unit: String
   unitStart: Int
   unitEnd: Int
   quantity: Float
   quantityStart: Int
   quantityEnd: Int
-  ingredientId: String
-  ingredientStart: Int
-  ingredientEnd: Int
+  foodId: String
+  foodStart: Int
+  foodEnd: Int
 }
 
-input RecipeIngredientCorrectionsFilterInput {
-  status: RecipeIngredientCorrectionStatus
+input IngredientCorrectionsFilterInput {
+  status: IngredientCorrectionStatus
 }
 
-input RecipeIngredientCorrectionAcceptInput {
+input IngredientCorrectionAcceptInput {
   id: ID!
 }
 
-input RecipeIngredientCorrectionRejectInput {
-  id: ID!
-}
-
-input IngredientCreateInput {
-  name: String!
-  description: String
-  attribution: String
-  alternateNames: [String!] = []
-}
-
-input IngredientUpdateInput {
-  id: ID!
-  fields: IngredientUpdateFieldsInput!
-}
-
-input IngredientUpdateFieldsInput {
-  name: String
-  description: String
-  attribution: String
-  alternateNames: [String!]
-}
-
-input IngredientMergeInput {
-  primaryId: ID!
-  secondaryId: ID!
-}
-
-input IngredientDeleteInput {
+input IngredientCorrectionRejectInput {
   id: ID!
 }
 
 type Mutation {
-  submitRecipeIngredientCorrection(input: RecipeIngredientCorrectionSubmitInput!): RecipeIngredientCorrection!
+  submitIngredientCorrection(input: IngredientCorrectionSubmitInput!): IngredientCorrection!
     @authenticated
 
-  acceptRecipeIngredientCorrection(input: RecipeIngredientCorrectionAcceptInput!): RecipeIngredientCorrection!
+  acceptIngredientCorrection(input: IngredientCorrectionAcceptInput!): IngredientCorrection!
     @hasClaim(claim: "admin")
 
-  rejectRecipeIngredientCorrection(input: RecipeIngredientCorrectionRejectInput!): RecipeIngredientCorrection!
+  rejectIngredientCorrection(input: IngredientCorrectionRejectInput!): IngredientCorrection!
     @hasClaim(claim: "admin")
-
-  createIngredient(input: IngredientCreateInput!): Ingredient!
-    @cypher(
-      create: "(ingredient:Ingredient{id:$args.id})"
-      set: "ingredient.name = $args.input, ingredient.searchHelpers = $args.input.alternateNames"
-      return: "ingredient"
-    )
-    @generateId(fromArg: "input.name")
-    @hasClaim(claim: "admin")
-
-  updateIngredient(input: IngredientUpdateInput!): Ingredient
-    @cypher(
-      match: "(ingredient:Ingredient{id:$args.input.id})"
-      set: "ingredient += $args.input.fields"
-      return: "ingredient"
-    )
-    @hasClaim(claim: "admin")
-
-  deleteIngredient(input: IngredientDeleteInput!): IngredientDeleteResult
-    @cypher(
-      match: "(ingredient:Ingredient{id:$args.input.id})"
-      detachDelete: "ingredient"
-      return: "{}"
-    )
-
-  mergeIngredients(input: MergeIngredientsInput!): Ingredient
-    @cypherCustom(
-      statement: """
-      MATCH (secondary:Ingredient{id:$args.input.secondaryId}),
-        (primary:Ingredient {id:$args.input.primaryId})
-      WITH head(collect([primary, secondary])) as nodes, coalesce(primary.alternateNames, []) +
-        coalesce(secondary.alternateNames, []) + secondary.name as newAlternateNames,
-        coalesece(primary.searchHelpers, []) + coalesce(secondary.searchHelpers, []) as newSearchHelpers
-      CALL apoc.refactor.mergeNodes(nodes, {properties: "discard"}) YIELD node
-      SET node.alternateNames = newAlternateNames, node.searchHelpers = newSearchHelpers
-      RETURN node
-      """
-    )
 }

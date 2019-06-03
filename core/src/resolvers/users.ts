@@ -38,6 +38,5 @@ export default {
       }
       return supplementUserData(user);
     },
-    user: (_parent, { id }, ctx: Context) => ctx.graph.users.get(id),
   },
 };
