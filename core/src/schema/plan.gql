@@ -1,100 +1,58 @@
 # import Recipe from 'recipes.gql'
 
-type PlanMeal {
+type PlanDay {
   id: ID!
-  note: String
+  date: Date!
 
-  cookingConnection: PlanMealCookingRecipeConnection!
-  eatingConnection: PlanMealEatingMealConnection!
+  cookingConnection: PlanDayCookingRecipeConnection!
 }
 
-type PlanMealCookingRecipeConnection @cypherVirtual {
-  edges: [PlanMealCookingRecipeEdge!]!
+type PlanDayCookingRecipeConnection @cypherVirtual {
+  edges: [PlanDayCookingRecipeEdge!]!
     @cypherRelationship(type: "PLANS_TO_COOK", direction: OUT)
 }
 
-type PlanMealCookingRecipeEdge {
+type PlanDayCookingRecipeEdge {
   servings: Int!
+  mealName: String!
 
   node: Recipe! @cypherNode(relationship: "PLANS_TO_COOK", direction: "OUT")
 }
 
-type PlanMealEatingMealConnection @cypherVirtual {
-  edges: [PlanMealEatingMealEdge!]!
-    @cypherRelationship(type: "PLANS_TO_EAT", direction: OUT)
-}
-
-type PlanMealEatingMealEdge {
-  node: PlanMeal! @cypherNode(relationship: "PLANS_TO_EAT", direction: "OUT")
-}
-
-input AssignPlanMealCookingInput {
-  planMealId: ID!
+input AssignPlanDayCookingInput {
+  planDayId: ID!
+  mealName: String!
   recipeId: ID!
   servings: Int!
 }
 
-input UnassignPlanMealCookingInput {
-  planMealId: ID!
-  eatingPlanMealId: ID!
-}
-
-input AssignPlanMealEatingInput {
-  planMealId: ID!
-  eatingPlanMealId: ID!
-}
-
-input UnassignPlanMealEatingInput {
-  planMealId: ID!
-  eatingPlanMealId: ID!
+input UnassignPlanDayCookingInput {
+  planDayId: ID!
+  mealName: String!
 }
 
 type Mutation {
-  assignPlanMealCooking(input: AssignPlanMealCookingInput!): PlanMeal!
+  assignPlanDayCooking(input: AssignPlanDayCookingInput!): PlanDay!
     @cypher(
       match: """
-      (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_PLAN_MEAL]->
-        (planMeal:PlanMeal{id:$args.input.planMealId}),
+      (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_NEXT_PLAN_DAY*]->
+        (planDay:PlanDay{id:$args.input.planDayId}),
         (recipe:Recipe{id:$args.input.recipeId})
       """
-      merge: "(planMeal)-[:PLANS_TO_COOK {servings: $args.input.servings}]->(recipe)"
-      return: "planMeal"
+      merge: "(planDay)-[:PLANS_TO_COOK {servings: $args.input.servings, mealName: $args.input.mealName}]->(recipe)"
+      return: "planDay"
     )
     @authenticated
 
-  unassignPlanMealCooking(input: UnassignPlanMealCookingInput!): PlanMeal!
+  unassignPlanDayCooking(input: UnassignPlanDayCookingInput!): PlanDay!
     @cypher(
       match: """
-      (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_PLAN_MEAL]->
-        (planMeal:PlanMeal{id:$args.input.planMealId})-[cookRel:PLANS_TO_COOK]->
-        (:Recipe{id:$args.input.recipeId})
+      (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_NEXT_PLAN_DAY*]->
+        (planDay:PlanDay{id:$args.input.planDayId})-[cookRel:PLANS_TO_COOK {mealName: $args.input.mealName}]->
+        (:Recipe)
       """
       delete: "cookRel"
-      return: "planMeal"
-    )
-    @authenticated
-
-  assignPlanMealEating(input: AssignPlanMealEatingInput!): PlanMeal!
-    @cypher(
-      match: """
-      (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_PLAN_MEAL]->
-        (planMeal:PlanMeal{id:$args.input.planMealId}),
-        (eating:PlanMeal{id:$input.eatingPlanMealId})
-      """
-      merge: "(planMeal)-[:PLANS_TO_EAT]->(eating)"
-      return: "planMeal"
-    )
-    @authenticated
-
-  unassignPlanMealEating(input: UnassignPlanMealEatingInput!): PlanMeal!
-    @cypher(
-      match: """
-      (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_PLAN_MEAL]->
-        (planMeal:PlanMeal{id:$args.input.planMealId})-[eatingRel:PLANS_TO_EAT]->
-        (eating:PlanMeal{id:$input.eatingPlanMealId})
-      """
-      delete: "eatingRel"
-      return: "planMeal"
+      return: "planDay"
     )
     @authenticated
 }

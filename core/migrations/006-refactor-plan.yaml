@@ -1,0 +1,22 @@
+---
+# removing a property index
+- kind: index
+  type: node_label_property
+  operation: delete # specify delete as operation
+  label: PlanMeal
+  properties:
+    - id
+
+- kind: index
+  type: node_label_property
+  label: PlanDay
+  properties:
+    - date
+
+# just wiping out all the plans... yeah... haven't launched yet.
+- kind: cypher
+  up: >-
+    MATCH (group:Group)-[:HAS_PLAN_DAY]->(planDay:PlanDay)-[rel:HAS_PLAN_MEAL]->(planMeal:PlanMeal)
+    DETACH DELETE planMeal, planDay
+  down: >-
+    null

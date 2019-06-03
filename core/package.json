@@ -15,7 +15,10 @@
     "build:transpile": "tsc",
     "build": "run-s build:*",
     "mock": "npm run dev:mock",
-    "start": "cross-env NODE_PATH=build node build/server.js"
+    "start": "cross-env NODE_PATH=build node build/server.js",
+    "migration:create": "neo4j-migrate create-migration --name=new-migration ./migrations",
+    "migration:up": "neo4j-migrate up",
+    "migration:down": "neo4j-migrate down"
   },
   "repository": {
     "type": "git",

@@ -61,13 +61,13 @@ type Group {
   """
   Returns the available planned meals of the group's meal plan
   """
-  planMealsConnection: GroupPlanMealConnection!
+  planDaysConnection: GroupPlanDayConnection!
 
   """
-  Get a specific planned meal by ID
+  Get a specific plan day by ID
   """
-  planMeal(input: PlanMealGetInput!): PlanMealEdge @cypherNode(
-    relationship: "HAS_PLAN_MEAL"
+  planDay(input: PlanDayGetInput!): PlanDay @cypherNode(
+    relationship: "HAS_PLAN_DAY"
     direction: "OUT"
     where: "node.id = $args.input.id"
   )
@@ -89,7 +89,7 @@ type Group {
   shoppingList: ShoppingList! @cypherSkip
 }
 
-input PlanMealGetInput {
+input PlanDayGetInput {
   id: ID!
 }
 
@@ -97,17 +97,9 @@ input RecipeCollectionGetInput {
   id: ID!
 }
 
-type GroupPlanMealConnection @cypherVirtual {
-  edges: [GroupPlanMealEdge!]!
-    @cypherRelationship(type: "HAS_PLAN_MEAL", direction: OUT)
-}
-
-type GroupPlanMealEdge {
-  # edge has some properties
-  date: Date!
-  mealName: String!
-
-  node: PlanMeal! @cypherNode(relationship: "HAS_PLAN_MEAL", direction: "OUT")
+type GroupPlanDayConnection @cypherVirtual {
+  nodes: [PlanDay!]!
+    @cypherLinkedNodes(relationship: "HAS_NEXT_PLAN_DAY")
 }
 
 type GroupRecipeCollectionConnection @cypherVirtual {
