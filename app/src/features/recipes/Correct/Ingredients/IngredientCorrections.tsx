@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import IngredientCorrector from './IngredientCorrector';
-import { IngredientCorrectorRecipeIngredient } from '../types';
+import { IngredientCorrectorIngredient } from '../types';
 import { AddIngredient } from './AddIngredient';
 import { Box } from 'grommet';
 import { Heading } from 'components/text';
@@ -8,7 +8,7 @@ import { useCorrectIngredient } from '../useCorrectIngredient';
 
 interface IngredientCorrectionsProps {
   recipeId: string;
-  recipeIngredients: IngredientCorrectorRecipeIngredient[];
+  recipeIngredients: IngredientCorrectorIngredient[];
 }
 
 const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
@@ -20,13 +20,10 @@ const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
   });
 
   const [candidates, seemFine] = recipeIngredients.reduce<
-    [
-      IngredientCorrectorRecipeIngredient[],
-      IngredientCorrectorRecipeIngredient[]
-    ]
+    [IngredientCorrectorIngredient[], IngredientCorrectorIngredient[]]
   >(
     ([c, f], recipeIngredient) => {
-      if (!recipeIngredient.ingredient || !recipeIngredient.unit) {
+      if (!recipeIngredient.food || !recipeIngredient.unit) {
         c.push(recipeIngredient);
       } else {
         f.push(recipeIngredient);

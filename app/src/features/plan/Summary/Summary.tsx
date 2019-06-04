@@ -52,7 +52,10 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
     ? 'lunch'
     : 'dinner';
 
-  const meal = (today && today[nextMeal]) || null;
+  const meal =
+    (today &&
+      today.cookingConnection.edges.find(edge => edge.mealName === nextMeal)) ||
+    null;
 
   return (
     <Box align="start" margin={{ bottom: 'large' }}>

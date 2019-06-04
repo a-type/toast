@@ -61,9 +61,10 @@ export default ({ recipeId }: { recipeId: string }) => {
             });
             const updatedStep = data.updateRecipeStep;
             recipe.steps = recipe.steps.map(step => {
-              if (step.id === updatedStep.id) {
-                return updatedStep;
-              }
+              // FIXME
+              // if (step.id === updatedStep.id) {
+              //   return updatedStep;
+              // }
               return step;
             });
             cache.writeQuery({ query: GetRecipeQuery, data: { recipe } });
@@ -92,7 +93,8 @@ export default ({ recipeId }: { recipeId: string }) => {
               query: GetRecipeQuery,
               variables: { id: recipeId },
             });
-            recipe.steps = recipe.steps.filter(({ id }) => recipeStepId !== id);
+            // FIXME
+            //recipe.steps = recipe.steps.filter(({ id }) => recipeStepId !== id);
             cache.writeQuery({ query: GetRecipeQuery, data: { recipe } });
           },
         });

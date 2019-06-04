@@ -4,23 +4,20 @@ import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 const CollectionQuery = gql`
-  query Collection($id: ID!, $firstRecipes: Int, $offsetRecipes: Int) {
+  query Collection($id: ID!) {
     me {
       id
       group {
         id
-        collection(id: $id) {
+        collection(input: { id: $id }) {
           id
           name
-          recipes(first: $firstRecipes, offset: $offsetRecipes) {
-            id
-            title
-            coverImage {
+          recipesConnection {
+            nodes {
               id
-              url
-            }
-            author {
-              id
+              title
+              coverImageUrl
+              coverImageAttribution
             }
           }
         }
@@ -32,19 +29,16 @@ const CollectionQuery = gql`
 export type CollectionRecipe = {
   id: string;
   title: string;
-  coverImage?: {
-    id: string;
-    url: string;
-  };
-  author?: {
-    id: string;
-  };
+  coverImageUrl: string;
+  coverImageAttribution: string;
 };
 
 export type Collection = {
   id: string;
   name: string;
-  recipes: CollectionRecipe[];
+  recipesConnection: {
+    nodes: CollectionRecipe[];
+  };
 };
 
 export type CollectionQueryResult = {
@@ -72,24 +66,24 @@ export default (
   QueryHookResult<
     CollectionQueryResult,
     {
-      id: string;
-      firstRecipes: number;
-      offsetRecipes: number;
+      input: {
+        id: string;
+      };
     }
   >
 ] => {
   const result = useQuery<
     CollectionQueryResult,
     {
-      id: string;
-      firstRecipes: number;
-      offsetRecipes: number;
+      input: {
+        id: string;
+      };
     }
   >(CollectionQuery, {
     variables: {
-      id,
-      firstRecipes: pagination.first,
-      offsetRecipes: pagination.offset,
+      input: {
+        id,
+      },
     },
   });
 

@@ -24,9 +24,7 @@ const truncate = (text: string, characters: number = 180) => {
 export interface SpotlightProps {
   showSave?: boolean;
   recipe: {
-    coverImage?: {
-      url: string;
-    };
+    coverImageUrl: string;
     id?: string;
     sourceUrl?: string;
     title: string;
@@ -52,7 +50,7 @@ export const Spotlight: FC<SpotlightProps> = ({ recipe, showSave }) => {
       </Box>
       <Box data-grid-area="details">
         <Link to={!!recipe.id && `/recipes/${recipe.id}`}>
-          <Heading margin={{ bottom: 'small', top: '0' }}>
+          <Heading level="1" margin={{ bottom: 'small', top: '0' }}>
             {recipe.title}
           </Heading>
         </Link>
@@ -77,7 +75,7 @@ export const SpotlightSkeleton = () => (
       </Image>
     </Box>
     <Box data-grid-area="details">
-      <HeadingSkeleton />
+      <HeadingSkeleton level="1" />
       <ParagraphSkeleton />
     </Box>
   </Layout>

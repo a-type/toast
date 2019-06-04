@@ -42,18 +42,13 @@ export default gql`
   }
 
   type RecipeRecipeCollectionConnection @cypherVirtual {
-    edges: [RecipeRecipeCollectionEdge!]!
+    nodes: [RecipeCollection!]!
       @cypherCustom(
         statement: """
-        MATCH (parent)-[rel:COLLECTED_IN]->(:RecipeCollection)-(:Group)<-[:MEMBER_OF]-(:User{id:$context.userId})
-        RETURN rel
+        MATCH (parent)-[:COLLECTED_IN]->(collection:RecipeCollection)-(:Group)<-[:MEMBER_OF]-(:User{id:$context.userId})
+        RETURN collection
         """
       )
-  }
-
-  type RecipeRecipeCollectionEdge {
-    node: RecipeCollection!
-      @cyperNode(relationship: "COLLECTED_IN", direction: OUT)
   }
 
   type RecipeCollection {
@@ -66,15 +61,12 @@ export default gql`
   }
 
   type RecipeCollectionRecipeConnection @cypherVirtual {
-    edges: [RecipeCollectionRecipeEdge!]!
-      @cypherRelationship(type: "COLLECTED_IN", direction: IN)
-  }
-
-  type RecipeCollectionRecipeEdge {
-    node: Recipe! @cypherNode(relationship: "COLLECTED_IN", direction: IN)
+    nodes: [Recipe!]! @cypherNode(relationship: "COLLECTED_IN", direction: IN)
   }
 
   type RecipeIngredientConnection @cypherVirtual {
+    nodes: [Ingredient!]!
+      @cypherNode(relationship: "INGREDIENT_OF", direction: IN)
     edges: [RecipeIngredientEdge!]!
       @cypherRelationship(type: "INGREDIENT_OF", direction: IN)
   }

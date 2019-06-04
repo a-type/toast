@@ -4,28 +4,19 @@ export type PlanMealRecipeData = {
   attribution: string;
   description: string;
   sourceUrl: string;
-  coverImage: {
-    id: string;
-    url: string;
-  };
-};
-
-export type PlanMealCookingEdge = {
-  servings: number;
-  recipe: PlanMealRecipeData;
+  coverImageUrl: string;
 };
 
 export type PlanMealData = {
-  id: string;
-  cooking: PlanMealCookingEdge[];
-
-  eating: PlanMealData[];
+  servings: number;
+  mealName: string;
+  node: PlanMealRecipeData;
 };
 
 export type PlanDayData = {
   id: string;
   date: number;
-  breakfast: PlanMealData;
-  lunch: PlanMealData;
-  dinner: PlanMealData;
+  cookingConnection: {
+    edges: PlanMealData[];
+  };
 };

@@ -8,8 +8,8 @@ import {
 } from './CorrectionForm';
 import { toDisplay } from 'formatters/quantity';
 import {
-  IngredientCorrectorRecipeIngredient,
-  RecipeIngredientCorrectedValueInput,
+  IngredientCorrectorIngredient,
+  IngredientCorrectedFieldsInput,
 } from 'features/recipes/Correct/types';
 
 export type IngredientCorrectorMessages = IngredientCorrectionFormMessages & {
@@ -19,8 +19,8 @@ export type IngredientCorrectorMessages = IngredientCorrectionFormMessages & {
 };
 
 interface IngredientCorrectorProps {
-  recipeIngredient: IngredientCorrectorRecipeIngredient;
-  submit(id: string, correction: RecipeIngredientCorrectedValueInput): void;
+  recipeIngredient: IngredientCorrectorIngredient;
+  submit(id: string, correction: IngredientCorrectedFieldsInput): void;
   requestDelete(id: string): void;
   messages?: IngredientCorrectorMessages;
 }
@@ -55,8 +55,8 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
                 <Text color="status-warning">None</Text>
               )}
               , Ingredient:{' '}
-              {recipeIngredient.ingredient ? (
-                recipeIngredient.ingredient.name
+              {recipeIngredient.food ? (
+                recipeIngredient.food.name
               ) : (
                 <Text color="status-error">Unknown</Text>
               )}
@@ -94,17 +94,17 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
     );
   }
 
-  const handleSubmit = (values: IngredientCorrectorRecipeIngredient) => {
+  const handleSubmit = (values: IngredientCorrectorIngredient) => {
     submit(recipeIngredient.id, {
       unit: values.unit,
       quantity: values.quantity,
-      ingredientId: values.ingredient.id,
+      foodId: values.food.id,
       unitStart: values.unitStart,
       unitEnd: values.unitEnd,
       quantityStart: values.quantityStart,
       quantityEnd: values.quantityEnd,
-      ingredientStart: values.ingredientStart,
-      ingredientEnd: values.ingredientEnd,
+      foodStart: values.foodStart,
+      foodEnd: values.foodEnd,
       text: values.text,
     });
   };

@@ -56,7 +56,7 @@ app.get('/ping', (req, res) => {
 const schema = applyMiddleware(
   makeExecutableSchema({
     typeDefs,
-    resolvers,
+    resolvers: resolvers as any,
     schemaDirectives: {
       ...directives,
     },

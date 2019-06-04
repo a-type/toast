@@ -17,10 +17,7 @@ const getShape = recipe => {
 export interface RecipeCardRecipe {
   id: string;
   title: string;
-  coverImage?: {
-    id: string;
-    url: string;
-  };
+  coverImageUrl: string;
   attribution: string;
 }
 
@@ -30,7 +27,7 @@ const RecipeCard: FC<
   }
 > = ({ recipe, ...props }) => (
   <Card
-    imageSrc={path(['coverImage', 'url'], recipe)}
+    imageSrc={recipe.coverImageUrl}
     shape={getShape(recipe)}
     title={truncate(recipe.title)}
     {...props}

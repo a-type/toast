@@ -9,6 +9,7 @@ export default gql`
   }
 
   type PlanDayCookingRecipeConnection @cypherVirtual {
+    nodes: [Recipe!]! @cypherNode(relationship: "PLANS_TO_COOK", direction: OUT)
     edges: [PlanDayCookingRecipeEdge!]!
       @cypherRelationship(type: "PLANS_TO_COOK", direction: OUT)
   }

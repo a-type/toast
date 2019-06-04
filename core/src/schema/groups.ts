@@ -105,12 +105,7 @@ export default gql`
   }
 
   type GroupRecipeCollectionConnection @cypherVirtual {
-    edges: [GroupRecipeCollectionEdge!]!
-      @cypherRelationship(type: "HAS_COLLECTION", direction: OUT)
-  }
-
-  type GroupRecipeCollectionEdge {
-    node: RecipeCollection!
+    nodes: [RecipeCollection!]!
       @cypherNode(relationship: "HAS_COLLECTION", direction: OUT)
   }
 

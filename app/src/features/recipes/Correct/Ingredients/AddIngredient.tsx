@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react';
-import { RecipeIngredientCorrectedValueInput } from 'features/recipes/Correct/types';
+import { IngredientCorrectedFieldsInput } from 'features/recipes/Correct/types';
 import { Button } from 'grommet';
 import { IngredientCorrectionForm } from './CorrectionForm';
 
 export interface AddIngredientProps {
-  submitAdd(added: RecipeIngredientCorrectedValueInput): void;
+  submitAdd(added: IngredientCorrectedFieldsInput): void;
 }
 
 export const AddIngredient: FC<AddIngredientProps> = ({ submitAdd }) => {

@@ -13,8 +13,10 @@ const RecipeSaveButtonQuery = gql`
   query RecipeSaveButton($id: ID!) {
     recipe(id: $id) {
       id
-      containedInViewerCollections {
-        id
+      containedInViewerCollectionsConnection {
+        nodes {
+          id
+        }
       }
     }
   }

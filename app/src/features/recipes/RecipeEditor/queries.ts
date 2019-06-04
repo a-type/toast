@@ -11,6 +11,7 @@ export type RecipeCreateInput = {
 };
 
 export type RecipeUpdateInput = {
+  id: string;
   title?: string;
   description?: string;
   servings?: number;
@@ -18,6 +19,7 @@ export type RecipeUpdateInput = {
   prepTime?: number;
   unattendedTime?: number;
   private?: boolean;
+  published?: boolean;
 };
 
 export type EditRecipeIngredient = {
@@ -41,12 +43,6 @@ export type EditRecipeRecipeIngredient = {
   preparations: string[];
 };
 
-export type EditRecipeRecipeStep = {
-  id: string;
-  index: number;
-  text: string;
-};
-
 export type EditRecipeRecipe = {
   id: string;
   title: string;
@@ -57,8 +53,10 @@ export type EditRecipeRecipe = {
   unattendedTime: number;
   published: boolean;
   private: boolean;
-  ingredients: EditRecipeRecipeIngredient[];
-  steps: EditRecipeRecipeStep[];
+  ingredientsConnection: {
+    nodes: EditRecipeRecipeIngredient[];
+  };
+  steps: string[];
 };
 
 export type EditRecipeCreateIngredientInput = {
@@ -84,11 +82,11 @@ export const EditRecipeRecipeIngredientFragment = gql`
     unitEnd
     quantityStart
     quantityEnd
-    ingredientStart
-    ingredientEnd
+    foodStart
+    foodEnd
     comments
     preparations
-    ingredient {
+    food {
       id
       name
     }
@@ -114,12 +112,10 @@ export const EditRecipeRecipeFragment = gql`
     unattendedTime
     published
     private
-    ingredients {
+    food {
       ...EditRecipeRecipeIngredient
     }
-    steps {
-      ...EditRecipeRecipeStep
-    }
+    steps
   }
 
   ${EditRecipeRecipeIngredientFragment}

@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 import { Box, Button, Paragraph, DropButton, TextArea } from 'grommet';
 import { Icon, Field } from 'components/generic';
-import { EditRecipeRecipeStep, EditRecipeUpdateStepInput } from './queries';
+import { EditRecipeUpdateStepInput } from './queries';
 import { Formik } from 'formik';
 
 export interface RecipeStepEditorProps {
-  step: EditRecipeRecipeStep;
+  step: string;
   updateStep: (input: EditRecipeUpdateStepInput) => Promise<any>;
   deleteStep: (id: string) => Promise<any>;
 }
@@ -21,7 +21,7 @@ export const RecipeStepEditor: FC<RecipeStepEditorProps> = ({
     return (
       <Box width="100%" direction="row">
         <Box flex="grow" alignContent="stretch">
-          <Paragraph>{step.text}</Paragraph>
+          <Paragraph>{step}</Paragraph>
         </Box>
         <Box justify="center">
           <DropButton
@@ -34,14 +34,14 @@ export const RecipeStepEditor: FC<RecipeStepEditorProps> = ({
                   onClick={() => setShowForm(true)}
                   margin={{ bottom: 'small' }}
                 />
-                <Button
+                {/* <Button
                   color="status-critical"
                   onClick={async () => {
                     await deleteStep(step.id);
                     setShowForm(false);
                   }}
                   label="Delete"
-                />
+                /> */}
               </Box>
             }
           />
@@ -52,9 +52,10 @@ export const RecipeStepEditor: FC<RecipeStepEditorProps> = ({
 
   return (
     <Formik
-      initialValues={{ text: step.text }}
+      initialValues={{ text: step }}
       onSubmit={async values => {
-        await updateStep({ ...values, recipeStepId: step.id });
+        // FIXME
+        // await updateStep({ ...values, recipeStepId: step.id });
         setShowForm(false);
       }}
     >

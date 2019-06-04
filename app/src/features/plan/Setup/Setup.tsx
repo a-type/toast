@@ -34,7 +34,7 @@ export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
 
   return (
     <React.Fragment>
-      <Heading>Let's get started</Heading>
+      <Heading level="1">Let's get started</Heading>
       <Paragraph>
         Thanks for joining Toast! Let's set you up with your new plan. This
         shouldn't take long.

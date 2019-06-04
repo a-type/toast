@@ -21,4 +21,4 @@ export default [
   Mutation: {
     ping: () => 'pong',
   },
-});
+}) as { Query: { [key: string]: Function }, Mutation: { [key: string]: Function }};

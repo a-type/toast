@@ -19,17 +19,15 @@ export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = ({ recipe }) => {
     <Box>
       <Box>
         <ol>
-          {recipe.steps
-            .sort((a, b) => a.index - b.index)
-            .map(step => (
-              <li key={step.id}>
-                <RecipeStepEditor
-                  step={step}
-                  updateStep={updateStep}
-                  deleteStep={deleteStep}
-                />
-              </li>
-            ))}
+          {recipe.steps.map(step => (
+            <li key={step}>
+              <RecipeStepEditor
+                step={step}
+                updateStep={updateStep}
+                deleteStep={deleteStep}
+              />
+            </li>
+          ))}
         </ol>
       </Box>
       <Formik

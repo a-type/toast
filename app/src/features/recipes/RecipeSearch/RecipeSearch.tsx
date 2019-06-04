@@ -24,13 +24,12 @@ const SearchRecipesQuery = gql`
         ingredients: { include: $include, exclude: $exclude }
       }
     ) {
-      id
-      title
-      attribution
-      coverImage {
+      nodes {
         id
-        url
+        title
         attribution
+        coverImageUrl
+        coverImageAttribution
       }
     }
   }
@@ -38,15 +37,14 @@ const SearchRecipesQuery = gql`
 
 type SearchRecipesQueryResult = {
   searchRecipes: {
-    id: string;
-    title: string;
-    attribution: string;
-    coverImage?: {
+    nodes: {
       id: string;
-      url: string;
+      title: string;
       attribution: string;
-    };
-  }[];
+      coverImageUrl: string;
+      coverImageAttribution: string;
+    }[];
+  };
 };
 
 const useRecipeResults = (
@@ -114,7 +112,7 @@ export const RecipeSearchResults = ({
 
   return (
     <CardGrid>
-      {data.searchRecipes.map(recipe => (
+      {data.searchRecipes.nodes.map(recipe => (
         <RecipeCard
           key={recipe.id}
           recipe={recipe}
