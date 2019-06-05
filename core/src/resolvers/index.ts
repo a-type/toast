@@ -7,6 +7,7 @@ import ingredientCorrections from './ingredientCorrections';
 import groupInvitations from './groupInvitations';
 import shoppingList from './shoppingList';
 import ingredients from './ingredients';
+import groups from './groups';
 
 export default [
   recipes,
@@ -16,6 +17,7 @@ export default [
   shoppingList,
   scalars,
   ingredients,
+  groups,
 ].reduce(mergeDeepRight, {
   Query: {
     foo: () => false,

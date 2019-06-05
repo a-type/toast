@@ -119,7 +119,7 @@ export default gql`
 
   input RecipeUncollectInput {
     recipeId: ID!
-    collectionId: ID!
+    collectionId: ID
   }
 
   input RecipeUpdateInput {
@@ -203,7 +203,8 @@ export default gql`
         match: "(recipe:Recipe{id:$args.input.recipeId})"
         optionalMatch: """
         (user:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->
-          (:RecipeCollection)<-[rel:COLLECTED_IN]-(recipe)
+          (coll:RecipeCollection)<-[rel:COLLECTED_IN]-(recipe)
+        WHERE $args.input.collectionId IS NULL OR coll.id = $args.input.collectionId
         """
         delete: "rel"
         return: "recipe"

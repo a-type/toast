@@ -25,7 +25,7 @@ const CollectRecipeMutation = gql`
 `;
 
 const UnsaveRecipeMutation = gql`
-  mutation UnsaveRecipe($input: RecipeCollectInput!) {
+  mutation UnsaveRecipe($input: RecipeUncollectInput!) {
     uncollectRecipe(input: $input) {
       ...CollectRecipeRecipe
     }

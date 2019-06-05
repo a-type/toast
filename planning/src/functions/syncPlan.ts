@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import ApiError from '../ApiError';
 
 import id from '../tools/id';
+import { parse, subWeeks, format } from 'date-fns';
 
 export const updateStartDay = async (
   tx: Transaction,
@@ -26,7 +27,7 @@ export const updateStartDay = async (
   const targetDay =
     targetDayRes.records.length && targetDayRes.records[0].get('targetDay');
 
-  if (targetDay) {
+  if (targetDay && targetDay.id) {
     /**
      * Match group and target day,
      * match all links between group and target day,
@@ -112,7 +113,7 @@ export default async (req: Request, res: Response) => {
     throw new ApiError('groupId parameter is required', 400);
   }
 
-  if (!startDate || !/\d{4}-\d{2}-\d{2}/.test(startDate)) {
+  if (!startDate || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
     throw new ApiError(
       'a startDate parameter is required in format YYYY-MM-DD',
       400,
@@ -123,11 +124,15 @@ export default async (req: Request, res: Response) => {
     `Sync: group: ${groupId}, startDate: ${startDate}, weekCount: ${weekCount}`,
   );
 
+  // subtract a week; we also store the current week
+  // of plan data
+  const weekPrior = format(subWeeks(parse(startDate), 1), 'YYYY-MM-DD');
+
   const dayCount = weekCount * 7;
 
   const session = neo4j.session();
   await session.writeTransaction(async tx => {
-    await updateStartDay(tx, groupId, startDate);
+    await updateStartDay(tx, groupId, weekPrior);
     await fillMissingDays(tx, groupId, dayCount);
   });
 

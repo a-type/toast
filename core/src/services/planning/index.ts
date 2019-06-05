@@ -2,11 +2,9 @@ import config from 'config';
 import fetch from 'node-fetch';
 import { InternalError } from 'errors';
 import logger from 'logger';
-import { startOfWeek, format } from 'date-fns';
 
 export default {
-  syncPlan: async (groupId: string): Promise<void> => {
-    const startDate = format(startOfWeek(new Date()), 'YYYY-MM-DD');
+  syncPlan: async (groupId: string, startDate: string): Promise<void> => {
     const response = await fetch(config.planning.host + '/syncPlan', {
       method: 'POST',
       body: JSON.stringify({

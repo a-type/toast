@@ -16,7 +16,7 @@ export type SetGroceryDayMutation = {
 };
 
 export const Document = gql`
-  mutation SetGroceryDay($groceryDay: Int!) {
+  mutation SetGroceryDay($groceryDay: WeekDay!) {
     setGroceryDay(input: { groceryDay: $groceryDay }) {
       id
       groceryDay
