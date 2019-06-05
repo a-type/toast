@@ -32,8 +32,8 @@ export default {
       if (!ctx.user) {
         return null;
       }
-      const user = await ctx.runCypher();
-      if (user.group) {
+      const user = await parent.me();
+      if (user && user.group) {
         ctx.storeGroupId(user.group.id);
       }
       return supplementUserData(user);

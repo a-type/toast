@@ -40,7 +40,7 @@ export type Context = {
   getPurchasedIngredientLoader: () => Promise<
     DataLoader<string, PurchaseListItem>
   >;
-  cypherParams: {
+  cypherContext: {
     userId: string;
   };
   runCypher(): Promise<any>;
@@ -117,7 +117,7 @@ export const createContext = async (req): Promise<Context> => {
     getGroupId,
     storeGroupId,
 
-    cypherParams: {
+    cypherContext: {
       userId: user && user.id,
     },
 

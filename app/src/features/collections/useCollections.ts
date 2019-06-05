@@ -4,7 +4,7 @@ import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 const CollectionsQuery = gql`
-  query Collections($first: Int, $offset: Int) {
+  query Collections {
     me {
       id
       group {

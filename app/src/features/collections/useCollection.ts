@@ -4,12 +4,12 @@ import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 const CollectionQuery = gql`
-  query Collection($id: ID!) {
+  query Collection($input: RecipeCollectionGetInput!) {
     me {
       id
       group {
         id
-        collection(input: { id: $id }) {
+        recipeCollection(input: $input) {
           id
           name
           recipesConnection {
@@ -58,7 +58,6 @@ export type Pagination = {
 
 export default (
   id: string,
-  pagination: Pagination = { first: 10, offset: 0 },
 ): [
   Collection,
   boolean,
@@ -87,7 +86,11 @@ export default (
     },
   });
 
-  const collection = pathOr([], ['me', 'group', 'collection'], result.data);
+  const collection = pathOr(
+    [],
+    ['me', 'group', 'recipeCollection'],
+    result.data,
+  );
 
   return [collection, result.loading, result.error, result];
 };

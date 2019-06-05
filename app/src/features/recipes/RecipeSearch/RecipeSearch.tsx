@@ -17,34 +17,25 @@ import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import ErrorMessage from 'components/generic/ErrorMessage';
 
 const SearchRecipesQuery = gql`
-  query SearchRecipes($term: String, $include: [ID!], $exclude: [ID!]) {
-    searchRecipes(
-      input: {
-        term: $term
-        ingredients: { include: $include, exclude: $exclude }
-      }
-    ) {
-      nodes {
-        id
-        title
-        attribution
-        coverImageUrl
-        coverImageAttribution
-      }
+  query SearchRecipes($input: RecipeSearchInput!) {
+    searchRecipes(input: $input) {
+      id
+      title
+      attribution
+      coverImageUrl
+      coverImageAttribution
     }
   }
 `;
 
 type SearchRecipesQueryResult = {
   searchRecipes: {
-    nodes: {
-      id: string;
-      title: string;
-      attribution: string;
-      coverImageUrl: string;
-      coverImageAttribution: string;
-    }[];
-  };
+    id: string;
+    title: string;
+    attribution: string;
+    coverImageUrl: string;
+    coverImageAttribution: string;
+  }[];
 };
 
 const useRecipeResults = (
@@ -69,9 +60,13 @@ const useRecipeResults = (
         .query({
           query: SearchRecipesQuery,
           variables: {
-            term: debouncedTerm,
-            includeIngredients,
-            excludeIngredients,
+            input: {
+              term: debouncedTerm,
+              foods: {
+                include: includeIngredients || [],
+                exclude: excludeIngredients || [],
+              },
+            },
           },
         })
         .then(setQueryResult)
@@ -112,7 +107,7 @@ export const RecipeSearchResults = ({
 
   return (
     <CardGrid>
-      {data.searchRecipes.nodes.map(recipe => (
+      {data.searchRecipes.map(recipe => (
         <RecipeCard
           key={recipe.id}
           recipe={recipe}

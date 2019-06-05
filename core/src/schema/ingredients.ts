@@ -3,19 +3,19 @@ import { gql } from 'apollo-server-core';
 export default gql`
   type Ingredient {
     id: ID!
-    text: String!
+    text: String! @defaultValue(value: "")
     foodStart: Int
     foodEnd: Int
     unit: String
     unitStart: Int
     unitEnd: Int
-    quantity: Float!
+    quantity: Float! @defaultValue(value: 1)
     quantityStart: Int
     quantityEnd: Int
-    comments: [String!]!
-    preparations: [String!]!
+    comments: [String!]! @defaultValue(value: [])
+    preparations: [String!]! @defaultValue(value: [])
 
-    food: Food! @cypherNode(relationship: "USED_IN", direction: IN)
+    food: Food @cypherNode(relationship: "USED_IN", direction: IN)
     recipe: Recipe! @cypherNode(relationship: "INGREDIENT_OF", direction: OUT)
   }
 

@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 const RecordView = gql`
   mutation RecordView($recipeId: ID!) {
-    recordRecipeView(id: $recipeId) {
+    recordRecipeView(input: { id: $recipeId }) {
       id
       views
     }

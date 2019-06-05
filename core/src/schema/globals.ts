@@ -4,6 +4,7 @@ export default gql`
   scalar Date
   scalar Weekday
   scalar Upload
+  scalar Any
 
   type Query {
     foo: Boolean

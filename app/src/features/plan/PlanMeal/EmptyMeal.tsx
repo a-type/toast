@@ -29,10 +29,11 @@ const Border = styled<{}, 'button'>('button')`
 `;
 
 interface EmptyMealProps {
-  meal: PlanMealData;
+  planDayId: string;
+  mealName: string;
 }
 
-export const EmptyMeal: FC<EmptyMealProps> = ({ meal }) => {
+export const EmptyMeal: FC<EmptyMealProps> = ({ planDayId, mealName }) => {
   const [
     { stage, actionType },
     { begin, cancel, selectActionType },
@@ -56,7 +57,8 @@ export const EmptyMeal: FC<EmptyMealProps> = ({ meal }) => {
             <PlanMealActionPicker onActionSelected={selectActionType} />
           ) : (
             <PlanMealDetailsStage
-              meal={meal}
+              planDayId={planDayId}
+              mealName={mealName}
               actionType={actionType}
               onCancel={cancel}
               onDone={cancel}

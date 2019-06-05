@@ -22,7 +22,7 @@ export default gql`
     """
     unattendedTime: Int
 
-    coverImageUrl: String!
+    coverImageUrl: String
     coverImageAttribution: String
 
     createdAt: Date!
@@ -34,7 +34,7 @@ export default gql`
     private: Boolean!
     locked: Boolean!
 
-    steps: [String!]!
+    steps: [String!]
     ingredientsConnection: RecipeIngredientConnection!
 
     containedInViewerCollectionsConnection: RecipeRecipeCollectionConnection!
@@ -45,7 +45,9 @@ export default gql`
     nodes: [RecipeCollection!]!
       @cypherCustom(
         statement: """
-        MATCH (parent)-[:COLLECTED_IN]->(collection:RecipeCollection)-(:Group)<-[:MEMBER_OF]-(:User{id:$context.userId})
+        MATCH (parent)-[:COLLECTED_IN]->
+          (collection:RecipeCollection)<-[:HAS_COLLECTION]-(:Group)
+          <-[:MEMBER_OF]-(:User{id:$context.userId})
         RETURN collection
         """
       )
@@ -159,7 +161,7 @@ export default gql`
         ]
         return: "recipe"
       )
-      @generateId(fromArg: "input.title")
+      @generateSlug(fromArg: "input.title")
       @authenticated
 
     linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated
@@ -177,9 +179,9 @@ export default gql`
         statement: """
         MATCH (recipe:Recipe{id:$args.input.id})
         WITH recipe,
-          CASE WHEN datetime(coalesce(recipe.viewedAt, '2018-08-31T00:00:00')) + duration("PT1M") < datetime($time)
+          CASE WHEN datetime(coalesce(recipe.viewedAt, '2018-08-31T00:00:00')) + duration("PT1M") < datetime($args.input.time)
           THEN 1 ELSE 0 END as increment
-        SET recipe.views = coalesce(recipe.views, 0) + increment, recipe.viewedAt = $time
+        SET recipe.views = coalesce(recipe.views, 0) + increment, recipe.viewedAt = $args.input.time
         RETURN recipe
         """
       )

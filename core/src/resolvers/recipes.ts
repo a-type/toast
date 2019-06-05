@@ -3,7 +3,7 @@ import { Context } from 'context';
 export default {
   Mutation: {
     updateRecipe: async (parent, args, ctx: Context, input) => {
-      const recipe = await ctx.runCypher();
+      const recipe = await parent.updateRecipe();
 
       if (args.coverImage) {
         const file = await args.input.coverImage.file;

@@ -20,6 +20,7 @@ export type RecipeUpdateInput = {
   unattendedTime?: number;
   private?: boolean;
   published?: boolean;
+  steps?: string[];
 };
 
 export type EditRecipeIngredient = {
@@ -61,15 +62,6 @@ export type EditRecipeRecipe = {
 
 export type EditRecipeCreateIngredientInput = {
   ingredientText: string;
-};
-
-export type EditRecipeCreateStepInput = {
-  text: string;
-};
-
-export type EditRecipeUpdateStepInput = {
-  recipeStepId: string;
-  text?: string;
 };
 
 export const EditRecipeRecipeIngredientFragment = gql`
@@ -133,8 +125,8 @@ export const CreateRecipeMutation = gql`
 `;
 
 export const UpdateRecipeMutation = gql`
-  mutation UpdateRecipe($id: ID!, $input: RecipeUpdateInput!) {
-    updateRecipe(id: $id, input: $input) {
+  mutation UpdateRecipe($input: RecipeUpdateInput!) {
+    updateRecipe(input: $input) {
       ...EditRecipeRecipe
     }
   }
@@ -169,17 +161,6 @@ export const CreateRecipeIngredientMutation = gql`
 export const CreateRecipeStepMutation = gql`
   mutation CreateRecipeStep($recipeId: ID!, $input: RecipeStepCreateInput!) {
     createRecipeStep(recipeId: $recipeId, input: $input) {
-      id
-      ...EditRecipeRecipeStep
-    }
-  }
-
-  ${EditRecipeRecipeStepFragment}
-`;
-
-export const UpdateRecipeStepMutation = gql`
-  mutation UpdateRecipeStep($input: RecipeStepUpdateInput!) {
-    updateRecipeStep(input: $input) {
       id
       ...EditRecipeRecipeStep
     }

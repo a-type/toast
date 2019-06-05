@@ -27,20 +27,25 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
     );
   }
 
-  const { date, cookingConnection } = day;
-  const meals = path(['edges'], cookingConnection) as PlanMealData[];
+  const { date } = day;
+  const meals = path(['cookingConnection', 'edges'], day) as PlanMealData[];
   // TODO: support non-standard meals
   const standardMeals = ['breakfast', 'lunch', 'dinner'].map(
-    mealName => meals.find(meal => meal.mealName === mealName) || null,
+    mealName =>
+      meals.find(
+        meal => meal.mealName.toLowerCase() === mealName.toLowerCase(),
+      ) || null,
   );
+  console.log(meals);
+  console.log(standardMeals);
 
   return (
     <Box>
       <Heading level="2">{formatDay(parse(date))}</Heading>
       <MealGrid>
-        <Meal meal={standardMeals[0]} mealName="Breakfast" />
-        <Meal meal={standardMeals[1]} mealName="Lunch" />
-        <Meal meal={standardMeals[2]} mealName="Dinner" />
+        <Meal planDayId={day.id} meal={standardMeals[0]} mealName="Breakfast" />
+        <Meal planDayId={day.id} meal={standardMeals[1]} mealName="Lunch" />
+        <Meal planDayId={day.id} meal={standardMeals[2]} mealName="Dinner" />
       </MealGrid>
     </Box>
   );

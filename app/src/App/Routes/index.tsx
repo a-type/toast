@@ -4,7 +4,6 @@ import PrivateRoute from './PrivateRoute';
 import HomePage from './pages/Home';
 import PlanPage from './pages/Plan';
 import RecipePage from './pages/Recipe';
-import UserPage from './pages/User';
 import ManagePage from './pages/Manage';
 import NotFoundPage from './pages/NotFound';
 import ShoppingList from './pages/ShoppingList';
@@ -28,8 +27,6 @@ export default () => (
     <Route path="/recipes" component={RecipePage} />
 
     <PrivateRoute path="/collections" component={Collections} />
-
-    <Route path="/users/:userId" component={UserPage} />
 
     <PrivateRoute path="/settings" component={SettingsPage} />
 

@@ -6,6 +6,7 @@ import users from './users';
 import ingredientCorrections from './ingredientCorrections';
 import groupInvitations from './groupInvitations';
 import shoppingList from './shoppingList';
+import ingredients from './ingredients';
 
 export default [
   recipes,
@@ -14,6 +15,7 @@ export default [
   groupInvitations,
   shoppingList,
   scalars,
+  ingredients,
 ].reduce(mergeDeepRight, {
   Query: {
     foo: () => false,
@@ -21,4 +23,7 @@ export default [
   Mutation: {
     ping: () => 'pong',
   },
-}) as { Query: { [key: string]: Function }, Mutation: { [key: string]: Function }};
+}) as {
+  Query: { [key: string]: Function };
+  Mutation: { [key: string]: Function };
+};

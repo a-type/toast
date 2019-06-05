@@ -10,9 +10,13 @@ import { directiveTypeDefs } from 'graphql-cypher';
 import { gql } from 'apollo-server-core';
 
 export default [
-  // gql`
-  //   ${directiveTypeDefs}
-  // `,
+  gql`
+    ${directiveTypeDefs()}
+    directive @authenticated on FIELD_DEFINITION
+    directive @generateSlug(fromArg: String, type: String) on FIELD_DEFINITION
+    directive @hasClaim(claim: String!) on FIELD_DEFINITION
+    directive @defaultValue(value: Any!) on FIELD_DEFINITION
+  `,
   globals,
   foods,
   groups,

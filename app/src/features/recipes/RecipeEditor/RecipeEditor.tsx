@@ -175,7 +175,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
             refetchRecipe={refetchRecipe}
           />
           <Heading level="3">Steps</Heading>
-          <RecipeStepsEditor recipe={recipe} />
+          <RecipeStepsEditor recipe={recipe} updateRecipe={save} />
         </>
       )}
     </Box>

@@ -49,7 +49,7 @@ export default gql`
         set: "ingredient.name = $args.input, ingredient.searchHelpers = $args.input.alternateNames"
         return: "ingredient"
       )
-      @generateId(fromArg: "input.name")
+      @generateSlug(fromArg: "input.name")
       @hasClaim(claim: "admin")
 
     updateFood(input: FoodUpdateInput!): Food

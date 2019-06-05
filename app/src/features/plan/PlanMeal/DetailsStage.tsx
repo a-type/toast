@@ -4,10 +4,10 @@ import { PlanActionType } from './types';
 import { PlanMealData } from '../types';
 import { Box } from 'grommet';
 import { Heading } from 'components/text';
-import ChoosePreviousMeal from './ChoosePreviousMeal';
 
 export interface PlanMealDetailsStageProps {
-  meal: PlanMealData;
+  planDayId: string;
+  mealName: string;
   actionType: PlanActionType;
   onCancel(): void;
   onDone(): void;
@@ -17,20 +17,18 @@ export const PlanMealDetailsStage: FC<PlanMealDetailsStageProps> = ({
   actionType,
   onCancel,
   onDone,
-  meal,
+  planDayId,
+  mealName,
 }) => {
   if (actionType === PlanActionType.Cook) {
     return (
       <Box>
         <Heading level="3">Choose a Recipe</Heading>
-        <RecipeSuggestions planMealId={meal.id} onRecipeSelected={onDone} />
-      </Box>
-    );
-  } else if (actionType === PlanActionType.Eat) {
-    return (
-      <Box>
-        <Heading level="3">Choose from previous meals</Heading>
-        <ChoosePreviousMeal planMealId={meal.id} />
+        <RecipeSuggestions
+          planDayId={planDayId}
+          mealName={mealName}
+          onRecipeSelected={onDone}
+        />
       </Box>
     );
   }

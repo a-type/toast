@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { CheckBox, Text } from 'grommet';
 import { toDisplay } from 'formatters/quantity';
 
-type Ingredient = {
+type Food = {
   id: string;
   name: string;
 };
@@ -12,10 +12,10 @@ type Recipe = {
   title: string;
 };
 
-type RecipeIngredient = {
-  id: string;
-  text: string;
-  recipe: Recipe;
+type ShoppingListItemUsage = {
+  recipeTitle: string;
+  recipeId: string;
+  ingredientText: string;
 };
 
 type ShoppingListItem = {
@@ -23,9 +23,9 @@ type ShoppingListItem = {
   totalQuantity: number;
   purchasedQuantity: number;
   unit?: string;
-  ingredient?: Ingredient;
+  food?: Food;
   displayName: string;
-  plannedUses: RecipeIngredient[];
+  plannedUses: ShoppingListItemUsage[];
 };
 
 export interface ShoppingListItemProps {
@@ -51,7 +51,7 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({
     }
   };
 
-  const label = item.ingredient ? (
+  const label = item.food ? (
     <Text>
       {toDisplay(item.totalQuantity)}
       {item.unit ? ` ${item.unit}` : ''} {item.displayName}
@@ -60,7 +60,7 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({
     <Text>{item.displayName}</Text>
   );
 
-  const details = item.ingredient ? (
+  const details = item.food ? (
     <Text
       style={{
         fontStyle: 'italic',
@@ -68,7 +68,7 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({
         opacity: 0.7,
       }}
     >
-      ({item.plannedUses.map(use => use.text).join(', ')})
+      ({item.plannedUses.map(use => use.ingredientText).join(', ')})
     </Text>
   ) : null;
 

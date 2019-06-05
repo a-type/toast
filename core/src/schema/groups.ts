@@ -15,6 +15,8 @@ export default gql`
     You may only view the group associated with your own User
     """
     group: Group
+      @cypherNode(relationship: "MEMBER_OF", direction: OUT)
+      @authenticated
 
     authoredRecipesConnection(
       input: UserAuthoredRecipesConnectionInput = { published: Published }
@@ -32,9 +34,9 @@ export default gql`
   }
 
   type UserAuthoredRecipesConnection @cypherVirtual {
-    edges: [UserAuthoredRecipesEdge!]!
-      @cypherRelationship(
-        type: "AUTHOR_OF"
+    nodes: [Recipe!]!
+      @cypherNode(
+        relationship: "AUTHOR_OF"
         direction: OUT
         where: """
         $virtual.input.published = 'Any' OR
@@ -42,10 +44,6 @@ export default gql`
         ($virtual.input.published = 'Unpublished' AND NOT coalesce(node.published, false))
         """
       )
-  }
-
-  type UserAuthoredRecipesEdge {
-    node: Recipe! @cypherNode(relationship: "AUTHOR_OF", direction: OUT)
   }
 
   """
@@ -101,7 +99,8 @@ export default gql`
   }
 
   type GroupPlanDayConnection @cypherVirtual {
-    nodes: [PlanDay!]! @cypherLinkedNodes(relationship: "HAS_NEXT_PLAN_DAY")
+    nodes: [PlanDay!]!
+      @cypherLinkedNodes(relationship: "HAS_NEXT_PLAN_DAY", direction: OUT)
   }
 
   type GroupRecipeCollectionConnection @cypherVirtual {

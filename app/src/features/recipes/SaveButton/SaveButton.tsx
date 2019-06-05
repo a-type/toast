@@ -11,7 +11,7 @@ import RecipeCollections from 'features/collections/RecipeCollections';
 
 const RecipeSaveButtonQuery = gql`
   query RecipeSaveButton($id: ID!) {
-    recipe(id: $id) {
+    recipe(input: { id: $id }) {
       id
       containedInViewerCollectionsConnection {
         nodes {

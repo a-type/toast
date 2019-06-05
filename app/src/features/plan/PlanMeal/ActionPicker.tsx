@@ -15,10 +15,6 @@ export const PlanMealActionPicker: FC<PlanMealActionPickerProps> = ({
         onClick={() => onActionSelected(PlanActionType.Cook)}
         label="Cook"
       />
-      <Button
-        onClick={() => onActionSelected(PlanActionType.Eat)}
-        label="Eat"
-      />
     </Box>
   );
 };

@@ -78,7 +78,9 @@ export default ({ recipeId }: { recipeId?: string }) => {
               query: GetRecipeQuery,
               variables: { id: recipeId },
             });
-            recipe.ingredients.push(data.createRecipeIngredient);
+            recipe.ingredientsConnection.nodes.push(
+              data.createRecipeIngredient,
+            );
             cache.writeQuery({ query: GetRecipeQuery, data: { recipe } });
           },
         });

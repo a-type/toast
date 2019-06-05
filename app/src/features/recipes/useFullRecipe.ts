@@ -5,45 +5,39 @@ import { ApolloError } from 'apollo-boost';
 
 export const FullRecipeQuery = gql`
   query FullRecipe($recipeId: ID!) {
-    recipe(id: $recipeId) {
+    recipe(input: { id: $recipeId }) {
       id
       title
       description
       attribution
       sourceUrl
       published
-      displayType
-      ingredients {
-        id
-        unit
-        unitStart
-        unitEnd
-        quantity
-        quantityStart
-        quantityEnd
-        text
-        ingredientStart
-        ingredientEnd
-        comments
-        preparations
-        ingredient {
+      coverImageUrl
+      coverImageAttribution
+      ingredientsConnection {
+        nodes {
           id
-          name
+          unit
+          unitStart
+          unitEnd
+          quantity
+          quantityStart
+          quantityEnd
+          text
+          foodStart
+          foodEnd
+          comments
+          preparations
+          food {
+            id
+            name
+          }
         }
       }
-      steps {
-        id
-        index
-        text
-      }
-      coverImage {
-        id
-        url
-        attribution
-      }
-      author {
-        id
-      }
+      steps
+      # author {
+      #   id
+      # }
     }
   }
 `;
@@ -55,38 +49,32 @@ export type FullRecipe = {
   description: string;
   sourceUrl: string;
   attribution: string;
-  displayType: 'LINK' | 'FULL';
-  ingredients: {
-    id: string;
-    unit?: string;
-    unitStart?: number;
-    unitEnd?: number;
-    quantity: number;
-    quantityStart?: number;
-    quantityEnd?: number;
-    text: string;
-    ingredientStart?: number;
-    ingredientEnd?: number;
-    comments: string[];
-    preparations: string[];
-    ingredient: {
+  coverImageUrl: string;
+  coverImageAttribution: string;
+  ingredientsConnection: {
+    nodes: {
       id: string;
-      name: string;
-    };
-  }[];
-  steps: {
-    id: string;
-    index: number;
-    text: string;
-  }[];
-  coverImage?: {
-    id: string;
-    url: string;
-    attribution: string;
+      unit?: string;
+      unitStart?: number;
+      unitEnd?: number;
+      quantity: number;
+      quantityStart?: number;
+      quantityEnd?: number;
+      text: string;
+      foodStart?: number;
+      foodEnd?: number;
+      comments: string[];
+      preparations: string[];
+      food: {
+        id: string;
+        name: string;
+      };
+    }[];
   };
-  author?: {
-    id: string;
-  };
+  steps: string[];
+  // author?: {
+  //   id: string;
+  // };
 };
 
 export type FullRecipeData = {

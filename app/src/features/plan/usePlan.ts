@@ -4,7 +4,7 @@ import { useQuery, QueryHookResult } from 'react-apollo-hooks';
 import { ApolloError } from 'apollo-boost';
 import { pathOr } from 'ramda';
 
-export const MealFragment = gql`
+export const PlanDayCookingEdgeFragment = gql`
   fragment MealRecipeFragment on Recipe {
     id
     title
@@ -14,7 +14,7 @@ export const MealFragment = gql`
     coverImageUrl
   }
 
-  fragment MealFragment on PlanDay {
+  fragment PlanDayCookingEdgeFragment on PlanDayCookingRecipeEdge {
     servings
     mealName
     node {
@@ -36,7 +36,7 @@ export const GetPlanQuery = gql`
 
             cookingConnection {
               edges {
-                ...MealFragment
+                ...PlanDayCookingEdgeFragment
               }
             }
           }
@@ -45,7 +45,7 @@ export const GetPlanQuery = gql`
     }
   }
 
-  ${MealFragment}
+  ${PlanDayCookingEdgeFragment}
 `;
 
 export type GetPlanQueryResult = {

@@ -14,17 +14,22 @@ const MealBox = styled(Box)`
 `;
 
 interface MealProps {
+  planDayId: string;
   meal: PlanMealData;
   mealName: string;
 }
 
-const Meal: SFC<MealProps> = ({ meal, mealName }) => {
-  const empty = !meal.cooking.length && !meal.eating.length;
+const Meal: SFC<MealProps> = ({ meal, mealName, planDayId }) => {
+  const empty = !meal;
 
   return (
     <MealBox>
       <Label>{mealName}</Label>
-      {empty ? <EmptyMeal meal={meal} /> : <PlannedMeal meal={meal} />}
+      {empty ? (
+        <EmptyMeal planDayId={planDayId} mealName={mealName} />
+      ) : (
+        <PlannedMeal meal={meal} />
+      )}
     </MealBox>
   );
 };
