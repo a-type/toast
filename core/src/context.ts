@@ -43,7 +43,6 @@ export type Context = {
   cypherContext: {
     userId: string;
   };
-  runCypher(): Promise<any>;
 };
 
 export const createContext = async (req): Promise<Context> => {
@@ -120,8 +119,6 @@ export const createContext = async (req): Promise<Context> => {
     cypherContext: {
       userId: user && user.id,
     },
-
-    runCypher: () => null,
   };
 
   return context;

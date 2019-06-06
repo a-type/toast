@@ -1,11 +1,11 @@
 import parse from '../parser';
 
-describe('ingredient parser', () => {
+describe('food parser', () => {
   test('1 cup of oats', () => {
     expect(parse('1 cup of oats')).toEqual({
       original: '1 cup of oats',
       sanitized: '1 cup of oats',
-      ingredient: {
+      food: {
         raw: 'oats',
         normalized: 'oat',
         range: [9, 13],
@@ -27,7 +27,7 @@ describe('ingredient parser', () => {
 
   test('1/3 tablespoon chopped onion', () => {
     expect(parse('1/3 tablespoon chopped onion')).toEqual({
-      ingredient: {
+      food: {
         raw: 'chopped onion',
         normalized: 'chopped onion',
         range: [15, 28],
@@ -51,7 +51,7 @@ describe('ingredient parser', () => {
 
   test('four slices of white bread', () => {
     expect(parse('four slices of white bread')).toEqual({
-      ingredient: {
+      food: {
         raw: 'white bread',
         normalized: 'white bread',
         range: [15, 26],
@@ -85,7 +85,7 @@ describe('ingredient parser', () => {
         normalized: null,
         range: [],
       },
-      ingredient: {
+      food: {
         raw: null,
         normalized: null,
         range: [],
@@ -109,7 +109,7 @@ describe('ingredient parser', () => {
         normalized: null,
         range: [],
       },
-      ingredient: {
+      food: {
         raw: 'egg',
         normalized: 'egg',
         range: [2, 5],
@@ -133,7 +133,7 @@ describe('ingredient parser', () => {
         normalized: null,
         range: [],
       },
-      ingredient: {
+      food: {
         raw: 'eggs',
         normalized: 'egg',
         range: [2, 6],
@@ -157,7 +157,7 @@ describe('ingredient parser', () => {
         normalized: 'tablespoon',
         range: [2, 6],
       },
-      ingredient: {
+      food: {
         raw: 'flour',
         normalized: 'flour',
         range: [7, 12],
@@ -181,7 +181,7 @@ describe('ingredient parser', () => {
         normalized: 'slice',
         range: [2, 7],
       },
-      ingredient: {
+      food: {
         raw: 'Bread',
         normalized: 'bread',
         range: [11, 16],
@@ -205,7 +205,7 @@ describe('ingredient parser', () => {
         normalized: 'teaspoon',
         range: [2, 5],
       },
-      ingredient: {
+      food: {
         raw: 'sesame or vegetable oil',
         normalized: 'sesame or vegetable oil',
         range: [6, 29],
@@ -229,7 +229,7 @@ describe('ingredient parser', () => {
         normalized: null,
         range: [],
       },
-      ingredient: {
+      food: {
         raw: 'kosher salt',
         normalized: 'kosher salt',
         range: [0, 11],
@@ -253,7 +253,7 @@ describe('ingredient parser', () => {
         normalized: 'can',
         range: [13, 16],
       },
-      ingredient: {
+      food: {
         raw: 'kidney beans',
         normalized: 'kidney bean',
         range: [17, 29],
@@ -279,7 +279,7 @@ describe('ingredient parser', () => {
         normalized: 'pound',
         range: [2, 7],
       },
-      ingredient: {
+      food: {
         raw: 'skinless, boneless chicken thighs',
         normalized: 'skinless, boneless chicken thigh',
         range: [8, 41],
@@ -306,7 +306,7 @@ describe('ingredient parser', () => {
         'I use 2 large breasts -- 12 oz or 350 grams each',
       ],
       preparations: [],
-      ingredient: {
+      food: {
         raw:
           'large boneless and skinless chicken breasts halved horizontally to make 4 fillets',
         normalized:
@@ -334,7 +334,7 @@ describe('ingredient parser', () => {
       sanitized: '1/2 cup grated Parmesan cheese (plus additional for serving)',
       comments: ['plus additional for serving'],
       preparations: [],
-      ingredient: {
+      food: {
         raw: 'grated Parmesan cheese',
         normalized: 'grated parmesan cheese',
         range: [8, 30],

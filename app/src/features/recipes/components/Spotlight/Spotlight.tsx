@@ -38,7 +38,7 @@ export const Spotlight: FC<SpotlightProps> = ({ recipe, showSave }) => {
     return null;
   }
 
-  const coverImage = path<string>(['coverImage', 'url'], recipe);
+  const coverImage = path<string>(['coverImageUrl'], recipe);
 
   return (
     <Layout>
@@ -90,14 +90,7 @@ export const SpotlightFragments = {
       description
       attribution
       sourceUrl
-      author {
-        id
-        displayName
-      }
-      coverImage {
-        id
-        url
-      }
+      coverImageUrl
     }
   `,
 };
