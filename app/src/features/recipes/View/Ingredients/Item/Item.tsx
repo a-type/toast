@@ -12,9 +12,9 @@ export interface IngredientItemProps {
   unit?: string;
   unitStart?: number;
   unitEnd?: number;
-  ingredient: any; // FIXME
-  ingredientStart?: number;
-  ingredientEnd?: number;
+  food: any; // FIXME
+  foodStart?: number;
+  foodEnd?: number;
   text: string;
 }
 
@@ -48,12 +48,12 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
     return <span key={`unit`}>{unitText}</span>;
   };
 
-  renderIngredient = (ingredientText: string) => {
-    const { ingredient } = this.props;
+  renderFood = (foodText: string) => {
+    const { food } = this.props;
 
     return (
-      <IngredientLink key={`ingredient`} ingredient={ingredient}>
-        {ingredientText}
+      <IngredientLink key={`ingredient`} ingredient={food}>
+        {foodText}
       </IngredientLink>
     );
   };
@@ -70,8 +70,8 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
   render() {
     const {
       text,
-      ingredientStart,
-      ingredientEnd,
+      foodStart,
+      foodEnd,
       unitStart,
       unitEnd,
       quantityStart: valueStart,
@@ -80,10 +80,10 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
 
     const ranges: Range[] = [
       {
-        name: 'ingredient',
-        start: ingredientStart,
-        end: ingredientEnd,
-        render: this.renderIngredient,
+        name: 'food',
+        start: foodStart,
+        end: foodEnd,
+        render: this.renderFood,
       },
       { name: 'unit', start: unitStart, end: unitEnd, render: this.renderUnit },
       {

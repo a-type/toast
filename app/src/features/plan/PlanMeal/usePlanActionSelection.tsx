@@ -31,7 +31,9 @@ const reducer = (
     case 'begin':
       return {
         ...state,
-        stage: SelectionStage.Action,
+        // FIXME: when there are more actions? Or redesign this whole thign....
+        //stage: SelectionStage.Action,
+        stage: SelectionStage.Details,
       };
     case 'cancel':
       return DEFAULT_STATE;

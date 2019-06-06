@@ -4,16 +4,15 @@ import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 const DraftRecipeQuery = gql`
-  query DraftRecipes($first: Int, $offset: Int) {
+  query DraftRecipes {
     me {
       id
-      draftRecipes(first: $first, offset: $offset) {
-        id
-        title
-        published
-        coverImage {
+      authoredRecipesConnection(input: { published: false }) {
+        nodes {
           id
-          url
+          title
+          published
+          coverImageUrl
         }
       }
     }
@@ -24,38 +23,25 @@ export type DraftRecipe = {
   id: string;
   title: string;
   published: string;
-  coverImage?: {
-    id: string;
-    url: string;
-  };
+  coverImageUrl: string;
 };
 
 export type DraftRecipeQueryResult = {
   me: {
     id: string;
-    draftRecipes: DraftRecipe[];
+    authoredRecipesConnection: DraftRecipe[];
   };
 };
 
-export type Pagination = {
-  first?: number;
-  offset?: number;
-};
-
-export default (
-  pagination: Pagination = { first: 10, offset: 0 },
-): [
+export default (): [
   DraftRecipe[],
   boolean,
   ApolloError,
-  QueryHookResult<DraftRecipeQueryResult, Pagination>
+  QueryHookResult<DraftRecipeQueryResult, any>
 ] => {
-  const result = useQuery<DraftRecipeQueryResult, Pagination>(
-    DraftRecipeQuery,
-    { variables: pagination },
-  );
+  const result = useQuery<DraftRecipeQueryResult>(DraftRecipeQuery);
 
-  const recipes = pathOr([], ['me', 'draftRecipes'], result.data);
+  const recipes = pathOr([], ['me', 'authoredRecipesConnection'], result.data);
 
   return [recipes, result.loading, result.error, result];
 };

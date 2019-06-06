@@ -17,21 +17,13 @@ import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import ErrorMessage from 'components/generic/ErrorMessage';
 
 const SearchRecipesQuery = gql`
-  query SearchRecipes($term: String, $include: [ID!], $exclude: [ID!]) {
-    searchRecipes(
-      input: {
-        term: $term
-        ingredients: { include: $include, exclude: $exclude }
-      }
-    ) {
+  query SearchRecipes($input: RecipeSearchInput!) {
+    searchRecipes(input: $input) {
       id
       title
       attribution
-      coverImage {
-        id
-        url
-        attribution
-      }
+      coverImageUrl
+      coverImageAttribution
     }
   }
 `;
@@ -41,11 +33,8 @@ type SearchRecipesQueryResult = {
     id: string;
     title: string;
     attribution: string;
-    coverImage?: {
-      id: string;
-      url: string;
-      attribution: string;
-    };
+    coverImageUrl: string;
+    coverImageAttribution: string;
   }[];
 };
 
@@ -71,9 +60,13 @@ const useRecipeResults = (
         .query({
           query: SearchRecipesQuery,
           variables: {
-            term: debouncedTerm,
-            includeIngredients,
-            excludeIngredients,
+            input: {
+              term: debouncedTerm,
+              foods: {
+                include: includeIngredients || [],
+                exclude: excludeIngredients || [],
+              },
+            },
           },
         })
         .then(setQueryResult)

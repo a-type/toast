@@ -42,17 +42,17 @@ export const ListRecipeIngredientCorrectionsQuery = gql`
       status
       recipeIngredientId
       correctionType
-      correctedValue {
-        text
+      correctedText
+      correctedFields {
         unit
         unitStart
         unitEnd
         quantity
         quantityStart
         quantityEnd
-        ingredientStart
-        ingredientEnd
-        ingredient {
+        foodStart
+        foodEnd
+        food {
           id
           name
         }

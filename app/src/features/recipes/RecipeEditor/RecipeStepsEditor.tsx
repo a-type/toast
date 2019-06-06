@@ -1,54 +1,57 @@
 import React, { FC } from 'react';
-import useEditRecipeSteps from './useEditRecipeSteps';
-import { Box, TextArea, Button, Paragraph, DropButton } from 'grommet';
-import { Formik } from 'formik';
-import { EditRecipeCreateStepInput, EditRecipeRecipe } from './queries';
-import { Field, Icon } from 'components/generic';
-import RecipeStepEditor from './RecipeStepEditor';
+import { Box, TextArea, Button } from 'grommet';
+import { Formik, FieldArray } from 'formik';
+import { EditRecipeRecipe, RecipeUpdateInput } from './queries';
 
 export interface RecipeStepsEditorProps {
   recipe: EditRecipeRecipe;
+  updateRecipe: (input: RecipeUpdateInput) => any;
 }
 
-export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = ({ recipe }) => {
-  const { createStep, updateStep, deleteStep } = useEditRecipeSteps({
-    recipeId: recipe.id,
-  });
-
+export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = ({
+  recipe,
+  updateRecipe,
+}) => {
   return (
     <Box>
-      <Box>
-        <ol>
-          {recipe.steps
-            .sort((a, b) => a.index - b.index)
-            .map(step => (
-              <li key={step.id}>
-                <RecipeStepEditor
-                  step={step}
-                  updateStep={updateStep}
-                  deleteStep={deleteStep}
-                />
-              </li>
-            ))}
-        </ol>
-      </Box>
       <Formik
-        initialValues={{ stepText: '' }}
-        onSubmit={async (values, actions) => {
-          await createStep({ text: values.stepText });
-          actions.resetForm();
-        }}
+        onSubmit={({ steps }) => updateRecipe({ id: recipe.id, steps })}
+        initialValues={{ steps: recipe.steps }}
       >
-        {({ handleSubmit, handleChange, values }) => (
+        {({ handleSubmit, values, handleChange }) => (
           <form onSubmit={handleSubmit}>
-            <Field label="Step text" required>
-              <TextArea
-                value={values.stepText}
-                onChange={handleChange}
-                name="stepText"
-              />
-            </Field>
-            <Button type="submit" label="Add step" />
+            <FieldArray
+              name="steps"
+              render={arrayHelpers => (
+                <div>
+                  {values.steps && values.steps.length > 0 ? (
+                    values.steps.map((step, index) => (
+                      <div key={index}>
+                        <TextArea
+                          value={step}
+                          name={`steps.${index}`}
+                          onChange={handleChange}
+                        />
+                        <Button
+                          type="button"
+                          label="Delete"
+                          onClick={() => arrayHelpers.remove(index)}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div>There are no steps</div>
+                  )}
+
+                  <Button
+                    type="button"
+                    label="Add step"
+                    onClick={() => arrayHelpers.push('')}
+                  />
+                </div>
+              )}
+            />
+            <Button type="submit" label="Save" primary />
           </form>
         )}
       </Formik>

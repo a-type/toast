@@ -8,14 +8,18 @@ export type AcceptGroupInvitationVariables = {
 
 export type AcceptGroupInvitationMutation = {
   acceptGroupInvitation?: {
-    id: string;
+    group: {
+      id: string;
+    };
   };
 };
 
 export const Document = gql`
   mutation AcceptGroupInvitation($id: String!) {
     acceptGroupInvitation(id: $id) {
-      id
+      group {
+        id
+      }
     }
   }
 `;

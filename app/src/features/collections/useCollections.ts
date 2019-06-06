@@ -4,14 +4,16 @@ import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 const CollectionsQuery = gql`
-  query Collections($first: Int, $offset: Int) {
+  query Collections {
     me {
       id
       group {
         id
-        collections(first: $first, offset: $offset) {
-          id
-          name
+        recipeCollectionsConnection {
+          nodes {
+            id
+            name
+          }
         }
       }
     }
@@ -28,7 +30,9 @@ export type CollectionsQueryResult = {
     id: string;
     group: {
       id: string;
-      collections: Collection[];
+      recipeCollectionsConnection: {
+        nodes: Collection[];
+      };
     };
   };
 };
@@ -53,7 +57,11 @@ export default (
     },
   );
 
-  const collections = pathOr([], ['me', 'group', 'collections'], result.data);
+  const collections = pathOr(
+    [],
+    ['me', 'group', 'recipeCollectionsConnection', 'nodes'],
+    result.data,
+  );
 
   return [collections, result.loading, result.error, result];
 };

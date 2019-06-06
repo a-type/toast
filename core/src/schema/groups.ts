@@ -1,57 +1,166 @@
-import { gql } from 'apollo-server-express';
-import { Context } from 'context';
-import neo4jgraphql from 'neo4j-graphql-js';
+import { gql } from 'apollo-server-core';
 
-export const typeDefs = gql`
-  type Group {
+export default gql`
+  # Users and groups
+
+  """
+  A user in the system
+  """
+  type User {
     id: ID!
-    groceryDay: WeekDay!
-  }
+    displayName: String
+    photoUrl: String
 
-  extend type User {
-    group: Group @authenticated @relation(name: "MEMBER_OF", direction: "OUT")
-  }
-
-  extend type Query {
     """
-    Shortcut to the user's group
+    You may only view the group associated with your own User
     """
-    group: Group @authenticated
-  }
-
-  extend type Mutation {
-    setGroceryDay(groceryDay: Int!): Group!
-    createGroup: Group!
+    group: Group
+      @cypherNode(relationship: "MEMBER_OF", direction: OUT)
       @authenticated
-      @generateId(type: "group")
-      @generateId(type: "recipeCollection", argName: "collectionId")
-      @cypher(
-        statement: """
-        MATCH (user:User {id: $cypherParams.userId})
-        CREATE (group:Group {id: $id, groceryDay: 0})<-[:MEMBER_OF]-(user)
-        CREATE (group)-[:HAS_COLLECTION]->(:RecipeCollection {id: $collectionId, name: "Saved", default: true})
-        RETURN group
+
+    authoredRecipesConnection(
+      input: UserAuthoredRecipesConnectionInput = { published: Published }
+    ): UserAuthoredRecipesConnection!
+  }
+
+  enum RecipePublishedStateFilter {
+    Published
+    Unpublished
+    Any
+  }
+
+  input UserAuthoredRecipesConnectionInput {
+    published: RecipePublishedStateFilter
+  }
+
+  type UserAuthoredRecipesConnection @cypherVirtual {
+    nodes: [Recipe!]!
+      @cypherNode(
+        relationship: "AUTHOR_OF"
+        direction: OUT
+        where: """
+        $virtual.input.published = 'Any' OR
+        ($virtual.input.published = 'Published' AND coalesce(node.published, false)) OR
+        ($virtual.input.published = 'Unpublished' AND NOT coalesce(node.published, false))
         """
       )
   }
-`;
 
-export const resolvers = {
-  Query: {
-    async group(parent, _args, ctx: Context, info) {
-      const groupId = await ctx.getGroupId();
-      return neo4jgraphql(parent, { id: groupId }, ctx, info);
-    },
-  },
-  Mutation: {
-    setGroceryDay(_parent, { groceryDay }, ctx: Context) {
-      return ctx.graph.groups.mergeMine({ groceryDay });
-    },
-    async createGroup(parent, args, ctx: Context, info) {
-      const group = await neo4jgraphql(parent, args, ctx, info);
-      await ctx.planning.syncPlan(group.id);
-      ctx.storeGroupId(group.id);
-      return group;
-    },
-  },
-};
+  """
+  One of the primary resources in meal planning, a Group is the container for plan information for one
+  or more Users.
+  """
+  type Group {
+    id: ID!
+    groceryDay: Weekday!
+
+    """
+    Returns the available planned meals of the group's meal plan
+    """
+    planDaysConnection: GroupPlanDayConnection!
+
+    """
+    Get a specific plan day by ID
+    """
+    planDay(input: PlanDayGetInput!): PlanDay
+      @cypherNode(
+        relationship: "HAS_PLAN_DAY"
+        direction: "OUT"
+        where: "node.id = $args.input.id"
+      )
+
+    """
+    Collections of recipes group users have created
+    """
+    recipeCollectionsConnection: GroupRecipeCollectionConnection!
+
+    """
+    Gets a specific recipe collection
+    """
+    recipeCollection(input: RecipeCollectionGetInput!): RecipeCollection
+      @cypherNode(
+        relationship: "HAS_COLLECTION"
+        direction: "OUT"
+        where: "node.id = $args.input.id"
+      )
+
+    """
+    A list of items to purchase for next week's plan
+    """
+    shoppingList: ShoppingList! @cypherSkip
+  }
+
+  input PlanDayGetInput {
+    id: ID!
+  }
+
+  input RecipeCollectionGetInput {
+    id: ID!
+  }
+
+  type GroupPlanDayConnection @cypherVirtual {
+    nodes: [PlanDay!]!
+      @cypherLinkedNodes(relationship: "HAS_NEXT_PLAN_DAY", direction: OUT)
+  }
+
+  type GroupRecipeCollectionConnection @cypherVirtual {
+    nodes: [RecipeCollection!]!
+      @cypherNode(relationship: "HAS_COLLECTION", direction: OUT)
+  }
+
+  type GroupInvitationAcceptResult {
+    group: Group!
+      @cypher(match: "(group:Group{id: parent.groupId})", return: "group")
+  }
+
+  extend type Query {
+    me: User @cypher(match: "(user:User{id:$context.userId})", return: "user")
+
+    """
+    Group functions as a Viewer node; it is the starting point for most queries.
+    """
+    group: Group
+      @cypher(
+        match: "(user:User{id:$context.userId})-[:MEMBER_OF]->(group:Group)"
+        return: "group"
+      )
+      @authenticated
+  }
+
+  input SetGroceryDayInput {
+    groceryDay: Weekday!
+  }
+
+  extend type Mutation {
+    # users and groups
+
+    """
+    Idempotent operation that merges a new user into the graph based on the currently authenticated
+    user info.
+    """
+    mergeUser: User!
+      @cypher(merge: "(user:User {id: $context.userId})", return: "user")
+      @authenticated
+
+    createGroup: Group!
+      @cypher(
+        match: "(user:User {id: $context.userId})"
+        create: "(user)-[:MEMBER_OF]->(group:Group {id: $args.id, groceryDay: 0})"
+        return: "group"
+      )
+      @authenticated
+      @generateSlug(type: "group")
+
+    setGroceryDay(input: SetGroceryDayInput!): Group
+      @cypher(
+        match: "(:User {id: $context.userId})-[:MEMBER_OF]->(group:Group)"
+        set: "group.groceryDay = $args.input.groceryDay"
+        return: "group"
+      )
+      @authenticated
+
+    createGroupInvitation: String! @authenticated
+    acceptGroupInvitation(id: String!): GroupInvitationAcceptResult
+      @authenticated
+  }
+`;

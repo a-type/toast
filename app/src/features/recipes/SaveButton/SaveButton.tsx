@@ -11,10 +11,12 @@ import RecipeCollections from 'features/collections/RecipeCollections';
 
 const RecipeSaveButtonQuery = gql`
   query RecipeSaveButton($id: ID!) {
-    recipe(id: $id) {
+    recipe(input: { id: $id }) {
       id
-      containedInViewerCollections {
-        id
+      containedInViewerCollectionsConnection {
+        nodes {
+          id
+        }
       }
     }
   }
@@ -32,7 +34,7 @@ const LikeButton = ({ id }) => {
   );
 
   const isSaved = !!path(
-    ['recipe', 'containedInViewerCollections', 'length'],
+    ['recipe', 'containedInViewerCollectionsConnection', 'nodes', 'length'],
     data,
   );
 

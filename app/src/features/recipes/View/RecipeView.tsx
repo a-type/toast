@@ -41,7 +41,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
       <Heading level="2">Ingredients</Heading>
       <Ingredients
         servings={path(['servings'], recipe)}
-        ingredients={pathOr([], ['ingredients'], recipe)}
+        ingredients={pathOr([], ['ingredientsConnection', 'nodes'], recipe)}
       />
       <StepsLink recipeId={recipeId} />
       <ViewSpy recipeId={recipeId} />

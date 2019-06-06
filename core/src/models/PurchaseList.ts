@@ -9,8 +9,8 @@ export interface PurchaseListItem {
 export interface PurchaseListData {
   startDate: string;
   endDate: string;
-  ingredients: {
-    [ingredientId: string]: PurchaseListItem;
+  foods: {
+    [foodId: string]: PurchaseListItem;
   };
 }
 
@@ -29,15 +29,15 @@ export default class PurchaseList {
     return new Date(this.data.endDate);
   }
 
-  get ingredients() {
-    return this.data.ingredients;
+  get foods() {
+    return this.data.foods;
   }
 
-  getIngredient = (id: string) => this.data.ingredients[id];
+  getIngredient = (id: string) => this.data.foods[id];
 
   setIngredient = (id: string, item: PurchaseListItem) => {
     item.shoppingListItemId = id;
-    this.data.ingredients[id] = item;
+    this.data.foods[id] = item;
   };
 
   purchase = (
@@ -45,22 +45,22 @@ export default class PurchaseList {
     quantity: number,
     unit?: string,
   ): PurchaseListItem => {
-    this.data.ingredients[id] = {
+    this.data.foods[id] = {
       shoppingListItemId: id,
       quantity,
       unit,
     };
 
-    return this.data.ingredients[id];
+    return this.data.foods[id];
   };
 
   unpurchase = (id: string): PurchaseListItem => {
-    this.data.ingredients[id] = {
+    this.data.foods[id] = {
       shoppingListItemId: id,
       quantity: 0,
       unit: null,
     };
-    return this.data.ingredients[id];
+    return this.data.foods[id];
   };
 
   toJSON() {
@@ -75,7 +75,7 @@ export default class PurchaseList {
     return new PurchaseList({
       startDate: startDate.toUTCString(),
       endDate: endDate.toUTCString(),
-      ingredients: {},
+      foods: {},
     });
   }
 }

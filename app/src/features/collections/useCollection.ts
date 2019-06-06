@@ -4,23 +4,20 @@ import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 const CollectionQuery = gql`
-  query Collection($id: ID!, $firstRecipes: Int, $offsetRecipes: Int) {
+  query Collection($input: RecipeCollectionGetInput!) {
     me {
       id
       group {
         id
-        collection(id: $id) {
+        recipeCollection(input: $input) {
           id
           name
-          recipes(first: $firstRecipes, offset: $offsetRecipes) {
-            id
-            title
-            coverImage {
+          recipesConnection {
+            nodes {
               id
-              url
-            }
-            author {
-              id
+              title
+              coverImageUrl
+              coverImageAttribution
             }
           }
         }
@@ -32,19 +29,16 @@ const CollectionQuery = gql`
 export type CollectionRecipe = {
   id: string;
   title: string;
-  coverImage?: {
-    id: string;
-    url: string;
-  };
-  author?: {
-    id: string;
-  };
+  coverImageUrl: string;
+  coverImageAttribution: string;
 };
 
 export type Collection = {
   id: string;
   name: string;
-  recipes: CollectionRecipe[];
+  recipesConnection: {
+    nodes: CollectionRecipe[];
+  };
 };
 
 export type CollectionQueryResult = {
@@ -64,7 +58,6 @@ export type Pagination = {
 
 export default (
   id: string,
-  pagination: Pagination = { first: 10, offset: 0 },
 ): [
   Collection,
   boolean,
@@ -72,28 +65,32 @@ export default (
   QueryHookResult<
     CollectionQueryResult,
     {
-      id: string;
-      firstRecipes: number;
-      offsetRecipes: number;
+      input: {
+        id: string;
+      };
     }
   >
 ] => {
   const result = useQuery<
     CollectionQueryResult,
     {
-      id: string;
-      firstRecipes: number;
-      offsetRecipes: number;
+      input: {
+        id: string;
+      };
     }
   >(CollectionQuery, {
     variables: {
-      id,
-      firstRecipes: pagination.first,
-      offsetRecipes: pagination.offset,
+      input: {
+        id,
+      },
     },
   });
 
-  const collection = pathOr([], ['me', 'group', 'collection'], result.data);
+  const collection = pathOr(
+    [],
+    ['me', 'group', 'recipeCollection'],
+    result.data,
+  );
 
   return [collection, result.loading, result.error, result];
 };

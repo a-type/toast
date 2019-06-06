@@ -6,8 +6,10 @@ const CollectRecipeRecipeFragment = gql`
   fragment CollectRecipeRecipe on Recipe {
     id
     title
-    containedInViewerCollections {
-      id
+    containedInViewerCollectionsConnection {
+      nodes {
+        id
+      }
     }
   }
 `;
@@ -23,7 +25,7 @@ const CollectRecipeMutation = gql`
 `;
 
 const UnsaveRecipeMutation = gql`
-  mutation UnsaveRecipe($input: RecipeCollectInput!) {
+  mutation UnsaveRecipe($input: RecipeUncollectInput!) {
     uncollectRecipe(input: $input) {
       ...CollectRecipeRecipe
     }
@@ -35,9 +37,11 @@ const UnsaveRecipeMutation = gql`
 type CollectRecipeRecipe = {
   id: string;
   title: string;
-  saved?: {
-    collection: string;
-  }[];
+  containedInViewerCollectionsConnection: {
+    nodes: {
+      id: string;
+    }[];
+  };
 };
 
 type CollectRecipeMutationResult = {
@@ -63,13 +67,14 @@ export default ({ refetchQueries }: { refetchQueries?: any[] } = {}) => {
         update: (cache, { data }) => {
           // apollo cache adds a typename to the id
           const id = `Recipe:${data.collectRecipe.id}`;
-          const saved = data.collectRecipe.saved;
+          const containedInViewerCollectionsConnection =
+            data.collectRecipe.containedInViewerCollectionsConnection;
           const current = cache.readFragment<CollectRecipeRecipe>({
             id,
             fragment: CollectRecipeRecipeFragment,
           });
           if (current) {
-            current.saved = saved;
+            current.containedInViewerCollectionsConnection = containedInViewerCollectionsConnection;
             cache.writeFragment({
               fragment: CollectRecipeRecipeFragment,
               id: current.id,
@@ -92,13 +97,14 @@ export default ({ refetchQueries }: { refetchQueries?: any[] } = {}) => {
         variables: { input },
         update: (cache, { data }) => {
           const id = `Recipe:${data.uncollectRecipe.id}`;
-          const saved = data.uncollectRecipe.saved;
+          const containedInViewerCollectionsConnection =
+            data.uncollectRecipe.containedInViewerCollectionsConnection;
           const current = cache.readFragment<CollectRecipeRecipe>({
             id,
             fragment: CollectRecipeRecipeFragment,
           });
           if (current) {
-            current.saved = saved;
+            current.containedInViewerCollectionsConnection = containedInViewerCollectionsConnection;
             cache.writeFragment({
               fragment: CollectRecipeRecipeFragment,
               id,

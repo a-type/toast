@@ -24,7 +24,7 @@ const Login: React.SFC<LoginProps> = ({ returnTo }) => {
         firebaseAuth={firebase.auth()}
       />
       <div>
-        <Heading>Log in or join for free</Heading>
+        <Heading level="1">Log in or join for free</Heading>
         <Paragraph>
           Sign up for Toast to start planning meals that fit your
           life&mdash;your schedule, your recipes, your taste.

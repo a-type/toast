@@ -1,0 +1,47 @@
+---
+# removing a property index
+- kind: constraint
+  type: node_unique_property
+  operation: delete
+  label: RecipeIngredient
+  property: id
+
+- kind: index
+  type: node_fulltext
+  operation: delete
+  name: ingredients
+
+- kind: index
+  type: node_fulltext
+  name: foods
+  labels:
+    - Food
+  properties:
+    - name
+    - alternateNames
+    - searchHelpers
+
+- kind: constraint
+  type: node_unique_property
+  label: Food
+  property: id
+
+- kind: cypher
+  up: CALL apoc.refactor.rename.label('Ingredient', 'Food')
+  down: CALL apoc.refactor.rename.label('Food', 'Ingredient')
+
+- kind: cypher
+  up: CALL apoc.refactor.rename.label('RecipeIngredient', 'Ingredient')
+  down: CALL apoc.refactor.rename.label('Ingredient', 'RecipeIngredient')
+
+- kind: cypher
+  up: CALL apoc.refactor.rename.nodeProperty('ingredientStart', 'foodStart')
+  down: CALL apoc.refactor.rename.nodeProperty('foodStart', 'ingredientStart')
+
+- kind: cypher
+  up: CALL apoc.refactor.rename.nodeProperty('ingredientEnd', 'foodEnd')
+  down: CALL apoc.refactor.rename.nodeProperty('foodEnd', 'ingredientEnd')
+
+- kind: cypher
+  up: CALL apoc.refactor.rename.nodeProperty('ingredientText', 'foodText')
+  down: CALL apoc.refactor.rename.nodeProperty('foodText', 'ingredientText')

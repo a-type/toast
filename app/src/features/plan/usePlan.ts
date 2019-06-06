@@ -4,38 +4,21 @@ import { useQuery, QueryHookResult } from 'react-apollo-hooks';
 import { ApolloError } from 'apollo-boost';
 import { pathOr } from 'ramda';
 
-export const MealFragment = gql`
+export const PlanDayCookingEdgeFragment = gql`
   fragment MealRecipeFragment on Recipe {
     id
     title
     attribution
     sourceUrl
     description
-    coverImage {
-      id
-      url
-    }
+    coverImageUrl
   }
 
-  fragment MealFragment on PlanMeal {
-    id
-
-    cooking {
-      servings
-      recipe {
-        ...MealRecipeFragment
-      }
-    }
-
-    eating {
-      id
-
-      cooking {
-        servings
-        recipe {
-          ...MealRecipeFragment
-        }
-      }
+  fragment PlanDayCookingEdgeFragment on PlanDayCookingRecipeEdge {
+    servings
+    mealName
+    node {
+      ...MealRecipeFragment
     }
   }
 `;
@@ -46,25 +29,23 @@ export const GetPlanQuery = gql`
       id
       group {
         id
-        planDays {
-          id
-          date
+        planDaysConnection {
+          nodes {
+            id
+            date
 
-          breakfast {
-            ...MealFragment
-          }
-          lunch {
-            ...MealFragment
-          }
-          dinner {
-            ...MealFragment
+            cookingConnection {
+              edges {
+                ...PlanDayCookingEdgeFragment
+              }
+            }
           }
         }
       }
     }
   }
 
-  ${MealFragment}
+  ${PlanDayCookingEdgeFragment}
 `;
 
 export type GetPlanQueryResult = {
@@ -72,7 +53,9 @@ export type GetPlanQueryResult = {
     id: string;
     group?: {
       id: string;
-      planDays: PlanDayData[];
+      planDaysConnection: {
+        nodes: PlanDayData[];
+      };
     };
   };
 };
@@ -85,9 +68,11 @@ export default (): [
 ] => {
   const result = useQuery<GetPlanQueryResult>(GetPlanQuery);
 
-  const planDays = pathOr([], ['me', 'group', 'planDays'], result.data).sort(
-    (a, b) => a.date.localeCompare(b.date),
-  );
+  const planDays = pathOr(
+    [],
+    ['me', 'group', 'planDaysConnection', 'nodes'],
+    result.data,
+  ).sort((a, b) => a.date.localeCompare(b.date));
 
   return [planDays, result.loading, result.error, result];
 };

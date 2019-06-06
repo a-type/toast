@@ -20,9 +20,7 @@ import getNextDay from 'utils/getNextDay';
 import ErrorMessage from 'components/generic/ErrorMessage';
 
 const isCookingSomething = (day: PlanDayData) =>
-  !!pathOr(0, ['breakfast', 'cooking', 'length'], day) ||
-  !!pathOr(0, ['lunch', 'cooking', 'length'], day) ||
-  !!pathOr(0, ['dinner', 'cooking', 'length'], day);
+  !!day.cookingConnection.edges.length;
 
 interface PlanViewProps {}
 

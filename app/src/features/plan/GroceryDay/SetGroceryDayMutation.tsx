@@ -3,7 +3,9 @@ import { Mutation, MutationFn } from 'react-apollo';
 import gql from 'graphql-tag';
 
 export type SetGroceryDayVariables = {
-  groceryDay: number;
+  input: {
+    groceryDay: number;
+  };
 };
 
 export type SetGroceryDayMutation = {
@@ -14,8 +16,8 @@ export type SetGroceryDayMutation = {
 };
 
 export const Document = gql`
-  mutation SetGroceryDay($groceryDay: Int!) {
-    setGroceryDay(groceryDay: $groceryDay) {
+  mutation SetGroceryDay($groceryDay: WeekDay!) {
+    setGroceryDay(input: { groceryDay: $groceryDay }) {
       id
       groceryDay
     }

@@ -12,15 +12,12 @@ const convertToLuceneFuzzy = (term: string) =>
 
 const ensureCloseEnough = (
   searchTerm: string,
-  ingredient: { id: string; name: string; alternateNames: string[] },
+  food: { id: string; name: string; alternateNames: string[] },
 ) => {
-  if (!ingredient) {
+  if (!food) {
     return null;
   }
-  const allComparisons = [
-    ingredient.name,
-    ...(ingredient.alternateNames || []),
-  ];
+  const allComparisons = [food.name, ...(food.alternateNames || [])];
   const passed =
     allComparisons.reduce(
       (highest, name) =>
@@ -28,7 +25,7 @@ const ensureCloseEnough = (
       0,
     ) > 0.75;
 
-  return passed ? ingredient : null;
+  return passed ? food : null;
 };
 
 const findClearWinner = (result: StatementResult) => {
@@ -56,7 +53,7 @@ export default (
       ingredientTexts.map(async ingredientText => {
         const result = await tx.run(
           `
-      CALL db.index.fulltext.queryNodes("ingredients", $match) YIELD node, score
+      CALL db.index.fulltext.queryNodes("foods", $match) YIELD node, score
       RETURN node {.id, .name, .alternateNames}, score ORDER BY score DESC LIMIT 10
       `,
           {
@@ -64,13 +61,13 @@ export default (
           },
         );
 
-        let foundIngredient = ensureCloseEnough(
+        let foundFood = ensureCloseEnough(
           ingredientText,
           findClearWinner(result),
         );
 
-        if (foundIngredient) {
-          return foundIngredient;
+        if (foundFood) {
+          return foundFood;
         } else {
           return null;
         }

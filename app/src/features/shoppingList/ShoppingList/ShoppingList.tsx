@@ -29,18 +29,16 @@ const GetShoppingListQuery = gql`
             unit
             displayName
 
-            ingredient {
+            food {
               id
               name
             }
 
             plannedUses {
               id
-              text
-              recipe {
-                id
-                title
-              }
+              ingredientText
+              recipeTitle
+              recipeId
             }
           }
         }
@@ -66,19 +64,17 @@ type GetShoppingListResult = {
           unit: string;
           displayName: string;
 
-          ingredient: {
+          food: {
             id: string;
             name: string;
           };
 
           plannedUses: {
             id: string;
-            text: string;
+            ingredientText: string;
 
-            recipe: {
-              id: string;
-              title: string;
-            };
+            recipeId: string;
+            recipeTitle: string;
           }[];
         }[];
       };

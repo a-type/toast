@@ -26,7 +26,7 @@ const Steps: React.SFC<StepsProps> = ({ recipeId }) => {
   return (
     <Box height="100%">
       <Box flex="grow">
-        {recipe.displayType === 'LINK' ? (
+        {!!recipe.sourceUrl ? (
           <LinkFrame src={recipe.sourceUrl} />
         ) : (
           <StepList steps={pathOr([], ['steps'], recipe)} />

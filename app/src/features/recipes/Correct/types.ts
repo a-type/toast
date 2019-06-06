@@ -1,17 +1,16 @@
-export interface RecipeIngredientCorrectedValueInput {
+export interface IngredientCorrectedFieldsInput {
   unit?: string;
   unitStart?: number;
   unitEnd?: number;
   quantity?: number;
   quantityStart?: number;
   quantityEnd?: number;
-  ingredientId?: string;
-  ingredientStart?: number;
-  ingredientEnd?: number;
-  text?: string;
+  foodId?: string;
+  foodStart?: number;
+  foodEnd?: number;
 }
 
-export interface IngredientCorrectorRecipeIngredient {
+export interface IngredientCorrectorIngredient {
   id?: string;
   text: string;
   unit?: string;
@@ -20,12 +19,12 @@ export interface IngredientCorrectorRecipeIngredient {
   quantity: number;
   quantityStart?: number;
   quantityEnd?: number;
-  ingredient?: {
+  food?: {
     id: string;
     name: string;
   };
-  ingredientStart?: number;
-  ingredientEnd?: number;
+  foodStart?: number;
+  foodEnd?: number;
 }
 
 export enum CorrectionType {

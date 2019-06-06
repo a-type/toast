@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import useEditRecipe from './useEditRecipe';
-import { EditRecipeRecipe } from './queries';
+import { RecipeUpdateInput } from './queries';
 import {
   Box,
   Form,
@@ -24,7 +24,7 @@ export interface RecipeEditorProps {
   recipeId?: string;
 }
 
-const emptyRecipe: EditRecipeRecipe = {
+const emptyRecipe: RecipeUpdateInput = {
   id: null,
   title: '',
   description: '',
@@ -33,7 +33,7 @@ const emptyRecipe: EditRecipeRecipe = {
   prepTime: 0,
   unattendedTime: 0,
   published: false,
-  ingredients: [],
+  private: false,
   steps: [],
 };
 
@@ -175,7 +175,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
             refetchRecipe={refetchRecipe}
           />
           <Heading level="3">Steps</Heading>
-          <RecipeStepsEditor recipe={recipe} />
+          <RecipeStepsEditor recipe={recipe} updateRecipe={save} />
         </>
       )}
     </Box>

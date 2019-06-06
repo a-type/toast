@@ -8,18 +8,20 @@ import RecipePicker from 'features/collections/RecipePicker';
 
 interface AssignRecipeProps {
   onRecipeSelected(): void;
-  planMealId: string;
+  planDayId: string;
+  mealName: string;
 }
 
 const AssignRecipe: FC<AssignRecipeProps> = ({
   onRecipeSelected,
-  planMealId,
+  planDayId,
+  mealName,
 }) => {
   const assign = useAssignMeal();
   const [servings, servingsInputProps] = useNumberInput(2);
 
   const onSelected = async (recipe: PlanMealRecipeData) => {
-    await assign({ planMealId, recipeId: recipe.id, servings });
+    await assign({ planDayId, recipeId: recipe.id, servings, mealName });
     onRecipeSelected();
   };
 

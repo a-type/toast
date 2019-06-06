@@ -1,31 +1,32 @@
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import {
-  RecipeIngredientCorrectedValueInput,
-  IngredientCorrectorRecipeIngredient,
+  IngredientCorrectedFieldsInput,
+  IngredientCorrectorIngredient,
   CorrectionType,
 } from './types';
 
 type CorrectIngredientMutationResult = {
-  submitRecipeIngredientCorrection: {
+  submitIngredientCorrection: {
     id: string;
     status: string;
   };
 };
 
-export type RecipeIngredientCorrectionSubmitInput = {
+export type IngredientCorrectionSubmitInput = {
   recipeId: string;
-  recipeIngredientId?: string;
-  correctedValue?: RecipeIngredientCorrectedValueInput;
+  ingredientId?: string;
+  correctedFields?: IngredientCorrectedFieldsInput;
+  correctedText?: string;
   correctionType: CorrectionType;
 };
 
 const CorrectIngredientMutation = gql`
-  mutation CorrectIngredient($input: RecipeIngredientCorrectionSubmitInput!) {
-    submitRecipeIngredientCorrection(input: $input) {
+  mutation CorrectIngredient($input: IngredientCorrectionSubmitInput!) {
+    submitIngredientCorrection(input: $input) {
       id
       status
-      recipeIngredient {
+      ingredient {
         id
         text
         unit
@@ -34,12 +35,12 @@ const CorrectIngredientMutation = gql`
         quantity
         quantityStart
         quantityEnd
-        ingredient {
+        food {
           id
           name
         }
-        ingredientStart
-        ingredientEnd
+        foodStart
+        foodEnd
         comments
         preparations
       }
@@ -56,12 +57,10 @@ export const useCorrectIngredient = ({
 }) => {
   const mutate = useMutation<
     CorrectIngredientMutationResult,
-    { input: RecipeIngredientCorrectionSubmitInput }
+    { input: IngredientCorrectionSubmitInput }
   >(CorrectIngredientMutation);
 
-  const submitCorrection = async (
-    input: RecipeIngredientCorrectionSubmitInput,
-  ) => {
+  const submitCorrection = async (input: IngredientCorrectionSubmitInput) => {
     await mutate({ variables: { input } });
     if (refetch) {
       return refetch();
@@ -69,27 +68,29 @@ export const useCorrectIngredient = ({
   };
 
   const submitChange = (
-    recipeIngredientId: string,
-    correctedValue: RecipeIngredientCorrectedValueInput,
+    ingredientId: string,
+    correctedFields: IngredientCorrectedFieldsInput,
+    correctedText?: string,
   ) =>
     submitCorrection({
       recipeId,
-      recipeIngredientId,
-      correctedValue,
+      ingredientId,
+      correctedFields,
+      correctedText,
       correctionType: CorrectionType.Change,
     });
 
-  const submitAdd = (correctedValue: RecipeIngredientCorrectedValueInput) =>
+  const submitAdd = (text: string) =>
     submitCorrection({
       recipeId,
-      correctedValue,
+      correctedText: text,
       correctionType: CorrectionType.Add,
     });
 
-  const submitDelete = (recipeIngredientId: string) =>
+  const submitDelete = (ingredientId: string) =>
     submitCorrection({
       recipeId,
-      recipeIngredientId,
+      ingredientId,
       correctionType: CorrectionType.Delete,
     });
 

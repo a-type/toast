@@ -2,7 +2,6 @@ import { v1 as neo4j } from 'neo4j-driver';
 import config from 'config';
 import { pathOr } from 'ramda';
 import firestore from 'services/firestore';
-import graph, { Graph } from 'services/graph';
 import logger from './logger';
 import { TransactionFunction } from 'types';
 import planning from 'services/planning';
@@ -25,13 +24,12 @@ process.on('exit', () => {
 });
 
 export type Context = {
-  driver: typeof driver;
+  neo4jDriver: typeof driver;
   transaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   writeTransaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   readTransaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   firestore: typeof firestore;
   firebase: typeof firebase;
-  graph: Graph;
   planning: typeof planning;
   gcloudStorage: typeof gcloudStorage;
   scanning: typeof scanning;
@@ -42,7 +40,7 @@ export type Context = {
   getPurchasedIngredientLoader: () => Promise<
     DataLoader<string, PurchaseListItem>
   >;
-  cypherParams: {
+  cypherContext: {
     userId: string;
   };
 };
@@ -86,7 +84,7 @@ export const createContext = async (req): Promise<Context> => {
   };
 
   const context: Context = {
-    driver,
+    neo4jDriver: driver,
     // interop / legacy
     transaction: txFunction => {
       const sess = driver.session();
@@ -107,7 +105,6 @@ export const createContext = async (req): Promise<Context> => {
 
     firestore,
     firebase,
-    graph: graph({ writeMode: isMutation, user, scopes }),
     planning,
     gcloudStorage,
     scanning,
@@ -119,7 +116,7 @@ export const createContext = async (req): Promise<Context> => {
     getGroupId,
     storeGroupId,
 
-    cypherParams: {
+    cypherContext: {
       userId: user && user.id,
     },
   };

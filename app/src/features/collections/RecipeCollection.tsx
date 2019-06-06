@@ -5,6 +5,7 @@ import { Loader } from 'components/generic';
 import { Box } from 'grommet';
 import { Heading, HelpText } from 'components/text';
 import { RecipeCards } from 'features/recipes';
+import { path } from 'ramda';
 
 export interface RecipeCollectionProps {
   collectionId: string;
@@ -29,14 +30,13 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
     return <ErrorMessage error="This collection doesn't exist" />;
   }
 
+  const recipes = path(['recipesConnection', 'nodes'], collection) as any[];
+
   return (
     <Box>
       <Heading level="2">{collection.name}</Heading>
-      {!!collection.recipes.length ? (
-        <RecipeCards
-          recipes={collection.recipes}
-          onRecipeSelected={onRecipeSelected}
-        />
+      {!!(recipes && recipes.length) ? (
+        <RecipeCards recipes={recipes} onRecipeSelected={onRecipeSelected} />
       ) : (
         <HelpText>This collection doesn't have any recipes in it</HelpText>
       )}
