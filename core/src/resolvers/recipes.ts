@@ -68,5 +68,11 @@ export default {
 
   Recipe: {
     locked: parent => (parent.locked === null ? true : parent.locked),
+    views: parent =>
+      parent.views === null
+        ? 0
+        : typeof parent.views === 'function'
+          ? Math.round(parent.views()) || 0
+          : Math.round(parent.views) || 0,
   },
 };

@@ -1,5 +1,6 @@
 import { Context } from 'context';
 import { getDay, addDays, startOfDay, format } from 'date-fns';
+import { ForbiddenError } from 'errors';
 
 const getNextGroceryDay = (day: number) => {
   let x = new Date();
@@ -29,6 +30,18 @@ export default {
       ctx.planning.syncPlan(groupId, getNextGroceryDay(args.input.groceryDay));
 
       return res;
+    },
+  },
+
+  User: {
+    authoredRecipesConnection: async (parent, args, ctx: Context, info) => {
+      if (args.input.published !== 'Published' && parent.id !== ctx.user.id) {
+        throw new ForbiddenError(
+          'You may not view unpublished recipes for other users.',
+        );
+      }
+
+      return parent.authoredRecipesConnection();
     },
   },
 };

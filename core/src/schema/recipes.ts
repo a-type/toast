@@ -95,7 +95,22 @@ export default gql`
 
   extend type Query {
     recipe(input: RecipeGetInput!): Recipe
-      @cypher(match: "(recipe:Recipe{id:$args.input.id})", return: "recipe")
+      @cypherCustom(
+        statement: """
+        MATCH (recipe:Recipe{id:$args.input.id})
+        OPTIONAL MATCH (currentUser:User{id:$context.userId})
+        OPTIONAL MATCH author = (currentUser)-[:AUTHOR_OF]->(recipe)
+        OPTIONAL MATCH (currentUser)-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->
+            (collection:RecipeCollection)<-[:COLLECTED_IN]-(recipe)
+        RETURN CASE
+          WHEN coalesce(recipe.published, false) AND NOT coalesce(recipe.private, true)
+            THEN recipe
+          WHEN author IS NOT NULL OR collection IS NOT NULL
+            THEN recipe
+          ELSE NULL
+        END
+        """
+      )
   }
 
   input RecipeCreateInput {
