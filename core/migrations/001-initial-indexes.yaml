@@ -5,15 +5,28 @@
   properties:
     - title
 
+- kind: index
+  type: node_label_property
+  label: RecipeCollection
+  properties:
+    - default
+
+- kind: index
+  type: node_label_property
+  label: PlanDay
+  properties:
+    - date
+
 # fulltext index (Neo4j 3.5+)
 - kind: index
   type: node_fulltext
-  name: ingredients
+  name: foods
   labels:
-    - Ingredient
+    - Food
   properties:
     - name
     - alternateNames
+    - searchHelpers
 
 - kind: index
   type: node_fulltext
@@ -41,12 +54,12 @@
 
 - kind: constraint
   type: node_unique_property
-  label: Ingredient
+  label: Food
   property: id
 
 - kind: constraint
   type: node_unique_property
-  label: Ingredient
+  label: Food
   property: name
 
 - kind: constraint
@@ -61,12 +74,7 @@
 
 - kind: constraint
   type: node_unique_property
-  label: PlanMeal
-  property: id
-
-- kind: constraint
-  type: node_unique_property
-  label: RecipeIngredient
+  label: Ingredient
   property: id
 
 - kind: constraint
@@ -74,7 +82,7 @@
   label: Step
   property: id
 
-# example of arbitrary cypher migration, which may or may not be reversible
-# - kind: Cypher
-#   up: 'MATCH (p:Person) SET p.name = trim(p.name)'
-#   down: null
+- kind: constraint
+  type: node_unique_property
+  label: RecipeCollection
+  property: id

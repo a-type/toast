@@ -1,58 +1,8 @@
 ---
-# simple property index
-# - kind: index
-#   type: node_label_property
-#   operation: create # operation is optional, defaults to create
-#   label: Person
-#   properties:
-#     - id
-
-# compound property index
-# - kind: index
-#   type: node_label_property
-#   label: Person
-#   properties:
-#     - name
-#     - bio
-
-# fulltext index (Neo4j 3.5+)
-# - kind: index
-#   type: node_fulltext
-#   name: testindex
-#   labels:
-#     - Post
-#   properties:
-#     - title
-#     - text
-
-# removing a property index
-# - kind: index
-#   type: node_label_property
-#   operation: delete # specify delete as operation
-#   label: Person
-#   properties:
-#     - email
-
-# removing a fulltext index (name only required)
-# - kind: index
-#   type: node_fulltext
-#   operation: delete
-#   name: oldindex
-
-# unique property constraint
-# - kind: constraint
-#   type: node_unique_property
-#   label: Person
-#   property: id
-
-# example of arbitrary cypher migration, which may or may not be reversible
-# - kind: cypher
-#   up: 'MATCH (p:Person) SET p.name = trim(p.name)'
-#   down: null
 - kind: cypher
   up: |-
     LOAD CSV WITH HEADERS FROM "https://storage.googleapis.com/toast-datasets/ingredients/wikibooks-ingredients.csv" AS line
-    MERGE (i:Ingredient { name: line.name })
+    MERGE (i:Food { name: line.name })
       ON CREATE SET
         i.id = line.id,
         i.description = line.description,

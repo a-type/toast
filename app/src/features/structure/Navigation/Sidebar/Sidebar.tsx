@@ -70,17 +70,11 @@ const Sidebar: SFC<SidebarProps> = props => {
 
   const authContent = (
     <List>
-      <ListItem button onClick={navigate('/')}>
-        <ListItemIcon>
-          <HomeTwoTone />
-        </ListItemIcon>
-        <ListItemText>Home</ListItemText>
-      </ListItem>
-      <ListItem button onClick={navigate('/plan')}>
+      <ListItem button onClick={navigate('/home')}>
         <ListItemIcon>
           <CalendarTodayTwoTone />
         </ListItemIcon>
-        <ListItemText>Plan</ListItemText>
+        <ListItemText>Home</ListItemText>
       </ListItem>
       <ListItem button onClick={navigate('/explore')}>
         <ListItemIcon>

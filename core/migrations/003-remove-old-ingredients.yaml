@@ -1,5 +1,0 @@
----
-- kind: index
-  type: node_fulltext
-  name: ingredients
-  operation: delete

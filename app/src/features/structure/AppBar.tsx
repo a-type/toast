@@ -21,10 +21,12 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>(theme => ({
     position: 'relative',
     backgroundColor: 'transparent',
   }),
+  titleArea: {
+    flexGrow: 1,
+  },
   title: {
     fontFamily: '"Pacifico", "PlayFair Display", "PT Serif", serif',
     color: 'white',
-    flexGrow: 1,
   },
   settingsButton: {
     backgroundColor: theme.palette.primary.main,
@@ -42,9 +44,11 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
     <AppBar className={classes.appBar}>
       <BackdropArt />
       <Toolbar>
-        <Typography variant="h3" className={classes.title}>
-          Toast
-        </Typography>
+        <Link to="/" className={classes.titleArea}>
+          <Typography variant="h3" className={classes.title}>
+            Toast
+          </Typography>
+        </Link>
         <Link to="/settings">
           <IconButton aria-label="Settings" className={classes.settingsButton}>
             <SettingsTwoTone />
