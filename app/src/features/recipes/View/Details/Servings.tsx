@@ -1,10 +1,10 @@
 import React from 'react';
-import { Paragraph } from 'grommet';
+import { Typography } from '@material-ui/core';
 
 export default ({ servings }) => {
   return (
-    <Paragraph>
+    <Typography variant="body1" gutterBottom>
       <span>Servings: {servings}</span>
-    </Paragraph>
+    </Typography>
   );
 };

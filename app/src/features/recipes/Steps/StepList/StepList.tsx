@@ -1,11 +1,11 @@
 import React from 'react';
-import { Paragraph } from 'grommet';
+import { Typography } from '@material-ui/core';
 
 export default ({ steps }) => (
   <ol css={{ margin: 'var(--spacing-md)', fontSize: 'var(--font-size-lg)' }}>
     {steps.map((text, index) => (
       <li key={index}>
-        <Paragraph size="large">{text}</Paragraph>
+        <Typography>{text}</Typography>
       </li>
     ))}
   </ol>

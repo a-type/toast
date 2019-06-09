@@ -1,7 +1,4 @@
 import React, { FC, useState } from 'react';
-import { Icon } from 'components/generic';
-import { Button, Paragraph, Box, DropButton, Text } from 'grommet';
-import { HelpText } from 'components/text';
 import {
   IngredientCorrectionForm,
   IngredientCorrectionFormMessages,
@@ -11,6 +8,16 @@ import {
   IngredientCorrectorIngredient,
   IngredientCorrectedFieldsInput,
 } from 'features/recipes/Correct/types';
+import {
+  Box,
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+  makeStyles,
+  IconButton,
+} from '@material-ui/core';
+import { MoreVertTwoTone } from '@material-ui/icons';
 
 export type IngredientCorrectorMessages = IngredientCorrectionFormMessages & {
   correctionSubmitted: string;
@@ -19,8 +26,12 @@ export type IngredientCorrectorMessages = IngredientCorrectionFormMessages & {
 };
 
 interface IngredientCorrectorProps {
-  recipeIngredient: IngredientCorrectorIngredient;
-  submit(id: string, correction: IngredientCorrectedFieldsInput): void;
+  ingredient: IngredientCorrectorIngredient;
+  submit(
+    id: string,
+    correction: IngredientCorrectedFieldsInput,
+    text: string,
+  ): void;
   requestDelete(id: string): void;
   messages?: IngredientCorrectorMessages;
 }
@@ -32,62 +43,81 @@ export const DEFAULT_MESSAGES: IngredientCorrectorMessages = {
   suggestDelete: 'Suggest delete',
 };
 
+const useStyles = makeStyles(theme => ({
+  badText: {
+    color: theme.palette.error.dark,
+  },
+}));
+
 const IngredientCorrector: FC<IngredientCorrectorProps> = ({
-  recipeIngredient,
+  ingredient,
   submit,
   requestDelete,
   messages = DEFAULT_MESSAGES,
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const classes = useStyles({});
+  const [anchorEl, setAnchorEl] = useState(null);
 
   if (!showForm) {
     return (
-      <Box direction="row" width="100%" margin={{ bottom: 'medium' }}>
-        <Box flex="grow" alignContent="stretch">
-          <Paragraph margin={{ top: '0', bottom: 'small' }}>
-            {recipeIngredient.text}
-          </Paragraph>
-          <Paragraph margin={{ top: '0', bottom: 'small' }}>
-            <HelpText>
-              Quantity: {toDisplay(recipeIngredient.quantity)}, Unit:{' '}
-              {recipeIngredient.unit || (
-                <Text color="status-warning">None</Text>
-              )}
+      <Box display="flex" flexDirection="row" width="100%" mb={2}>
+        <Box
+          flexGrow={1}
+          display="flex"
+          flexDirection="column"
+          alignContent="stretch"
+        >
+          <Typography gutterBottom>{ingredient.text}</Typography>
+          <Typography gutterBottom>
+            <Typography variant="caption">
+              Quantity: {toDisplay(ingredient.quantity)}, Unit:{' '}
+              {ingredient.unit || <span className={classes.badText}>None</span>}
               , Ingredient:{' '}
-              {recipeIngredient.food ? (
-                recipeIngredient.food.name
+              {ingredient.food ? (
+                ingredient.food.name
               ) : (
-                <Text color="status-error">Unknown</Text>
+                <span className={classes.badText}>Unknown</span>
               )}
-            </HelpText>
-          </Paragraph>
+            </Typography>
+          </Typography>
         </Box>
-        <Box justify="center">
+        <Box justifyContent="center">
           {hasSubmitted ? (
-            <HelpText>{messages.correctionSubmitted}</HelpText>
+            <Typography>{messages.correctionSubmitted}</Typography>
           ) : (
-            <DropButton
-              icon={<Icon name="more_vert" />}
-              dropAlign={{ right: 'right', top: 'top' }}
-              dropContent={
-                <Box pad="medium" round background="white">
-                  <Button
-                    label={messages.suggestChange}
-                    onClick={() => setShowForm(true)}
-                    margin={{ bottom: 'small' }}
-                  />
-                  <Button
-                    color="status-critical"
-                    onClick={async () => {
-                      await requestDelete(recipeIngredient.id);
-                      setHasSubmitted(true);
-                    }}
-                    label={messages.suggestDelete}
-                  />
-                </Box>
-              }
-            />
+            <>
+              <IconButton
+                onClick={ev => {
+                  setAnchorEl(ev.currentTarget);
+                  setMenuOpen(true);
+                }}
+                aria-controls="correction-menu"
+                aria-haspopup
+              >
+                <MoreVertTwoTone />
+              </IconButton>
+              <Menu
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                anchorEl={anchorEl}
+                id="correction-menu"
+              >
+                <MenuItem onClick={() => setShowForm(true)}>
+                  {messages.suggestChange}
+                </MenuItem>
+                <MenuItem
+                  onClick={async () => {
+                    await requestDelete(ingredient.id);
+                    setHasSubmitted(true);
+                  }}
+                >
+                  {messages.suggestDelete}
+                </MenuItem>
+              </Menu>
+            </>
           )}
         </Box>
       </Box>
@@ -95,23 +125,26 @@ const IngredientCorrector: FC<IngredientCorrectorProps> = ({
   }
 
   const handleSubmit = (values: IngredientCorrectorIngredient) => {
-    submit(recipeIngredient.id, {
-      unit: values.unit,
-      quantity: values.quantity,
-      foodId: values.food.id,
-      unitStart: values.unitStart,
-      unitEnd: values.unitEnd,
-      quantityStart: values.quantityStart,
-      quantityEnd: values.quantityEnd,
-      foodStart: values.foodStart,
-      foodEnd: values.foodEnd,
-      text: values.text,
-    });
+    submit(
+      ingredient.id,
+      {
+        unit: values.unit,
+        quantity: values.quantity,
+        foodId: values.food.id,
+        unitStart: values.unitStart,
+        unitEnd: values.unitEnd,
+        quantityStart: values.quantityStart,
+        quantityEnd: values.quantityEnd,
+        foodStart: values.foodStart,
+        foodEnd: values.foodEnd,
+      },
+      values.text,
+    );
   };
 
   return (
     <IngredientCorrectionForm
-      initialValue={recipeIngredient}
+      initialValue={ingredient}
       onSubmit={async data => {
         await handleSubmit(data);
         setShowForm(false);

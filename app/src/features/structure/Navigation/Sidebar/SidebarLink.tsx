@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
 import styled from 'styled-components';
-import { Icon } from 'components/generic';
+import { Icon } from 'components/generic/Icon';
 import Link, { LinkProps } from 'components/generic/Link';
 import { GenericIconName } from 'components/generic/Icon';
 
@@ -16,14 +16,14 @@ const ModdedLink = styled(Link)`
   color: var(--color-white);
 
   &:hover {
-    background: var(--color-brand-light);
+    background: var(--color-primary-light);
     color: var(--color-dark);
     border: 0;
     z-index: 1;
   }
 
   &:focus {
-    background: var(--color-brand-light);
+    background: var(--color-primary-light);
     color: var(--color-dark);
     border: 0;
     z-index: 1;
@@ -34,7 +34,7 @@ const ModdedLink = styled(Link)`
   }
 
   &.link-matching {
-    background: var(--color-brand-dark);
+    background: var(--color-primary-dark);
     color: var(--color-white);
     cursor: default;
   }

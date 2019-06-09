@@ -1,10 +1,18 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ApolloError } from 'apollo-boost';
-import { Box, Text, Button, Paragraph } from 'grommet';
 import Icon, { GenericIconName } from './Icon';
 import logger from 'logger';
 import { differenceInMinutes } from 'date-fns';
 import Link from './Link';
+import {
+  Paper,
+  Box,
+  Typography,
+  Button,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
+import { WarningTwoTone, CloudOffTwoTone } from '@material-ui/icons';
 
 const LAST_ERROR_REFRESH_KEY = 'lastErrorRefresh';
 const UNKNOWN_MESSAGE =
@@ -17,17 +25,44 @@ export interface ErrorMessageProps {
   full?: boolean;
 }
 
-const getIcon = (error: ApolloError | string): GenericIconName => {
+const useStyles = makeStyles<Theme>(theme => ({
+  icon: {
+    fontSize: '4rem',
+    color: theme.palette.error.dark,
+  },
+  paper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: theme.palette.error.contrastText,
+    backgroundColor: theme.palette.error.light,
+    padding: theme.spacing(3),
+  },
+  button: {
+    color: theme.palette.error.contrastText,
+    borderColor: theme.palette.error.contrastText,
+    '&:hover': {
+      color: theme.palette.error.contrastText,
+      borderColor: theme.palette.error.contrastText,
+    },
+    '&:focus': {
+      color: theme.palette.error.contrastText,
+      borderColor: theme.palette.error.contrastText,
+    },
+  },
+}));
+
+const isWarning = (error: ApolloError | string): boolean => {
   if (typeof error === 'string') {
-    return 'warning';
+    return true;
   }
 
   switch (error.name) {
     case 'UserInputError':
     case 'ForbiddenError':
-      return 'warning';
+      return true;
     default:
-      return 'cloud_off';
+      return false;
   }
 };
 
@@ -59,7 +94,10 @@ const getText = (
   }
 };
 
-export const ErrorMessage: FC<ErrorMessageProps> = ({ error, full }) => {
+export const ErrorMessage: FC<ErrorMessageProps> = props => {
+  const { error, full } = props;
+  const classes = useStyles(props);
+
   const [isDismissed, setDismissed] = useState(false);
 
   useEffect(() => {
@@ -82,44 +120,40 @@ export const ErrorMessage: FC<ErrorMessageProps> = ({ error, full }) => {
   }
 
   return (
-    <Box
-      direction="row"
-      pad="small"
-      align="center"
-      width={full ? '100%' : 'auto'}
-      height={full ? '100%' : 'auto'}
-      background="light-2"
-      className="neutral-content"
-      justify="center"
-      margin={full ? '0' : 'small'}
-      round={!full}
-    >
-      <Icon name={getIcon(error)} size="4em" color="var(--color-gray)" />
-      <Box margin={{ left: 'medium' }} align="start">
-        <Paragraph>{getText(error, isRepeatError)}</Paragraph>
-        <Box direction="row" justify="start">
+    <Paper className={classes.paper}>
+      {isWarning(error) ? (
+        <WarningTwoTone className={classes.icon} />
+      ) : (
+        <CloudOffTwoTone className={classes.icon} />
+      )}
+      <Box ml={2} alignContent="flex-start">
+        <Typography variant="body1" gutterBottom>
+          {getText(error, isRepeatError)}
+        </Typography>
+        <Box flexDirection="row" justifyContent="flex-start">
           {!error ||
             (typeof error !== 'string' &&
             !['ForbiddenError', 'UserInputError'].includes(error.name) ? (
               <Button
+                className={classes.button}
                 onClick={() => {
                   saveLastErrorRefreshTime();
                   window.location.reload();
                 }}
-                margin={{ right: 'small', left: '0' }}
-                label="Reload"
-              />
+              >
+                Reload
+              </Button>
             ) : (
-              <Button label="Dismiss" onClick={() => setDismissed(true)} />
+              <Button onClick={() => setDismissed(true)}>Dismiss</Button>
             ))}
           {isRepeatError && (
             <Link to="mailto:support@toastcooking.app">
-              <Button label="Contact support" />
+              <Button className={classes.button}>Contact support</Button>
             </Link>
           )}
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

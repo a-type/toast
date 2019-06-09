@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Wave } from './components';
 
-const colors = ['dark', 'negative', 'brand'];
+const colors = ['#290f34', '#b30753', '#f6c667'];
 
 export const BackdropArt: FC<{
   fade?: boolean;
@@ -11,13 +11,7 @@ export const BackdropArt: FC<{
 
   const artContent = (
     <>
-      <rect
-        x="0"
-        y="0"
-        width="100%"
-        height="100%"
-        fill="var(--color-positive-light)"
-      />
+      <rect x="0" y="0" width="100%" height="100%" fill="#bff4ed" />
       {colors.map((color, idx) => (
         <Wave
           color={color}

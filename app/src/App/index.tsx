@@ -6,76 +6,96 @@ import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
 import history from 'browserHistory';
-import { GlobalStyle, grommetTheme } from 'theme';
-import { Grommet, Box } from 'grommet';
 import Navigation from 'features/structure/Navigation/Navigation';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { GlobalLoader } from 'components/generic/Loader';
 import Helmet from 'react-helmet';
 import Guides from 'features/guides/Guides/Guides';
-import styled from 'styled-components';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
-import { positions, transitions, Provider as AlertProvider } from 'react-alert';
-import AlertTemplate from 'components/generic/Alert';
 import UpdateChecker from './UpdateChecker';
+import { Global, css } from '@emotion/core';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme, { GlobalCssVariables } from 'theme';
+import { Box, CssBaseline, Theme } from '@material-ui/core';
+import { hot } from 'react-hot-loader/root';
+import { ToastAppBar } from 'features/structure/AppBar';
+import { makeStyles } from '@material-ui/styles';
+import { AlertRenderer, AlertProvider } from 'contexts/AlertContext';
 
-const MainContentBox = styled(Box)`
-  overflow-y: auto;
-  flex: 1 0 0;
-`;
+const useStyles = makeStyles<Theme, {}>(theme => ({
+  mainGrid: {
+    width: '100%',
+    height: '100%',
+    display: 'grid',
+    gridTemplateAreas: "'appBar' 'content' 'guides' 'nav'",
+    gridTemplateRows: 'auto 1fr auto auto',
+    gridTemplateColumns: '100%',
 
-const MainGrid = styled.div`
-  width: 100%;
-  height: 100%;
+    [`@media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px)`]: {
+      gridTemplateAreas: "'appBar appBar' 'nav content' 'nav guides'",
+      gridTemplateRows: 'auto 1fr auto',
+      gridTemplateColumns: 'auto 1fr',
+    },
+  },
 
-  display: grid;
-  grid-template-areas: 'content' 'guides' 'nav';
-  grid-template-rows: 1fr auto auto;
-  grid-template-columns: 100%;
+  content: {
+    width: '100%',
+    gridArea: 'content',
+    overflowY: 'auto',
+  },
+}));
 
-  @media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px) {
-    grid-template-areas: 'nav content' 'nav guides';
-    grid-template-rows: 1fr auto;
-    grid-template-columns: auto 1fr;
-  }
-`;
+const App: FC<{}> = props => {
+  const classes = useStyles(props);
 
-const alertOptions = {
-  position: positions.BOTTOM_RIGHT,
-  timeout: 10000,
-  offset: '30px',
-  transition: transitions.FADE,
+  return (
+    <ApolloProvider client={apolloClient}>
+      <ApolloHooksProvider client={apolloClient}>
+        <MuiThemeProvider theme={theme}>
+          <AlertProvider>
+            <Router history={history}>
+              <TokenContext.Provider>
+                <LinkerContextProvider>
+                  <Suspense fallback={<GlobalLoader />}>
+                    <Helmet title="Toast" />
+                    <Box className={classes.mainGrid}>
+                      <ToastAppBar gridArea="appBar" />
+                      <Navigation gridArea="nav" />
+                      <Box className={classes.content}>
+                        <Routes />
+                      </Box>
+                      <Guides gridArea="guides" />
+                    </Box>
+                  </Suspense>
+                </LinkerContextProvider>
+              </TokenContext.Provider>
+            </Router>
+            <AlertRenderer />
+            <UpdateChecker />
+            <CssBaseline />
+            <Global
+              styles={css`
+                html,
+                body,
+                #main {
+                  height: 100vh;
+                }
+                body {
+                  overflow-y: hidden;
+                  position: relative;
+                }
+                ::selection,
+                ::moz-selection {
+                  background: #ffe6bd;
+                }
+              `}
+            />
+            <GlobalCssVariables />
+          </AlertProvider>
+        </MuiThemeProvider>
+      </ApolloHooksProvider>
+    </ApolloProvider>
+  );
 };
 
-const App: FC<{}> = () => (
-  <ApolloProvider client={apolloClient}>
-    <ApolloHooksProvider client={apolloClient}>
-      <Grommet theme={grommetTheme} full>
-        <AlertProvider {...alertOptions} template={AlertTemplate}>
-          <Router history={history}>
-            <TokenContext.Provider>
-              <LinkerContextProvider>
-                <Suspense fallback={<GlobalLoader />}>
-                  <Helmet>
-                    <title>Toast</title>
-                  </Helmet>
-                  <MainGrid>
-                    <Navigation gridArea="nav" />
-                    <MainContentBox width="100%" gridArea="content">
-                      <Routes />
-                    </MainContentBox>
-                    <Guides gridArea="guides" />
-                  </MainGrid>
-                </Suspense>
-              </LinkerContextProvider>
-            </TokenContext.Provider>
-          </Router>
-          <GlobalStyle />
-          <UpdateChecker />
-        </AlertProvider>
-      </Grommet>
-    </ApolloHooksProvider>
-  </ApolloProvider>
-);
-
-export default App;
+export default hot(App);

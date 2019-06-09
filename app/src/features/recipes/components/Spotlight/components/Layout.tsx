@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { gridAreas } from 'components/effects';
 
 export default styled<{}, 'div'>('div')`
   display: grid;
@@ -23,5 +22,11 @@ export default styled<{}, 'div'>('div')`
     }
   }
 
-  ${gridAreas(['image', 'details'])};
+  & > *:first-child {
+    grid-area: image;
+  }
+
+  & > *:nth-child(2) {
+    grid-area: details;
+  }
 `;

@@ -4,22 +4,22 @@ import { IsLoggedIn } from 'features/auth/gates';
 import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router-dom';
 import { parse } from 'query-string';
-import Column from 'components/layout/Column';
 import { Logo } from 'components/brand';
+import { Container } from '@material-ui/core';
 
 const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
   const returnTo = (parse(location.search).r as string) || '/';
   return (
     <IsLoggedIn
       fallback={
-        <Column>
+        <Container>
           <Logo
             pattern
             style={{ margin: 'auto auto var(--spacing-lg) auto' }}
             size="10vw"
           />
           <Login returnTo={returnTo} />
-        </Column>
+        </Container>
       }
     >
       <Redirect to="/" />

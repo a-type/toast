@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Typography } from '@material-ui/core';
 
 export type Range = {
   name: string;
@@ -41,7 +42,7 @@ const RangeHighlighter: React.SFC<RangeHighlighterProps> = ({
       return item;
     });
 
-  return <div>{segments}</div>;
+  return <Typography variant="body1">{segments}</Typography>;
 };
 
 export default RangeHighlighter;

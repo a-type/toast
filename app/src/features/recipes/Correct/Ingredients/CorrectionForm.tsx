@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
 import { Formik } from 'formik';
-import { Paragraph, TextInput, Box, Button, TextArea } from 'grommet';
-import { Field } from 'components/generic';
 import { Picker } from 'features/ingredients';
+import { TextField, Box, Button, Grid } from '@material-ui/core';
 
 export interface IngredientCorrectionFormRecipeIngredient {
   text: string;
@@ -54,41 +53,59 @@ export const IngredientCorrectionForm: FC<IngredientCorrectionFormProps> = ({
           onSubmit={handleSubmit}
           style={{ marginBottom: 'var(--spacing-lg)' }}
         >
-          <Field label="Text" required>
-            <TextArea value={values.text} onChange={handleChange} name="text" />
-          </Field>
-          <Field label="Quantity" required>
-            <TextInput
-              name="quantity"
-              type="number"
-              value={`${values.quantity}`}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field label="Unit">
-            <TextInput
-              name="unit"
-              value={values.unit}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field label="Ingredient">
-            <Picker
-              initialSearchText={ingredientSearchText}
-              onChange={ing => setFieldValue('ingredient', ing)}
-              value={values.ingredient}
-              canCreate
-            />
-          </Field>
-          <Box direction="row" margin={{ bottom: 'medium' }}>
-            <Button
-              primary
-              type="submit"
-              label={messages.submitCorrection}
-              margin={{ right: 'medium' }}
-            />
-            <Button onClick={onCancel} label="Cancel" />
-          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                required
+                multiline
+                label="Text"
+                value={values.text}
+                onChange={handleChange}
+                name="text"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Quantity"
+                required
+                name="quantity"
+                type="number"
+                value={`${values.quantity}`}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Unit"
+                required
+                name="unit"
+                value={values.unit}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Picker
+                initialSearchText={ingredientSearchText}
+                onChange={ing => setFieldValue('ingredient', ing)}
+                value={values.ingredient}
+                canCreate
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box display="flex" flexDirection="row" justifyContent="flex-end">
+                <Button variant="text" onClick={onCancel}>
+                  Cancel
+                </Button>{' '}
+                <Button color="primary" type="submit">
+                  {messages.submitCorrection}
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
         </form>
       )}
     </Formik>

@@ -1,27 +1,29 @@
 import React, { FC } from 'react';
-import Column from 'components/layout/Column';
 import { GroceryDay } from 'features/plan';
 import Invite from 'features/groups/Invite';
-import { Box } from 'grommet';
-import { Heading } from 'components/text';
 import LogoutButton from 'features/structure/LogoutButton';
+import { Typography, Box, Container, Divider } from '@material-ui/core';
 
 export interface SettingsPageProps {}
 
 export const SettingsPage: FC<SettingsPageProps> = ({}) => {
   return (
-    <Column>
-      <Heading level="2">Group Settings</Heading>
-      <Box margin={{ bottom: 'large' }}>
+    <Container>
+      <Typography variant="h2" gutterBottom>
+        Group Settings
+      </Typography>
+      <Box mb={2} mt={2}>
         <GroceryDay />
       </Box>
-      <Box margin={{ bottom: 'large' }}>
+      <Divider />
+      <Box mb={2} mt={2}>
         <Invite />
       </Box>
-      <Box margin={{ bottom: 'large' }}>
+      <Divider />
+      <Box mb={2} mt={2}>
         <LogoutButton />
       </Box>
-    </Column>
+    </Container>
   );
 };
 

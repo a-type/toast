@@ -1,4 +1,4 @@
 import React from 'react';
-import Column from 'components/layout/Column';
+import { Container } from '@material-ui/core';
 
-export default () => <Column>Not found</Column>;
+export default () => <Container>Not found</Container>;

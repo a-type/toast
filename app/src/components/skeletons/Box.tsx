@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box } from 'grommet';
+import { Box } from '@material-ui/core';
 
 export const BoxSkeleton = props => (
-  <Box background="light-2" width="100%" rounded {...props} />
+  <Box css={{ borderRadius: '8px', background: '#eeeeee', width: '100%' }} />
 );

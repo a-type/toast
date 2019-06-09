@@ -1,14 +1,14 @@
 import React, { FC, useState } from 'react';
 import { Guide } from '../types';
-import { Text, Box, Button, Collapsible } from 'grommet';
-import { Icon, Link } from 'components/generic';
 import { withRouter, RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import { LinkProps } from 'components/generic/Link';
+import Link, { LinkProps } from 'components/generic/Link';
+import { Box, IconButton, Typography, Collapse } from '@material-ui/core';
+import Icon from 'components/generic/Icon';
 
 const MessageBox = styled(Box)`
-  border-left: 1px solid var(--color-brand-dark);
-  background: var(--color-brand);
+  border-left: 1px solid var(--color-primary-dark);
+  background: var(--color-primary);
   color: var(--color-dark);
   position: relative;
 
@@ -17,12 +17,12 @@ const MessageBox = styled(Box)`
     position: absolute;
     bottom: 100%;
     left: -1px;
-    background: var(--color-brand);
+    background: var(--color-primary);
     color: var(--color-dark);
     font-style: italic;
     border-top-right-radius: var(--border-radius-md);
     padding: var(--spacing-xs) var(--spacing-lg);
-    border-left: 1px solid var(--color-brand-dark);
+    border-left: 1px solid var(--color-primary-dark);
   }
 
   & > *:first-child {
@@ -34,10 +34,10 @@ const ActionLink = styled<{ primary?: boolean } & LinkProps>(
   ({ primary, ...rest }) => <Link {...rest} />,
 )`
   background: ${props =>
-    props.primary ? 'var(--color-positive)' : 'var(--color-white)'};
+    props.primary ? 'var(--color-secondary)' : 'var(--color-white)'};
   color: ${props =>
-    props.primary ? 'var(--color-white)' : 'var(--color-positive)'};
-  border-top: 1px solid var(--color-positive);
+    props.primary ? 'var(--color-white)' : 'var(--color-secondary)'};
+  border-top: 1px solid var(--color-secondary);
   text-align: center;
   font-style: italic;
   display: flex;
@@ -63,21 +63,21 @@ export const GuideMessage: FC<GuideMessageProps & RouteComponentProps> = ({
   const path = location.pathname;
   const isOnPage = guide.page === path;
   const content = isOnPage ? (
-    <Box pad="small" flex="grow">
-      <Box direction="row">
-        <Button
-          style={{ padding: 0 }}
-          margin={{ right: 'medium', left: 'small' }}
+    <Box p={1} flexGrow={1}>
+      <Box flexDirection="row">
+        <IconButton
+          css={{ padding: 0, marginRight: '16px', marginLeft: '8px' }}
           onClick={() => setExpanded(!expanded)}
-          icon={<Icon name="expand_more" rotation={expanded ? 0 : 180} />}
-        />
-        <Text>{guide.summary}</Text>
+        >
+          <Icon name="expand_more" rotation={expanded ? 0 : 180} />
+        </IconButton>
+        <Typography>{guide.summary}</Typography>
       </Box>
-      <Collapsible open={expanded}>
-        <Box pad="medium">
-          <Text size="small">{guide.text}</Text>
+      <Collapse in={expanded}>
+        <Box p={2}>
+          <Typography>{guide.text}</Typography>
         </Box>
-      </Collapsible>
+      </Collapse>
     </Box>
   ) : (
     <ActionLink to={guide.page} primary>
@@ -88,7 +88,7 @@ export const GuideMessage: FC<GuideMessageProps & RouteComponentProps> = ({
   );
 
   return (
-    <MessageBox direction="row" align="stretch">
+    <MessageBox flexDirection="row" alignItems="stretch">
       {content}
       <ActionLink onClick={dismiss} primary={isOnPage}>
         <Icon name="done" />

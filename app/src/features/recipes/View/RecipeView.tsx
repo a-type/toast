@@ -6,11 +6,11 @@ import { Redirect } from 'react-router-dom';
 import ViewSpy from './ViewSpy';
 import { Spotlight } from 'features/recipes/components/Spotlight';
 import { StepsLink } from './components';
-import { Heading } from 'components/text';
 import { useAuth } from 'contexts/AuthContext';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';
 import { GlobalLoader } from 'components/generic/Loader';
+import { Typography } from '@material-ui/core';
 
 export interface RecipeViewProps {
   recipeId: string;
@@ -38,7 +38,9 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
     <React.Fragment>
       <Spotlight recipe={recipe} />
       <Details recipe={recipe} />
-      <Heading level="2">Ingredients</Heading>
+      <Typography variant="h2" gutterBottom>
+        Ingredients
+      </Typography>
       <Ingredients
         servings={path(['servings'], recipe)}
         ingredients={pathOr([], ['ingredientsConnection', 'nodes'], recipe)}

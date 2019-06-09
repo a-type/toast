@@ -1,9 +1,9 @@
 import React from 'react';
 
 const colors = [
-  'var(--color-negative)',
-  'var(--color-positive)',
-  'var(--color-brand)',
+  'var(--color-error)',
+  'var(--color-secondary)',
+  'var(--color-primary)',
 ];
 
 export default ({ show }) => {

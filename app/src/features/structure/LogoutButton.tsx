@@ -1,21 +1,21 @@
 import React, { FC } from 'react';
 import browserHistory from 'browserHistory';
 import firebase from 'services/firebase';
-import { Button } from 'grommet';
-import { Icon } from 'components/generic';
+import { Icon } from 'components/generic/Icon';
+import { Button } from '@material-ui/core';
 
 export interface LogoutButtonProps {}
 
 export const LogoutButton: FC<LogoutButtonProps> = ({}) => {
   return (
     <Button
-      label="Log out"
-      icon={<Icon name="meeting_room" />}
       onClick={async () => {
         await firebase.auth().signOut();
         browserHistory.push('/');
       }}
-    />
+    >
+      <Icon name="meeting_room" /> Log out
+    </Button>
   );
 };
 

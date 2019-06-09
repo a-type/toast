@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Button } from 'grommet';
-import { Heading } from 'components/text';
 import { SIDE_ACTIONS_MIN_WIDTH_PX } from 'constants/breakpoints';
-import { Link, Icon } from 'components/generic';
+import { Typography, IconButton } from '@material-ui/core';
+import Icon from 'components/generic/Icon';
+import Link from 'components/generic/Link';
 
 export const CLASS_NAMES = {
   ACTIONS: 'actions',
@@ -33,8 +33,8 @@ export const Actions: FC<{}> = ({ children }) => {
       }}
       className={CLASS_NAMES.ACTIONS}
     >
-      <Heading
-        level="2"
+      <Typography
+        variant="h2"
         css={{
           display: 'none',
           [`@media(min-width: ${SIDE_ACTIONS_MIN_WIDTH_PX}px)`]: {
@@ -43,7 +43,7 @@ export const Actions: FC<{}> = ({ children }) => {
         }}
       >
         Links
-      </Heading>
+      </Typography>
       {children}
     </aside>
   );
@@ -54,7 +54,6 @@ export const PageContent: FC<{}> = ({ children }) => {
     <main
       css={{
         gridArea: 'content',
-        padding: 'var(--spacing-lg)',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -97,27 +96,6 @@ export const PageWithActions: FC<PageWithActionsProps> = ({
         },
       }}
     >
-      {!!(pageTitle || backPath) && (
-        <Heading
-          level="1"
-          css={{
-            margin: 'var(--spacing-lg)',
-            marginBottom: '0',
-            gridArea: 'title',
-          }}
-        >
-          {backPath && (
-            <Link
-              to={backPath}
-              className={CLASS_NAMES.BACK_BUTTON}
-              css={{ display: 'inline' }}
-            >
-              <Button icon={<Icon name="arrow_back_ios" />} />
-            </Link>
-          )}
-          {pageTitle}
-        </Heading>
-      )}
       {children}
     </div>
   );

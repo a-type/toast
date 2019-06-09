@@ -1,44 +1,88 @@
 import React, { FC, useContext } from 'react';
-import IconLink from './IconLink';
 import AuthContext from 'contexts/AuthContext';
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Theme,
+} from '@material-ui/core';
+import useRouter from 'use-react-router';
+import {
+  HomeTwoTone,
+  SearchTwoTone,
+  LocalDiningTwoTone,
+  CalendarTodayTwoTone,
+  BookmarksTwoTone,
+} from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles';
+import useNavState from 'hooks/useNavState';
 
 export interface BottomNavProps {
   gridArea?: string;
 }
 
-export const BottomNav: FC<BottomNavProps> = ({ gridArea }) => {
+const useStyles = makeStyles<Theme, BottomNavProps>({
+  bottomNav: props => ({
+    gridArea: props.gridArea,
+    borderTop: '1px solid #00000010',
+  }),
+});
+
+export const BottomNav: FC<BottomNavProps> = props => {
   const { isLoggedIn } = useContext(AuthContext);
+  const classes = useStyles(props);
+  const paths = !isLoggedIn
+    ? [
+        {
+          path: '/',
+          exact: true,
+        },
+        {
+          path: '/login',
+          exact: true,
+        },
+      ]
+    : [
+        {
+          path: '/home',
+          exact: true,
+        },
+        {
+          path: '/explore',
+        },
+        {
+          path: '/collections',
+        },
+      ];
+  const { index, onChange } = useNavState(paths);
 
-  const anonLinks = (
-    <>
-      <IconLink to="/" exact icon="home" label="Home" />
-      <IconLink to="/login" exact icon="local_dining" label="Join or log in" />
-    </>
-  );
-
-  const authLinks = (
-    <>
-      <IconLink to="/" exact icon="home" label="Home" />
-      <IconLink to="/plan" icon="calendar_today" label="Plan" />
-      <IconLink to="/explore" icon="search" label="Explore" />
-      <IconLink to="/collections" icon="bookmarks" label="Collections" />
-    </>
-  );
+  if (!isLoggedIn) {
+    return (
+      <BottomNavigation
+        showLabels
+        onChange={onChange}
+        className={classes.bottomNav}
+        value={index}
+      >
+        <BottomNavigationAction icon={<HomeTwoTone />} label="Home" />
+        <BottomNavigationAction
+          icon={<LocalDiningTwoTone />}
+          label="Join or log in"
+        />
+      </BottomNavigation>
+    );
+  }
 
   return (
-    <nav
-      css={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 'var(--spacing-sm) var(--spacing-lg)',
-        background: 'var(--color-gray-lightest)',
-        gridTemplateArea: gridArea,
-        boxShadow: '0 -2px 4px 0 var(--color-shadow)',
-      }}
+    <BottomNavigation
+      showLabels
+      value={index}
+      onChange={onChange}
+      className={classes.bottomNav}
     >
-      {isLoggedIn ? authLinks : anonLinks}
-    </nav>
+      <BottomNavigationAction icon={<CalendarTodayTwoTone />} label="Home" />
+      <BottomNavigationAction icon={<SearchTwoTone />} label="Explore" />
+      <BottomNavigationAction icon={<BookmarksTwoTone />} label="Collections" />
+    </BottomNavigation>
   );
 };
 

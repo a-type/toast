@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import gql from 'graphql-tag';
-import { Link } from 'components/text';
+import Link from 'components/text/Link';
 import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import { Image, Layout } from './components';
 import { path } from 'ramda';
-import { Paragraph, Box } from 'grommet';
-import { Heading } from 'components/text';
 import { HeadingSkeleton, ParagraphSkeleton } from 'components/skeletons';
-import { Icon } from 'components/generic';
+import { Icon } from 'components/generic/Icon';
+import { Box, Typography } from '@material-ui/core';
+import { LocalDiningTwoTone } from '@material-ui/icons';
 
 const truncate = (text: string, characters: number = 180) => {
   let trimmed = text.substr(0, characters);
@@ -23,6 +23,7 @@ const truncate = (text: string, characters: number = 180) => {
 
 export interface SpotlightProps {
   showSave?: boolean;
+  linkTitle?: boolean;
   recipe: {
     coverImageUrl?: string;
     id?: string;
@@ -33,7 +34,11 @@ export interface SpotlightProps {
   };
 }
 
-export const Spotlight: FC<SpotlightProps> = ({ recipe, showSave }) => {
+export const Spotlight: FC<SpotlightProps> = ({
+  recipe,
+  linkTitle,
+  showSave,
+}) => {
   if (!recipe) {
     return null;
   }
@@ -44,21 +49,26 @@ export const Spotlight: FC<SpotlightProps> = ({ recipe, showSave }) => {
     <Layout>
       <Box data-grid-area="image">
         <Image src={coverImage}>
-          {!coverImage && <Icon name="local_dining" size="100px" />}
+          {!coverImage && <LocalDiningTwoTone fontSize="large" />}
         </Image>
-        {showSave && <SaveButton id={recipe.id} />}
+        {showSave && <SaveButton recipeId={recipe.id} />}
       </Box>
       <Box data-grid-area="details">
-        <Link to={!!recipe.id && `/recipes/${recipe.id}`}>
-          <Heading
-            level="1"
-            css={{ marginBottom: 'var(--spacing-small)', marginTop: '0' }}
-          >
+        {linkTitle ? (
+          <Link to={!!recipe.id && `/recipes/${recipe.id}`}>
+            <Typography variant="h1" gutterBottom>
+              {recipe.title}
+            </Typography>
+          </Link>
+        ) : (
+          <Typography variant="h1" gutterBottom>
             {recipe.title}
-          </Heading>
-        </Link>
+          </Typography>
+        )}
         {recipe.description && (
-          <Paragraph>{truncate(recipe.description)}</Paragraph>
+          <Typography variant="body1">
+            {truncate(recipe.description)}
+          </Typography>
         )}
         {recipe.attribution && (
           <Link to={recipe.sourceUrl} newTab>

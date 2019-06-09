@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Bar = styled.div`
-  background: var(--color-positive);
+  background: var(--color-secondary);
   color: var(--color-white);
   display: flex;
   flex-direction: row;

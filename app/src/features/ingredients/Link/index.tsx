@@ -1,9 +1,8 @@
 import React from 'react';
-import { Tip } from 'components/generic';
 import { Link } from 'components/text';
 import { sentence } from 'change-case';
 import { pathOr } from 'ramda';
-import { Text } from 'grommet';
+import { Typography } from '@material-ui/core';
 
 export interface IngredientLinkProps {
   ingredient: any; // FIXME
@@ -26,31 +25,10 @@ export default class IngredientLink extends React.PureComponent<
   render() {
     const { ingredient, isHighlighted, children } = this.props;
 
-    if (!ingredient) {
-      return <Text>{children || 'Unknown ingredient'}</Text>;
-    }
-
-    const ingredientName = sentence(
-      pathOr('Unknown Ingredient', ['name'], ingredient),
-    );
     return (
-      <Tip
-        disabled={!this.state.hovered}
-        placement="top"
-        tipContent={<div>{ingredientName}</div>}
-      >
-        {({ ref }) => (
-          <div style={{ display: 'inline-block' }} ref={ref}>
-            <Link
-              onMouseEnter={this.startHover}
-              onMouseLeave={this.endHover}
-              to={`/ingredients/${encodeURIComponent(ingredient.id)}`}
-            >
-              {children || ingredientName}
-            </Link>
-          </div>
-        )}
-      </Tip>
+      <Typography>
+        {(ingredient && ingredient.name) || 'Unknown ingredient'}
+      </Typography>
     );
   }
 }

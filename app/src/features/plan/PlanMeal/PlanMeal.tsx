@@ -1,46 +1,46 @@
 import React, { SFC } from 'react';
 import { PlanMealData } from '../types';
-import { Box } from 'grommet';
-import { Label } from 'components/text';
 import { TextSkeleton, CardSkeleton } from 'components/skeletons';
-import styled from 'styled-components';
 import EmptyMeal from './EmptyMeal';
 import PlannedMeal from './PlannedMeal';
-
-const MealBox = styled(Box)`
-  & > *:last-child {
-    flex: 1;
-  }
-`;
+import { Box, Typography } from '@material-ui/core';
 
 interface MealProps {
   planDayId: string;
   meal: PlanMealData;
   mealName: string;
+  variant?: 'full' | 'compact';
 }
 
-const Meal: SFC<MealProps> = ({ meal, mealName, planDayId }) => {
+const Meal: SFC<MealProps> = ({
+  meal,
+  mealName,
+  planDayId,
+  variant = 'full',
+}) => {
   const empty = !meal;
 
   return (
-    <MealBox>
-      <Label>{mealName}</Label>
+    <Box m="0" flexDirection="column" display="flex">
+      <Typography variant="caption" gutterBottom>
+        {mealName}
+      </Typography>
       {empty ? (
         <EmptyMeal planDayId={planDayId} mealName={mealName} />
       ) : (
-        <PlannedMeal meal={meal} />
+        <PlannedMeal meal={meal} variant={variant} />
       )}
-    </MealBox>
+    </Box>
   );
 };
 
-export const MealSkeleton = () => (
-  <MealBox>
-    <Label>
+export const MealSkeleton = ({ variant }) => (
+  <Box m="0" flexDirection="column" display="flex">
+    <Typography variant="caption" gutterBottom>
       <TextSkeleton />
-    </Label>
-    <CardSkeleton />
-  </MealBox>
+    </Typography>
+    <CardSkeleton variant={variant} />
+  </Box>
 );
 
 export default Meal;

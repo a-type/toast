@@ -4,9 +4,9 @@ import StepList from './StepList';
 import Toolbar from './Toolbar';
 import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
 import { pathOr } from 'ramda';
-import { Box } from 'grommet';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';
+import { Box } from '@material-ui/core';
 
 export interface StepsProps {
   recipeId: string;
@@ -24,8 +24,8 @@ const Steps: React.SFC<StepsProps> = ({ recipeId }) => {
   }
 
   return (
-    <Box height="100%">
-      <Box flex="grow">
+    <Box height="100%" display="flex" flexDirection="column">
+      <Box flexGrow={1} display="flex">
         {!!recipe.sourceUrl ? (
           <LinkFrame src={recipe.sourceUrl} />
         ) : (

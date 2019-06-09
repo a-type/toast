@@ -12,7 +12,7 @@ export const Action: FC<ActionProps> = ({ children, icon, ...rest }) => {
       {...rest}
       css={{
         borderRadius: '1em',
-        background: 'var(--color-brand-light)',
+        background: 'var(--color-primary-light)',
         color: 'var(--color-dark)',
         padding: 'var(--spacing-sm) var(--spacing-lg)',
         cursor: 'pointer',

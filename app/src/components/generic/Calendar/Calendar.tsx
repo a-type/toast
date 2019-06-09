@@ -10,8 +10,8 @@ import {
   startOfWeek,
   isWithinRange,
 } from 'date-fns';
-import { Label, Heading } from 'components/text';
 import { MONTH_NAMES, WEEKDAY_ABBREVIATIONS } from './constants';
+import { Typography } from '@material-ui/core';
 
 export interface DateProps {
   title: string;
@@ -110,11 +110,13 @@ const Calendar: FC<CalendarProps> = ({
   return (
     <div>
       <MonthContainer>
-        <Heading level="4">{MONTH_NAMES[month]}</Heading>
+        <Typography variant="h4">{MONTH_NAMES[month]}</Typography>
       </MonthContainer>
       <WeekdayRow>
         {new Array(7).fill(null).map((_, idx) => (
-          <Label key={`weekday_${idx}`}>{WEEKDAY_ABBREVIATIONS[idx]}</Label>
+          <Typography variant="overline" key={`weekday_${idx}`}>
+            {WEEKDAY_ABBREVIATIONS[idx]}
+          </Typography>
         ))}
       </WeekdayRow>
       <CalendarGridView

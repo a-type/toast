@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Loader, Link } from 'components/generic';
-import { Button } from 'grommet';
 import { Spotlight } from 'features/recipes/components/Spotlight';
 import IngredientCorrections from './Ingredients';
 import { pathOr } from 'ramda';
-import { Heading } from 'components/text';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';
+import { Typography, Button } from '@material-ui/core';
+import Link from 'components/generic/Link';
+import Loader from 'components/generic/Loader';
 
 export interface CorrectRecipeProps {
   recipeId: string;
@@ -23,19 +23,20 @@ const CorrectRecipe: React.SFC<CorrectRecipeProps> = ({ recipeId }) => {
     return <ErrorMessage error={error} />;
   }
 
-  const recipeIngredients = pathOr([], ['ingredients'], recipe);
+  const ingredients = pathOr([], ['ingredientsConnection', 'nodes'], recipe);
 
   return (
     <div>
-      <Heading level="2">Suggest Recipe Corrections</Heading>
+      <Typography variant="h2" gutterBottom>
+        Suggest Recipe Corrections
+      </Typography>
       <Spotlight recipe={recipe} />
-      <Heading level="3">Ingredients ({recipeIngredients.length})</Heading>
-      <IngredientCorrections
-        recipeId={recipeId}
-        recipeIngredients={recipeIngredients}
-      />
+      <Typography variant="h3" gutterBottom>
+        Ingredients ({ingredients.length})
+      </Typography>
+      <IngredientCorrections recipeId={recipeId} ingredients={ingredients} />
       <Link to={`/recipes/${recipeId}`}>
-        <Button label="Done" />
+        <Button>Done</Button>
       </Link>
     </div>
   );

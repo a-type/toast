@@ -12,6 +12,7 @@ export const FullRecipeQuery = gql`
       attribution
       sourceUrl
       published
+      servings
       coverImageUrl
       coverImageAttribution
       ingredientsConnection {

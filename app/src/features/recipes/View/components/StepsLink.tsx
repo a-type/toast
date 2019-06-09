@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Button } from 'grommet';
 import Link, { LinkProps } from 'components/generic/Link';
+import { Button } from '@material-ui/core';
 
 export interface StepsLinkProps extends LinkProps {
   recipeId: string;
@@ -9,7 +9,7 @@ export interface StepsLinkProps extends LinkProps {
 const StepsLink: React.SFC<StepsLinkProps> = ({ recipeId }) => {
   return (
     <Link to={`/recipes/${recipeId}/steps`}>
-      <Button label="Start Cooking" primary />
+      <Button>Start cooking</Button>
     </Link>
   );
 };

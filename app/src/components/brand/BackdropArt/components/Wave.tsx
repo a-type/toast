@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const Path = styled<{ color: string; scale: number }, 'path'>('path')`
-  fill: var(${props => `--color-${props.color}`});
+  fill: ${props => props.color};
   transform: scale(${props => props.scale});
   transform-origin: 50% 100%;
 `;
@@ -45,7 +45,7 @@ const Wave: React.SFC<WaveProps> = ({ scale, color, factor }) => {
 
 Wave.defaultProps = {
   scale: 1,
-  color: 'brand',
+  color: '#f6c667',
 };
 
 export default Wave;

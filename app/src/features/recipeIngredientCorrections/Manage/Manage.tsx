@@ -2,7 +2,7 @@ import * as React from 'react';
 import Correction from './Correction';
 import gql from 'graphql-tag';
 import { useMutation, useQuery } from 'react-apollo-hooks';
-import { Loader } from 'components/generic';
+import Loader from 'components/generic/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 
 enum CorrectionStatus {

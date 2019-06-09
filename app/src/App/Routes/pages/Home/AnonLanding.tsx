@@ -1,41 +1,37 @@
 import React from 'react';
-import { Link } from 'components/generic';
-import { Button, Paragraph } from 'grommet';
-import { Heading } from 'components/text';
+import Link from 'components/generic/Link';
 import { Logo } from 'components/brand';
-import Column from 'components/layout/Column';
+import { Typography, Button, Container } from '@material-ui/core';
 
 export default () => {
   return (
-    <Column>
+    <Container>
       <Logo
         pattern
         style={{ margin: 'auto auto var(--spacing-lg) 0' }}
         size="10vw"
       />
-      <Heading level="1">Bring order to your week</Heading>
-      <Paragraph size="large">
+      <Typography variant="h1">Bring order to your week</Typography>
+      <Typography variant="body1">
         Join Toast and start planning your daily meals in advance the easy way.
-      </Paragraph>
-      <Paragraph size="large" margin={{ bottom: 'large' }}>
+      </Typography>
+      <Typography variant="body1" gutterBottom>
         <Link to="/login?r=/">
-          <Button
-            style={{ fontSize: 'var(--font-size-lg)' }}
-            primary
-            label="Join or log in"
-          />
+          <Button variant="contained" color="primary">
+            Join or log in
+          </Button>
         </Link>
-      </Paragraph>
-      <Heading level="2">All of the Internet's Recipes</Heading>
-      <Paragraph size="large">
+      </Typography>
+      <Typography variant="h2">All of the Internet's Recipes</Typography>
+      <Typography variant="body1">
         Bring all your favorites. We make it easy to scan recipes from across
         the web and add them to your plan.
-      </Paragraph>
-      {/* <Heading level="2">Instantly Fit Your Schedule with Toast Gold</Heading>
-      <Paragraph>
+      </Typography>
+      {/* <Typography level="2">Instantly Fit Your Schedule with Toast Gold</Typography>
+      <Typography>
         Upgrade your account to make planning even easier with an AI-driven
         schedule.
-      </Paragraph> */}
-    </Column>
+      </Typography> */}
+    </Container>
   );
 };

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
 import { Ingredient, Unit, Value } from './components';
-import { Button } from 'grommet';
 import { pathOr } from 'ramda';
+import { Button } from '@material-ui/core';
 
 enum CorrectionType {
   Delete = 'Delete',
@@ -23,12 +23,8 @@ const Correction: React.SFC<
     return (
       <div>
         <div>Delete?</div>
-        <Button
-          color="status-error"
-          onClick={() => accept(correction.id)}
-          label="Accept"
-        />
-        <Button onClick={() => reject(correction.id)} label="Reject" />
+        <Button onClick={() => accept(correction.id)}>Accept</Button>
+        <Button onClick={() => reject(correction.id)}>Reject</Button>
       </div>
     );
   }
@@ -83,16 +79,10 @@ const Correction: React.SFC<
         </li>
       </ul>
       <div>
-        <Button
-          color="status-ok"
-          onClick={() => accept(correction.id)}
-          label="Accept"
-        />
-        <Button
-          color="status-error"
-          onClick={() => reject(correction.id)}
-          label="Reject"
-        />
+        <Button color="primary" onClick={() => accept(correction.id)}>
+          Accept
+        </Button>
+        <Button onClick={() => reject(correction.id)}>Reject</Button>
       </div>
     </div>
   );

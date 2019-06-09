@@ -1,11 +1,11 @@
 import React from 'react';
-import { Box } from 'grommet';
+import { Box } from '@material-ui/core';
 
 export const Fullscreen = ({ children }) => (
   <Box
-    direction="column"
-    justify="start"
-    align="stretch"
+    flexDirection="column"
+    justifyContent="start"
+    alignItems="stretch"
     width="100%"
     height="100%"
   >

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import BaseLink, { LinkProps } from 'components/generic/Link';
-import { Text } from 'grommet';
+import { Typography, Link, makeStyles } from '@material-ui/core';
+import { lighten, darken, emphasize } from '@material-ui/core/styles';
 
 export type TextLinkProps = LinkProps & {
   to?: string;
@@ -9,61 +10,61 @@ export type TextLinkProps = LinkProps & {
 
 const ProtectedBaseLink = (props: TextLinkProps) => <BaseLink {...props} />;
 
-const LinkWrap = styled<TextLinkProps>(ProtectedBaseLink)`
-  color: var(--color-link-foreground);
-  text-decoration: underline;
-  transition: 0.25s ease-in-out;
-  display: inline-block;
-  position: relative;
+const useStyles = makeStyles(theme => ({
+  link: {
+    color: theme.palette.primary.dark,
+    textDecoration: 'underline',
+    transition: '0.25s ease-in-out',
+    display: 'inline-block',
+    position: 'relative',
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: -0.5em;
-    right: -0.5em;
-    top: 0;
-    bottom: 0;
-    border-radius: 1em;
-    background: var(--color-brand-light);
-    opacity: 0;
-    transition: 0.25s ease-in-out;
-  }
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      left: '-0.5em',
+      right: '-0.5em',
+      top: '0',
+      bottom: '0',
+      borderRadius: '1em',
+      background: theme.palette.primary.light,
+      opacity: 0,
+      transition: '0.25s ease-in-out',
+    },
 
-  &:hover {
-    color: var(--color-link-active);
+    '&:hover': {
+      color: '#632d00',
+      '&::after': {
+        opacity: 0.5,
+      },
+    },
 
-    &::after {
-      opacity: 0.25;
-    }
-  }
+    '&:focus': {
+      outline: 'none',
+      color: '#632d00',
+      '&::after': {
+        opacity: 0.5,
+      },
+    },
+  },
+}));
 
-  &:focus {
-    outline: none;
-    color: var(--color-link-active);
+const TextLink: React.SFC<TextLinkProps> = ({ children, to, ...props }) => {
+  const classes = useStyles(props);
 
-    &::after {
-      opacity: 0.25;
-    }
-  }
-`;
-
-LinkWrap.defaultProps = {
-  to: '#',
-};
-
-const LinkText = styled(Text)`
-  color: var(--color-brand-dark);
-`;
-
-const Link: React.SFC<TextLinkProps> = ({ children, to, ...props }) =>
-  to ? (
-    <LinkWrap to={to} {...props}>
-      <LinkText>{children}</LinkText>
-    </LinkWrap>
+  return !!to ? (
+    <Link
+      component={ProtectedBaseLink}
+      {...props}
+      to={to}
+      className={classes.link}
+    >
+      {children}
+    </Link>
   ) : (
-    <span {...props}>
-      <LinkText>{children}</LinkText>
+    <span {...props} className={classes.link}>
+      <Typography color="textPrimary">{children}</Typography>
     </span>
   );
+};
 
-export default Link;
+export default TextLink;

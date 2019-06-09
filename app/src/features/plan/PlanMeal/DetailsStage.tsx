@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
 import RecipeSuggestions from './AssignRecipe';
 import { PlanActionType } from './types';
-import { PlanMealData } from '../types';
-import { Box } from 'grommet';
-import { Heading } from 'components/text';
+import { Typography, Box } from '@material-ui/core';
 
 export interface PlanMealDetailsStageProps {
   planDayId: string;
@@ -22,14 +20,11 @@ export const PlanMealDetailsStage: FC<PlanMealDetailsStageProps> = ({
 }) => {
   if (actionType === PlanActionType.Cook) {
     return (
-      <Box>
-        <Heading level="3">Choose a Recipe</Heading>
-        <RecipeSuggestions
-          planDayId={planDayId}
-          mealName={mealName}
-          onRecipeSelected={onDone}
-        />
-      </Box>
+      <RecipeSuggestions
+        planDayId={planDayId}
+        mealName={mealName}
+        onRecipeSelected={onDone}
+      />
     );
   }
 

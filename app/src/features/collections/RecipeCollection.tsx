@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 import useCollection from './useCollection';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import { Loader } from 'components/generic';
-import { Box } from 'grommet';
-import { Heading, HelpText } from 'components/text';
+import Loader from 'components/generic/Loader';
 import { RecipeCards } from 'features/recipes';
 import { path } from 'ramda';
+import { Box, Typography } from '@material-ui/core';
 
 export interface RecipeCollectionProps {
   collectionId: string;
@@ -33,14 +32,15 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
   const recipes = path(['recipesConnection', 'nodes'], collection) as any[];
 
   return (
-    <Box>
-      <Heading level="2">{collection.name}</Heading>
+    <>
       {!!(recipes && recipes.length) ? (
         <RecipeCards recipes={recipes} onRecipeSelected={onRecipeSelected} />
       ) : (
-        <HelpText>This collection doesn't have any recipes in it</HelpText>
+        <Typography variant="caption">
+          This collection doesn't have any recipes in it
+        </Typography>
       )}
-    </Box>
+    </>
   );
 };
 

@@ -1,6 +1,4 @@
 import React, { SFC, useState, useEffect } from 'react';
-import { Text, Box } from 'grommet';
-import { pathOr } from 'ramda';
 import DayView from './DayView/DayView';
 import {
   startOfDay,
@@ -18,6 +16,7 @@ import usePlan from '../usePlan';
 import useGroceryDay from '../useGroceryDay';
 import getNextDay from 'utils/getNextDay';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { Box } from '@material-ui/core';
 
 const isCookingSomething = (day: PlanDayData) =>
   !!day.cookingConnection.edges.length;

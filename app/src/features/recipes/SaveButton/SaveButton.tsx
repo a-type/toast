@@ -3,11 +3,11 @@ import gql from 'graphql-tag';
 import { IsLoggedIn } from 'features/auth/gates';
 import useCollectRecipe from '../useCollectRecipe';
 import { useQuery } from 'react-apollo-hooks';
-import { Button } from 'grommet';
-import { Icon } from 'components/generic';
 import { path } from 'ramda';
-import Popup from 'components/generic/Popup';
 import RecipeCollections from 'features/collections/RecipeCollections';
+import { Button, Dialog, Theme } from '@material-ui/core';
+import { FavoriteBorderTwoTone, FavoriteTwoTone } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles';
 
 const RecipeSaveButtonQuery = gql`
   query RecipeSaveButton($id: ID!) {
@@ -22,12 +22,20 @@ const RecipeSaveButtonQuery = gql`
   }
 `;
 
-const LikeButton = ({ id }) => {
+const useStyles = makeStyles<Theme>(theme => ({
+  saveIcon: {
+    marginRight: theme.spacing(1),
+  },
+}));
+
+const SaveButton = ({ recipeId, ...props }) => {
+  const classes = useStyles(props);
+
   const { save, unsave } = useCollectRecipe({
     refetchQueries: ['RecipeSaveButton'],
   });
   const { data, loading, error } = useQuery(RecipeSaveButtonQuery, {
-    variables: { id },
+    variables: { id: recipeId },
   });
   const [showCollectionModal, setShowCollectionModal] = useState<boolean>(
     false,
@@ -40,42 +48,48 @@ const LikeButton = ({ id }) => {
 
   const onClick = useCallback(() => {
     if (isSaved) {
-      unsave({ recipeId: id });
+      unsave({ recipeId });
     } else {
       setShowCollectionModal(true);
     }
-  }, [isSaved, save, unsave, id]);
+  }, [isSaved, save, unsave, recipeId]);
 
   const handleCollectionSelected = useCallback(
     async collection => {
-      await save({ recipeId: id, collectionId: collection.id });
+      await save({ recipeId, collectionId: collection.id });
       setShowCollectionModal(false);
     },
-    [save, id],
+    [save, recipeId],
   );
 
   if (loading || error || !data) {
     return (
       <IsLoggedIn>
-        <Button disabled label="Save" icon={<Icon name="favorite_border" />} />
+        <Button disabled>
+          <FavoriteBorderTwoTone className={classes.saveIcon} /> Save
+        </Button>
       </IsLoggedIn>
     );
   }
 
   return (
     <IsLoggedIn>
-      <Button
-        icon={<Icon name={isSaved ? 'favorite' : 'favorite_border'} />}
-        label={isSaved ? 'Saved' : 'Save'}
-        onClick={onClick}
-      />
-      {showCollectionModal && (
-        <Popup onClose={() => setShowCollectionModal(false)}>
-          <RecipeCollections onCollectionSelected={handleCollectionSelected} />
-        </Popup>
-      )}
+      <Button onClick={onClick}>
+        {isSaved ? (
+          <FavoriteTwoTone className={classes.saveIcon} />
+        ) : (
+          <FavoriteBorderTwoTone className={classes.saveIcon} />
+        )}{' '}
+        {isSaved ? 'Saved' : 'Save'}
+      </Button>
+      <Dialog
+        open={showCollectionModal}
+        onClose={() => setShowCollectionModal(false)}
+      >
+        <RecipeCollections onCollectionSelected={handleCollectionSelected} />
+      </Dialog>
     </IsLoggedIn>
   );
 };
 
-export default LikeButton;
+export default SaveButton;

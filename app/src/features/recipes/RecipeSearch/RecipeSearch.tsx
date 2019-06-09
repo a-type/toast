@@ -7,14 +7,13 @@ import { useEffect, useState } from 'react';
 import { useApolloClient } from 'react-apollo-hooks';
 import { useDebounce } from 'use-debounce';
 import gql from 'graphql-tag';
-import { CardGrid } from 'components/generic';
 import { RecipeSearchForm } from './RecipeSearchForm';
 import RecipeCard from '../RecipeCards/RecipeCard';
 import { QueryResult } from 'react-apollo';
 import useReactRouter from 'use-react-router';
 import { CardSkeleton } from 'components/skeletons';
-import SaveButton from 'features/recipes/SaveButton/SaveButton';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import CardGrid from 'components/generic/CardGrid';
 
 const SearchRecipesQuery = gql`
   query SearchRecipes($input: RecipeSearchInput!) {
@@ -112,7 +111,6 @@ export const RecipeSearchResults = ({
           key={recipe.id}
           recipe={recipe}
           onClick={() => history.push(`/recipes/${recipe.id}`)}
-          actions={[() => <SaveButton id={recipe.id} />]}
         />
       ))}
     </CardGrid>

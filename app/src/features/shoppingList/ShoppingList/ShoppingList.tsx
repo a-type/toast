@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import gql from 'graphql-tag';
-import { HelpText } from 'components/text';
 import { format } from 'date-fns';
 import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListItemList } from './components/ShoppingListItemList';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import ShoppingListEmptyState from './components/EmptyState';
 import { GlobalLoader } from 'components/generic/Loader';
+import { Typography } from '@material-ui/core';
 
 const GetShoppingListQuery = gql`
   query GetShoppingListQuery {
@@ -138,9 +138,9 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
 
   return (
     <>
-      <HelpText margin={{ bottom: 'large' }}>
+      <Typography variant="h4" gutterBottom>
         Week of {format(new Date(startDate), 'MMMM Do')}
-      </HelpText>
+      </Typography>
       <ShoppingListItemList>
         {items.map(item => (
           <li key={item.id}>

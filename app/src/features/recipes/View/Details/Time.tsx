@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpText } from 'components/text';
+import { Typography } from '@material-ui/core';
 
 export default ({ cookTime, prepTime, unattendedTime }) => {
   if (!cookTime && !prepTime && !unattendedTime) {
@@ -7,29 +7,29 @@ export default ({ cookTime, prepTime, unattendedTime }) => {
   }
 
   if (cookTime && !prepTime && !unattendedTime) {
-    return <HelpText margin={{ bottom: 'medium' }}>{cookTime} min</HelpText>;
+    return <Typography gutterBottom>{cookTime} min</Typography>;
   }
 
   if (cookTime && unattendedTime) {
     return (
-      <HelpText margin={{ bottom: 'medium' }}>
+      <Typography gutterBottom>
         {unattendedTime} min unattended + {cookTime} min active
-      </HelpText>
+      </Typography>
     );
   }
 
   if (prepTime && cookTime) {
     return (
-      <HelpText margin={{ bottom: 'medium' }}>
+      <Typography gutterBottom>
         {prepTime} min prep + {cookTime} min cooking
-      </HelpText>
+      </Typography>
     );
   }
 
   return (
-    <HelpText margin={{ bottom: 'medium' }}>
+    <Typography gutterBottom>
       {prepTime} min prep, {unattendedTime} min unattended, {cookTime} min
       cooking
-    </HelpText>
+    </Typography>
   );
 };

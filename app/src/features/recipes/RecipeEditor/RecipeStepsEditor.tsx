@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { Box, TextArea, Button } from 'grommet';
 import { Formik, FieldArray } from 'formik';
 import { EditRecipeRecipe, RecipeUpdateInput } from './queries';
+import { TextField, Button, Box } from '@material-ui/core';
 
 export interface RecipeStepsEditorProps {
   recipe: EditRecipeRecipe;
@@ -27,31 +27,28 @@ export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = ({
                   {values.steps && values.steps.length > 0 ? (
                     values.steps.map((step, index) => (
                       <div key={index}>
-                        <TextArea
+                        <TextField
+                          label="Step"
                           value={step}
                           name={`steps.${index}`}
                           onChange={handleChange}
                         />
-                        <Button
-                          type="button"
-                          label="Delete"
-                          onClick={() => arrayHelpers.remove(index)}
-                        />
+                        <Button onClick={() => arrayHelpers.remove(index)}>
+                          Delete
+                        </Button>
                       </div>
                     ))
                   ) : (
                     <div>There are no steps</div>
                   )}
 
-                  <Button
-                    type="button"
-                    label="Add step"
-                    onClick={() => arrayHelpers.push('')}
-                  />
+                  <Button onClick={() => arrayHelpers.push('')}>
+                    Add step
+                  </Button>
                 </div>
               )}
             />
-            <Button type="submit" label="Save" primary />
+            <Button type="submit">Save</Button>
           </form>
         )}
       </Formik>

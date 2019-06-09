@@ -5,11 +5,11 @@ export default styled<{ active?: boolean }, 'div'>('div')`
   cursor: pointer;
   text-transform: capitalize;
   color: ${props =>
-    props.active ? 'var(--color-brand)' : 'var(--color-black)'};
+    props.active ? 'var(--color-primary)' : 'var(--color-black)'};
   border-bottom: 1px solid var(--color-gray-lightest);
 
   &:hover,
   &:focus {
-    color: var(--color-brand);
+    color: var(--color-primary);
   }
 `;

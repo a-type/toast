@@ -21,6 +21,7 @@ module.exports = {
   entry: [
     '@babel/polyfill',
     'resize-observer-polyfill',
+    'react-hot-loader/patch',
     './thirdParty/mixpanel.js',
     './src/index.tsx',
     process.env.NODE_ENV !== 'production'
@@ -41,7 +42,10 @@ module.exports = {
         'node_modules/styled-components',
       ),
       react: path.resolve(__dirname, 'node_modules/react'),
-      'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      'react-dom': path.resolve(
+        __dirname,
+        'node_modules/@hot-loader/react-dom',
+      ),
     },
   },
   module: {
@@ -145,7 +149,6 @@ module.exports = {
             host: 'localhost',
             port: 8080,
             progress: 'minimal',
-            liveReload: true,
             historyFallback: {
               rewrites: [
                 {

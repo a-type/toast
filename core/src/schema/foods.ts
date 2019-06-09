@@ -46,7 +46,12 @@ export default gql`
     createFood(input: FoodCreateInput!): Food!
       @cypher(
         create: "(ingredient:Food{id:$args.id})"
-        set: "ingredient.name = $args.input, ingredient.searchHelpers = $args.input.alternateNames"
+        set: """
+          ingredient.name = $args.input.name,
+          ingredient.alternateNames = $args.input.alternateNames,
+          ingredient.attribution = $args.input.attribution
+          ingredient.description = $args.input.description
+        """
         return: "ingredient"
       )
       @generateSlug(fromArg: "input.name")

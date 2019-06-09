@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { CheckBox, Text } from 'grommet';
 import { toDisplay } from 'formatters/quantity';
+import { Typography, Checkbox, FormControlLabel } from '@material-ui/core';
 
 type Food = {
   id: string;
@@ -15,7 +15,7 @@ type Recipe = {
 type ShoppingListItemUsage = {
   recipeTitle: string;
   recipeId: string;
-  ingredientText: string;
+  ingredientTypography: string;
 };
 
 type ShoppingListItem = {
@@ -52,29 +52,32 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({
   };
 
   const label = item.food ? (
-    <Text>
+    <Typography>
       {toDisplay(item.totalQuantity)}
       {item.unit ? ` ${item.unit}` : ''} {item.displayName}
-    </Text>
+    </Typography>
   ) : (
-    <Text>{item.displayName}</Text>
+    <Typography>{item.displayName}</Typography>
   );
 
   const details = item.food ? (
-    <Text
+    <Typography
       style={{
         fontStyle: 'italic',
         fontSize: 'var(--font-size-sm)',
         opacity: 0.7,
       }}
     >
-      ({item.plannedUses.map(use => use.ingredientText).join(', ')})
-    </Text>
+      ({item.plannedUses.map(use => use.ingredientTypography).join(', ')})
+    </Typography>
   ) : null;
 
   return (
     <>
-      <CheckBox checked={marked} onChange={handleChange} label={label} />
+      <FormControlLabel
+        label={label}
+        control={<Checkbox checked={marked} onChange={handleChange} />}
+      />
       {details}
     </>
   );

@@ -1,6 +1,5 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { DAY_SIZE } from '../constants';
-import { focusShadow } from 'components/effects';
 
 export interface DayProps {
   faded?: boolean;
@@ -13,12 +12,12 @@ const Day = styled<DayProps, 'button'>('button')`
   border: 2px solid
     ${props =>
       props.selected
-        ? 'var(--color-brand)'
+        ? 'var(--color-primary)'
         : props.highlighted
-        ? 'var(--color-positive)'
+        ? 'var(--color-secondary)'
         : 'var(--color-gray-lightest)'};
   background: ${props =>
-    props.selected ? 'var(--color-brand)' : 'transparent'};
+    props.selected ? 'var(--color-primary)' : 'transparent'};
   border-radius: 100%;
   width: ${DAY_SIZE}px;
   height: ${DAY_SIZE}px;
@@ -26,11 +25,6 @@ const Day = styled<DayProps, 'button'>('button')`
 
   opacity: ${props => (props.faded ? '0.5' : '1')};
   transition: 0.2s ease all;
-
-  &:focus {
-    outline: 0;
-    box-shadow: ${focusShadow.default};
-  }
 
   &:disabled {
     opacity: 0.5;

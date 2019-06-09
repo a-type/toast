@@ -1,37 +1,61 @@
 import React, { FC } from 'react';
-import { Paragraph } from 'grommet';
 import { RecipeSearch } from 'features/recipes/RecipeSearch/RecipeSearch';
 import { Provider } from 'contexts/RecipeSearchContext';
-import PageWithActions, {
-  PageContent,
-  Actions,
-} from 'components/layout/PageWithActions';
-import Action from 'components/generic/Action';
+import { Typography } from '@material-ui/core';
+import { NavTabs } from 'components/layout/NavTabs';
+import LinkRecipeForm from 'features/recipes/Linker/LinkRecipeForm';
+import { parse } from 'query-string';
+import useRouter from 'use-react-router';
 
-export interface ExplorePageProps {}
+const findUrl = (text: string | string[]) => {
+  if (text instanceof Array) {
+    return text.reduce<string>((match, item) => match || findUrl(item), null);
+  }
+  const res = /(https?:\/\/.*)\s?/.exec(text);
+  return (res && res[1]) || null;
+};
 
-export const ExplorePage: FC<ExplorePageProps> = ({}) => {
+export const Scan: FC = ({}) => {
+  const { location } = useRouter();
+  const { url, text, title } = parse(location.search);
+
+  const scanUrl = url || findUrl(text) || findUrl(title);
+
+  return (
+    <>
+      {(url || text || title) && !scanUrl && (
+        <Typography>
+          The share didn't work. Try copying the URL and pasting it.
+        </Typography>
+      )}
+      <LinkRecipeForm prefilledValue={scanUrl || ''} />
+    </>
+  );
+};
+
+export const Search: FC = ({}) => {
   return (
     <Provider>
-      <PageWithActions pageTitle="Explore recipes">
-        <Actions>
-          <Action to="/explore/scan" icon="link">
-            Scan a recipe web page
-          </Action>
-          <Action to="/recipes/create" icon="add">
-            Add your own recipe
-          </Action>
-        </Actions>
-        <PageContent>
-          <Paragraph>
-            Search other recipes our users have discovered from all over the
-            internet.
-          </Paragraph>
-          <RecipeSearch />
-        </PageContent>
-      </PageWithActions>
+      <RecipeSearch />
     </Provider>
   );
 };
 
-export default ExplorePage;
+export const ExplorePage: FC = () => {
+  const paths = [
+    {
+      path: '/explore',
+      exact: true,
+    },
+    {
+      path: '/explore/scan',
+    },
+  ];
+
+  return (
+    <NavTabs paths={paths} tabLabels={['Explore', 'Scan']}>
+      <Search />
+      <Scan />
+    </NavTabs>
+  );
+};

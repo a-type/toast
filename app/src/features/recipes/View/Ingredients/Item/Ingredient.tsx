@@ -1,3 +1,3 @@
-import { Text } from 'grommet';
+import React from 'react';
 
-export default Text;
+export default ({ children }) => <span>{children}</span>;

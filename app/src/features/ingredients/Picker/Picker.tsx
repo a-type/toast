@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Icon } from 'components/generic';
+import { Icon } from 'components/generic/Icon';
 import Popup from './Popup';
 import { sentence } from 'change-case';
-import { Button } from 'grommet';
 import { pathOr } from 'ramda';
+import { Button } from '@material-ui/core';
 
 export interface IngredientPickerIngredient {
   id: string;
@@ -35,12 +35,10 @@ const IngredientPicker: React.SFC<IngredientPickerProps> = ({
 
   return (
     <React.Fragment>
-      <Button
-        onClick={() => setPopupOpen(!isPopupOpen)}
-        disabled={disabled}
-        icon={<Icon name="create" />}
-        label={sentence(pathOr('Unknown Ingredient', ['name'], value))}
-      />
+      <Button onClick={() => setPopupOpen(!isPopupOpen)} disabled={disabled}>
+        <Icon name="create" />
+        {sentence(pathOr('Unknown Ingredient', ['name'], value))}
+      </Button>
       {isPopupOpen && (
         <Popup
           value={value}

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { FC, useState } from 'react';
 import { toDisplay } from 'formatters/quantity';
-import IngredientLink from 'features/ingredients/Link';
 import pluralize from 'pluralize';
 import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
+import { Box, Checkbox } from '@material-ui/core';
 
 export interface IngredientItemProps {
   servings: number;
@@ -22,25 +22,34 @@ interface IngredientItemInternalProps extends IngredientItemProps {
   preferredServings?: number;
 }
 
-class IngredientItem extends React.Component<IngredientItemInternalProps> {
-  getTextAtRange = ({ start, end }: { start: number; end: number }) =>
-    this.props.text.slice(start, end);
+const IngredientItem: FC<IngredientItemInternalProps> = ({
+  text,
+  foodStart,
+  foodEnd,
+  unitStart,
+  unitEnd,
+  quantityStart,
+  quantityEnd,
+  servings,
+  preferredServings,
+  unit,
+  quantity,
+}) => {
+  const [isChecked, setIsChecked] = useState(false);
 
-  renderQuantity = (valueText: string) => {
-    const { servings, preferredServings, quantity: value } = this.props;
-
+  const renderQuantity = (valueText: string) => {
     if (!preferredServings) {
       return <b key={`value`}>{valueText}</b>;
     }
 
     return (
-      <b key={`value`}>{toDisplay((preferredServings / servings) * value)}</b>
+      <b key={`value`}>
+        {toDisplay((preferredServings / servings) * quantity)}
+      </b>
     );
   };
 
-  renderUnit = (unitText: string) => {
-    const { servings, preferredServings, unit } = this.props;
-
+  const renderUnit = (unitText: string) => {
     if (servings === 1 && preferredServings && preferredServings > 1) {
       return <span key={`unit`}>{pluralize(unit)}</span>;
     }
@@ -48,58 +57,35 @@ class IngredientItem extends React.Component<IngredientItemInternalProps> {
     return <span key={`unit`}>{unitText}</span>;
   };
 
-  renderFood = (foodText: string) => {
-    const { food } = this.props;
-
-    return (
-      <IngredientLink key={`ingredient`} ingredient={food}>
-        {foodText}
-      </IngredientLink>
-    );
+  const renderFood = (foodText: string) => {
+    return <span key={`ingredient`}>{foodText}</span>;
   };
 
-  convertStringsToSpans = (items: React.ReactNode[]) =>
-    items.map(item => {
-      if (typeof item === 'string' && item) {
-        return <span key={item}>{item}</span>;
-      }
+  const ranges: Range[] = [
+    {
+      name: 'food',
+      start: foodStart,
+      end: foodEnd,
+      render: renderFood,
+    },
+    { name: 'unit', start: unitStart, end: unitEnd, render: renderUnit },
+    {
+      name: 'quantity',
+      start: quantityStart,
+      end: quantityEnd,
+      render: renderQuantity,
+    },
+  ].sort((a, b) => b.start - a.start);
 
-      return item;
-    });
-
-  render() {
-    const {
-      text,
-      foodStart,
-      foodEnd,
-      unitStart,
-      unitEnd,
-      quantityStart: valueStart,
-      quantityEnd: valueEnd,
-    } = this.props;
-
-    const ranges: Range[] = [
-      {
-        name: 'food',
-        start: foodStart,
-        end: foodEnd,
-        render: this.renderFood,
-      },
-      { name: 'unit', start: unitStart, end: unitEnd, render: this.renderUnit },
-      {
-        name: 'value',
-        start: valueStart,
-        end: valueEnd,
-        render: this.renderQuantity,
-      },
-    ].sort((a, b) => b.start - a.start);
-
-    return (
-      <li>
-        <RangeHighlighter text={text} ranges={ranges} />
-      </li>
-    );
-  }
-}
+  return (
+    <Box display="flex" flexDirection="row" alignItems="center">
+      <Checkbox
+        checked={isChecked}
+        onChange={ev => setIsChecked(ev.target.checked)}
+      />
+      <RangeHighlighter text={text} ranges={ranges} />
+    </Box>
+  );
+};
 
 export default IngredientItem;

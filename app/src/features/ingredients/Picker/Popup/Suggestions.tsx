@@ -1,23 +1,22 @@
 import React, { FC } from 'react';
-import { Button, Box } from 'grommet';
 import Suggestion from './Suggestion';
-import { HelpText } from 'components/text';
-import { Loader } from 'components/generic';
+import Loader from 'components/generic/Loader';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo-hooks';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { Button, Typography, Box } from '@material-ui/core';
 
 const IngredientPickerSuggestionsQuery = gql`
-  query IngredientPickerSuggestions($input: IngredientSearchInput!) {
-    searchIngredients(input: $input) {
+  query IngredientPickerSuggestions($input: FoodSearchInput!) {
+    searchFoods(input: $input) {
       id
       name
     }
   }
 `;
 
-const hasNoResults = ({ searchIngredients }) =>
-  !searchIngredients || searchIngredients.length === 0;
+const hasNoResults = data =>
+  !data || !data.searchFoods || data.searchFoods.length === 0;
 
 export interface IngredientPickerSuggestionsProps {
   term: string;
@@ -39,13 +38,13 @@ export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
         term,
       },
     },
+    skip: !term || term.length < 3,
   });
   const renderCreate = (term, getItemProps, index, highlightedIndex) => (
     <Button
       {...getItemProps({ item: { name: term }, index })}
       active={index === highlightedIndex}
-      label={`Create new ingredient: "${term}"`}
-    />
+    >{`Create new ingredient: "${term}"`}</Button>
   );
 
   if (loading) return <Loader size="64px" />;
@@ -54,16 +53,16 @@ export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
     if (canCreate && term.length > 3) {
       return renderCreate(term, getItemProps, 0, highlightedIndex);
     } else {
-      return <HelpText>No results</HelpText>;
+      return <Typography>No results</Typography>;
     }
   }
 
-  const items = data.searchIngredients;
+  const items = data.searchFoods;
 
   return (
-    <Box pad="small" margin={{ top: 'small' }}>
-      <HelpText>Choose one:</HelpText>
-      <Box margin={{ bottom: 'medium' }}>
+    <Box mt={1}>
+      <Typography>Choose one:</Typography>
+      <Box mb={2}>
         {items.map((ingredient, index) => (
           <Suggestion
             key={ingredient.id}

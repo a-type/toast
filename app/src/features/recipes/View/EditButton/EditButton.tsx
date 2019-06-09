@@ -1,7 +1,7 @@
 import React from 'react';
 import { Gate } from 'features/auth/gates';
-import { Button } from 'grommet';
 import { Link } from 'components/text';
+import { Button } from '@material-ui/core';
 
 export default ({ authorId, recipeId, displayType }) => {
   return (
@@ -11,7 +11,7 @@ export default ({ authorId, recipeId, displayType }) => {
       }
     >
       <Link to={`${recipeId}/edit`}>
-        <Button label="Edit" />
+        <Button>Edit</Button>
       </Link>
     </Gate>
   );

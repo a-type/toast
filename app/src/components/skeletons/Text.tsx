@@ -1,58 +1,64 @@
 import React, { useRef, FC } from 'react';
 import styled from 'styled-components';
-import { ParagraphProps, Paragraph } from 'grommet';
-import { Label, Heading, HeadingProps } from 'components/text';
+import { Typography, makeStyles, Theme } from '@material-ui/core';
 
 export type TextSkeletonProps = {
   size?: number;
 };
 
-const Blob = styled<{ charCount: number }, 'span'>('span')`
-  display: inline-block;
-  background: var(--color-gray-lightest);
-  height: 1em;
-  width: ${props => props.charCount}em;
-  border-radius: var(--border-radius-md);
-  margin-right: 1em;
-`;
+const useStyles = makeStyles<Theme, TextSkeletonProps>(theme => ({
+  blob: {
+    borderColor: 'inherit',
+    borderRadius: theme.spacing(2),
+    borderStyle: 'solid',
+    opacity: 0.1,
+    height: '1em',
+    borderWidth: '1em',
+    display: 'inline-block',
+    '& + &': {
+      marginLeft: '1ch',
+    },
+  },
+}));
 
 export const TextSkeleton: FC<TextSkeletonProps> = ({ size }) => {
+  const classes = useStyles({ size });
+
   const { current: charCount } = useRef(
-    size || Math.floor(Math.random() * 4) + 2,
+    size || Math.floor(Math.random() * 32) + 3,
   );
 
-  return <Blob charCount={charCount} />;
+  return <span className={classes.blob} style={{ width: `${charCount}ch` }} />;
 };
 
-export const HeadingSkeleton: FC<HeadingProps & TextSkeletonProps> = ({
+export const HeadingSkeleton: FC<any> = ({ size, ...rest }) => {
+  return (
+    <Typography {...rest as any}>
+      <TextSkeleton size={size} />
+    </Typography>
+  );
+};
+
+export const ParagraphSkeleton: FC<TextSkeletonProps & { words?: number }> = ({
   size,
+  words,
   ...rest
 }) => {
-  return (
-    <Heading {...rest as any}>
-      <TextSkeleton size={size} />
-    </Heading>
-  );
-};
-
-export const ParagraphSkeleton: FC<
-  ParagraphProps & TextSkeletonProps & { words?: number }
-> = ({ size, words, ...rest }) => {
   const { current: wordCount } = useRef(
     words || Math.floor(Math.random() * 8) + 4,
   );
 
   return (
-    <Paragraph {...rest as any}>
+    <Typography variant="body1" {...rest as any}>
       {new Array(wordCount)
         .fill(null)
         .reduce((all, _, idx) => [...all, <TextSkeleton key={idx} />, ' '], [])}
-    </Paragraph>
+    </Typography>
   );
 };
 
 export const LabelSkeleton: FC<TextSkeletonProps> = ({ size }) => (
-  <Label>
+  <Typography variant="subtitle2">
     <TextSkeleton size={size} />
-  </Label>
+  </Typography>
 );

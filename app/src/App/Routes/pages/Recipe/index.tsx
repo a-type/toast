@@ -5,16 +5,12 @@ import { Route, Switch } from 'react-router-dom';
 import Correct from './Correct';
 import Fullscreen from 'components/layout/Fullscreen';
 import RecipeEditor from 'features/recipes/RecipeEditor/RecipeEditor';
-import PageWithActions, {
-  PageContent,
-} from 'components/layout/PageWithActions';
+import { Container } from '@material-ui/core';
 
 const RecipePage = ({ match: { params } }) => (
-  <PageWithActions>
-    <PageContent>
-      <Recipe recipeId={params.recipeId} />
-    </PageContent>
-  </PageWithActions>
+  <Container>
+    <Recipe recipeId={params.recipeId} />
+  </Container>
 );
 
 const RecipeStepsPage = ({ match: { params } }) => (
@@ -24,11 +20,9 @@ const RecipeStepsPage = ({ match: { params } }) => (
 );
 
 const EditRecipePage = ({ match: { params } }) => (
-  <PageWithActions pageTitle={params.recipeId ? 'Edit recipe' : 'New recipe'}>
-    <PageContent>
-      <RecipeEditor recipeId={params.recipeId || null} />
-    </PageContent>
-  </PageWithActions>
+  <Container>
+    <RecipeEditor recipeId={params.recipeId || null} />
+  </Container>
 );
 
 export default () => (

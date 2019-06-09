@@ -1,24 +1,25 @@
 import React, { FC, useState } from 'react';
 import useEditRecipe from './useEditRecipe';
 import { RecipeUpdateInput } from './queries';
-import {
-  Box,
-  Form,
-  TextInput,
-  TextArea,
-  Button,
-  Paragraph,
-  CheckBox,
-  Collapsible,
-} from 'grommet';
-import { Heading, HelpText, Link } from 'components/text';
 import { path } from 'ramda';
 import { Formik } from 'formik';
-import { Field, Icon } from 'components/generic';
 import RecipeIngredientsEditor from './RecipeIngredientsEditor';
 import { GlobalLoader } from 'components/generic/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { RecipeStepsEditor } from './RecipeStepsEditor';
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+} from '@material-ui/core';
+import Link from 'components/text/Link';
+import Icon from 'components/generic/Icon';
 
 export interface RecipeEditorProps {
   recipeId?: string;
@@ -67,7 +68,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
           <span
             css={{
               fontSize: '18px',
-              color: 'var(--color-negative)',
+              color: 'var(--color-error)',
               marginBottom: 'var(--spacing-md)',
             }}
           >
@@ -76,10 +77,12 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
         )}
         {!published && (
           <Box>
-            <Button primary onClick={publish} label="Publish" />
-            <Paragraph>
+            <Button variant="contained" color="primary" onClick={publish}>
+              Publish
+            </Button>
+            <Typography>
               Your recipe is unpublished. Publish it so you can start using it!
-            </Paragraph>
+            </Typography>
           </Box>
         )}
         <Formik
@@ -88,93 +91,98 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
           onSubmit={save}
         >
           {({ values, handleChange, handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
-              <Field label="Title" required>
-                <TextInput
-                  size="xlarge"
-                  value={values.title}
-                  onChange={handleChange}
-                  name="title"
-                />
-              </Field>
-              <Field label="Description">
-                <TextArea
-                  name="description"
-                  onChange={handleChange}
-                  value={values.description}
-                />
-              </Field>
-              <Field label="Servings" required>
-                <TextInput
-                  type="number"
-                  name="servings"
-                  onChange={handleChange}
-                  value={values.servings}
-                />
-              </Field>
-              <Field>
-                <CheckBox
-                  name="private"
-                  onChange={handleChange}
-                  checked={values.private}
-                  label="Private recipe"
-                />
-                <HelpText>
-                  Private recipes can only be seen by you and other members of
-                  your plan
-                </HelpText>
-              </Field>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                required
+                label="Title"
+                css={{ fontSize: '64px' }}
+                value={values.title}
+                onChange={handleChange}
+                name="title"
+              />
+              <TextField
+                label="Description"
+                name="description"
+                onChange={handleChange}
+                value={values.description}
+              />
+              <TextField
+                label="Servings"
+                type="number"
+                name="servings"
+                onChange={handleChange}
+                value={values.servings}
+              />
+
+              <FormControlLabel
+                label="Private"
+                control={
+                  <Checkbox
+                    name="private"
+                    onChange={handleChange}
+                    checked={values.private}
+                  />
+                }
+              />
+              <Typography variant="caption">
+                Private recipes can only be seen by you and other members of
+                your plan
+              </Typography>
 
               <Link onClick={() => setShowOptional(!showOptional)}>
                 {showOptional ? 'Hide' : 'Show'} optional fields
               </Link>
-              <Collapsible open={showOptional}>
-                <Field label="Cook time (minutes)">
-                  <TextInput
+              <ExpansionPanel>
+                <ExpansionPanelSummary>
+                  <Typography>Optional fields</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <TextField
+                    label="Cook time (minutes)"
                     type="number"
                     name="cookTime"
                     onChange={handleChange}
                     value={values.cookTime}
                   />
-                </Field>
-                <Field label="Prep time (minutes)">
-                  <TextInput
+                  <TextField
+                    label="Prep time (minutes)"
                     type="number"
                     name="prepTime"
                     onChange={handleChange}
                     value={values.prepTime}
                   />
-                </Field>
-                <Field label="Unattended time (minutes)">
-                  <TextInput
+                  <TextField
+                    label="Unattended time (minutes)"
                     type="number"
                     name="unattendedTime"
                     onChange={handleChange}
                     value={values.unattendedTime}
                   />
-                  <HelpText>
+                  <Typography variant="caption">
                     Unattended time is any time you spend slow cooking, baking,
                     sous vide... any time you don't have to actively do anything
                     during cooking.
-                  </HelpText>
-                </Field>
-              </Collapsible>
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
 
-              <Button type="submit" label={!recipeId ? 'Continue' : 'Save'} />
-            </Form>
+              <Button variant="contained" color="primary" type="submit">
+                {!recipeId ? 'Continue' : 'Save'}
+              </Button>
+            </form>
           )}
         </Formik>
       </Box>
 
       {recipe && (
         <>
-          <Heading level="3">Ingredients</Heading>
+          <Typography variant="h3">Ingredients</Typography>
           <RecipeIngredientsEditor
             recipe={recipe}
             createIngredient={createIngredient}
             refetchRecipe={refetchRecipe}
           />
-          <Heading level="3">Steps</Heading>
+          <Typography variant="h3">Steps</Typography>
           <RecipeStepsEditor recipe={recipe} updateRecipe={save} />
         </>
       )}

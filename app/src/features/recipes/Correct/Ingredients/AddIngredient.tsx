@@ -1,30 +1,31 @@
 import React, { FC, useState } from 'react';
-import { IngredientCorrectedFieldsInput } from 'features/recipes/Correct/types';
-import { Button } from 'grommet';
-import { IngredientCorrectionForm } from './CorrectionForm';
+import { Button, TextField } from '@material-ui/core';
 
 export interface AddIngredientProps {
-  submitAdd(added: IngredientCorrectedFieldsInput): void;
+  submitAdd(added: string): void;
 }
 
 export const AddIngredient: FC<AddIngredientProps> = ({ submitAdd }) => {
   const [showForm, setShowForm] = useState(false);
+  const [text, setText] = useState('');
 
   if (!showForm) {
     return (
-      <Button
-        color="status-ok"
-        label="Suggest Missing Ingredient"
-        onClick={() => setShowForm(true)}
-      />
+      <Button color="secondary" onClick={() => setShowForm(true)}>
+        Suggest missing ingredient
+      </Button>
     );
   }
 
   return (
-    <IngredientCorrectionForm
-      onCancel={() => setShowForm(false)}
-      initialValue={{ text: '', quantity: 1 }}
-      onSubmit={submitAdd}
-    />
+    <>
+      <TextField
+        label="Ingredient text"
+        multiline
+        value={text}
+        onChange={ev => setText(ev.target.value)}
+      />
+      <Button onClick={() => submitAdd(text)}>Add</Button>
+    </>
   );
 };

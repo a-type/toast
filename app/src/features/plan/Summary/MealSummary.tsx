@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { PlanMealData } from '../types';
-import { Text } from 'grommet';
 import { Spotlight } from 'features/recipes/components/Spotlight';
+import { Typography } from '@material-ui/core';
 
 interface PlanMealSummaryProps {
   meal: PlanMealData | null;
@@ -25,7 +25,7 @@ export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {
 
   return (
     <>
-      <Text color="accent-1">Cooking</Text>
+      <Typography>Cooking</Typography>
       <Spotlight recipe={firstRecipe} />
     </>
   );

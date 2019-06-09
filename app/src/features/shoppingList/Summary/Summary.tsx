@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { Box, Text, Button } from 'grommet';
-import { Link } from 'components/generic';
+import Link from 'components/generic/Link';
 import getNextDay from 'utils/getNextDay';
 import { formatDay } from 'formatters/date';
 import { ApolloError } from 'apollo-boost';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { BoxSkeleton } from 'components/skeletons/Box';
+import { Box, Typography, Button } from '@material-ui/core';
 
 interface ShoppingListSummaryProps {
   groceryDay: { index: number; name: string };
@@ -29,10 +29,10 @@ export const ShoppingListSummary: FC<ShoppingListSummaryProps> = ({
   }
 
   return (
-    <Box align="start" margin={{ bottom: 'large' }}>
-      <Text margin={{ bottom: 'small' }}>Grocery day: {nextGroceryDay}</Text>
+    <Box alignItems="start" mb={3}>
+      <Typography gutterBottom>Grocery day: {nextGroceryDay}</Typography>
       <Link to="/shoppingList">
-        <Button label="Go to shopping list" />
+        <Button>Go to shopping list</Button>
       </Link>
     </Box>
   );

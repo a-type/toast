@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 const size = ({ size = 10 }) => `${size}px`;
-const color = ({ color = 'var(--color-brand)' }) => color;
+const color = ({ color = 'var(--color-primary)' }) => color;
 
 export type TriangleDirection = 'up' | 'down' | 'left' | 'right';
 

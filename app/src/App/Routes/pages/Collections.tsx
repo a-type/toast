@@ -1,48 +1,39 @@
-import React, { FC } from 'react';
+import React, { useState } from 'react';
 import { RecipeCollections } from 'features/collections/RecipeCollections';
-import Action from 'components/generic/Action';
-import PageWithActions, {
-  PageContent,
-  Actions,
-} from 'components/layout/PageWithActions';
+import { Container, makeStyles } from '@material-ui/core';
 import RecipeCollection from 'features/collections/RecipeCollection';
-import { RouteComponentProps, Switch, Route } from 'react-router';
+import Popup from 'components/generic/Popup';
 
-const RecipeCollectionsPage = () => (
-  <PageWithActions pageTitle="Collections">
-    <Actions>
-      <Action to="/recipes/create" icon="add">
-        Add your own recipe
-      </Action>
-    </Actions>
-    <PageContent>
-      <RecipeCollections />
-    </PageContent>
-  </PageWithActions>
-);
-
-const RecipeCollectionPage: FC<
-  RouteComponentProps<{ collectionId: string }>
-> = ({
-  match: {
-    params: { collectionId },
+const useStyles = makeStyles(theme => ({
+  container: {
+    marginTop: theme.spacing(4),
   },
-}) => (
-  <PageWithActions pageTitle="Collection" backPath="/collections">
-    <Actions>
-      <Action to="/recipes/create" icon="add">
-        Add your own recipe
-      </Action>
-    </Actions>
-    <PageContent>
-      <RecipeCollection collectionId={collectionId} />
-    </PageContent>
-  </PageWithActions>
-);
+  collectionName: {
+    flexGrow: 1,
+    marginTop: 'auto',
+    marginBottom: 'auto',
+  },
+}));
 
-export default () => (
-  <Switch>
-    <Route path="/collections" exact component={RecipeCollectionsPage} />
-    <Route path="/collections/:collectionId" component={RecipeCollectionPage} />
-  </Switch>
-);
+export default props => {
+  const [showCollection, setShowCollection] = useState(null);
+  const classes = useStyles(props);
+
+  const handleClose = () => setShowCollection(null);
+
+  return (
+    <Container className={classes.container}>
+      <RecipeCollections onCollectionSelected={setShowCollection} />
+
+      <Popup
+        title={showCollection ? showCollection.name : ''}
+        open={!!showCollection}
+        onClose={handleClose}
+      >
+        {showCollection && (
+          <RecipeCollection collectionId={showCollection.id} />
+        )}
+      </Popup>
+    </Container>
+  );
+};

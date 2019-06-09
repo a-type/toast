@@ -17,7 +17,7 @@ const ExpandOuterButton = styled.button`
 
   &:focus {
     outline: 0;
-    border-color: var(--color-brand);
+    border-color: var(--color-primary);
   }
 `;
 

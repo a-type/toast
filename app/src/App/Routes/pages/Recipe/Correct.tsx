@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Correct from 'features/recipes/Correct';
-import Column from 'components/layout/Column';
+import { Container } from '@material-ui/core';
 
 export default ({ match: { params } }) => (
-  <Column>
+  <Container>
     <Correct recipeId={params.recipeId} />
-  </Column>
+  </Container>
 );

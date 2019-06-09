@@ -1,71 +1,81 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
-import { Icon, Popup } from 'components/generic';
 import PlanMealActionPicker from './ActionPicker';
-import { hoverBorder, focusShadow } from 'theme';
 import usePlanActionSelection, {
   SelectionStage,
 } from './usePlanActionSelection';
 import PlanMealDetailsStage from './DetailsStage';
-import { PlanMealData } from '../types';
+import {
+  Dialog,
+  Card,
+  CardActionArea,
+  Box,
+  makeStyles,
+} from '@material-ui/core';
+import { AddCircleTwoTone } from '@material-ui/icons';
+import { darken } from '@material-ui/core/styles';
 import { PlanActionType } from './types';
+import Popup from 'components/generic/Popup';
 
-const Border = styled<{}, 'button'>('button')`
-  border-radius: var(--border-radius-lg);
-  background: var(--color-brand);
-  color: var(--color-dark);
-  display: flex;
-  outline: 0;
-  border: 0;
-  cursor: pointer;
-
-  & > * {
-    margin: auto;
-  }
-
-  ${hoverBorder.default}
-
-  ${focusShadow.default}
-`;
+const useStyles = makeStyles(theme => ({
+  card: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.primary.main,
+    color: darken(theme.palette.primary.dark, 0.5),
+  },
+  cardActionArea: {
+    height: '100%',
+  },
+  addIcon: {
+    margin: 'auto',
+    fontSize: '3.75rem',
+  },
+}));
 
 interface EmptyMealProps {
   planDayId: string;
   mealName: string;
 }
 
-export const EmptyMeal: FC<EmptyMealProps> = ({ planDayId, mealName }) => {
+export const EmptyMeal: FC<EmptyMealProps> = ({
+  planDayId,
+  mealName,
+  ...rest
+}) => {
   const [
     { stage, actionType },
-    { begin, cancel, selectActionType },
+    { cancel, selectActionType },
   ] = usePlanActionSelection();
+  const classes = useStyles(rest);
 
   return (
     <>
-      <Border
-        onClick={() => {
-          // normally we'd call begin() here, but
-          // until we actually have previous meal assignment ready, we can skip
-          // to recipe assign instead
-          selectActionType(PlanActionType.Cook);
-        }}
+      <Card className={classes.card}>
+        <CardActionArea
+          className={classes.cardActionArea}
+          onClick={() => selectActionType(PlanActionType.Cook)}
+        >
+          <Box display="flex" flexDirection="column" height="100%">
+            <AddCircleTwoTone className={classes.addIcon} />
+          </Box>
+        </CardActionArea>
+      </Card>
+      <Popup
+        open={stage !== SelectionStage.Initial}
+        title="Select a recipe"
+        onClose={cancel}
       >
-        <Icon name="add" size="32px" color="var(--color-brand-dark)" />
-      </Border>
-      {stage !== SelectionStage.Initial && (
-        <Popup onClose={cancel}>
-          {stage === SelectionStage.Action ? (
-            <PlanMealActionPicker onActionSelected={selectActionType} />
-          ) : (
-            <PlanMealDetailsStage
-              planDayId={planDayId}
-              mealName={mealName}
-              actionType={actionType}
-              onCancel={cancel}
-              onDone={cancel}
-            />
-          )}
-        </Popup>
-      )}
+        {stage === SelectionStage.Action ? (
+          <PlanMealActionPicker onActionSelected={selectActionType} />
+        ) : (
+          <PlanMealDetailsStage
+            planDayId={planDayId}
+            mealName={mealName}
+            actionType={actionType}
+            onCancel={cancel}
+            onDone={cancel}
+          />
+        )}
+      </Popup>
     </>
   );
 };

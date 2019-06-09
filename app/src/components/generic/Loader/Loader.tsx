@@ -39,15 +39,15 @@ const Wave = styled.div`
   }
   &:nth-child(2) {
     animation-delay: 1s;
-    background: var(--color-negative);
+    background: var(--color-error);
   }
   &:nth-child(3) {
     animation-delay: 2s;
-    background: var(--color-brand);
+    background: var(--color-primary);
   }
   &:nth-child(4) {
     animation-delay: 3s;
-    background: var(--color-positive-light);
+    background: var(--color-secondary-light);
   }
 `;
 

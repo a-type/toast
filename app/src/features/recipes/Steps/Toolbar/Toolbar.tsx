@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Bar } from './components';
-import { Link, Icon } from 'components/generic';
-import { HelpText, Heading } from 'components/text';
-import { Button } from 'grommet';
+import { IconButton, Typography, Box, makeStyles } from '@material-ui/core';
+import Link from 'components/generic/Link';
+import { ArrowBackIosTwoTone, LinkTwoTone } from '@material-ui/icons';
 
 export interface ToolbarProps {
   recipe: {
@@ -12,27 +12,44 @@ export interface ToolbarProps {
   };
 }
 
+const useStyles = makeStyles(theme => ({
+  bar: {
+    background: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+    padding: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+}));
+
 const Toolbar: React.SFC<ToolbarProps> = ({ recipe }) => {
+  const classes = useStyles({});
+
   return (
-    <Bar>
+    <Box className={classes.bar}>
       <Link to={`/recipes/${recipe.id}`}>
-        <Button icon={<Icon name="arrow_downward" rotation={90} />} />
+        <IconButton>
+          <ArrowBackIosTwoTone />
+        </IconButton>
       </Link>
-      <div>
-        <HelpText>Cooking</HelpText>
-        <Heading css={{ margin: '0' }} level="3">
+      <Box flexGrow={1} ml={2}>
+        <Typography>Cooking</Typography>
+        <Typography css={{ margin: '0' }} variant="h3">
           {recipe.title}
-        </Heading>
-      </div>
+        </Typography>
+      </Box>
       {/* <div>
         <Button.Icon name="index" />
       </div> */}
-      <div>
+      <Box>
         <Link to={recipe.sourceUrl} newTab>
-          <Button icon={<Icon name="link" size="24px" />} />
+          <IconButton>
+            <LinkTwoTone />
+          </IconButton>
         </Link>
-      </div>
-    </Bar>
+      </Box>
+    </Box>
   );
 };
 

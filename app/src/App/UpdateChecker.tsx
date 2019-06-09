@@ -1,29 +1,25 @@
 import React, { FC, useEffect } from 'react';
 import workbox from 'workbox';
-import { useAlert } from 'react-alert';
-import { Button } from 'grommet';
+import { useAlerts } from 'contexts/AlertContext';
 
 export interface UpdateCheckerProps {}
 
 export const UpdateChecker: FC<UpdateCheckerProps> = ({}) => {
-  const alert = useAlert();
+  const alerts = useAlerts();
+
   useEffect(() => {
     const handleInstalled = event => {
       if (event.isUpdate) {
         console.log('SW update: ', event);
-        alert.success(
-          <div>
-            A new version is available.{' '}
-            <Button
-              primary
-              label="Update"
-              onClick={() => window.location.reload()}
-            />
-          </div>,
-          {
-            timeout: 0,
-          },
-        );
+        alerts.showAlert({
+          content: 'A new version is available.',
+          actions: [
+            {
+              name: 'Update',
+              onClick: () => window.location.reload(),
+            },
+          ],
+        });
       }
     };
     if (workbox) {

@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
 import { EditRecipeRecipe } from './queries';
-import { Box, TextArea, Button } from 'grommet';
 import { Formik } from 'formik';
-import { Field } from 'components/generic';
 import IngredientCorrector, {
   IngredientCorrectorMessages,
 } from 'features/recipes/Correct/Ingredients/IngredientCorrector';
 import { useCorrectIngredient } from '../Correct/useCorrectIngredient';
+import { Box, Button, TextField } from '@material-ui/core';
 
 export interface RecipeIngredientsEditorProps {
   recipe: EditRecipeRecipe;
@@ -53,14 +52,14 @@ export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
       >
         {({ values, handleSubmit, handleChange }) => (
           <form onSubmit={handleSubmit}>
-            <Field label="Add ingredient" required>
-              <TextArea
-                value={values.ingredientText}
-                onChange={handleChange}
-                name="ingredientText"
-              />
-            </Field>
-            <Button type="submit" label="Add ingredient" />
+            <TextField
+              label="Add ingredient"
+              required
+              value={values.ingredientText}
+              onChange={handleChange}
+              name="ingredientText"
+            />
+            <Button type="submit">Add ingredient</Button>
           </form>
         )}
       </Formik>

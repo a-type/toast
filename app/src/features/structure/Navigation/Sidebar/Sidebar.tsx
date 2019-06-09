@@ -1,94 +1,137 @@
-import React, { SFC, useContext, Fragment, HTMLAttributes } from 'react';
-import { Box, BoxProps, Button } from 'grommet';
-import { Link, Icon } from 'components/generic';
+import React, { SFC, useContext } from 'react';
 import { Logo, BackdropArt } from 'components/brand';
-import SidebarLink from './SidebarLink';
 import AuthContext from 'contexts/AuthContext';
 import Avatar from './Avatar';
 import { path } from 'ramda';
-import styled from 'styled-components';
-import browserHistory from 'browserHistory';
-import firebase from 'services/firebase';
 import SidebarContact from './Contact';
 import { IsAdmin } from 'features/auth/gates';
-import LogoutButton from 'features/structure/LogoutButton';
-
-const SidebarContentBox = styled<
-  { embedded: boolean } & BoxProps & HTMLAttributes<HTMLDivElement>
->(({ embedded, ...props }) => <Box {...props} />)`
-  position: relative;
-  flex-shrink: 0;
-  width: 300px;
-  display: flex;
-  min-height: 100%;
-  flex-direction: column;
-
-  & > .sidebar-content {
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  & > .sidebar-contact {
-    flex: 0 0 auto;
-  }
-
-  @media (min-width: 800px) {
-    width: 300px;
-  }
-`;
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Theme,
+} from '@material-ui/core';
+import Link from 'components/generic/Link';
+import {
+  LocalDiningTwoTone,
+  HomeTwoTone,
+  CalendarTodayTwoTone,
+  SearchTwoTone,
+  BookmarksTwoTone,
+  SettingsTwoTone,
+  WarningTwoTone,
+  MeetingRoomTwoTone,
+} from '@material-ui/icons';
+import useRouter from 'use-react-router';
+import firebase from 'services/firebase';
+import { makeStyles } from '@material-ui/styles';
 
 interface SidebarProps {
   gridArea?: string;
 }
 
-const Sidebar: SFC<SidebarProps> = ({ gridArea }) => {
+const useStyles = makeStyles<Theme, SidebarProps>(() => ({
+  drawer: props => ({
+    gridArea: props.gridArea,
+    width: '240px',
+    flexShrink: 0,
+    position: 'relative',
+  }),
+  drawerPaper: {
+    position: 'relative',
+  },
+}));
+
+const Sidebar: SFC<SidebarProps> = props => {
   const { user, isLoggedIn } = useContext(AuthContext);
+  const { history } = useRouter();
+  const classes = useStyles(props);
+
+  const navigate = (path: string) => () => history.push(path);
+  const logout = async () => {
+    await firebase.auth().signOut();
+    history.push('/');
+  };
 
   const anonContent = (
-    <>
-      <SidebarLink nav label="Join or log in" icon="local_dining" to="/login" />
-    </>
+    <List>
+      <ListItem button onClick={navigate('/login')}>
+        <ListItemIcon>
+          <LocalDiningTwoTone />
+        </ListItemIcon>
+        <ListItemText>Join or log in</ListItemText>
+      </ListItem>
+    </List>
   );
 
   const authContent = (
-    <Fragment>
-      <Avatar avatarUrl={path(['photoURL'], user)} />
-
-      <SidebarLink nav exact label="Home" icon="home" to="/" />
-      <SidebarLink nav exact label="Plan" icon="calendar_today" to="/plan" />
-      <SidebarLink nav exact label="Explore" icon="search" to="/explore" />
-      <SidebarLink nav label="Collections" icon="bookmarks" to="/collections" />
-
-      <SidebarLink nav label="Settings" icon="settings" to="/settings" />
-
+    <List>
+      <ListItem button onClick={navigate('/')}>
+        <ListItemIcon>
+          <HomeTwoTone />
+        </ListItemIcon>
+        <ListItemText>Home</ListItemText>
+      </ListItem>
+      <ListItem button onClick={navigate('/plan')}>
+        <ListItemIcon>
+          <CalendarTodayTwoTone />
+        </ListItemIcon>
+        <ListItemText>Plan</ListItemText>
+      </ListItem>
+      <ListItem button onClick={navigate('/explore')}>
+        <ListItemIcon>
+          <SearchTwoTone />
+        </ListItemIcon>
+        <ListItemText>Explore</ListItemText>
+      </ListItem>
+      <ListItem button onClick={navigate('/collections')}>
+        <ListItemIcon>
+          <BookmarksTwoTone />
+        </ListItemIcon>
+        <ListItemText>Collections</ListItemText>
+      </ListItem>
+      <ListItem button onClick={navigate('/settings')}>
+        <ListItemIcon>
+          <SettingsTwoTone />
+        </ListItemIcon>
+        <ListItemText>Settings</ListItemText>
+      </ListItem>
       <IsAdmin>
-        <SidebarLink nav label="Manage" icon="warning" to="/manage" />
+        <ListItem button onClick={navigate('/manage')}>
+          <ListItemIcon>
+            <WarningTwoTone />
+          </ListItemIcon>
+          <ListItemText>Manage</ListItemText>
+        </ListItem>
       </IsAdmin>
-
-      <Box align="center" pad="medium">
-        <LogoutButton />
-      </Box>
-    </Fragment>
+      <ListItem button onClick={logout}>
+        <ListItemIcon>
+          <MeetingRoomTwoTone />
+        </ListItemIcon>
+        <ListItemText>Log out</ListItemText>
+      </ListItem>
+    </List>
   );
 
   return (
-    <SidebarContentBox
-      gridArea={gridArea}
-      height="100%"
-      embedded
-      className="sidebar overlay-context"
+    <Drawer
+      variant="permanent"
+      className={classes.drawer}
+      classes={{ paper: classes.drawerPaper }}
     >
       <BackdropArt />
-      <Box style={{ position: 'relative' }} className="sidebar-content">
-        <Box pad="large" align="center">
-          <Link nav to="/">
-            <Logo />
-          </Link>
-        </Box>
-        {isLoggedIn ? authContent : anonContent}
+      <Box p={3} alignItems="center" display="flex" flexDirection="column">
+        {user && <Avatar avatarUrl={path(['photoURL'], user)} />}
       </Box>
-      <SidebarContact className="sidebar-contact" />
-    </SidebarContentBox>
+      <Divider />
+      {isLoggedIn ? authContent : anonContent}
+      <Divider />
+      <SidebarContact />
+    </Drawer>
   );
 };
 

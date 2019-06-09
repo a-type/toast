@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { IFrame, ScrollArea } from './components';
-import { Stack, Box, Text } from 'grommet';
-import { Link } from 'components/text';
+import { IFrame } from './components';
+import { Box } from '@material-ui/core';
 
 const enforceHttps = (src: string) => {
   if (src.startsWith('http://')) {
@@ -17,7 +16,7 @@ export default ({ src }: { src: string }) => {
   }, []);
 
   return (
-    <div style={{ flex: '1', position: 'relative' }}>
+    <Box position="relative" flexGrow={1}>
       {showHelp && (
         <div
           style={{
@@ -28,10 +27,10 @@ export default ({ src }: { src: string }) => {
             textAlign: 'center',
           }}
         >
-          <Text>Not loading? Click the link icon below.</Text>
+          <span>Not loading? Click the link icon below.</span>
         </div>
       )}
       <IFrame src={enforceHttps(src)} />
-    </div>
+    </Box>
   );
 };

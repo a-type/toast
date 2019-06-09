@@ -1,16 +1,14 @@
 import React, { FC } from 'react';
-import { Loader, Link } from 'components/generic';
 import { isSameDay, isBefore, setHours } from 'date-fns';
-import { Box, Button } from 'grommet';
-import { Label } from 'components/text';
 import { PlanDayData } from '../types';
 import { sentence } from 'change-case';
 import { PlanMealSummary } from './MealSummary';
 import { ApolloError } from 'apollo-boost';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import { BoxSkeleton } from 'components/skeletons/Box';
 import { LabelSkeleton } from 'components/skeletons';
 import { SpotlightSkeleton } from 'features/recipes/components/Spotlight';
+import { Box, Button, Typography } from '@material-ui/core';
+import Link from 'components/generic/Link';
 
 interface PlanSummaryProps {
   planDays: PlanDayData[];
@@ -25,11 +23,11 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
 }) => {
   if (loading) {
     return (
-      <Box align="start" margin={{ bottom: 'large' }}>
+      <Box alignItems="start" mb={3}>
         <LabelSkeleton />
         <SpotlightSkeleton />
         <Link to="/plan">
-          <Button label="Go to plan" />
+          <Button>Go to plan</Button>
         </Link>
       </Box>
     );
@@ -58,14 +56,9 @@ export const PlanSummary: FC<PlanSummaryProps> = ({
     null;
 
   return (
-    <Box align="start" margin={{ bottom: 'large' }}>
-      <Label>Today - {sentence(nextMeal)}</Label>
-      <Box margin={{ bottom: 'small' }}>
-        <PlanMealSummary meal={meal} />
-      </Box>
-      <Link to="/plan">
-        <Button label="Go to plan" />
-      </Link>
+    <Box alignItems="start" mb={3}>
+      <Typography variant="overline">Today - {sentence(nextMeal)}</Typography>
+      <PlanMealSummary meal={meal} />
     </Box>
   );
 };

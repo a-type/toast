@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box, Button, Image } from 'grommet';
 import readAndCompressImage from 'browser-image-resizer';
+import { Box, Button } from '@material-ui/core';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -63,23 +63,20 @@ const FileInput: React.SFC<FileInputProps> = ({
     }
   };
 
-  React.useEffect(
-    () => {
-      if (typeof value === 'string') {
-        setPreview(value);
-      } else if (value) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview(reader.result as string);
-        };
-        reader.readAsDataURL(value);
-      }
-    },
-    [value],
-  );
+  React.useEffect(() => {
+    if (typeof value === 'string') {
+      setPreview(value);
+    } else if (value) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(value);
+    }
+  }, [value]);
 
   return (
-    <Box direction="row">
+    <Box flexDirection="row">
       <input
         type="file"
         style={inputStyle}
@@ -87,15 +84,19 @@ const FileInput: React.SFC<FileInputProps> = ({
         onChange={handleChange}
         {...rest}
       />
-      <Button as="label" {...{ htmlFor: elementId } as any} label={label} />
+      <Button variant="text" {...{ htmlFor: elementId } as any}>
+        {label}
+      </Button>
       {preview && (
-        <Image
+        <img
           src={preview}
-          width="41px"
-          height="41px"
-          fit="cover"
-          style={{ borderRadius: 'var(--border-radius-md)' }}
-          margin={{ left: 'small' }}
+          css={{
+            width: '41px',
+            height: '41px',
+            backgroundSize: 'cover',
+            borderRadius: '8px',
+            marginLeft: '8px',
+          }}
         />
       )}
     </Box>

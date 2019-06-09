@@ -1,15 +1,15 @@
 import React, { FC, ReactNode } from 'react';
 import styled from 'styled-components';
-import { Button } from 'grommet';
-import { Icon } from 'components/generic';
+import Icon from 'components/generic/Icon';
 import classnames from 'classnames';
+import { IconButton } from '@material-ui/core';
 
 const background = ({ type }) => {
   switch (type) {
     case 'error':
-      return 'var(--color-negative)';
+      return 'var(--color-error)';
     case 'success':
-      return 'var(--color-positive)';
+      return 'var(--color-secondary)';
     default:
       return 'var(--color-content-background)';
   }
@@ -74,7 +74,11 @@ export const Alert: FC<AlertProps> = ({
       className={classnames('alert', typeToClassName(options.type))}
     >
       <span>{message}</span>
-      {close && <Button icon={<Icon name="clear" />} onClick={close} />}
+      {close && (
+        <IconButton>
+          <Icon name="clear" />
+        </IconButton>
+      )}
     </AlertBorder>
   );
 };

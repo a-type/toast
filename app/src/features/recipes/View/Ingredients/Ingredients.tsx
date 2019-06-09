@@ -1,6 +1,6 @@
 import React from 'react';
-import List from './List';
 import Item from './Item';
+import { List, ListItem } from '@material-ui/core';
 
 export default ({
   ingredients,
@@ -11,7 +11,9 @@ export default ({
 }) => (
   <List>
     {ingredients.map((ingredient: any, index) => (
-      <Item {...ingredient} key={ingredient.id + index} servings={servings} />
+      <ListItem key={ingredient.id + index}>
+        <Item {...ingredient} key={ingredient.id + index} servings={servings} />
+      </ListItem>
     ))}
   </List>
 );

@@ -1,14 +1,13 @@
 import React, { useState, FC } from 'react';
-import { Loader, Popup, Icon } from 'components/generic';
 import logger from 'logger';
-import { Field } from 'components/generic';
-import { TextInput, Button, Paragraph, Box, Text } from 'grommet';
-import { Heading } from 'components/text';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
-import { Link } from 'components/generic';
 import { useLinker } from 'contexts/LinkerContext';
 import useMedia from 'hooks/useMedia';
+import { Typography, Button, Dialog, Box, TextField } from '@material-ui/core';
+import Loader from 'components/generic/Loader';
+import Icon from 'components/generic/Icon';
+import Link from 'components/generic/Link';
 
 const MESSAGES = {
   EXPLANATION:
@@ -17,37 +16,36 @@ const MESSAGES = {
     "Something went wrong when we tried to scan this recipe. If trying again doesn't work, feel free to reach out.",
 };
 
-const UninstalledMessage = () => <Paragraph>{MESSAGES.EXPLANATION}</Paragraph>;
+const UninstalledMessage = () => (
+  <Typography>{MESSAGES.EXPLANATION}</Typography>
+);
 
 const InstalledMessage = () => {
   const [showHelp, setShowHelp] = useState(false);
 
   return (
     <div>
-      <Paragraph>
+      <Typography>
         The easiest way to add a recipe from the web is to share it straight to
         the Toast app.
-      </Paragraph>
-      <Button onClick={() => setShowHelp(true)} label="Show me how" />
-      <Paragraph>You can also paste a URL below.</Paragraph>
-      {showHelp && (
-        <Popup onClose={() => setShowHelp(false)}>
-          <Heading level="2">Sharing to Toast</Heading>
-          <Paragraph>
-            In your device's web browser, visit the page which contains the
-            recipe you want to add. Then, tap the <Icon name="share" /> Share
-            button.
-          </Paragraph>
-          <Paragraph>
-            When a list of apps comes up, look for Toast and choose it.
-          </Paragraph>
-          <Paragraph>
-            If you don't see Toast come up, your device might not support
-            sharing directly to this app. Copy the URL instead and paste it into
-            the "Recipe URL" field on this page instead.
-          </Paragraph>
-        </Popup>
-      )}
+      </Typography>
+      <Button onClick={() => setShowHelp(true)}>Show me how</Button>
+      <Typography>You can also paste a URL below.</Typography>
+      <Dialog open={showHelp} onClose={() => setShowHelp(false)}>
+        <Typography variant="h2">Sharing to Toast</Typography>
+        <Typography>
+          In your device's web browser, visit the page which contains the recipe
+          you want to add. Then, tap the <Icon name="share" /> Share button.
+        </Typography>
+        <Typography>
+          When a list of apps comes up, look for Toast and choose it.
+        </Typography>
+        <Typography>
+          If you don't see Toast come up, your device might not support sharing
+          directly to this app. Copy the URL instead and paste it into the
+          "Recipe URL" field on this page instead.
+        </Typography>
+      </Dialog>
     </div>
   );
 };
@@ -120,8 +118,8 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   if (working) {
     return (
       <>
-        <Loader inline size="1em" />
-        <Paragraph>Scanning your recipe...</Paragraph>
+        <Loader inline size="20vh" />
+        <Typography>Scanning your recipe...</Typography>
       </>
     );
   }
@@ -134,20 +132,18 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
     if (lastResult.problems.length) {
       return (
         <Box>
-          <Text color="status-ok">We didn't quite get everything.</Text>
-          <Paragraph>
+          <Typography color="secondary">
+            We didn't quite get everything.
+          </Typography>
+          <Typography>
             That one was a little tough. We need to hand it over to you to
             finish off.
-          </Paragraph>
-          <Box direction="row">
+          </Typography>
+          <Box flexDirection="row">
             <Link to={linkTo}>
-              <Button label="Manage Recipe" />
+              <Button>Manage Recipe</Button>
             </Link>
-            <Button
-              margin={{ left: 'large' }}
-              label="Scan another one"
-              onClick={reset}
-            />
+            <Button onClick={reset}>Scan another one</Button>
           </Box>
         </Box>
       );
@@ -155,14 +151,14 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
 
     return (
       <Box>
-        <Text color="status-ok">Nice!</Text>
-        <Paragraph>
+        <Typography color="secondary">Nice!</Typography>
+        <Typography>
           We scanned <i>{lastResult.recipe.title}</i> for you.{' '}
           <Link to={linkTo}>
             Give it a once-over just to make sure we got things right.
           </Link>
-        </Paragraph>
-        <Button label="Scan another one" onClick={reset} />
+        </Typography>
+        <Button onClick={reset}>Scan another one</Button>
       </Box>
     );
   }
@@ -170,12 +166,12 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   if (error) {
     return (
       <Box>
-        <Text color="status-error">Bummer.</Text>
-        <Paragraph>
+        <Typography color="error">Bummer.</Typography>
+        <Typography>
           This is totally our fault... We couldn't scan that recipe page. We're
           working on some options for situations like this, but for now we're
           sorry for the disappointment.
-        </Paragraph>
+        </Typography>
         <Button onClick={reset}>Back</Button>
       </Box>
     );
@@ -184,22 +180,21 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   return (
     <form onSubmit={submit}>
       {isInstalled ? <InstalledMessage /> : <UninstalledMessage />}
-      <Field label="Recipe URL" required>
-        <TextInput
-          value={url}
-          onChange={ev => setUrl(ev.target.value)}
-          name="recipeUrl"
-          type="url"
-        />
-      </Field>
-      <Button
-        type="submit"
-        label="Scan"
-        disabled={!url}
-        primary
-        margin={{ right: 'medium' }}
+      <TextField
+        label="Recipe URL"
+        value={url}
+        onChange={ev => setUrl(ev.target.value)}
+        name="recipeUrl"
+        type="url"
       />
-      {url && <Button label="Clear" type="reset" onClick={() => setUrl('')} />}
+      <Button type="submit" disabled={!url} color="primary">
+        Scan
+      </Button>
+      {url && (
+        <Button variant="text" type="reset" onClick={() => setUrl('')}>
+          Clear
+        </Button>
+      )}
     </form>
   );
 };

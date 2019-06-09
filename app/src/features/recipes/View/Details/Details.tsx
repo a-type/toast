@@ -2,9 +2,9 @@ import React from 'react';
 import Servings from './Servings';
 import gql from 'graphql-tag';
 import Time from './Time';
-import { Link } from 'components/text';
-import { Box, Text, Button } from 'grommet';
-import { Heading } from 'components/text';
+import Link from 'components/generic/Link';
+import TextLink from 'components/text/Link';
+import { Box, Typography, Button } from '@material-ui/core';
 
 const RecipeDetails = ({ recipe }) => {
   if (!recipe) {
@@ -14,19 +14,21 @@ const RecipeDetails = ({ recipe }) => {
   const { servings, cookTime, prepTime, unattendedTime, sourceUrl } = recipe;
 
   return (
-    <Box margin={{ bottom: 'large' }}>
-      <Heading level="5">Details</Heading>
-      <Text>
-        Source: <Link to={sourceUrl}>{sourceUrl}</Link>
-      </Text>
-      <Servings servings={servings} />
+    <Box mb={3}>
+      <Typography variant="h5" gutterBottom>
+        Details
+      </Typography>
+      <Typography gutterBottom>
+        Source: <TextLink to={sourceUrl}>{sourceUrl}</TextLink>
+      </Typography>
+      <Servings servings={servings || 'Not specified'} />
       <Time
         cookTime={cookTime}
         prepTime={prepTime}
         unattendedTime={unattendedTime}
       />
       <Link to={`/recipes/${recipe.id}/correct`}>
-        <Button label="Suggest Correction" />
+        <Button>Suggest correction</Button>
       </Link>
     </Box>
   );

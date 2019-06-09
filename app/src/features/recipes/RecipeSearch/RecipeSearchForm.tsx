@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { RecipeSearchIngredientFilterValue } from 'contexts/RecipeSearchContext';
-import { Box, TextInput } from 'grommet';
-import { Field } from 'components/generic';
+import { TextField, Box } from '@material-ui/core';
 
 export interface RecipeSearchFormProps {
   searchTerm: string;
@@ -25,45 +24,13 @@ export const RecipeSearchForm: FC<RecipeSearchFormProps> = ({
   removeExcludeIngredient,
 }) => {
   return (
-    <Box margin={{ bottom: 'medium' }}>
-      <Field label="Search for recipes" required>
-        <TextInput
-          value={searchTerm}
-          onChange={ev => onSearchTermChanged(ev.target.value)}
-        />
-      </Field>
-      {/* <Box>
-        <Heading level="5" margin={{ top: 'medium', bottom: 'small' }}>
-          Include:
-        </Heading>
-        {includeIngredients.map(ing => (
-          <Button
-            color="accent-4"
-            label={ing.name}
-            onClick={() => removeIncludeIngredient(ing.id)}
-          />
-        ))}
-        <Picker
-          onChange={addIncludeIngredient}
-          value={{ id: 'empty', name: 'Choose ingredient' }}
-        />
-      </Box>
-      <Box>
-        <Heading level="5" margin={{ top: 'medium', bottom: 'small' }}>
-          Exclude:
-        </Heading>
-        {excludeIngredients.map(ing => (
-          <Button
-            color="accent-2"
-            label={ing.name}
-            onClick={() => removeExcludeIngredient(ing.id)}
-          />
-        ))}
-        <Picker
-          onChange={addExcludeIngredient}
-          value={{ id: 'empty', name: 'Choose ingredient' }}
-        />
-      </Box> */}
+    <Box mb={2}>
+      <TextField
+        label="Search for recipes"
+        value={searchTerm}
+        onChange={ev => onSearchTermChanged(ev.target.value)}
+        fullWidth
+      />
     </Box>
   );
 };

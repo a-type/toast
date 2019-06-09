@@ -1,10 +1,10 @@
 import React from 'react';
 import { IsLoggedIn } from 'features/auth/gates';
 import AnonLanding from './AnonLanding';
-import StartPage from './StartPage';
+import { Redirect } from 'react-router';
 
 export default () => (
   <IsLoggedIn fallback={<AnonLanding />}>
-    <StartPage />
+    <Redirect to="/plan" />
   </IsLoggedIn>
 );

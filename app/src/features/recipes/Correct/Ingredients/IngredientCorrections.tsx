@@ -2,31 +2,30 @@ import React, { FC } from 'react';
 import IngredientCorrector from './IngredientCorrector';
 import { IngredientCorrectorIngredient } from '../types';
 import { AddIngredient } from './AddIngredient';
-import { Box } from 'grommet';
-import { Heading } from 'components/text';
 import { useCorrectIngredient } from '../useCorrectIngredient';
+import { Box, Typography } from '@material-ui/core';
 
 interface IngredientCorrectionsProps {
   recipeId: string;
-  recipeIngredients: IngredientCorrectorIngredient[];
+  ingredients: IngredientCorrectorIngredient[];
 }
 
 const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
-  recipeIngredients,
+  ingredients,
   recipeId,
 }) => {
   const { submitChange, submitAdd, submitDelete } = useCorrectIngredient({
     recipeId,
   });
 
-  const [candidates, seemFine] = recipeIngredients.reduce<
+  const [candidates, seemFine] = ingredients.reduce<
     [IngredientCorrectorIngredient[], IngredientCorrectorIngredient[]]
   >(
-    ([c, f], recipeIngredient) => {
-      if (!recipeIngredient.food || !recipeIngredient.unit) {
-        c.push(recipeIngredient);
+    ([c, f], ingredient) => {
+      if (!ingredient.food || !ingredient.unit) {
+        c.push(ingredient);
       } else {
-        f.push(recipeIngredient);
+        f.push(ingredient);
       }
       return [c, f];
     },
@@ -34,22 +33,26 @@ const IngredientCorrections: FC<IngredientCorrectionsProps> = ({
   );
 
   return (
-    <Box margin={{ bottom: 'large' }}>
-      <Heading level="4">These might need help</Heading>
-      {candidates.map(recipeIngredient => (
+    <Box mb={3}>
+      <Typography variant="h4" gutterBottom>
+        These might need help
+      </Typography>
+      {candidates.map(ingredient => (
         <IngredientCorrector
-          key={recipeIngredient.id}
-          recipeIngredient={recipeIngredient}
+          key={ingredient.id}
+          ingredient={ingredient}
           submit={submitChange}
           requestDelete={submitDelete}
         />
       ))}
       <AddIngredient submitAdd={submitAdd} />
-      <Heading level="4">These seem ok</Heading>
-      {seemFine.map(recipeIngredient => (
+      <Typography variant="h4" gutterBottom>
+        These seem ok
+      </Typography>
+      {seemFine.map(ingredient => (
         <IngredientCorrector
-          key={recipeIngredient.id}
-          recipeIngredient={recipeIngredient}
+          key={ingredient.id}
+          ingredient={ingredient}
           submit={submitChange}
           requestDelete={submitDelete}
         />

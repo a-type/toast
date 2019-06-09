@@ -1,11 +1,13 @@
 import React, { FC } from 'react';
 import useGuides from '../useGuides';
 import GuideMessage from './GuideMessage';
-import { BoxProps, Box } from 'grommet';
+import { Box } from '@material-ui/core';
 
-interface GuidesProps extends BoxProps {}
+interface GuidesProps {
+  gridArea: string;
+}
 
-export const Guides: FC<GuidesProps> = props => {
+export const Guides: FC<GuidesProps> = ({ gridArea, ...props }) => {
   const [guide, { dismissGuide }] = useGuides();
 
   if (!guide) {
@@ -15,7 +17,7 @@ export const Guides: FC<GuidesProps> = props => {
   const onDismiss = () => dismissGuide(guide.name);
 
   return (
-    <Box {...props}>
+    <Box {...props} style={{ gridArea }}>
       <GuideMessage guide={guide} dismiss={onDismiss} />
     </Box>
   );

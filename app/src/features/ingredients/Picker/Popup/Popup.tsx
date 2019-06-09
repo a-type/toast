@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { cold } from 'react-hot-loader';
 import Downshift from 'downshift';
-import { Popup } from 'components/generic';
-import PickerCreateIngredientMutation from './PickerCreateIngredientMutation';
 import Suggestions from './Suggestions';
-import { TextInput } from 'grommet';
-import { Heading } from 'components/text';
+import { Dialog, makeStyles, TextField } from '@material-ui/core';
+import gql from 'graphql-tag';
+import { useMutation } from 'react-apollo-hooks';
+
+const CreateFoodMutation = gql`
+  mutation PickerCreateFood($name: String!) {
+    createFood(input: { name: $name }) {
+      id
+      name
+    }
+  }
+`;
 
 const ingredientToString = ingredient => {
   if (!ingredient) {
@@ -27,6 +34,15 @@ interface IngredientPickerPopupProps {
   initialSearchText?: string;
 }
 
+const useStyles = makeStyles(theme => ({
+  dialog: {
+    padding: theme.spacing(2),
+    width: '75vw',
+    maxWidth: '500px',
+    height: '50vh',
+  },
+}));
+
 const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
   onChange,
   onCancel,
@@ -34,62 +50,56 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
   value,
   initialSearchText,
 }) => {
+  const classes = useStyles({});
+  const mutate = useMutation(CreateFoodMutation);
+  const handleChange = async (newValue: { id: string; name: string }) => {
+    if (!newValue.id) {
+      const result = await mutate({
+        variables: { name: newValue.name },
+      });
+      if (result) {
+        onChange(result.data.createIngredient);
+      }
+    } else {
+      onChange(newValue);
+    }
+  };
   return (
-    <Popup onClose={onCancel}>
-      <PickerCreateIngredientMutation>
-        {mutate => {
-          const handleChange = async (newValue: {
-            id: string;
-            name: string;
-          }) => {
-            if (!newValue.id) {
-              const result = await mutate({
-                variables: { name: newValue.name },
-              });
-              if (result) {
-                onChange(result.data.createIngredient);
-              }
-            } else {
-              onChange(newValue);
-            }
-          };
-
+    <Dialog open onClose={onCancel} classes={{ paper: classes.dialog }}>
+      <Downshift
+        onChange={handleChange}
+        itemToString={ingredientToString}
+        defaultInputValue={initialSearchText}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          isOpen,
+          inputValue,
+          selectedItem,
+          highlightedIndex,
+        }) => {
           return (
-            <Downshift
-              onChange={handleChange}
-              itemToString={ingredientToString}
-              defaultInputValue={initialSearchText}
-            >
-              {({
-                getInputProps,
-                getItemProps,
-                isOpen,
-                inputValue,
-                selectedItem,
-                highlightedIndex,
-              }) => {
-                return (
-                  <div>
-                    <Heading level="3">Search ingredients</Heading>
-                    <TextInput
-                      {...getInputProps({ style: { width: '100%' } })}
-                    />
-                    <Suggestions
-                      term={inputValue}
-                      getItemProps={getItemProps}
-                      selectedItem={selectedItem}
-                      highlightedIndex={highlightedIndex}
-                      canCreate={canCreate}
-                    />
-                  </div>
-                );
-              }}
-            </Downshift>
+            <div>
+              <TextField
+                fullWidth
+                label="Search ingredients"
+                variant="outlined"
+                inputProps={getInputProps({ style: { width: '100%' } })}
+              />
+              <Suggestions
+                term={inputValue}
+                getItemProps={getItemProps}
+                selectedItem={selectedItem}
+                highlightedIndex={highlightedIndex}
+                canCreate={canCreate}
+              />
+            </div>
           );
         }}
-      </PickerCreateIngredientMutation>
-    </Popup>
+      </Downshift>
+    </Dialog>
   );
 };
 
-export default cold(IngredientPickerPopup);
+export default IngredientPickerPopup;

@@ -1,10 +1,9 @@
 import React, { FC } from 'react';
 import { PlanMealRecipeData } from '../types';
-import { Box, TextInput } from 'grommet';
-import { Field } from 'components/generic';
 import useAssignMeal from '../useAssignMeal';
 import useNumberInput from 'hooks/useNumberInput';
 import RecipePicker from 'features/collections/RecipePicker';
+import { Box, TextField } from '@material-ui/core';
 
 interface AssignRecipeProps {
   onRecipeSelected(): void;
@@ -27,10 +26,8 @@ const AssignRecipe: FC<AssignRecipeProps> = ({
 
   return (
     <>
-      <Box margin={{ bottom: 'medium' }}>
-        <Field label="Servings" required>
-          <TextInput {...servingsInputProps} />
-        </Field>
+      <Box mb={2}>
+        <TextField {...servingsInputProps} label="Servings" required />
       </Box>
       <RecipePicker onRecipeSelected={onSelected} />
     </>

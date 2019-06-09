@@ -1,13 +1,12 @@
 import React, { SFC } from 'react';
 import { PlanDayData, PlanMealData } from '../../types';
-import { Box } from 'grommet';
-import { Heading } from 'components/text';
 import { formatDay } from 'formatters/date';
 import MealGrid from './MealGrid';
 import Meal, { MealSkeleton } from 'features/plan/PlanMeal/PlanMeal';
 import { HeadingSkeleton } from 'components/skeletons';
 import { parse } from 'date-fns';
 import { path } from 'ramda';
+import { Box, Typography } from '@material-ui/core';
 
 interface DayViewProps {
   day?: PlanDayData;
@@ -19,9 +18,9 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
       <Box>
         <HeadingSkeleton level="1" />
         <MealGrid>
-          <MealSkeleton />
-          <MealSkeleton />
-          <MealSkeleton />
+          <MealSkeleton variant="compact" />
+          <MealSkeleton variant="compact" />
+          <MealSkeleton variant="full" />
         </MealGrid>
       </Box>
     );
@@ -36,15 +35,23 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
         meal => meal.mealName.toLowerCase() === mealName.toLowerCase(),
       ) || null,
   );
-  console.log(meals);
-  console.log(standardMeals);
 
   return (
     <Box>
-      <Heading level="2">{formatDay(parse(date))}</Heading>
+      <Typography variant="h2">{formatDay(parse(date))}</Typography>
       <MealGrid>
-        <Meal planDayId={day.id} meal={standardMeals[0]} mealName="Breakfast" />
-        <Meal planDayId={day.id} meal={standardMeals[1]} mealName="Lunch" />
+        <Meal
+          planDayId={day.id}
+          meal={standardMeals[0]}
+          mealName="Breakfast"
+          variant="compact"
+        />
+        <Meal
+          planDayId={day.id}
+          meal={standardMeals[1]}
+          mealName="Lunch"
+          variant="compact"
+        />
         <Meal planDayId={day.id} meal={standardMeals[2]} mealName="Dinner" />
       </MealGrid>
     </Box>

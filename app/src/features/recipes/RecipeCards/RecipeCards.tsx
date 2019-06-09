@@ -2,8 +2,8 @@ import * as React from 'react';
 import RecipeCard from './RecipeCard';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { withProps, compose } from 'recompose';
-import { CardShape, CardGrid } from 'components/generic/Card';
 import { CardSkeleton } from 'components/skeletons';
+import CardGrid from 'components/generic/CardGrid';
 
 interface RecipeCardsProps {
   recipes: any[];
@@ -37,18 +37,9 @@ const withDefaultSelectBehavior = withProps<
 export const RecipeCardsSkeleton: React.SFC<{ count?: number }> = ({
   count = 9,
 }) => (
-  <CardGrid loading>
+  <CardGrid>
     {new Array(count).fill(null).map((_, idx) => {
-      const shapeIdx = Math.floor(Math.random() * 10);
-      let shape: CardShape;
-      if (shapeIdx > 5) {
-        shape = CardShape.Large;
-      } else if (shapeIdx > 3) {
-        shape = CardShape.Wide;
-      } else {
-        shape = CardShape.Normal;
-      }
-      return <CardSkeleton key={idx} shape={shape} />;
+      <div>Placeholder</div>;
     })}
   </CardGrid>
 );

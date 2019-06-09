@@ -10,9 +10,8 @@ import { setConfig } from 'react-hot-loader';
 import './workbox';
 
 setConfig({
-  ignoreSFC: true,
-  pureRender: true,
-});
+  reloadHooks: false,
+} as any);
 
 const renderApp = (AppComponent = App) => {
   ReactDOM.render(<AppComponent />, document.getElementById('main'));
