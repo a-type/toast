@@ -35,7 +35,8 @@ export const Suggestions: FC<IngredientPickerSuggestionsProps> = ({
   const { data, loading, error } = useQuery(IngredientPickerSuggestionsQuery, {
     variables: {
       input: {
-        term,
+        // this should not be necessary, but unfortunately can't figure out a better backend plan yet.
+        term: term.replace(/\W/g, ' '),
       },
     },
     skip: !term || term.length < 3,

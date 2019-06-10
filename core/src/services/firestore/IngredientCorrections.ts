@@ -3,7 +3,7 @@ import IngredientCorrection, {
   CorrectionStatus,
 } from 'models/IngredientCorrection';
 
-const COLLECTION = 'recipeIngredientCorrections';
+const COLLECTION = 'ingredientCorrections';
 
 export type ListFilter = {
   status: CorrectionStatus;

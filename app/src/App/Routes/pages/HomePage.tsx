@@ -6,6 +6,7 @@ import { PlanSetup } from 'features/plan/Setup/Setup';
 import PlanView from 'features/plan/PlanView/PlanView';
 import { ShoppingList } from 'features/shoppingList/ShoppingList';
 import { NavTabs } from 'components/layout/NavTabs';
+import { Container } from '@material-ui/core';
 
 export const HomePlan = () => {
   const paths = [
@@ -40,7 +41,9 @@ export const HomePage: FC<HomePageProps> = () => {
   }
 
   return !plan.length ? (
-    <PlanSetup onCreated={planResult.refetch} />
+    <Container>
+      <PlanSetup onCreated={planResult.refetch} />
+    </Container>
   ) : (
     <HomePlan />
   );

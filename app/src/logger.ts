@@ -1,14 +1,14 @@
 export default {
-  fatal: message => {
-    console.error(message);
+  fatal: (...message) => {
+    console.error(...message);
   },
-  warn: message => {
-    console.warn(message);
+  warn: (...message) => {
+    console.warn(...message);
   },
-  info: message => {
-    console.info(message);
+  info: (...message) => {
+    console.info(...message);
   },
-  debug: message => {
-    console.debug(message);
+  debug: (...message) => {
+    console.debug(...message);
   },
 };

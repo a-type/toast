@@ -165,9 +165,10 @@ export default gql`
 
   extend type Mutation {
     createRecipe(input: RecipeCreateInput!): Recipe!
+      @generateId
       @cypher(
         match: "(user:User{id:$context.userId})"
-        create: "(recipe:Recipe{id:$args.id})<-[:AUTHOR_OF]-(user)"
+        create: "(recipe:Recipe{id:$generated.id})<-[:AUTHOR_OF]-(user)"
         setMany: [
           "recipe += $args.input"
           "recipe.displayType = 'FULL'"
@@ -176,7 +177,6 @@ export default gql`
         ]
         return: "recipe"
       )
-      @generateSlug(fromArg: "input.title")
       @authenticated
 
     linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated

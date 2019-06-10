@@ -45,10 +45,10 @@ const loadShoppingList = async (groupId: string, ctx: Context) => {
     const result = await tx.run(
       `
       MATCH (:Group {id:$groupId})-[:HAS_PLAN_MEAL]->
-        (:PlanMeal)-[:PLANS_TO_COOK]->(recipe:Recipe)
+        (meal:PlanMeal)-[:PLANS_TO_COOK]->(recipe:Recipe)
         <-[:INGREDIENT_OF]-(ing:Ingredient)
-      WHERE duration.between(date($startDate), day.date).days > 0
-      AND duration.between(date($startDate), day.date).days < 7
+      WHERE duration.between(date($startDate), meal.date).days > 0
+      AND duration.between(date($startDate), meal.date).days < 7
       OPTIONAL MATCH (ing)<-[:USED_IN]-(food:Food)
       RETURN recipe {.id,.title}, ing {.id,.text,.quantity,.unit}, food {.id,.name}
     `,

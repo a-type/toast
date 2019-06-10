@@ -44,17 +44,17 @@ export default gql`
 
   extend type Mutation {
     createFood(input: FoodCreateInput!): Food!
+      @generateId
       @cypher(
-        create: "(ingredient:Food{id:$args.id})"
+        create: "(food:Food{id:$generated.id})"
         set: """
-          ingredient.name = $args.input.name,
-          ingredient.alternateNames = $args.input.alternateNames,
-          ingredient.attribution = $args.input.attribution
-          ingredient.description = $args.input.description
+        food.name = $args.input.name,
+        food.alternateNames = $args.input.alternateNames,
+        food.attribution = $args.input.attribution,
+        food.description = $args.input.description
         """
-        return: "ingredient"
+        return: "food"
       )
-      @generateSlug(fromArg: "input.name")
       @hasClaim(claim: "admin")
 
     updateFood(input: FoodUpdateInput!): Food

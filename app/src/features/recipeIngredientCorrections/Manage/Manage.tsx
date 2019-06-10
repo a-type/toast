@@ -4,6 +4,8 @@ import gql from 'graphql-tag';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import Loader from 'components/generic/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { useAlerts } from 'contexts/AlertContext';
+import logger from 'logger';
 
 enum CorrectionStatus {
   Submitted = 'Submitted',
@@ -13,7 +15,7 @@ enum CorrectionStatus {
 
 export const AcceptRecipeIngredientCorrectionMutation = gql`
   mutation AcceptRecipeIngredientCorrection($id: ID!) {
-    acceptRecipeIngredientCorrection(id: $id) {
+    acceptIngredientCorrection(input: { id: $id }) {
       id
       status
     }
@@ -22,7 +24,7 @@ export const AcceptRecipeIngredientCorrectionMutation = gql`
 
 export const RejectRecipeIngredientCorrectionMutation = gql`
   mutation RejectRecipeIngredientCorrection($id: ID!) {
-    rejectRecipeIngredientCorrection(id: $id) {
+    rejectIngredientCorrection(input: { id: $id }) {
       id
       status
     }
@@ -30,17 +32,10 @@ export const RejectRecipeIngredientCorrectionMutation = gql`
 `;
 
 export const ListRecipeIngredientCorrectionsQuery = gql`
-  query ListRecipeIngredientCorrections(
-    $offset: Int!
-    $status: CorrectionStatus!
-  ) {
-    recipeIngredientCorrections(
-      pagination: { offset: $offset }
-      filter: { status: $status }
-    ) {
+  query ListRecipeIngredientCorrections {
+    ingredientCorrections {
       id
       status
-      recipeIngredientId
       correctionType
       correctedText
       correctedFields {
@@ -74,9 +69,28 @@ export const ManageRecipeIngredients: React.SFC<
       variables: { offset: 0, status: CorrectionStatus.Submitted },
     },
   );
+  const alerts = useAlerts();
 
-  const accept = (id: string) => mutateAccept({ variables: { id } });
-  const reject = (id: string) => mutateReject({ variables: { id } });
+  const accept = async (id: string) => {
+    try {
+      await mutateAccept({ variables: { id } });
+    } catch (err) {
+      logger.fatal(err);
+      alerts.showAlert({
+        content: 'Failed to accept correction',
+      });
+    }
+  };
+  const reject = async (id: string) => {
+    try {
+      await mutateReject({ variables: { id } });
+    } catch (err) {
+      logger.fatal(err);
+      alerts.showAlert({
+        content: 'Failed to reject correction',
+      });
+    }
+  };
 
   if (loading) {
     return <Loader />;
@@ -86,15 +100,15 @@ export const ManageRecipeIngredients: React.SFC<
     return <ErrorMessage error={error} />;
   }
 
-  const { recipeIngredientCorrections } = data;
+  const { ingredientCorrections } = data;
 
-  if (!recipeIngredientCorrections.length) {
+  if (!ingredientCorrections.length) {
     return <div>No submitted corrections</div>;
   }
 
   return (
     <div>
-      {recipeIngredientCorrections
+      {ingredientCorrections
         .filter(corr => corr.status === 'Submitted')
         .map(corr => (
           <Correction correction={corr} accept={accept} reject={reject} />

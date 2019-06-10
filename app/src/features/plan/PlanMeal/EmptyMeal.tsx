@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.primary.main,
     color: darken(theme.palette.primary.dark, 0.5),
+    padding: theme.spacing(3),
   },
   cardActionArea: {
     height: '100%',

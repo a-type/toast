@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Box } from '@material-ui/core';
 
 export interface AddIngredientProps {
   submitAdd(added: string): void;
@@ -18,14 +18,29 @@ export const AddIngredient: FC<AddIngredientProps> = ({ submitAdd }) => {
   }
 
   return (
-    <>
+    <Box>
       <TextField
         label="Ingredient text"
         multiline
+        fullWidth
         value={text}
         onChange={ev => setText(ev.target.value)}
+        style={{ marginBottom: '8px' }}
       />
-      <Button onClick={() => submitAdd(text)}>Add</Button>
-    </>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => submitAdd(text)}
+      >
+        Add
+      </Button>
+      <Button
+        variant="text"
+        style={{ marginLeft: '8px' }}
+        onClick={() => setShowForm(false)}
+      >
+        Cancel
+      </Button>
+    </Box>
   );
 };

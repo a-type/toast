@@ -58,7 +58,7 @@ const IngredientPickerPopup: React.SFC<IngredientPickerPopupProps> = ({
         variables: { name: newValue.name },
       });
       if (result) {
-        onChange(result.data.createIngredient);
+        onChange(result.data.createFood);
       }
     } else {
       onChange(newValue);

@@ -36,7 +36,7 @@ const Meal: SFC<MealProps> = ({
 
 export const MealSkeleton = ({ variant }) => (
   <Box m="0" flexDirection="column" display="flex">
-    <Typography variant="caption" gutterBottom>
+    <Typography variant="overline" gutterBottom>
       <TextSkeleton />
     </Typography>
     <CardSkeleton variant={variant} />

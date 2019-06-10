@@ -6,7 +6,7 @@ export type AlertDef = {
   content: string;
   timeout?: number;
   color?: 'primary' | 'secondary' | 'default';
-  actions: {
+  actions?: {
     name: string;
     onClick: () => any;
   }[];

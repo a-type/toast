@@ -89,15 +89,19 @@ export default gql`
         LIMIT $args.input.pagination.first
         """
       )
+      @defaultValue(value: [])
+
     searchFoods(input: FoodSearchInput!): [Food!]!
       @cypherCustom(
         statement: """
         CALL db.index.fulltext.queryNodes('foods', $args.input.term + '~') YIELD node as food, score
         RETURN food
         ORDER BY score
+        DESC
         SKIP $args.input.pagination.offset
         LIMIT $args.input.pagination.first
         """
       )
+      @defaultValue(value: [])
   }
 `;

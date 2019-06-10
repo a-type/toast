@@ -143,13 +143,13 @@ export default gql`
       @authenticated
 
     createGroup: Group!
+      @generateId
       @cypher(
         match: "(user:User {id: $context.userId})"
-        create: "(user)-[:MEMBER_OF]->(group:Group {id: $args.id, groceryDay: 0})"
+        create: "(user)-[:MEMBER_OF]->(group:Group {id: $generated.id, groceryDay: 0})"
         return: "group"
       )
       @authenticated
-      @generateSlug(type: "group")
 
     setGroceryDay(input: SetGroceryDayInput!): Group
       @cypher(

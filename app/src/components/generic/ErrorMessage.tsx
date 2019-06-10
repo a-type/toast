@@ -23,6 +23,7 @@ const REPEAT_MESSAGE =
 export interface ErrorMessageProps {
   error?: ApolloError | string;
   full?: boolean;
+  onClose?: () => any;
 }
 
 const useStyles = makeStyles<Theme>(theme => ({
@@ -49,6 +50,7 @@ const useStyles = makeStyles<Theme>(theme => ({
       color: theme.palette.error.contrastText,
       borderColor: theme.palette.error.contrastText,
     },
+    margin: theme.spacing(1),
   },
 }));
 
@@ -95,7 +97,7 @@ const getText = (
 };
 
 export const ErrorMessage: FC<ErrorMessageProps> = props => {
-  const { error, full } = props;
+  const { error, full, onClose } = props;
   const classes = useStyles(props);
 
   const [isDismissed, setDismissed] = useState(false);
@@ -150,6 +152,11 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
             <Link to="mailto:support@toastcooking.app">
               <Button className={classes.button}>Contact support</Button>
             </Link>
+          )}
+          {onClose && (
+            <Button variant="text" onClick={onClose} className={classes.button}>
+              Close
+            </Button>
           )}
         </Box>
       </Box>

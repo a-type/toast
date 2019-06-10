@@ -7,12 +7,12 @@ export interface IngredientCorrectionFormRecipeIngredient {
   text: string;
   quantity: number;
   unit?: string;
-  ingredient?: {
+  food?: {
     id: string;
     name: string;
   };
-  ingredientStart?: number;
-  ingredientEnd?: number;
+  foodStart?: number;
+  foodEnd?: number;
 }
 
 export type IngredientCorrectionFormMessages = {
@@ -37,13 +37,8 @@ export const IngredientCorrectionForm: FC<IngredientCorrectionFormProps> = ({
   messages = DEFAULT_MESSAGES,
 }) => {
   const ingredientSearchText =
-    initialValue.text &&
-    initialValue.ingredientStart &&
-    initialValue.ingredientEnd
-      ? initialValue.text.slice(
-          initialValue.ingredientStart,
-          initialValue.ingredientEnd,
-        )
+    initialValue.text && initialValue.foodStart && initialValue.foodEnd
+      ? initialValue.text.slice(initialValue.foodStart, initialValue.foodEnd)
       : '';
 
   return (
@@ -56,6 +51,7 @@ export const IngredientCorrectionForm: FC<IngredientCorrectionFormProps> = ({
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                disabled // FIXME...
                 fullWidth
                 required
                 multiline
@@ -89,17 +85,21 @@ export const IngredientCorrectionForm: FC<IngredientCorrectionFormProps> = ({
             <Grid item xs={12}>
               <Picker
                 initialSearchText={ingredientSearchText}
-                onChange={ing => setFieldValue('ingredient', ing)}
-                value={values.ingredient}
+                onChange={ing => setFieldValue('food', ing)}
+                value={values.food}
                 canCreate
               />
             </Grid>
 
             <Grid item xs={12}>
               <Box display="flex" flexDirection="row" justifyContent="flex-end">
-                <Button variant="text" onClick={onCancel}>
+                <Button
+                  variant="text"
+                  onClick={onCancel}
+                  style={{ marginRight: '8px' }}
+                >
                   Cancel
-                </Button>{' '}
+                </Button>
                 <Button color="primary" type="submit">
                   {messages.submitCorrection}
                 </Button>

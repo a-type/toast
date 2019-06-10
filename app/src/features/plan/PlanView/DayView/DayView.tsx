@@ -38,7 +38,9 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
 
   return (
     <Box>
-      <Typography variant="h2">{formatDay(parse(date))}</Typography>
+      <Typography gutterBottom variant="h2">
+        {formatDay(parse(date))}
+      </Typography>
       <MealGrid>
         <Meal
           planDayId={day.id}

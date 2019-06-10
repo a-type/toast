@@ -4,7 +4,14 @@ import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { useLinker } from 'contexts/LinkerContext';
 import useMedia from 'hooks/useMedia';
-import { Typography, Button, Dialog, Box, TextField } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Dialog,
+  Box,
+  TextField,
+  makeStyles,
+} from '@material-ui/core';
 import Loader from 'components/generic/Loader';
 import Icon from 'components/generic/Icon';
 import Link from 'components/generic/Link';
@@ -17,7 +24,7 @@ const MESSAGES = {
 };
 
 const UninstalledMessage = () => (
-  <Typography>{MESSAGES.EXPLANATION}</Typography>
+  <Typography gutterBottom>{MESSAGES.EXPLANATION}</Typography>
 );
 
 const InstalledMessage = () => {
@@ -25,22 +32,24 @@ const InstalledMessage = () => {
 
   return (
     <div>
-      <Typography>
+      <Typography gutterBottom>
         The easiest way to add a recipe from the web is to share it straight to
         the Toast app.
       </Typography>
       <Button onClick={() => setShowHelp(true)}>Show me how</Button>
-      <Typography>You can also paste a URL below.</Typography>
+      <Typography gutterBottom>You can also paste a URL below.</Typography>
       <Dialog open={showHelp} onClose={() => setShowHelp(false)}>
-        <Typography variant="h2">Sharing to Toast</Typography>
-        <Typography>
+        <Typography variant="h2" gutterBottom>
+          Sharing to Toast
+        </Typography>
+        <Typography gutterBottom>
           In your device's web browser, visit the page which contains the recipe
           you want to add. Then, tap the <Icon name="share" /> Share button.
         </Typography>
-        <Typography>
+        <Typography gutterBottom>
           When a list of apps comes up, look for Toast and choose it.
         </Typography>
-        <Typography>
+        <Typography gutterBottom>
           If you don't see Toast come up, your device might not support sharing
           directly to this app. Copy the URL instead and paste it into the
           "Recipe URL" field on this page instead.
@@ -67,6 +76,12 @@ export interface LinkRecipeFormProps {
   prefilledValue?: string;
 }
 
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
+
 const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   const {
     working,
@@ -80,6 +95,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   const [url, setUrl] = useState(prefilledValue || '');
   const mutate = useMutation(LinkRecipeMutation);
   const isInstalled = useMedia('(display-mode: standalone)');
+  const classes = useStyles({});
 
   const submit = async (ev?: any) => {
     if (ev) {
@@ -117,10 +133,10 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
 
   if (working) {
     return (
-      <>
+      <Box display="flex" flexDirection="column" alignItems="center">
         <Loader inline size="20vh" />
         <Typography>Scanning your recipe...</Typography>
-      </>
+      </Box>
     );
   }
 
@@ -132,18 +148,24 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
     if (lastResult.problems.length) {
       return (
         <Box>
-          <Typography color="secondary">
+          <Typography variant="h4" color="secondary" gutterBottom>
             We didn't quite get everything.
           </Typography>
-          <Typography>
+          <Typography gutterBottom>
             That one was a little tough. We need to hand it over to you to
             finish off.
           </Typography>
-          <Box flexDirection="row">
+          <Box display="flex" flexDirection="row">
             <Link to={linkTo}>
-              <Button>Manage Recipe</Button>
+              <Button className={classes.button}>Manage Recipe</Button>
             </Link>
-            <Button onClick={reset}>Scan another one</Button>
+            <Button
+              variant="contained"
+              onClick={reset}
+              className={classes.button}
+            >
+              Scan another one
+            </Button>
           </Box>
         </Box>
       );
@@ -158,7 +180,9 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
             Give it a once-over just to make sure we got things right.
           </Link>
         </Typography>
-        <Button onClick={reset}>Scan another one</Button>
+        <Button variant="contained" onClick={reset} className={classes.button}>
+          Scan another one
+        </Button>
       </Box>
     );
   }
@@ -172,7 +196,9 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
           working on some options for situations like this, but for now we're
           sorry for the disappointment.
         </Typography>
-        <Button onClick={reset}>Back</Button>
+        <Button onClick={reset} className={classes.button}>
+          Back
+        </Button>
       </Box>
     );
   }
@@ -181,17 +207,29 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
     <form onSubmit={submit}>
       {isInstalled ? <InstalledMessage /> : <UninstalledMessage />}
       <TextField
+        fullWidth
         label="Recipe URL"
         value={url}
         onChange={ev => setUrl(ev.target.value)}
         name="recipeUrl"
         type="url"
       />
-      <Button type="submit" disabled={!url} color="primary">
+      <Button
+        className={classes.button}
+        type="submit"
+        disabled={!url}
+        color="primary"
+        variant="contained"
+      >
         Scan
       </Button>
       {url && (
-        <Button variant="text" type="reset" onClick={() => setUrl('')}>
+        <Button
+          className={classes.button}
+          variant="text"
+          type="reset"
+          onClick={() => setUrl('')}
+        >
           Clear
         </Button>
       )}

@@ -21,6 +21,7 @@ import { hot } from 'react-hot-loader/root';
 import { ToastAppBar } from 'features/structure/AppBar';
 import { makeStyles } from '@material-ui/styles';
 import { AlertRenderer, AlertProvider } from 'contexts/AlertContext';
+import { ErrorBoundary } from 'components/generic/ErrorBoundary';
 
 const useStyles = makeStyles<Theme, {}>(theme => ({
   mainGrid: {
@@ -59,10 +60,16 @@ const App: FC<{}> = props => {
                   <Suspense fallback={<GlobalLoader />}>
                     <Helmet title="Toast" />
                     <Box className={classes.mainGrid}>
-                      <ToastAppBar gridArea="appBar" />
-                      <Navigation gridArea="nav" />
+                      <ErrorBoundary>
+                        <ToastAppBar gridArea="appBar" />
+                      </ErrorBoundary>
+                      <ErrorBoundary>
+                        <Navigation gridArea="nav" />
+                      </ErrorBoundary>
                       <Box className={classes.content}>
-                        <Routes />
+                        <ErrorBoundary>
+                          <Routes />
+                        </ErrorBoundary>
                       </Box>
                       <Guides gridArea="guides" />
                     </Box>

@@ -6,7 +6,7 @@ import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListItemList } from './components/ShoppingListItemList';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import ShoppingListEmptyState from './components/EmptyState';
-import { GlobalLoader } from 'components/generic/Loader';
+import Loader, { GlobalLoader } from 'components/generic/Loader';
 import { Typography } from '@material-ui/core';
 
 const GetShoppingListQuery = gql`
@@ -35,7 +35,6 @@ const GetShoppingListQuery = gql`
             }
 
             plannedUses {
-              id
               ingredientText
               recipeTitle
               recipeId
@@ -70,9 +69,7 @@ type GetShoppingListResult = {
           };
 
           plannedUses: {
-            id: string;
             ingredientText: string;
-
             recipeId: string;
             recipeTitle: string;
           }[];
@@ -121,7 +118,7 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
     markUnpurchasedMutation({ variables: { input } });
 
   if (loading) {
-    return <GlobalLoader full />;
+    return <Loader />;
   }
 
   if (error) {

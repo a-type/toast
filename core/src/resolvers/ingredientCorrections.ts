@@ -10,13 +10,13 @@ const applyCorrection = async (
   ctx: Context,
 ) => {
   if (correction.correctionType === CorrectionType.Change) {
-    let correctedFields = correction.correctedValue;
-    if (correction.correctedText) {
-      const [parsed] = await ctx.scanning.parseIngredients([
-        correction.correctedText,
-      ]);
-      correctedFields = ctx.scanning.parsedIngredientToRecipeIngredient(parsed);
-    }
+    let correctedFields = correction.correctedFields;
+    // if (correction.correctedText) {
+    //   const [parsed] = await ctx.scanning.parseIngredients([
+    //     correction.correctedText,
+    //   ]);
+    //   correctedFields = { ...ctx.scanning.parsedIngredientToRecipeIngredient(parsed), ...correctedFields };
+    // }
     await ctx.writeTransaction(async tx => {
       const { foodId, ...rest } = correctedFields;
       if (foodId) {
@@ -111,7 +111,7 @@ export default {
       const correction = new IngredientCorrection({
         id: id('ingredientCorrection'),
         ingredientId: args.input.ingredientId,
-        correctedValue: args.input.correctedValue,
+        correctedFields: args.input.correctedFields,
         correctedText: args.input.correctedText,
         status: CorrectionStatus.Submitted,
         reportingUserId: ctx.user.id,
@@ -133,8 +133,8 @@ export default {
         return result.records[0].get('recipe');
       });
 
-      if (!recipe.published || recipe.private) {
-        // for unpublished or private recipes (private: TODO), skip approval process
+      if (!recipe.published || recipe.private || !recipe.locked) {
+        // for unpublished or private recipes, skip approval process
         await applyCorrection(correction, ctx);
         correction.status = CorrectionStatus.Accepted;
         return correction;
@@ -144,8 +144,16 @@ export default {
       return result;
     },
 
-    acceptIngredientCorrection: async (_parent, { id }, ctx: Context) => {
+    acceptIngredientCorrection: async (
+      _parent,
+      { input: { id } },
+      ctx: Context,
+    ) => {
       const correction = await ctx.firestore.ingredientCorrections.get(id);
+
+      if (!correction) {
+        throw new NotFoundError('IngredientCorrection', id);
+      }
 
       await applyCorrection(correction, ctx);
 
@@ -155,13 +163,14 @@ export default {
       // update ingredient to improve matching
       try {
         if (
-          correction.correctedValue.foodId &&
-          correction.correctedValue.foodStart &&
-          correction.correctedValue.foodEnd
+          correction.correctedFields &&
+          correction.correctedFields.foodId &&
+          correction.correctedFields.foodStart &&
+          correction.correctedFields.foodEnd
         ) {
           const foodText = correction.correctedText.slice(
-            correction.correctedValue.foodStart,
-            correction.correctedValue.foodEnd,
+            correction.correctedFields.foodStart,
+            correction.correctedFields.foodEnd,
           );
           await ctx.writeTransaction(async tx => {
             await tx.run(
@@ -170,7 +179,7 @@ export default {
               SET food.searchHelpers = coalesce(food.searchHelpers, []) + $searchHelper
               `,
               {
-                foodId: correction.correctedValue.foodId,
+                foodId: correction.correctedFields.foodId,
                 searchHelper: foodText,
               },
             );
@@ -184,8 +193,15 @@ export default {
       return correction;
     },
 
-    rejectIngredientCorrection: async (_parent, { id }, ctx: Context) => {
+    rejectIngredientCorrection: async (
+      _parent,
+      { input: { id } },
+      ctx: Context,
+    ) => {
       const correction = await ctx.firestore.ingredientCorrections.get(id);
+      if (!correction) {
+        throw new NotFoundError('IngredientCorrection', id);
+      }
       correction.status = CorrectionStatus.Rejected;
       await ctx.firestore.ingredientCorrections.set(correction);
       return correction;

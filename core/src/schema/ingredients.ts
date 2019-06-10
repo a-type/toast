@@ -62,10 +62,10 @@ export default gql`
 
     recipe: Recipe!
       @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
-    recipeIngredient: Ingredient
+    ingredient: Ingredient
       @cypher(
-        match: "(recipeIngredient:Ingredient{id: parent.recipeIngredientId})"
-        return: "recipeIngredient"
+        match: "(ingredient:Ingredient{id: parent.ingredientId})"
+        return: "ingredient"
       )
   }
 
@@ -78,6 +78,7 @@ export default gql`
     quantityEnd: Int
     foodStart: Int
     foodEnd: Int
+    food: Food @cypher(match: "(food:Food{id: parent.foodId})", return: "food")
   }
 
   extend type Query {
@@ -85,11 +86,11 @@ export default gql`
   }
 
   input IngredientCorrectionSubmitInput {
-    recipeIngredientId: ID
+    ingredientId: ID
     recipeId: String!
     correctionType: IngredientCorrectionType!
     correctedText: String
-    correctedValue: IngredientCorrectedFieldsInput
+    correctedFields: IngredientCorrectedFieldsInput
   }
 
   input IngredientCorrectedFieldsInput {

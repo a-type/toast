@@ -2,7 +2,7 @@ import * as React from 'react';
 import RangeHighlighter, { Range } from 'components/generic/RangeHighlighter';
 import { Ingredient, Unit, Value } from './components';
 import { pathOr } from 'ramda';
-import { Button } from '@material-ui/core';
+import { Button, Paper, makeStyles } from '@material-ui/core';
 
 enum CorrectionType {
   Delete = 'Delete',
@@ -16,75 +16,123 @@ export interface ManageRecipeIngredientCorrectionsCorrectionProps {
   reject(id: string): void;
 }
 
+const useStyles = makeStyles(theme => ({
+  paper: {
+    padding: theme.spacing(2),
+    margin: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
+
 const Correction: React.SFC<
   ManageRecipeIngredientCorrectionsCorrectionProps
 > = ({ correction, accept, reject }) => {
+  const classes = useStyles({});
+
   if (correction.correctionType === CorrectionType.Delete) {
     return (
-      <div>
+      <Paper className={classes.paper}>
         <div>Delete?</div>
-        <Button onClick={() => accept(correction.id)}>Accept</Button>
-        <Button onClick={() => reject(correction.id)}>Reject</Button>
-      </div>
+        <Button
+          className={classes.button}
+          onClick={() => accept(correction.id)}
+        >
+          Accept
+        </Button>
+        <Button
+          className={classes.button}
+          onClick={() => reject(correction.id)}
+        >
+          Reject
+        </Button>
+      </Paper>
+    );
+  }
+
+  if (correction.correctedText && !correction.correctedFields) {
+    return (
+      <Paper className={classes.paper}>
+        <div>Corrected text: "{correction.correctedText}"</div>
+        <div>The ingredient will be reparsed from this text</div>
+        <Button
+          className={classes.button}
+          onClick={() => accept(correction.id)}
+        >
+          Accept
+        </Button>
+        <Button
+          className={classes.button}
+          onClick={() => reject(correction.id)}
+        >
+          Reject
+        </Button>
+      </Paper>
     );
   }
 
   const ranges: Range[] = [
     {
       name: 'ingredient',
-      start: correction.correctedValue.ingredientStart,
-      end: correction.correctedValue.ingredientEnd,
+      start: correction.correctedFields.foodStart,
+      end: correction.correctedFields.foodEnd,
       render: text => <Ingredient>{text}</Ingredient>,
     },
     {
       name: 'unit',
-      start: correction.correctedValue.unitStart,
-      end: correction.correctedValue.unitEnd,
+      start: correction.correctedFields.unitStart,
+      end: correction.correctedFields.unitEnd,
       render: text => <Unit>{text}</Unit>,
     },
     {
       name: 'quantity',
-      start: correction.correctedValue.quantityStart,
-      end: correction.correctedValue.quantityEnd,
+      start: correction.correctedFields.quantityStart,
+      end: correction.correctedFields.quantityEnd,
       render: text => <Value>{text}</Value>,
     },
   ];
 
   return (
-    <div>
+    <Paper className={classes.paper}>
       <RangeHighlighter
-        text={pathOr('Blank', ['correctedValue', 'text'], correction)}
+        text={pathOr('Blank', ['correctedFields', 'text'], correction)}
         ranges={ranges}
       />
       <ul>
         <li>
-          <label>Ingredient:</label>{' '}
+          <label>Food:</label>{' '}
           <Ingredient>
-            {pathOr(
-              'None',
-              ['correctedValue', 'ingredient', 'name'],
-              correction,
-            )}
+            {pathOr('None', ['correctedFields', 'food', 'name'], correction)}
           </Ingredient>
         </li>
         <li>
           <label>Unit:</label>{' '}
-          <Unit>{pathOr('None', ['correctedValue', 'unit'], correction)}</Unit>
+          <Unit>{pathOr('None', ['correctedFields', 'unit'], correction)}</Unit>
         </li>
         <li>
           <label>Quantity:</label>{' '}
           <Value>
-            {pathOr('None', ['correctedValue', 'quantity'], correction)}
+            {pathOr('None', ['correctedFields', 'quantity'], correction)}
           </Value>
         </li>
       </ul>
       <div>
-        <Button color="primary" onClick={() => accept(correction.id)}>
+        <Button
+          className={classes.button}
+          color="primary"
+          onClick={() => accept(correction.id)}
+        >
           Accept
         </Button>
-        <Button onClick={() => reject(correction.id)}>Reject</Button>
+        <Button
+          className={classes.button}
+          onClick={() => reject(correction.id)}
+        >
+          Reject
+        </Button>
       </div>
-    </div>
+    </Paper>
   );
 };
 

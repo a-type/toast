@@ -1,51 +1,13 @@
-import React, { SFC } from 'react';
-import styled from 'styled-components';
-import { Icon } from 'components/generic/Icon';
+import React, { FC } from 'react';
 import Link, { LinkProps } from 'components/generic/Link';
-import { GenericIconName } from 'components/generic/Icon';
+import { ListItem } from '@material-ui/core';
 
-const ModdedLink = styled(Link)`
-  border-radius: 0;
-  width: 100%;
-  margin: 0 0 var(--spacing-sm) 0;
-  border: 0;
-  transition: 0.2s ease all;
-  position: relative;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: var(--color-shadow);
-  color: var(--color-white);
-
-  &:hover {
-    background: var(--color-primary-light);
-    color: var(--color-dark);
-    border: 0;
-    z-index: 1;
-  }
-
-  &:focus {
-    background: var(--color-primary-light);
-    color: var(--color-dark);
-    border: 0;
-    z-index: 1;
-  }
-
-  &:active {
-    z-index: 1;
-  }
-
-  &.link-matching {
-    background: var(--color-primary-dark);
-    color: var(--color-white);
-    cursor: default;
-  }
-`;
-
-const SidebarLink: SFC<
-  LinkProps & { label: string; icon: GenericIconName }
-> = ({ label, icon, ...props }) => (
-  <ModdedLink {...props}>
-    <Icon name={icon} /> {label}
-  </ModdedLink>
-);
+const SidebarLink: FC<LinkProps> = props => {
+  return (
+    <li>
+      <ListItem button component={Link} {...props} />
+    </li>
+  );
+};
 
 export default SidebarLink;

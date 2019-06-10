@@ -12,7 +12,7 @@ export enum CorrectionType {
   Add = 'Add',
 }
 
-export interface IngredientCorrectedValue {
+export interface IngredientCorrectedFields {
   unit: string;
   unitStart: number;
   unitEnd: number;
@@ -28,7 +28,7 @@ export interface IngredientCorrectionData {
   id: string;
   ingredientId: string;
   recipeId: string;
-  correctedValue: IngredientCorrectedValue;
+  correctedFields: IngredientCorrectedFields;
   correctedText: string;
   reportingUserId: string;
   status: CorrectionStatus;
@@ -54,8 +54,8 @@ export default class IngredientCorrection {
     return this.data.recipeId;
   }
 
-  get correctedValue() {
-    return this.data.correctedValue;
+  get correctedFields() {
+    return this.data.correctedFields;
   }
 
   get reportingUserId() {

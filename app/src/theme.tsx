@@ -53,12 +53,12 @@ const theme = createMuiTheme({
     },
     background: {
       paper: '#fefeff',
-      default: '#fafaff',
+      default: '#fafafa',
     },
     text: {
       primary: '#290f34',
       secondary: '#7272af',
-      disabled: '#d8d8fa',
+      disabled: '#babad7',
       hint: '#d8d8fa',
     },
   },
@@ -78,12 +78,23 @@ const theme = createMuiTheme({
       contained: {
         backgroundColor: '#e1e1ee',
       },
+      outlinedPrimary: {
+        color: '#e3a33d',
+        borderColor: '#e3a33d',
+      },
+      outlinedSecondary: {
+        color: '#12b89c',
+        borderColor: '#12b89c',
+      },
     },
 
     MuiTab: {
       root: {
         textTransform: 'none',
         fontStyle: 'italic',
+        ['@media(min-width: 960px)']: {
+          fontSize: '1rem',
+        },
       },
     },
 

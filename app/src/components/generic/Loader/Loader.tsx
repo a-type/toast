@@ -62,7 +62,7 @@ const Circle = styled<{ size: string; inline?: boolean }, 'div'>('div')`
 `;
 
 export const Loader: FC<{ size?: string; inline?: boolean }> = ({
-  size = '32px',
+  size = '64px',
   inline,
 }) => {
   return (

@@ -7,6 +7,7 @@ import {
   Container,
   Theme,
   makeStyles,
+  useMediaQuery,
 } from '@material-ui/core';
 import useNavState, { PathConfig } from 'hooks/useNavState';
 import SwipeableViews from 'react-swipeable-views';
@@ -28,11 +29,17 @@ export const NavTabs: FC<{
   const theme = useTheme<Theme>();
   const { index, onChange } = useNavState(props.paths);
   const classes = useStyles(props);
+  const isWide = useMediaQuery(theme.breakpoints.up('lg'));
 
   return (
     <Box height="100%" display="flex" flexDirection="column">
       <Paper square className={classes.paper}>
-        <Tabs value={index} onChange={onChange}>
+        <Tabs
+          value={index}
+          onChange={onChange}
+          variant={!isWide ? 'fullWidth' : 'standard'}
+          centered={isWide}
+        >
           {props.tabLabels.map(label => (
             <Tab key={label} label={label} />
           ))}

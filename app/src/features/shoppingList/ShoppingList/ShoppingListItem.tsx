@@ -15,7 +15,7 @@ type Recipe = {
 type ShoppingListItemUsage = {
   recipeTitle: string;
   recipeId: string;
-  ingredientTypography: string;
+  ingredientText: string;
 };
 
 type ShoppingListItem = {
@@ -68,7 +68,7 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({
         opacity: 0.7,
       }}
     >
-      ({item.plannedUses.map(use => use.ingredientTypography).join(', ')})
+      ({item.plannedUses.map(use => use.ingredientText).join(', ')})
     </Typography>
   ) : null;
 

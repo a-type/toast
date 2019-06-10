@@ -20,6 +20,7 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>(theme => ({
     gridArea: props.gridArea,
     position: 'relative',
     backgroundColor: 'transparent',
+    zIndex: theme.zIndex.drawer + 1,
   }),
   titleArea: {
     flexGrow: 1,

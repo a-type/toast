@@ -35,7 +35,7 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
     }
   }, [groceryDayLoading]);
 
-  if (loading || groceryDayLoading) {
+  if (loading) {
     return (
       <Box>
         <DayView />

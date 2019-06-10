@@ -1,5 +1,4 @@
 import React, { SFC, useContext } from 'react';
-import { Logo, BackdropArt } from 'components/brand';
 import AuthContext from 'contexts/AuthContext';
 import Avatar from './Avatar';
 import { path } from 'ramda';
@@ -18,7 +17,6 @@ import {
 import Link from 'components/generic/Link';
 import {
   LocalDiningTwoTone,
-  HomeTwoTone,
   CalendarTodayTwoTone,
   SearchTwoTone,
   BookmarksTwoTone,
@@ -29,12 +27,13 @@ import {
 import useRouter from 'use-react-router';
 import firebase from 'services/firebase';
 import { makeStyles } from '@material-ui/styles';
+import ListItemLink from './SidebarLink';
 
 interface SidebarProps {
   gridArea?: string;
 }
 
-const useStyles = makeStyles<Theme, SidebarProps>(() => ({
+const useStyles = makeStyles<Theme, SidebarProps>(theme => ({
   drawer: props => ({
     gridArea: props.gridArea,
     width: '240px',
@@ -44,6 +43,16 @@ const useStyles = makeStyles<Theme, SidebarProps>(() => ({
   drawerPaper: {
     position: 'relative',
   },
+  listItemLink: {
+    '&.link-matching': {
+      color: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.light,
+
+      '& svg': {
+        color: theme.palette.primary.dark,
+      },
+    },
+  },
 }));
 
 const Sidebar: SFC<SidebarProps> = props => {
@@ -51,7 +60,6 @@ const Sidebar: SFC<SidebarProps> = props => {
   const { history } = useRouter();
   const classes = useStyles(props);
 
-  const navigate = (path: string) => () => history.push(path);
   const logout = async () => {
     await firebase.auth().signOut();
     history.push('/');
@@ -59,55 +67,55 @@ const Sidebar: SFC<SidebarProps> = props => {
 
   const anonContent = (
     <List>
-      <ListItem button onClick={navigate('/login')}>
+      <ListItemLink to="/login" nav className={classes.listItemLink}>
         <ListItemIcon>
           <LocalDiningTwoTone />
         </ListItemIcon>
         <ListItemText>Join or log in</ListItemText>
-      </ListItem>
+      </ListItemLink>
     </List>
   );
 
   const authContent = (
     <List>
-      <ListItem button onClick={navigate('/home')}>
+      <ListItemLink to="/home" nav className={classes.listItemLink}>
         <ListItemIcon>
           <CalendarTodayTwoTone />
         </ListItemIcon>
         <ListItemText>Home</ListItemText>
-      </ListItem>
-      <ListItem button onClick={navigate('/explore')}>
+      </ListItemLink>
+      <ListItemLink to="/explore" nav className={classes.listItemLink}>
         <ListItemIcon>
           <SearchTwoTone />
         </ListItemIcon>
         <ListItemText>Explore</ListItemText>
-      </ListItem>
-      <ListItem button onClick={navigate('/collections')}>
+      </ListItemLink>
+      <ListItemLink to="/collections" nav className={classes.listItemLink}>
         <ListItemIcon>
           <BookmarksTwoTone />
         </ListItemIcon>
         <ListItemText>Collections</ListItemText>
-      </ListItem>
-      <ListItem button onClick={navigate('/settings')}>
+      </ListItemLink>
+      <ListItemLink to="/settings" nav className={classes.listItemLink}>
         <ListItemIcon>
           <SettingsTwoTone />
         </ListItemIcon>
         <ListItemText>Settings</ListItemText>
-      </ListItem>
+      </ListItemLink>
       <IsAdmin>
-        <ListItem button onClick={navigate('/manage')}>
+        <ListItemLink to="/manage" nav className={classes.listItemLink}>
           <ListItemIcon>
             <WarningTwoTone />
           </ListItemIcon>
           <ListItemText>Manage</ListItemText>
-        </ListItem>
+        </ListItemLink>
       </IsAdmin>
-      <ListItem button onClick={logout}>
+      <ListItemLink onClick={logout} className={classes.listItemLink}>
         <ListItemIcon>
           <MeetingRoomTwoTone />
         </ListItemIcon>
         <ListItemText>Log out</ListItemText>
-      </ListItem>
+      </ListItemLink>
     </List>
   );
 
@@ -117,7 +125,6 @@ const Sidebar: SFC<SidebarProps> = props => {
       className={classes.drawer}
       classes={{ paper: classes.drawerPaper }}
     >
-      <BackdropArt />
       <Box p={3} alignItems="center" display="flex" flexDirection="column">
         {user && <Avatar avatarUrl={path(['photoURL'], user)} />}
       </Box>

@@ -60,7 +60,8 @@ const useRecipeResults = (
           query: SearchRecipesQuery,
           variables: {
             input: {
-              term: debouncedTerm,
+              // this should not be necessary, but unfortunately can't figure out a better backend plan yet.
+              term: debouncedTerm.replace(/\W/g, ' '),
               foods: {
                 include: includeIngredients || [],
                 exclude: excludeIngredients || [],
