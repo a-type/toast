@@ -43,7 +43,7 @@ db:
   creds:
     secretName: neo4j-neo4j-secrets
   hosts:
-    bolt: neo4j://neo4j-neo4j-core-0.neo4j-neo4j.production.svc.cluster.local:7687
+    bolt: bolt+routing://neo4j-neo4j-core-0.neo4j-neo4j.production.svc.cluster.local:7687
 application:
   storage:
     bucketName: toast-media-prod
