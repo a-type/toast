@@ -15,6 +15,9 @@
     {
       "path": "scanning",
       "name": "Scanning"
+    },
+    {
+      "path": "charts"
     }
   ]
 }
