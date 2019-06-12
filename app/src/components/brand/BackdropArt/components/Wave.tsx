@@ -13,12 +13,13 @@ export interface WaveProps {
   factor?: number;
 }
 
-const Y = 5.5;
+const Y = 4.5;
+const X = 4;
 
 const Wave: React.SFC<WaveProps> = ({ scale, color, factor }) => {
   const startPosition = [0, Y + 1];
-  const startCurveControlPoint = [4, Y - 1 + 0.3 * factor];
-  const centerPoint = [6, Y + 2 - 0.2 * factor];
+  const startCurveControlPoint = [X - 2, Y - 1 + 0.3 * factor];
+  const centerPoint = [X, Y + 2 - 0.2 * factor];
   const endPoint = [10, Y + 3 + 0.5 * factor];
   const bottomY = 20;
 
@@ -36,11 +37,7 @@ const Wave: React.SFC<WaveProps> = ({ scale, color, factor }) => {
   d.push(`L 10 ${bottomY}`);
   d.push(`L 0 ${bottomY}`);
 
-  return (
-    <React.Fragment>
-      <Path d={d.join(' ')} color={color} scale={scale} />
-    </React.Fragment>
-  );
+  return <Path d={d.join(' ')} color={color} scale={scale} />;
 };
 
 Wave.defaultProps = {

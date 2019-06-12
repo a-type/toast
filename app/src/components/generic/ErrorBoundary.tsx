@@ -13,12 +13,6 @@ export class ErrorBoundary extends Component {
     logger.fatal(error, info);
   }
 
-  componentDidUpdate() {
-    if (process.env.NODE_ENV !== 'production') {
-      this.setState({ error: null });
-    }
-  }
-
   render() {
     if (this.state.error) {
       return <ErrorMessage error={this.state.error} />;

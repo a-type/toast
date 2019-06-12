@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 
-export default styled<{ size?: string }, 'div'>('div')`
-  padding: calc(${props => props.size || '32px'} / 3);
-  border-radius: calc(${props => props.size || '32px'} / 3);
-  background: var(--color-primary);
+export default styled<{ size: string }, 'div'>('div')`
+  width: ${props => props.size};
+  height: ${props => props.size};
+  font-size: calc(${props => props.size} / 3);
+  border-radius: calc(${props => props.size} / 5);
   position: relative;
   overflow: hidden;
+  display: flex;
+
+  & > * {
+    margin: auto;
+  }
 `;

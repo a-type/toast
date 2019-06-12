@@ -5,11 +5,10 @@ import { Icon } from 'components/generic/Icon';
 const Circle = styled<{ avatarUrl: string }, 'div'>('div')`
   border-radius: 100%;
   display: flex;
-  width: 100px;
-  height: 100px;
-  font-size: 30px;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
   cursor: pointer;
-  margin: var(--spacing-lg) auto;
 
   background-color: var(--color-secondary);
   background-image: url(${props => props.avatarUrl});

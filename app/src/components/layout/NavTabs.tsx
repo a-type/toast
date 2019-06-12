@@ -18,7 +18,9 @@ const useStyles = makeStyles<Theme>(theme => ({
     marginTop: theme.spacing(4),
   },
   paper: {
-    zIndex: 1050,
+    zIndex: 0,
+    background: theme.palette.grey[100],
+    boxShadow: 'inset 0 -1px 2px 0 #00000020',
   },
 }));
 

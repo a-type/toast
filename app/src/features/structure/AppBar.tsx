@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { BackdropArt } from 'components/brand';
+import { BackdropArt, Logo } from 'components/brand';
 import {
   AppBar,
   Toolbar,
@@ -7,23 +7,29 @@ import {
   IconButton,
   Theme,
   makeStyles,
+  useMediaQuery,
 } from '@material-ui/core';
 import Link from 'components/generic/Link';
 import { SettingsTwoTone } from '@material-ui/icons';
+import { useTheme } from '@material-ui/core/styles';
 
 export interface ToastAppBarProps {
   gridArea: string;
 }
 
-const useStyles = makeStyles<Theme, ToastAppBarProps>(theme => ({
+const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
   appBar: props => ({
     gridArea: props.gridArea,
     position: 'relative',
-    backgroundColor: 'transparent',
-    zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: theme.palette.background.paper,
+    zIndex: theme.zIndex.drawer,
+    display: 'flex',
+    flexDirection: 'row',
   }),
   titleArea: {
-    flexGrow: 1,
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    flex: '0 0 auto',
   },
   title: {
     fontFamily: '"Pacifico", "PlayFair Display", "PT Serif", serif',
@@ -36,20 +42,36 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>(theme => ({
       backgroundColor: theme.palette.primary.dark,
     },
   },
+  logo: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: '32px',
+    borderBottomRightRadius: '32px',
+    borderBottomLeftRadius: 0,
+    padding: '0 40px 0 32px',
+    width: 'auto',
+    fontSize: '24px',
+  },
+  toolbar: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+  },
 }));
 
 export const ToastAppBar: FC<ToastAppBarProps> = props => {
   const classes = useStyles(props);
+  const theme = useTheme();
+  const isWide = useMediaQuery(theme.breakpoints.up('md'));
+
+  if (isWide) {
+    return null;
+  }
 
   return (
     <AppBar className={classes.appBar}>
-      <BackdropArt />
-      <Toolbar>
-        <Link to="/" className={classes.titleArea}>
-          <Typography variant="h3" className={classes.title}>
-            Toast
-          </Typography>
-        </Link>
+      <Link to="/" className={classes.titleArea}>
+        <Logo className={classes.logo} size="48px" />
+      </Link>
+      <Toolbar className={classes.toolbar}>
         <Link to="/settings">
           <IconButton aria-label="Settings" className={classes.settingsButton}>
             <SettingsTwoTone />

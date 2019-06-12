@@ -33,8 +33,8 @@ const useStyles = makeStyles<Theme, {}>(theme => ({
     gridTemplateColumns: '100%',
 
     [`@media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px)`]: {
-      gridTemplateAreas: "'appBar appBar' 'nav content' 'nav guides'",
-      gridTemplateRows: 'auto 1fr auto',
+      gridTemplateAreas: "'nav content' 'nav guides'",
+      gridTemplateRows: '1fr auto',
       gridTemplateColumns: 'auto 1fr',
     },
   },

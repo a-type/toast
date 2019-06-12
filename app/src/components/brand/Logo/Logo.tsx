@@ -5,10 +5,10 @@ import BackdropArt from '../BackdropArt';
 
 const Logo: SFC<
   { pattern?: boolean; size?: string } & HTMLAttributes<HTMLDivElement>
-> = ({ pattern, size, ...rest }) => (
+> = ({ pattern = true, size = '80px', ...rest }) => (
   <Wrapper {...rest} size={size}>
     {pattern && <BackdropArt />}
-    <Text size={size}>Toast</Text>
+    <Text>Toast</Text>
   </Wrapper>
 );
 

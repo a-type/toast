@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-export default styled<{ size?: string }, 'h1'>('h1')`
+export default styled<{}, 'h1'>('h1')`
   margin: auto 0;
   padding: 0;
   font-family: 'Pacifico', 'PlayFair Display';
-  font-size: ${props => props.size || '36px'};
+  font-size: inherit;
   font-weight: var(--normal);
   color: var(--color-white);
   line-height: 1;
