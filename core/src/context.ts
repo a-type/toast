@@ -52,25 +52,40 @@ export const createContext = async (req): Promise<Context> => {
   const user = req.user ? { ...req.user, id: req.user.uid } : null;
   const scopes = pathOr<string>('', ['user', 'scope'], req).split(' ');
 
-  const session = driver.session();
   let cachedGroupId: string;
-  const getGroupId = async () =>
-    cachedGroupId || user
-      ? session.readTransaction(async tx => {
-          const result = await tx.run(
-            `
-    MATCH (:User{id: $userId})-[:MEMBER_OF]->(group:Group)
-    RETURN group {.id}
-    `,
-            { userId: user && user.id },
-          );
-          if (result.records.length && result.records[0].get('group')) {
-            cachedGroupId = result.records[0].get('group').id;
-            return cachedGroupId;
-          }
-          return null;
-        })
-      : null;
+  const getGroupId = async () => {
+    if (cachedGroupId) {
+      return cachedGroupId;
+    }
+
+    if (!user) {
+      return null;
+    }
+
+    const session = driver.session();
+    let result: string;
+
+    try {
+      result = await session.readTransaction(async tx => {
+        const result = await tx.run(
+          `
+  MATCH (:User{id: $userId})-[:MEMBER_OF]->(group:Group)
+  RETURN group {.id}
+  `,
+          { userId: user && user.id },
+        );
+        if (result.records.length && result.records[0].get('group')) {
+          cachedGroupId = result.records[0].get('group').id;
+          return cachedGroupId;
+        }
+        return null;
+      });
+    } finally {
+      session.close();
+    }
+
+    return result;
+  };
   const storeGroupId = (groupId: string) => {
     cachedGroupId = groupId;
   };
