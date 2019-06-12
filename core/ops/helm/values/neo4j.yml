@@ -9,7 +9,8 @@ name: "neo4j"
 image: "neo4j"
 imageTag: "3.5.3-enterprise"
 acceptLicenseAgreement: "yes"
-podDisruptionBudget: {}
+podDisruptionBudget:
+  {}
   # minAvailable: 2
   # maxUnavailable: 1
 
@@ -24,7 +25,6 @@ authEnabled: true
 core:
   numberOfServers: 3
   persistentVolume:
-
     ## core server data Persistent Volume mount root path
     ##
     mountPath: /data
@@ -40,7 +40,6 @@ core:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ## storageClass: "-"
-
     ## Subdirectory of core server data Persistent Volume to mount
     ## Useful if the volume's root directory is not empty
     ##
@@ -49,16 +48,16 @@ core:
   ## Pass extra environment variables to the Neo4j container.
   ##
   extraVars:
-  - name: NEO4J_dbms_security_procedures_unrestricted
-    value: "apoc.*"
-  - name: NEO4J_apoc_autoIndex_enabled
-    value: "true"
-  - name: NEO4J_apoc_autoIndex_async
-    value: "true"
-  - name: NEO4J_allow__upgrade
-    value: "true"
-  - name: NEO4J_dbms_index_fulltext_eventually__consistent
-    value: "true"
+    - name: NEO4J_dbms_security_procedures_unrestricted
+      value: "apoc.*"
+    - name: NEO4J_apoc_autoIndex_enabled
+      value: "true"
+    - name: NEO4J_apoc_autoIndex_async
+      value: "true"
+    - name: NEO4J_allow__upgrade
+      value: "true"
+    - name: NEO4J_dbms_index_fulltext_eventually__consistent
+      value: "true"
 
   sidecarContainers: []
   ## Additional containers to be added to the Neo4j core pod.
@@ -70,14 +69,14 @@ core:
       image: "appropriate/curl:latest"
       imagePullPolicy: "IfNotPresent"
       volumeMounts:
-      - name: plugins
-        mountPath: /plugins
+        - name: plugins
+          mountPath: /plugins
       command:
         - "/bin/sh"
         - "-c"
         - |
-          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.2/apoc-3.5.0.2-all.jar -O
-          cp apoc-3.5.0.2-all.jar /plugins/
+          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.4/apoc-3.5.0.4-all.jar -O
+          cp apoc-3.5.0.4-all.jar /plugins/
 
 # Read Replicas
 readReplica:
@@ -85,14 +84,14 @@ readReplica:
   ## Pass extra environment variables to the Neo4j container.
   ##
   extraVars:
-  - name: NEO4J_dbms_security_procedures_unrestricted
-    value: "apoc.*"
-  - name: NEO4J_apoc_autoIndex_enabled
-    value: "true"
-  - name: NEO4J_apoc_autoIndex_async
-    value: "true"
-  - name: NEO4J_allow_upgrade
-    value: "true"
+    - name: NEO4J_dbms_security_procedures_unrestricted
+      value: "apoc.*"
+    - name: NEO4J_apoc_autoIndex_enabled
+      value: "true"
+    - name: NEO4J_apoc_autoIndex_async
+      value: "true"
+    - name: NEO4J_allow_upgrade
+      value: "true"
 
   sidecarContainers: []
   ## Additional containers to be added to the Neo4j replica pod.
@@ -104,14 +103,14 @@ readReplica:
       image: "appropriate/curl:latest"
       imagePullPolicy: "IfNotPresent"
       volumeMounts:
-      - name: plugins
-        mountPath: /plugins
+        - name: plugins
+          mountPath: /plugins
       command:
         - "/bin/sh"
         - "-c"
         - |
-          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.2/apoc-3.5.0.2-all.jar -O
-          cp apoc-3.5.0.2-all.jar /plugins/
+          curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.4/apoc-3.5.0.4-all.jar -O
+          cp apoc-3.5.0.4-all.jar /plugins/
 
 resources: {}
 # limits:
