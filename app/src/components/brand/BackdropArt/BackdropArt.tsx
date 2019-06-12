@@ -15,7 +15,8 @@ export const BackdropArt: FC<{
       {colors.map((color, idx) => (
         <Wave
           color={color}
-          scale={1 + Math.abs(4 - idx) * (0.4 + 0.2 * factor)}
+          scale={1 + Math.abs(4 - idx) * (0.2 + 0.3 * factor)}
+          offset={idx * (7 / 9)}
           factor={factor}
           key={idx}
         />
@@ -40,30 +41,7 @@ export const BackdropArt: FC<{
       preserveAspectRatio="xMidYMid slice"
       {...props}
     >
-      <defs>
-        <linearGradient
-          id="opacityGradient"
-          y1="100%"
-          x1="50%"
-          y2="0%"
-          x2="50%"
-        >
-          <stop offset="0" stop-color="black" />
-          <stop offset="0.45" stop-color="black" />
-          <stop offset="0.6" stop-color="white" />
-          <stop offset="1" stop-color="white" />
-        </linearGradient>
-        <mask id="opacityMask" x="0" y="0" width="100%" height="100%">
-          <rect
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="url(#opacityGradient)"
-          />
-        </mask>
-      </defs>
-      {fade ? <g mask="url(#opacityMask)">{artContent}</g> : artContent}
+      {artContent}
     </svg>
   );
 };

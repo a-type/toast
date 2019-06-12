@@ -4,23 +4,34 @@ import styled from 'styled-components';
 const Path = styled<{ color: string; scale: number }, 'path'>('path')`
   fill: ${props => props.color};
   transform: scale(${props => props.scale});
-  transform-origin: 50% 100%;
+  transform-origin: 50% 50%;
+  transition: 0.2s ease all;
 `;
 
 export interface WaveProps {
   scale?: number;
   color?: string;
   factor?: number;
+  offset?: number;
 }
 
+// focal point
 const Y = 4.5;
-const X = 4;
+const X = 5;
 
-const Wave: React.SFC<WaveProps> = ({ scale, color, factor }) => {
-  const startPosition = [0, Y + 1];
-  const startCurveControlPoint = [X - 2, Y - 1 + 0.3 * factor];
-  const centerPoint = [X, Y + 2 - 0.2 * factor];
-  const endPoint = [10, Y + 3 + 0.5 * factor];
+const factorOffset = factor => (Math.random() - 0.5) * factor;
+
+const Wave: React.SFC<WaveProps> = ({ scale, color, factor, offset }) => {
+  const startPosition = [0, 0 + offset];
+  const startCurveControlPoint = [
+    2 + factorOffset(factor),
+    7 + offset + factorOffset(factor),
+  ];
+  const centerPoint = [
+    4.5 + factorOffset(factor),
+    4 + offset + factorOffset(factor),
+  ];
+  const endPoint = [10, 10 + offset + factorOffset(factor)];
   const bottomY = 20;
 
   const d = [`M`];
