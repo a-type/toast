@@ -17,7 +17,14 @@ logger.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
 const driver = neo4j.driver(
   config.database.neo4j.endpoint,
   neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password),
-  { disableLosslessIntegers: true },
+  {
+    disableLosslessIntegers: true,
+    logging: {
+      level: 'warn',
+      logger: (level, message) =>
+        console.log(`${Date.now()} ${level.toUpperCase()} ${message}`),
+    },
+  },
 );
 
 process.on('exit', () => {
