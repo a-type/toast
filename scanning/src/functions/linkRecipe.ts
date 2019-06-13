@@ -1,17 +1,17 @@
-import scraper from '../services/scraper';
-import parser from '../services/parser';
-import neo4j from '../services/neo4j';
-import lookupIngredients from '../services/lookupIngredients';
-import { Request, Response } from 'express';
-import { timestamp, id } from '../tools';
-import { saveFromUrl } from '../services/images/images';
-import { ParseResult } from '../services/parser/parser';
-import ApiError from '../ApiError';
+import { Request, Response } from "express";
+import ApiError from "../ApiError";
+import { saveFromUrl } from "../services/images/images";
+import lookupFoods from "../services/lookupFoods";
+import neo4j from "../services/neo4j";
+import parser from "../services/parser";
+import { ParseResult } from "../services/parser/parser";
+import scraper from "../services/scraper";
+import { id, timestamp } from "../tools";
 
 enum RecipeLinkProblem {
-  FailedIngredients = 'FailedIngredients',
-  IncompleteIngredients = 'IncompleteIngredients',
-  FailedImage = 'FailedImage',
+  FailedIngredients = "FailedIngredients",
+  IncompleteIngredients = "IncompleteIngredients",
+  FailedImage = "FailedImage"
 }
 
 interface RecipeLinkResult {
@@ -38,7 +38,7 @@ type RecipeIngredient = {
 
 const parsedToRecipeIngredient = (
   parsed: ParseResult,
-  foodId: string,
+  foodId: string
 ): RecipeIngredient => {
   const getOrNull = (range: [number, number] | [], index: number): number =>
     range[index] !== undefined ? range[index] : null;
@@ -56,29 +56,29 @@ const parsedToRecipeIngredient = (
     foodId,
     comments: parsed.comments,
     preparations: parsed.preparations,
-    foodText: parsed.food && parsed.food.normalized,
+    foodText: parsed.food && parsed.food.normalized
   };
 };
 
 export default async (req: Request, res: Response) => {
   const {
     sourceUrl: fullSourceUrl,
-    userId,
+    userId
   }: { sourceUrl: string; userId: string } = req.body;
 
   if (!fullSourceUrl) {
-    throw new ApiError('Parameter sourceUrl is required', 400);
+    throw new ApiError("Parameter sourceUrl is required", 400);
   } else if (!userId) {
-    throw new ApiError('Parameter userId is required', 400);
+    throw new ApiError("Parameter userId is required", 400);
   }
 
   const result: RecipeLinkResult = {
     recipeId: null,
-    problems: [],
+    problems: []
   };
 
   // removing query string
-  const sourceUrl = fullSourceUrl.replace(/\?.*/, '');
+  const sourceUrl = fullSourceUrl.replace(/\?.*/, "");
 
   const session = neo4j.session();
   const time = timestamp();
@@ -89,14 +89,14 @@ export default async (req: Request, res: Response) => {
       MATCH (:User{id: $userId})-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->(collection:RecipeCollection{default:true})
       RETURN collection {.id}
       `,
-      { userId },
+      { userId }
     );
 
     if (!result.records.length) {
       return null;
     }
 
-    return result.records[0].get('collection').id;
+    return result.records[0].get("collection").id;
   });
 
   if (!defaultCollectionId) {
@@ -109,11 +109,11 @@ export default async (req: Request, res: Response) => {
         `,
         {
           userId,
-          collectionId: id('recipeCollection'),
-        },
+          collectionId: id("recipeCollection")
+        }
       );
 
-      return result.records[0].get('collection').id;
+      return result.records[0].get("collection").id;
     });
   }
 
@@ -130,13 +130,13 @@ export default async (req: Request, res: Response) => {
       RETURN recipe {.id}
       `,
       {
-        sourceUrl,
-      },
+        sourceUrl
+      }
     );
 
     if (existing.records.length) {
       // like existing recipe
-      recipeId = existing.records[0].get('recipe').id;
+      recipeId = existing.records[0].get("recipe").id;
 
       await tx.run(
         `
@@ -146,8 +146,8 @@ export default async (req: Request, res: Response) => {
         {
           userId,
           recipeId,
-          collectionId: defaultCollectionId,
-        },
+          collectionId: defaultCollectionId
+        }
       );
 
       return recipeId;
@@ -171,7 +171,7 @@ export default async (req: Request, res: Response) => {
     if (!scraped.title && !scraped.ingredients.length) {
       throw new ApiError(
         "We couldn't extract any recipe data from the provided webpage.",
-        400,
+        400
       );
     }
 
@@ -184,7 +184,7 @@ export default async (req: Request, res: Response) => {
       unattendedTime: scraped.unaccountedForTimeMinutes,
       servings: scraped.servings || 1,
       sourceUrl,
-      locked: scraped.title && scraped.ingredients.length > 3,
+      locked: scraped.title && scraped.ingredients.length > 3
     };
 
     /**
@@ -198,18 +198,45 @@ export default async (req: Request, res: Response) => {
       // parse strings
       const parsedIngredients = scraped.ingredients.map(parser);
       // search db for matches or null
-      const fondFoods = await lookupIngredients(
+      const foundFoods = await lookupFoods(
         session,
-        parsedIngredients.map(parsed => parsed.food.normalized),
+        parsedIngredients.map(parsed => parsed.food.normalized)
       );
 
-      // if any null, add problem
-      if (fondFoods.some(food => !food)) {
+      // if any null, add problem and create new foods for them
+      if (foundFoods.some(food => !food)) {
         result.problems.push(RecipeLinkProblem.IncompleteIngredients);
+        parsedIngredients
+          .filter((_, idx) => !foundFoods[idx])
+          .reduce<Promise<any>>(async (prevOperation, parsed, idx) => {
+            await prevOperation;
+            try {
+              const foodName = parsed.food.normalized;
+              const result = await session.writeTransaction(async tx => {
+                tx.run(
+                  `
+              CREATE (food:Food {id: $id, name: $name, alternateNames: [], searchHelpers: [], verified: false})
+              RETURN food
+              `,
+                  {
+                    id: id(foodName),
+                    name: foodName
+                  }
+                );
+              });
+              const food = result.records[0].get("food");
+              foundFoods[idx] = food;
+            } catch (err) {
+              console.error(
+                "Failed to create food " + parsed.food.normalized,
+                err
+              );
+            }
+          }, Promise.resolve());
       }
 
       ingredients = parsedIngredients.map((parsed, idx) =>
-        parsedToRecipeIngredient(parsed, fondFoods[idx] && fondFoods[idx].id),
+        parsedToRecipeIngredient(parsed, foundFoods[idx] && foundFoods[idx].id)
       );
     }
 
@@ -221,7 +248,7 @@ export default async (req: Request, res: Response) => {
       try {
         image = await saveFromUrl(scraped.image);
       } catch (err) {
-        console.error('Image upload failed for link recipe', err);
+        console.error("Image upload failed for link recipe", err);
         result.problems.push(RecipeLinkProblem.FailedImage);
       }
     }
@@ -244,19 +271,19 @@ export default async (req: Request, res: Response) => {
           sourceUrl: recipeData.sourceUrl,
           input: {
             ...recipeData,
-            displayType: 'LINK',
+            displayType: "LINK",
             published: true,
             createdAt: time,
             updatedAt: time,
-            viewedAt: time,
+            viewedAt: time
           },
-          id: id(scraped.title || 'recipe'),
+          id: id(scraped.title || "recipe"),
           userId,
-          collectionId: defaultCollectionId,
-        },
+          collectionId: defaultCollectionId
+        }
       );
 
-      return createResult.records[0].get('recipe').id;
+      return createResult.records[0].get("recipe").id;
     });
 
     if (ingredients) {
@@ -287,16 +314,16 @@ export default async (req: Request, res: Response) => {
                 foodId,
                 props: {
                   ...rest,
-                  id: id('ingredient'),
-                },
+                  id: id("ingredient")
+                }
               });
-            }),
+            })
           );
         });
       } catch (err) {
         console.error(
-          'Ingredient links failed for linked recipe',
-          result.recipeId,
+          "Ingredient links failed for linked recipe",
+          result.recipeId
         );
         console.error(err);
         result.problems.push(RecipeLinkProblem.FailedIngredients);
@@ -316,13 +343,13 @@ export default async (req: Request, res: Response) => {
               recipeId: result.recipeId,
               props: {
                 ...image,
-                attribution: scraped.attribution,
-              },
-            },
+                attribution: scraped.attribution
+              }
+            }
           );
         });
       } catch (err) {
-        console.error('Image link failed for linked recipe ', result.recipeId);
+        console.error("Image link failed for linked recipe ", result.recipeId);
         console.error(err);
         result.problems.push(RecipeLinkProblem.FailedImage);
       }
