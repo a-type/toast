@@ -28,13 +28,6 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
   const [planDays, loading, error] = usePlan();
   const [date, setDate] = useState(startOfDay(new Date()));
 
-  useEffect(() => {
-    if (!groceryDayLoading) {
-      // start on the day after grocery day
-      setDate(addDays(getNextDay(new Date(), groceryDay.index), 1));
-    }
-  }, [groceryDayLoading]);
-
   if (loading) {
     return (
       <Box>
