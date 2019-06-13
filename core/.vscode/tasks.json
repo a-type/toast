@@ -16,6 +16,11 @@
       "problemMatcher": [
         "$awesometsc"
       ]
+    },
+    {
+      "type": "npm",
+      "script": "migration:up",
+      "problemMatcher": []
     }
   ]
 }

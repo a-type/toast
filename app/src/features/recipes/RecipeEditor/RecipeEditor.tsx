@@ -4,7 +4,7 @@ import { RecipeUpdateInput } from './queries';
 import { path } from 'ramda';
 import { Formik } from 'formik';
 import RecipeIngredientsEditor from './RecipeIngredientsEditor';
-import { GlobalLoader } from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { RecipeStepsEditor } from './RecipeStepsEditor';
 import {
@@ -55,7 +55,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
   const [showOptional, setShowOptional] = useState(false);
 
   if (initializing) {
-    return <GlobalLoader />;
+    return <Loader />;
   }
 
   const published = !!path(['published'], recipe);

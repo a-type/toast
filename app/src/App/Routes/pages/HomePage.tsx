@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import usePlan from 'features/plan/usePlan';
-import { GlobalLoader } from 'components/generic/Loader/GlobalLoader';
+import { Loader } from 'components/generic/Loader/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { PlanSetup } from 'features/plan/Setup/Setup';
 import PlanView from 'features/plan/PlanView/PlanView';
@@ -37,7 +37,7 @@ export const HomePage: FC<HomePageProps> = () => {
   }
 
   if (planLoading) {
-    return <GlobalLoader />;
+    return <Loader />;
   }
 
   return !plan.length ? (

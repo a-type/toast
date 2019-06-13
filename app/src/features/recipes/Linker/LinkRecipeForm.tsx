@@ -1,20 +1,21 @@
-import React, { useState, FC } from 'react';
-import logger from 'logger';
-import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
-import { useLinker } from 'contexts/LinkerContext';
-import useMedia from 'hooks/useMedia';
 import {
-  Typography,
+  Box,
   Button,
   Dialog,
-  Box,
-  TextField,
   makeStyles,
+  TextField,
+  Typography,
 } from '@material-ui/core';
-import Loader from 'components/generic/Loader';
 import Icon from 'components/generic/Icon';
 import Link from 'components/generic/Link';
+import InlineLoader from 'components/generic/Loader/InlineLoader';
+import { Row } from 'components/generic/Row';
+import { useLinker } from 'contexts/LinkerContext';
+import gql from 'graphql-tag';
+import useMedia from 'hooks/useMedia';
+import logger from 'logger';
+import React, { FC, useState } from 'react';
+import { useMutation } from 'react-apollo-hooks';
 
 const MESSAGES = {
   EXPLANATION:
@@ -77,9 +78,7 @@ export interface LinkRecipeFormProps {
 }
 
 const useStyles = makeStyles(theme => ({
-  button: {
-    margin: theme.spacing(1),
-  },
+  button: {},
 }));
 
 const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
@@ -134,7 +133,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   if (working) {
     return (
       <Box display="flex" flexDirection="column" alignItems="center">
-        <Loader inline size="20vh" />
+        <InlineLoader size="20vh" />
         <Typography>Scanning your recipe...</Typography>
       </Box>
     );
@@ -155,7 +154,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
             That one was a little tough. We need to hand it over to you to
             finish off.
           </Typography>
-          <Box display="flex" flexDirection="row">
+          <Row>
             <Link to={linkTo}>
               <Button className={classes.button}>Manage Recipe</Button>
             </Link>
@@ -166,7 +165,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
             >
               Scan another one
             </Button>
-          </Box>
+          </Row>
         </Box>
       );
     }
@@ -214,25 +213,27 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
         name="recipeUrl"
         type="url"
       />
-      <Button
-        className={classes.button}
-        type="submit"
-        disabled={!url}
-        color="primary"
-        variant="contained"
-      >
-        Scan
-      </Button>
-      {url && (
+      <Row>
         <Button
           className={classes.button}
-          variant="text"
-          type="reset"
-          onClick={() => setUrl('')}
+          type="submit"
+          disabled={!url}
+          color="primary"
+          variant="contained"
         >
-          Clear
+          Scan
         </Button>
-      )}
+        {url && (
+          <Button
+            className={classes.button}
+            variant="text"
+            type="reset"
+            onClick={() => setUrl('')}
+          >
+            Clear
+          </Button>
+        )}
+      </Row>
     </form>
   );
 };

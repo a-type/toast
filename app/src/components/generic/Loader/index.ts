@@ -1,2 +1,2 @@
-export { default } from './Loader';
-export * from './GlobalLoader';
+export { InlineLoader } from './InlineLoader';
+export * from './Loader';

@@ -1,6 +1,12 @@
-import React, { createContext, useState, useContext } from 'react';
-import { Snackbar, Button } from '@material-ui/core';
-import { pathOr, path } from 'ramda';
+import { Button, Snackbar } from '@material-ui/core';
+import { path, pathOr } from 'ramda';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 export type AlertDef = {
   content: string;
@@ -28,26 +34,30 @@ const AlertContext = createContext<AlertContextValue>({
 export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState<AlertDef[]>([]);
 
-  const showAlert = (alert: AlertDef) => {
-    console.log('showAlert', alert);
-    setAlerts([...alerts, alert]);
-  };
+  const showAlert = useCallback(
+    (alert: AlertDef) => {
+      console.log('showAlert', alert);
+      setAlerts([...alerts, alert]);
+    },
+    [setAlerts, alerts],
+  );
 
-  const popAlert = () => {
+  const popAlert = useCallback(() => {
     const [_, ...rest] = alerts;
     setAlerts(rest);
-  };
+  }, [setAlerts, alerts]);
+
+  const value = useMemo(
+    () => ({
+      alerts,
+      showAlert,
+      popAlert,
+    }),
+    [alerts, showAlert, popAlert],
+  );
 
   return (
-    <AlertContext.Provider
-      value={{
-        alerts,
-        showAlert,
-        popAlert,
-      }}
-    >
-      {children}
-    </AlertContext.Provider>
+    <AlertContext.Provider value={value}>{children}</AlertContext.Provider>
   );
 };
 

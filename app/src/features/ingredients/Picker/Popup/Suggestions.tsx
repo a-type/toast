@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Suggestion from './Suggestion';
-import Loader from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo-hooks';
 import ErrorMessage from 'components/generic/ErrorMessage';

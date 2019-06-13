@@ -2,8 +2,7 @@ import React, { FC } from 'react';
 import useCollections from './useCollections';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { Collection } from './useCollections';
-import Link from 'components/generic/Link';
-import Loader from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 import { Card, CardHeader, CardActionArea } from '@material-ui/core';
 import CardGrid from 'components/generic/CardGrid';
 

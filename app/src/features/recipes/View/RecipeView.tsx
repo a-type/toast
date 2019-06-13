@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
-import Ingredients from './Ingredients';
-import Details from './Details/Details';
-import { pathOr, path } from 'ramda';
-import { Redirect } from 'react-router-dom';
-import ViewSpy from './ViewSpy';
-import { Spotlight } from 'features/recipes/components/Spotlight';
-import { StepsLink } from './components';
-import { useAuth } from 'contexts/AuthContext';
-import ErrorMessage from 'components/generic/ErrorMessage';
-import useFullRecipe from '../useFullRecipe';
-import { GlobalLoader } from 'components/generic/Loader';
 import { Typography } from '@material-ui/core';
+import ErrorMessage from 'components/generic/ErrorMessage';
+import { Loader } from 'components/generic/Loader/Loader';
+import { useAuth } from 'contexts/AuthContext';
+import { Spotlight } from 'features/recipes/components/Spotlight';
+import { path, pathOr } from 'ramda';
+import React, { FC } from 'react';
+import { Redirect } from 'react-router-dom';
+import useFullRecipe from '../useFullRecipe';
+import { StepsLink } from './components';
+import Details from './Details/Details';
+import Ingredients from './Ingredients';
+import ViewSpy from './ViewSpy';
 
 export interface RecipeViewProps {
   recipeId: string;
@@ -21,7 +21,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
   const [recipe, loading, error] = useFullRecipe(recipeId);
 
   if (loading) {
-    return <GlobalLoader />;
+    return <Loader />;
   }
 
   if (error) {

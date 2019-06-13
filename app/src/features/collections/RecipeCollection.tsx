@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import useCollection from './useCollection';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import Loader from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 import { RecipeCards } from 'features/recipes';
 import { path } from 'ramda';
 import { Box, Typography } from '@material-ui/core';

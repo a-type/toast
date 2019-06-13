@@ -1,5 +1,5 @@
+import { css, Global } from '@emotion/core';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { Global, css } from '@emotion/core';
 
 const theme = createMuiTheme({
   typography: {
@@ -53,7 +53,7 @@ const theme = createMuiTheme({
     },
     background: {
       paper: '#fefeff',
-      default: '#fafafa',
+      default: '#fefeff',
     },
     text: {
       primary: '#290f34',

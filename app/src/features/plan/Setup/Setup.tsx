@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
-import Loader from 'components/generic/Loader';
-import useStoredFlag from 'hooks/useStoredFlag';
-import useGuides from 'features/guides/useGuides';
-import { Typography, Button, makeStyles, Paper } from '@material-ui/core';
+import { Button, makeStyles, Paper, Typography } from '@material-ui/core';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { Loader } from 'components/generic/Loader/Loader';
+import { Row } from 'components/generic/Row';
+import useGuides from 'features/guides/useGuides';
+import gql from 'graphql-tag';
+import useStoredFlag from 'hooks/useStoredFlag';
+import React, { useState } from 'react';
+import { useMutation } from 'react-apollo-hooks';
 
 export const Document = gql`
   mutation CreatePlan {
@@ -16,9 +17,7 @@ export const Document = gql`
 `;
 
 const useStyles = makeStyles(theme => ({
-  button: {
-    margin: theme.spacing(1),
-  },
+  button: {},
   paper: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
@@ -51,19 +50,21 @@ export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h1">Let's get started</Typography>
-      <Typography variant="body1">
+      <Typography variant="h1" gutterBottom>
+        Let's get started
+      </Typography>
+      <Typography variant="body1" gutterBottom>
         Thanks for joining Toast! Let's set you up with your new plan. This
         shouldn't take long.
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" gutterBottom>
         First off, are you looking to start your own plan, or join someone else?
       </Typography>
       {!showJoinInfo ? (
         loading ? (
           <Loader />
         ) : (
-          <>
+          <Row mt={1}>
             <Button
               color="primary"
               variant="contained"
@@ -78,7 +79,7 @@ export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
             >
               Join someone else's plan
             </Button>
-          </>
+          </Row>
         )
       ) : (
         <Paper className={classes.paper}>

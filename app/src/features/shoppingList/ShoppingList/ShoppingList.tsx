@@ -6,7 +6,7 @@ import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListItemList } from './components/ShoppingListItemList';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import ShoppingListEmptyState from './components/EmptyState';
-import Loader, { GlobalLoader } from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 import { Typography } from '@material-ui/core';
 
 const GetShoppingListQuery = gql`

@@ -1,17 +1,15 @@
-import React, { FC, useState } from 'react';
-import { Guide } from '../types';
-import { withRouter, RouteComponentProps } from 'react-router';
-import styled from 'styled-components';
-import Link, { LinkProps } from 'components/generic/Link';
 import {
   Box,
-  IconButton,
-  Typography,
   Collapse,
+  IconButton,
   makeStyles,
+  Typography,
 } from '@material-ui/core';
-import Icon from 'components/generic/Icon';
-import { ExpandMoreTwoTone, DoneTwoTone } from '@material-ui/icons';
+import { DoneTwoTone, ExpandMoreTwoTone } from '@material-ui/icons';
+import Link from 'components/generic/Link';
+import React, { FC, useState } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Guide } from '../types';
 
 interface GuideMessageProps {
   guide: Guide;
@@ -48,7 +46,10 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     fontStyle: 'italic',
     display: 'flex',
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
+    },
 
     '& > *': {
       margin: 'auto',
@@ -62,7 +63,10 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     fontStyle: 'italic',
     display: 'flex',
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
+    },
 
     '& > *': {
       margin: 'auto',

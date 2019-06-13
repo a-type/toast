@@ -20,7 +20,7 @@ const driver = neo4j.driver(
   {
     disableLosslessIntegers: true,
     logging: {
-      level: 'debug',
+      level: 'warn',
       logger: (level, message) =>
         console.log(`${Date.now()} ${level.toUpperCase()} ${message}`),
     },

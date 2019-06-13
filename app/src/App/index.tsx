@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom';
 import history from 'browserHistory';
 import Navigation from 'features/structure/Navigation/Navigation';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
-import { GlobalLoader } from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 import Helmet from 'react-helmet';
 import Guides from 'features/guides/Guides/Guides';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
@@ -57,7 +57,7 @@ const App: FC<{}> = props => {
             <Router history={history}>
               <TokenContext.Provider>
                 <LinkerContextProvider>
-                  <Suspense fallback={<GlobalLoader />}>
+                  <Suspense fallback={<Loader />}>
                     <Helmet title="Toast" />
                     <Box className={classes.mainGrid}>
                       <ErrorBoundary>

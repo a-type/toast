@@ -6,7 +6,7 @@ import ErrorMessage from 'components/generic/ErrorMessage';
 import useFullRecipe from '../useFullRecipe';
 import { Typography, Button } from '@material-ui/core';
 import Link from 'components/generic/Link';
-import Loader from 'components/generic/Loader';
+import { Loader } from 'components/generic/Loader/Loader';
 
 export interface CorrectRecipeProps {
   recipeId: string;
