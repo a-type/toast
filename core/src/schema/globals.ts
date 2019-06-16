@@ -6,6 +6,11 @@ export default gql`
   scalar Upload
   scalar Any
 
+  type PageInfo {
+    hasNextPage: Boolean
+    hasPreviousPage: Boolean
+  }
+
   type Query {
     foo: Boolean
   }

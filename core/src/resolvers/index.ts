@@ -3,7 +3,7 @@ import { mergeDeepRight } from 'ramda';
 import * as scalars from './scalars';
 import recipes from './recipes';
 import users from './users';
-import ingredientCorrections from './ingredientCorrections';
+import corrections from './corrections';
 import groupInvitations from './groupInvitations';
 import shoppingList from './shoppingList';
 import ingredients from './ingredients';
@@ -12,7 +12,7 @@ import groups from './groups';
 export default [
   recipes,
   users,
-  ingredientCorrections,
+  corrections,
   groupInvitations,
   shoppingList,
   scalars,
