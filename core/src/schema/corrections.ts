@@ -22,30 +22,33 @@ export default gql`
     submittedAt: Date!
   }
 
-  type ChangeFoodIngredientCorrection implements IngredientConnection {
+  type ChangeFoodIngredientCorrection implements IngredientCorrection {
     id: ID!
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-    foodId: String!
+      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+    food: Food! @cypher(match: "(food:Food{id: parent.foodId})", return: "food")
   }
 
-  type ChangeQuantityIngredientCorrection implements IngredientConnection {
+  type ChangeQuantityIngredientCorrection implements IngredientCorrection {
     id: ID!
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
+      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
     quantity: Float!
   }
 
-  type ChangeUnitIngredientCorrection implements IngredientConnection {
+  type ChangeUnitIngredientCorrection implements IngredientCorrection {
     id: ID!
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
+      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
     unit: String!
   }
 
@@ -55,6 +58,8 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     text: String!
+    recipe: Recipe!
+      @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
   }
 
   type RemoveIngredientCorrection implements IngredientCorrection {
@@ -63,10 +68,11 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
+      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
   }
 
   type IngredientCorrectionsConnection {
-    edges: [IngredientConnectionEdge!]!
+    edges: [IngredientCorrectionEdge!]!
     pageInfo: PageInfo!
   }
 
@@ -77,7 +83,7 @@ export default gql`
 
   input IngredientCorrectionsCollectionFilterInput {
     first: Int
-    after: string
+    after: String
     status: IngredientCorrectionStatus
   }
 
@@ -88,28 +94,31 @@ export default gql`
   }
 
   input IngredientCorrectionChangeFoodInput {
+    ingredientId: String!
     foodId: String!
   }
 
   input IngredientCorrectionChangeQuantityInput {
+    ingredientId: String!
     quantity: Float!
   }
 
   input IngredientCorrectionChangeUnitInput {
+    ingredientId: String!
     unit: String!
   }
 
   input IngredientCorrectionAddInput {
     text: String!
-    recipeId: String!
   }
 
   input IngredientCorrectionRemoveInput {
     ingredientId: String!
-    report: Boolean
   }
 
   input IngredientCorrectionSubmitInput {
+    recipeId: String!
+
     changeFood: IngredientCorrectionChangeFoodInput
     changeQuantity: IngredientCorrectionChangeQuantityInput
     changeUnit: IngredientCorrectionChangeUnitInput
