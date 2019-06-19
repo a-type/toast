@@ -274,13 +274,18 @@ export default {
         const res = await tx.run(
           `
           MATCH (recipe:Recipe{id:$id})
-          RETURN recipe {.public, .locked}
+          OPTIONAL MATCH authorPath=(:User{id:$userId})-[:AUTHOR_OF]->(recipe)
+          RETURN recipe {.public, .locked}, size(authorPath) as authorCount
           `,
-          { id: input.recipeId },
+          { id: input.recipeId, userId: ctx.user.id },
         );
 
         if (!res.records || res.records.length === 0) {
           return false;
+        }
+
+        if (res.records[0].get('authorCount')) {
+          return true;
         }
 
         const recipe = res.records[0].get('recipe');
