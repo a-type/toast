@@ -2,7 +2,6 @@ import React from 'react';
 import Recipe from 'features/recipes/View';
 import Steps from 'features/recipes/Steps';
 import { Route, Switch } from 'react-router-dom';
-import Correct from './Correct';
 import Fullscreen from 'components/layout/Fullscreen';
 import RecipeEditor from 'features/recipes/RecipeEditor/RecipeEditor';
 import { Container } from '@material-ui/core';
@@ -32,7 +31,6 @@ export default () => (
       component={EditRecipePage}
     />
     <Route path="/recipes/:recipeId/steps" component={RecipeStepsPage} />
-    <Route path="/recipes/:recipeId/correct" component={Correct} />
     <Route path="/recipes/:recipeId" component={RecipePage} />
   </Switch>
 );

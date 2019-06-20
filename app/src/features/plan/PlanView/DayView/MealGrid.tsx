@@ -4,7 +4,7 @@ const MealGrid = styled.div`
   display: grid;
   min-height: 33vh;
   grid-template-areas: 'breakfast lunch' 'dinner dinner';
-  grid-template-rows: auto auto;
+  grid-template-rows: repeat(2, minmax(200px, auto));
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);

@@ -1,20 +1,14 @@
+import { Box, Card, CardActionArea, makeStyles } from '@material-ui/core';
+import { darken } from '@material-ui/core/styles';
+import { AddTwoTone } from '@material-ui/icons';
+import Popup from 'components/generic/Popup';
 import React, { FC } from 'react';
 import PlanMealActionPicker from './ActionPicker';
+import PlanMealDetailsStage from './DetailsStage';
+import { PlanActionType } from './types';
 import usePlanActionSelection, {
   SelectionStage,
 } from './usePlanActionSelection';
-import PlanMealDetailsStage from './DetailsStage';
-import {
-  Dialog,
-  Card,
-  CardActionArea,
-  Box,
-  makeStyles,
-} from '@material-ui/core';
-import { AddCircleTwoTone } from '@material-ui/icons';
-import { darken } from '@material-ui/core/styles';
-import { PlanActionType } from './types';
-import Popup from 'components/generic/Popup';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -56,7 +50,7 @@ export const EmptyMeal: FC<EmptyMealProps> = ({
           onClick={() => selectActionType(PlanActionType.Cook)}
         >
           <Box display="flex" flexDirection="column" height="100%">
-            <AddCircleTwoTone className={classes.addIcon} />
+            <AddTwoTone className={classes.addIcon} />
           </Box>
         </CardActionArea>
       </Card>

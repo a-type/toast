@@ -35,13 +35,7 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
     fontFamily: '"Pacifico", "PlayFair Display", "PT Serif", serif',
     color: 'white',
   },
-  settingsButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  },
+  settingsButton: {},
   logo: {
     borderTopLeftRadius: 0,
     borderTopRightRadius: '32px',

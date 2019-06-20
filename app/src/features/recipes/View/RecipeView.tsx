@@ -9,7 +9,7 @@ import { Redirect } from 'react-router-dom';
 import useFullRecipe from '../useFullRecipe';
 import { StepsLink } from './components';
 import Details from './Details/Details';
-import Ingredients from './Ingredients';
+import Ingredients from './Ingredients/Ingredients';
 import ViewSpy from './ViewSpy';
 
 export interface RecipeViewProps {
@@ -42,6 +42,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
         Ingredients
       </Typography>
       <Ingredients
+        recipeId={recipeId}
         servings={path(['servings'], recipe)}
         ingredients={pathOr([], ['ingredientsConnection', 'nodes'], recipe)}
       />

@@ -141,7 +141,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
 
   if (lastResult) {
     const linkTo = lastResult.recipe.locked
-      ? `/recipes/${lastResult.recipe.id}/correct`
+      ? `/recipes/${lastResult.recipe.id}`
       : `/recipes/${lastResult.recipe.id}/edit`;
 
     if (lastResult.problems.length) {

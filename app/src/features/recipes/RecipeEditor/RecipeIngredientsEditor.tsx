@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
 import { EditRecipeRecipe } from './queries';
 import { Formik } from 'formik';
-import IngredientCorrector, {
-  IngredientCorrectorMessages,
-} from 'features/recipes/Correct/Ingredients/IngredientCorrector';
-import { useCorrectIngredient } from '../Correct/useCorrectIngredient';
 import { Box, Button, TextField } from '@material-ui/core';
 
 export interface RecipeIngredientsEditorProps {
@@ -36,7 +32,7 @@ export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
   return (
     <Box>
       <Box>
-        {recipe.ingredients.map(recipeIngredient => (
+        {/* {recipe.ingredients.map(recipeIngredient => (
           <IngredientCorrector
             key={recipeIngredient.id}
             recipeIngredient={recipeIngredient}
@@ -44,7 +40,7 @@ export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
             requestDelete={submitDelete}
             messages={CORRECTOR_MESSAGES}
           />
-        ))}
+        ))} */}
       </Box>
       <Formik
         onSubmit={createIngredient}

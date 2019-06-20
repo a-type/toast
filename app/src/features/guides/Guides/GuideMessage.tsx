@@ -32,6 +32,8 @@ const useStyles = makeStyles(theme => ({
       fontStyle: 'italic',
       borderTopRightRadius: theme.shape.borderRadius,
       padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
+      borderTop: `1px solid ${theme.palette.primary.dark}`,
+      borderRight: `1px solid ${theme.palette.primary.dark}`,
     },
 
     '& > *:first-child': {

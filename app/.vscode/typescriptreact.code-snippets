@@ -27,9 +27,7 @@
       "",
       "export const $1: FC<$1Props> = ({ $3 }) => {",
       "  $0",
-      "};",
-      "",
-      "export default $1;"
+      "};"
     ]
   }
 }
