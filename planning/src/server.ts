@@ -1,6 +1,6 @@
 import express from 'express';
 import 'express-async-errors';
-import { syncPlan } from './functions';
+import { syncPlan, syncAll } from './functions';
 import ApiError from './ApiError';
 
 const app = express();
@@ -23,5 +23,6 @@ app.get('/ping', (req, res) => {
 });
 
 app.post('/syncPlan', syncPlan);
+app.post('/syncAll', syncAll);
 
 app.listen(port, () => console.info(`Running on http://localhost:${port}`));
