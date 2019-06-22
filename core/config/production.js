@@ -19,4 +19,10 @@ module.exports = {
       },
     },
   },
+  planning: {
+    host: 'https://toast-planning-q6mtovqfhq-uc.a.run.app',
+  },
+  scanning: {
+    host: 'https://toast-scanning-q6mtovqfhq-uc.a.run.app',
+  },
 };

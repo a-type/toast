@@ -92,7 +92,7 @@ steps:
         "--region",
         "us-central1",
         "--set-env-vars",
-        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password,NEO4J_BOLT_HOST=${_NEO4J_HOST}",
         "--allow-unauthenticated",
       ]
 
@@ -140,7 +140,7 @@ steps:
         "--region",
         "us-central1",
         "--set-env-vars",
-        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password,NEO4J_BOLT_HOST=${_NEO4J_HOST}",
         "--no-allow-unauthenticated",
       ]
 
@@ -188,7 +188,7 @@ steps:
         "--region",
         "us-central1",
         "--set-env-vars",
-        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password,NEO4J_BOLT_HOST=${_NEO4J_HOST}",
         "--no-allow-unauthenticated",
       ]
 
@@ -202,3 +202,4 @@ timeout: 1800s
 
 substitutions:
   _BERGLAS_BUCKET_ID: toast-secrets
+  _NEO4J_HOST: bolt://35.211.56.142:7687
