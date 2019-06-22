@@ -49,8 +49,6 @@ steps:
         "us-central1",
         "--allow-unauthenticated",
       ]
-    env:
-      - "PROJECT_ID=toast-cooking"
 
   # CORE
   #========================================================
@@ -94,12 +92,10 @@ steps:
         "--region",
         "us-central1",
         "--set-env-vars",
-        "NEO4J_PASSWORD=berglas://${BERGLAS_BUCKET_ID}/neo4j-prod-password",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password",
         "--allow-unauthenticated",
       ]
-    env:
-      - "PROJECT_ID=toast-cooking"
-      - "BERGLAS_BUCKET_ID=toast-secrets"
+
   # PLANNING
   #========================================================
 
@@ -144,12 +140,9 @@ steps:
         "--region",
         "us-central1",
         "--set-env-vars",
-        "NEO4J_PASSWORD=berglas://${BERGLAS_BUCKET_ID}/neo4j-prod-password",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password",
         "--no-allow-unauthenticated",
       ]
-    env:
-      - "PROJECT_ID=toast-cooking"
-      - "BERGLAS_BUCKET_ID=toast-secrets"
 
   # SCANNING
   #========================================================
@@ -195,12 +188,9 @@ steps:
         "--region",
         "us-central1",
         "--set-env-vars",
-        "NEO4J_PASSWORD=berglas://${BERGLAS_BUCKET_ID}/neo4j-prod-password",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password",
         "--no-allow-unauthenticated",
       ]
-    env:
-      - "PROJECT_ID=toast-cooking"
-      - "BERGLAS_BUCKET_ID=toast-secrets"
 
 images:
   - "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA"
@@ -209,3 +199,6 @@ images:
   - "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA"
 
 timeout: 1800s
+
+substitutions:
+  _BERGLAS_BUCKET_ID: toast-secrets
