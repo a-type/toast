@@ -18,7 +18,7 @@ app.use((err, req, res, next) => {
   return res.status(500).send('Internal error');
 });
 
-const port = 3002;
+const port = process.env.PORT || 3002;
 
 app.get('/ping', (req, res) => {
   res.send('pong');
