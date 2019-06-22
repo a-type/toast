@@ -2,7 +2,7 @@ import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
 import config from 'config';
 import { createContext } from './context';
-import { info, warn } from 'logger';
+import logger, { info, warn } from 'logger';
 import minimist from 'minimist';
 import { path as get } from 'ramda';
 import mockAuthMiddleware from 'mocks/mockAuthMiddleware';
@@ -18,6 +18,8 @@ import typeDefs from './schema/schema';
 const argv = minimist(process.argv.slice(2));
 
 const app = express();
+
+logger.info(`Allowed origins: `, JSON.stringify(config.cors.allowedOrigins));
 
 const corsMiddleware = cors({
   origin: config.cors.allowedOrigins,
