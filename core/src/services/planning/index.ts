@@ -1,11 +1,11 @@
 import config from 'config';
-import fetch from 'node-fetch';
 import { InternalError } from 'errors';
 import logger from 'logger';
+import { invokeCloudRun } from 'services/common';
 
 export default {
   syncPlan: async (groupId: string, startDate: string): Promise<void> => {
-    const response = await fetch(config.planning.host + '/syncPlan', {
+    const response = await invokeCloudRun(config.planning.host, '/syncPlan', {
       method: 'POST',
       body: JSON.stringify({
         groupId,

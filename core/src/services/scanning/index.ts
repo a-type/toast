@@ -1,5 +1,5 @@
 import config from 'config';
-import fetch from 'node-fetch';
+import { invokeCloudRun } from 'services/common';
 
 export type LinkResult = {
   recipeId: string;
@@ -30,7 +30,7 @@ export default {
     sourceUrl: string,
     userId: string,
   ): Promise<LinkResult> => {
-    const response = await fetch(config.scanning.host + '/linkRecipe', {
+    const response = await invokeCloudRun(config.scanning.host, '/linkRecipe', {
       method: 'POST',
       body: JSON.stringify({
         sourceUrl,
@@ -48,15 +48,19 @@ export default {
   parseIngredients: async (
     ingredients: string[],
   ): Promise<IngredientParseResult[]> => {
-    const response = await fetch(config.scanning.host + '/parseIngredients', {
-      method: 'POST',
-      body: JSON.stringify({
-        ingredients,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await invokeCloudRun(
+      config.scanning.host,
+      '/parseIngredients',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          ingredients,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
 
     const body = await response.json();
     return body;
