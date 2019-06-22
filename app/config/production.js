@@ -16,4 +16,8 @@ module.exports = {
   server: {
     port: 4040,
   },
+
+  stripe: {
+    key: 'pk_live_aZ7kiJFNwm8cUvhpgw7hN334',
+  },
 };

@@ -12,4 +12,9 @@ module.exports = {
   pushCertPublicKey:
     'BPesS8Hxjh_5S6bo4wXPae5uDaviR8i1KOGf89ikse-QwaH5ILXT7VdlyYx5ie2XHY9wpkownOTvHwHBFhzL5KY',
   mock: process.env.TOAST_MOCK,
+
+  stripe: {
+    key: 'pk_test_OgHpoAwXJ6IwsSsoYtWufP1x',
+    planId: 'plan_FHo8ETWYeopwEv',
+  },
 };
