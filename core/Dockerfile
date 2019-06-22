@@ -2,14 +2,12 @@ FROM node:10
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-
+COPY package.json package*.json ./
 RUN npm ci
 
-COPY . .
-
+COPY . ./
 RUN npm run build
 
-EXPOSE 4000
+COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
-CMD ["npm", "start"]
+ENTRYPOINT exec /bin/berglas exec -- npm start

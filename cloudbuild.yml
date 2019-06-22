@@ -41,12 +41,16 @@ steps:
         "run",
         "deploy",
         "toast-web",
+        "--project",
+        "${PROJECT_ID}",
         "--image",
         "us.gcr.io/toast-cooking/toast-web:$SHORT_SHA",
         "--region",
         "us-central1",
         "--allow-unauthenticated",
       ]
+    env:
+      - "PROJECT_ID=toast-cooking"
 
   # CORE
   #========================================================
@@ -83,13 +87,19 @@ steps:
         "run",
         "deploy",
         "toast-core",
+        "--project",
+        "${PROJECT_ID}",
         "--image",
-        "us.gcr.io/toast-cooking/toast-core:$SHORT_SHA",
+        "us.gcr.io/${PROJECT_ID}/toast-core:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--set-env-vars",
+        "NEO4J_PASSWORD=berglas://${BERGLAS_BUCKET_ID}/neo4j-prod-password",
         "--allow-unauthenticated",
       ]
-
+    env:
+      - "PROJECT_ID=toast-cooking"
+      - "BERGLAS_BUCKET_ID=toast-secrets"
   # PLANNING
   #========================================================
 
@@ -127,12 +137,19 @@ steps:
         "run",
         "deploy",
         "toast-planning",
+        "--project",
+        "${PROJECT_ID}",
         "--image",
         "us.gcr.io/toast-cooking/toast-planning:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--set-env-vars",
+        "NEO4J_PASSWORD=berglas://${BERGLAS_BUCKET_ID}/neo4j-prod-password",
         "--no-allow-unauthenticated",
       ]
+    env:
+      - "PROJECT_ID=toast-cooking"
+      - "BERGLAS_BUCKET_ID=toast-secrets"
 
   # SCANNING
   #========================================================
@@ -171,12 +188,19 @@ steps:
         "run",
         "deploy",
         "toast-scanning",
+        "--project",
+        "${PROJECT_ID}",
         "--image",
         "us.gcr.io/toast-cooking/toast-scanning:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--set-env-vars",
+        "NEO4J_PASSWORD=berglas://${BERGLAS_BUCKET_ID}/neo4j-prod-password",
         "--no-allow-unauthenticated",
       ]
+    env:
+      - "PROJECT_ID=toast-cooking"
+      - "BERGLAS_BUCKET_ID=toast-secrets"
 
 images:
   - "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA"

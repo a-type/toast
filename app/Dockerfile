@@ -1,19 +1,14 @@
-FROM node:9
+FROM node:10
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-ADD . .
+COPY . ./
 
-WORKDIR /app/server
-
-RUN npm i
+WORKDIR /usr/src/app/server
+RUN npm ci
 
 RUN npm run build
 
-EXPOSE 4040
+COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
-# RUN chown -R 1001:1001 /app
-
-USER 1001
-
-CMD ["npm", "start"]
+ENTRYPOINT exec /bin/berglas exec -- npm start

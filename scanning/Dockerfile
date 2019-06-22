@@ -1,15 +1,13 @@
-FROM buildkite/puppeteer:v1.11.0
+FROM node:10
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json package*.json ./
+RUN npm ci
 
-RUN npm install
-
-COPY . .
-
+COPY . ./
 RUN npm run build
 
-EXPOSE 3002
+COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
-CMD ["npm", "start"]
+ENTRYPOINT exec /bin/berglas exec -- npm start
