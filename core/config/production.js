@@ -11,9 +11,9 @@ module.exports = {
     },
   },
   gcloud: {
-    projectId: process.env.GCLOUD_PROJECT_ID,
+    projectId: 'toast-cooking',
     storage: {
-      bucket: process.env.GCLOUD_MEDIA_BUCKET,
+      bucket: 'toast-prod-media',
       directories: {
         images: 'images',
       },
