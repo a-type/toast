@@ -44,7 +44,7 @@ steps:
         "--image",
         "gcr.io/toast-cooking/toast-web:$SHORT_SHA",
         "--region",
-        "us-east-1b",
+        "us-east1-b",
       ]
 
   # CORE
@@ -85,7 +85,7 @@ steps:
         "--image",
         "gcr.io/toast-cooking/toast-core:$SHORT_SHA",
         "--region",
-        "us-east-1b",
+        "us-east1-b",
       ]
 
   # PLANNING
@@ -128,7 +128,7 @@ steps:
         "--image",
         "gcr.io/toast-cooking/toast-planning:$SHORT_SHA",
         "--region",
-        "us-east-1b",
+        "us-east1-b",
       ]
 
   # SCANNING
@@ -171,7 +171,7 @@ steps:
         "--image",
         "gcr.io/toast-cooking/toast-scanning:$SHORT_SHA",
         "--region",
-        "us-east-1b",
+        "us-east1-b",
       ]
 
 images:
