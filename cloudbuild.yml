@@ -45,6 +45,7 @@ steps:
         "gcr.io/toast-cooking/toast-web:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--allow-unauthenticated",
       ]
 
   # CORE
@@ -86,6 +87,7 @@ steps:
         "gcr.io/toast-cooking/toast-core:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--allow-unauthenticated",
       ]
 
   # PLANNING
@@ -129,6 +131,7 @@ steps:
         "gcr.io/toast-cooking/toast-planning:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--no-allow-unauthenticated",
       ]
 
   # SCANNING
@@ -172,6 +175,7 @@ steps:
         "gcr.io/toast-cooking/toast-scanning:$SHORT_SHA",
         "--region",
         "us-central1",
+        "--no-allow-unauthenticated",
       ]
 
 images:
