@@ -33,16 +33,20 @@ if (argv.mock) {
   app.use('/api', mockAuthMiddleware);
 } else {
   app.use('/api', async (req, res, next) => {
-    const token =
-      req.headers.authorization &&
-      req.headers.authorization.replace('Bearer ', '');
-    if (!token) {
-      next();
-      return;
-    }
+    try {
+      const token =
+        req.headers.authorization &&
+        req.headers.authorization.replace('Bearer ', '');
+      if (!token) {
+        next();
+        return;
+      }
 
-    const decoded = await firebase.auth().verifyIdToken(token);
-    req.user = decoded;
+      const decoded = await firebase.auth().verifyIdToken(token);
+      req.user = decoded;
+    } catch (err) {
+      logger.fatal(err);
+    }
     next();
   });
 }
