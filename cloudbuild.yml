@@ -1,36 +1,42 @@
 steps:
-  # APP
-  #=======================================================
   - name: "gcr.io/cloud-builders/npm"
-    id: "App Install"
-    args: ["install"]
-    dir: "app"
-
+    id: "Lerna Install"
+    args: ["install", "-g", "lerna"]
   - name: "gcr.io/cloud-builders/npm"
-    id: "App Test"
-    waitFor: ["App Install"]
-    args: ["run", "test"]
-    dir: "app"
-
+    id: "Lerna Bootstrap"
+    entrypoint: "lerna"
+    args: ["bootstrap"]
   - name: "gcr.io/cloud-builders/npm"
-    id: "App Build"
-    waitFor: ["App Install"]
-    args: ["run", "build"]
+    id: "Lerna Test"
+    entrypoint: "lerna"
+    args: ["run", "ci:test"]
+  - name: "gcr.io/cloud-builders/npm"
+    id: "Lerna Build"
+    entrypoint: "lerna"
+    args: ["run", "ci:build"]
     env:
       - "BUILD_ID=$BUILD_ID"
-    dir: "app"
 
+  # APP
+  #=======================================================
   - name: "gcr.io/cloud-builders/docker"
     id: "App Containerize"
-    waitFor: ["App Build"]
-    args: ["build", "-t", "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA", "."]
-    dir: "app"
+    args:
+      [
+        "build",
+        "-f",
+        ".web.Dockerfile",
+        "-t",
+        "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA",
+        ".",
+      ]
+    dir: "services"
 
   - name: "gcr.io/cloud-builders/docker"
     id: "App Push"
     waitFor: ["App Containerize"]
     args: ["push", "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA"]
-    dir: "app"
+    dir: "services"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "App Deploy"
@@ -52,22 +58,17 @@ steps:
 
   # CORE
   #========================================================
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Core Install"
-    waitFor: ["-"]
-    args: ["install"]
-    dir: "core"
-
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Core Test"
-    waitFor: ["Core Install"]
-    args: ["run", "test"]
-    dir: "core"
-
   - name: "gcr.io/cloud-builders/docker"
     id: "Core Containerize"
-    waitFor: ["Core Test"]
-    args: ["build", "-t", "us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA", "."]
+    args:
+      [
+        "build",
+        "-f",
+        ".core.Dockerfile",
+        "-t",
+        "us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA",
+        ".",
+      ]
     dir: "core"
 
   - name: "gcr.io/cloud-builders/docker"
@@ -98,27 +99,13 @@ steps:
 
   # PLANNING
   #========================================================
-
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Planning Install"
-    waitFor: ["-"]
-    args: ["install"]
-    dir: "planning"
-
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Planning Test"
-    waitFor: ["Planning Install"]
-    args: ["run", "test"]
-    dir: "planning"
-
   - name: "gcr.io/cloud-builders/docker"
     id: "Planning Containerize"
-    waitFor: ["Planning Test"]
     args:
       [
         "build",
         "-f",
-        "planning.Dockerfile",
+        ".planning.Dockerfile",
         "-t",
         "us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA",
         ".",
@@ -151,19 +138,6 @@ steps:
 
   # SCANNING
   #========================================================
-
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Scanning Install"
-    waitFor: ["-"]
-    args: ["install"]
-    dir: "scanning"
-
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Scanning Test"
-    waitFor: ["Scanning Install"]
-    args: ["run", "test"]
-    dir: "scanning"
-
   - name: "gcr.io/cloud-builders/docker"
     id: "Scanning Containerize"
     waitFor: ["Scanning Test"]
@@ -171,7 +145,7 @@ steps:
       [
         "build",
         "-f",
-        "planning.Dockerfile",
+        ".scanning.Dockerfile",
         "-t",
         "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA",
         ".",

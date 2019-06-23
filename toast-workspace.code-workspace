@@ -1,23 +1,27 @@
 {
   "folders": [
     {
-      "path": "app",
-      "name": "App"
+      "path": "services/toast-ui",
+      "name": "UI"
     },
     {
-      "path": "core",
+      "path": "services/toast-web",
+      "name": "Web"
+    },
+    {
+      "path": "services/toast-core",
       "name": "Core"
     },
     {
-      "path": "planning",
+      "path": "services/toast-planning",
       "name": "Planning"
     },
     {
-      "path": "scanning",
+      "path": "services/toast-scanning",
       "name": "Scanning"
     },
     {
-      "path": "common",
+      "path": "services/toast-common",
       "name": "Common"
     },
     {
