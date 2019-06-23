@@ -1,6 +1,5 @@
-import neo4j from '../services/neo4j';
+import { neo4j, ApiError } from 'toast-common';
 import { Request, Response } from 'express';
-import ApiError from '../ApiError';
 import { addHours, getDay, format, startOfDay } from 'date-fns';
 import { syncPlan } from './common';
 

@@ -54,6 +54,7 @@
     "robots-txt-parser": "^1.0.1",
     "shortid": "^2.2.14",
     "string-similarity": "^3.0.0",
+    "toast-common": "file:../common",
     "uuid": "^3.3.2"
   }
 }

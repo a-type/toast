@@ -13,6 +13,7 @@
     "node-fetch": "^2.3.0",
     "ramda": "^0.26.1",
     "shortid": "^2.2.14",
+    "toast-common": "file:../common",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
@@ -36,8 +37,7 @@
     "build:clean-dir": "rimraf build",
     "build:transpile": "tsc",
     "build": "run-s build:*",
-    "start": "node -r dotenv/config ./build/server.js",
-    "job:sync": "node -r dotenv/config ./build/jobs/sync.js"
+    "start": "node -r dotenv/config ./build/server.js"
   },
   "repository": {
     "type": "git",

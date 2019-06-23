@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 import { Readable } from 'stream';
-import { id } from '../../tools';
 import { Storage } from '@google-cloud/storage';
 import { lookup } from 'mime-types';
+import { createId } from 'toast-common';
 
 const projectId = process.env.GCLOUD_PROJECT_ID;
 const bucket = process.env.GCLOUD_IMAGE_BUCKET;
@@ -24,7 +24,7 @@ export const saveFromUrl = async (imageUrl: string) => {
   stream.push(buffer);
   stream.push(null);
 
-  const imageId = id('image');
+  const imageId = createId('image');
   const directory = 'images';
   const fileName = `${directory}/${imageId}`;
 

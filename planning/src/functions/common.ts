@@ -1,6 +1,6 @@
-import id from '../tools/id';
 import { Transaction, Session } from 'neo4j-driver/types/v1';
 import { parse, subWeeks, format } from 'date-fns';
+import { createId } from 'toast-common';
 
 export const updateStartDay = async (
   tx: Transaction,
@@ -59,7 +59,7 @@ export const updateStartDay = async (
       {
         groupId,
         startDate,
-        dayId: id('planDay'),
+        dayId: createId('planDay'),
       },
     );
   }
@@ -93,7 +93,7 @@ export const fillMissingDays = async (
     {
       groupId,
       dayCount,
-      dayIds: new Array(dayCount).fill(null).map(() => id('planDay')),
+      dayIds: new Array(dayCount).fill(null).map(() => createId('planDay')),
     },
   );
 };

@@ -115,14 +115,19 @@ steps:
     id: "Planning Containerize"
     waitFor: ["Planning Test"]
     args:
-      ["build", "-t", "us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA", "."]
-    dir: "planning"
+      [
+        "build",
+        "-f",
+        "planning.Dockerfile",
+        "-t",
+        "us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA",
+        ".",
+      ]
 
   - name: "gcr.io/cloud-builders/docker"
     id: "Planning Push"
     waitFor: ["Planning Containerize"]
     args: ["push", "us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA"]
-    dir: "planning"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "Planning Deploy"
@@ -163,14 +168,19 @@ steps:
     id: "Scanning Containerize"
     waitFor: ["Scanning Test"]
     args:
-      ["build", "-t", "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA", "."]
-    dir: "scanning"
+      [
+        "build",
+        "-f",
+        "planning.Dockerfile",
+        "-t",
+        "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA",
+        ".",
+      ]
 
   - name: "gcr.io/cloud-builders/docker"
     id: "Scanning Push"
     waitFor: ["Scanning Containerize"]
     args: ["push", "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA"]
-    dir: "scanning"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "Scanning Deploy"

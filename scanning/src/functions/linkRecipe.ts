@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
-import ApiError from '../ApiError';
 import { saveFromUrl } from '../services/images/images';
 import lookupFoods from '../services/lookupFoods';
-import neo4j from '../services/neo4j';
+import { neo4j, createId, neo4jTimestamp, ApiError } from 'toast-common';
 import parser from '../services/parser';
 import { ParseResult } from '../services/parser/parser';
 import scraper from '../services/scraper';
-import { id, timestamp } from '../tools';
 
 enum RecipeLinkProblem {
   FailedIngredients = 'FailedIngredients',
@@ -81,7 +79,7 @@ export default async (req: Request, res: Response) => {
   const sourceUrl = fullSourceUrl.replace(/\?.*/, '');
 
   const session = neo4j.session();
-  const time = timestamp();
+  const time = neo4jTimestamp();
 
   let defaultCollectionId = await session.readTransaction(async tx => {
     const result = await tx.run(
@@ -109,7 +107,7 @@ export default async (req: Request, res: Response) => {
         `,
         {
           userId,
-          collectionId: id('recipeCollection'),
+          collectionId: createId('recipeCollection'),
         },
       );
 
@@ -219,7 +217,7 @@ export default async (req: Request, res: Response) => {
               RETURN food
               `,
                   {
-                    id: id(foodName),
+                    id: createId(foodName),
                     name: foodName,
                   },
                 ),
@@ -277,7 +275,7 @@ export default async (req: Request, res: Response) => {
             updatedAt: time,
             viewedAt: time,
           },
-          id: id(scraped.title || 'recipe'),
+          id: createId(scraped.title || 'recipe'),
           userId,
           collectionId: defaultCollectionId,
         },
@@ -314,7 +312,7 @@ export default async (req: Request, res: Response) => {
                 foodId,
                 props: {
                   ...rest,
-                  id: id('ingredient'),
+                  id: createId('ingredient'),
                 },
               });
             }),
