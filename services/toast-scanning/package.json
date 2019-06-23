@@ -57,6 +57,7 @@
     "shortid": "^2.2.14",
     "string-similarity": "^3.0.0",
     "toast-common": "^0.1.0",
+    "typescript": "^3.5.2",
     "uuid": "^3.3.2"
   }
 }

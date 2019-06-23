@@ -1,1 +1,0 @@
-export { ShoppingList } from './ShoppingList';

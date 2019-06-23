@@ -27,7 +27,8 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "lint-staged": "^8.1.4",
-    "toast-ui": "^0.1.0"
+    "toast-ui": "^0.1.0",
+    "typescript": "^3.5.2"
   },
   "devDependencies": {
     "@types/node": "^11.9.5",

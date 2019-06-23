@@ -1,0 +1,15 @@
+{
+  "name": "toast-billing",
+  "version": "1.0.0",
+  "description": "Billing microservice for Toast",
+  "main": "build/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Grant Forrest",
+  "license": "ISC",
+  "dependencies": {
+    "toast-common": "^0.1.0",
+    "typescript": "^3.5.2"
+  }
+}

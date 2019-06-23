@@ -80,6 +80,7 @@
     "shortid": "^2.2.12",
     "string-similarity": "^1.2.2",
     "text2num": "0.0.1",
+    "typescript": "^3.5.2",
     "uuid": "^3.2.1",
     "yup": "^0.26.10"
   },
