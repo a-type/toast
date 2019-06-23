@@ -7,7 +7,6 @@ steps:
     args: ["run", "bootstrap"]
   - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Test"
-    entrypoint: "lerna"
     args: ["run", "ci:test"]
   - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Build"
