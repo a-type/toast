@@ -1,5 +1,8 @@
 steps:
   - name: "gcr.io/cloud-builders/npm"
+    id: "Global Install"
+    args: ["ci"]
+  - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Bootstrap"
     args: ["run", "bootstrap"]
   - name: "gcr.io/cloud-builders/npm"
