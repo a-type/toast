@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest",
     "build:clean-dir": "rimraf build",
-    "build:transpile": "tsc",
+    "build:transpile": "tsc --declaration",
     "build": "run-s build:*",
     "ci:build": "run-s build:*",
     "dev": "tsc --watch"
@@ -27,7 +27,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.0.0",
     "express-async-errors": "^3.1.1",
     "neo4j-driver": "^1.7.2",
     "node-fetch": "^2.3.0",

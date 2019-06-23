@@ -169,13 +169,54 @@ steps:
         "--no-allow-unauthenticated",
       ]
 
+  # BILLING
+  #========================================================
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Billing Containerize"
+    waitFor: ["Lerna Test"]
+    args:
+      [
+        "build",
+        "-f",
+        ".billing.Dockerfile",
+        "-t",
+        "us.gcr.io/$PROJECT_ID/toast-billing:$SHORT_SHA",
+        ".",
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Billing Push"
+    waitFor: "Billing Containerize"
+    args: ["push", "us.gcr.io/$PROJECT_ID/toast-billing:$SHORT_SHA"]
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "Billing Deploy"
+    waitFor: ["Billing Push"]
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "toast-billing",
+        "--project",
+        "${PROJECT_ID}",
+        "--image",
+        "us.gcr.io/toast-cooking/toast-billing:$SHORT_SHA",
+        "--region",
+        "us-central1",
+        "--set-env-vars",
+        "NEO4J_PASSWORD=berglas://${_BERGLAS_BUCKET_ID}/neo4j-prod-password,STRIPE_SECRET_KEY=berglas://${_BERGLAS_BUCKET_ID}/stripe-secret-key,STRIPE_WEBHOOK_SECRET=berglas://${_BERGLAS_BUCKET_ID}/stripe-webhook-secret,NEO4J_BOLT_HOST=${_NEO4J_HOST}",
+        "--allow-unauthenticated",
+      ]
+
 images:
   - "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA"
   - "us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA"
   - "us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA"
   - "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA"
+  - "us.gcr.io/$PROJECT_ID/toast-billing:$SHORT_SHA"
 
-timeout: 1800s
+timeout: 2400s
 
 substitutions:
   _BERGLAS_BUCKET_ID: toast-secrets

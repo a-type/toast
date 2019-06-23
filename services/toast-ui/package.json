@@ -47,6 +47,7 @@
     "classnames": "^2.2.6",
     "clean-webpack-plugin": "^2.0.1",
     "date-fns": "^1.29.0",
+    "dotenv": "^8.0.0",
     "downshift": "^1.30.0",
     "favicons-webpack-plugin": "0.0.9",
     "firebase": "^5.8.0",

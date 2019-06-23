@@ -42,7 +42,7 @@
     "@google-cloud/storage": "^2.4.2",
     "@microsoft/recognizers-text-number": "^1.1.4",
     "config": "^3.0.1",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.0.0",
     "express-async-errors": "^3.1.1",
     "extract-domain": "^2.0.4",
     "ingredients-parser": "^1.4.0",

@@ -7,7 +7,7 @@
     "clone-deep": "^4.0.1",
     "config": "^3.0.1",
     "date-fns": "^1.30.1",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.0.0",
     "express-async-errors": "^3.1.1",
     "neo4j-driver": "^1.7.2",
     "node-fetch": "^2.3.0",
