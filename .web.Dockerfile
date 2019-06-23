@@ -12,8 +12,7 @@ COPY services/toast-web ./services/toast-web
 
 COPY lerna.json ./
 RUN lerna bootstrap
-
-RUN npm --prefix services/toast-ui build
+RUN lerna run ci:build
 
 COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 

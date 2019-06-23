@@ -8,6 +8,7 @@
     "build:clean": "rimraf build",
     "build:transpile": "tsc",
     "build": "run-s build:*",
+    "ci:build": "run-s build:*",
     "dev": "node -r ts-node/register src/server.ts",
     "start": "node ./build/server.js"
   },

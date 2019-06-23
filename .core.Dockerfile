@@ -11,6 +11,7 @@ COPY services/toast-core ./services/toast-core
 
 COPY lerna.json ./
 RUN lerna bootstrap
+RUN lerna run ci:build
 
 COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
