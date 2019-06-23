@@ -8,9 +8,6 @@ steps:
   - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Test"
     args: ["run", "ci:test"]
-  - name: "gcr.io/cloud-builders/npm"
-    id: "Lerna Build"
-    args: ["run", "ci:build"]
     env:
       - "BUILD_ID=$BUILD_ID"
 
