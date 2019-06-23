@@ -1,14 +1,14 @@
 steps:
   - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Bootstrap"
-    args: ["bootstrap"]
+    args: ["run", "bootstrap"]
   - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Test"
     entrypoint: "lerna"
-    args: ["ci:test"]
+    args: ["run", "ci:test"]
   - name: "gcr.io/cloud-builders/npm"
     id: "Lerna Build"
-    args: ["ci:build"]
+    args: ["run", "ci:build"]
     env:
       - "BUILD_ID=$BUILD_ID"
 
