@@ -15,6 +15,7 @@
     "build:clean": "rimraf build",
     "build:transpile": "tsc",
     "build": "run-s build:*",
+    "ci:build": "run-s build:*",
     "mock": "npm run dev:mock",
     "start": "cross-env NODE_PATH=build node build/server.js",
     "migration:create": "neo4j-migrate create-migration --name=new-migration ./migrations",

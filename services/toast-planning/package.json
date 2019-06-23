@@ -37,6 +37,7 @@
     "build:clean-dir": "rimraf build",
     "build:transpile": "tsc",
     "build": "run-s build:*",
+    "ci:build": "run-s build:*",
     "start": "node -r dotenv/config ./build/server.js"
   },
   "repository": {
