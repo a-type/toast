@@ -11,11 +11,14 @@ import { ExplorePage } from './pages/Explore/Explore';
 import SettingsPage from './pages/Settings';
 import Collections from './pages/Collections';
 import LandingPage from './pages/LandingPage';
+import { SubscribePage } from './pages/Subscribe';
 
 export default () => (
   <Switch>
     <Route path="/" exact component={LandingPage} />
     <Route path="/login" exact component={LoginPage} />
+
+    <PrivateRoute path="/subscribe" component={SubscribePage} />
 
     <PrivateRoute path="/home" component={HomePage} />
 

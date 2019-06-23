@@ -17,6 +17,10 @@ declare var CONFIG: {
   origin: string;
   apiHost: string;
   mock: boolean;
+  stripe: {
+    key: string;
+    planId: string;
+  };
 };
 
 declare var mixpanel: any;
