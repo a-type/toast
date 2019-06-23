@@ -28,13 +28,11 @@ steps:
         "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA",
         ".",
       ]
-    dir: "services"
 
   - name: "gcr.io/cloud-builders/docker"
     id: "App Push"
     waitFor: ["App Containerize"]
     args: ["push", "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA"]
-    dir: "services"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "App Deploy"
@@ -68,13 +66,11 @@ steps:
         "us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA",
         ".",
       ]
-    dir: "core"
 
   - name: "gcr.io/cloud-builders/docker"
     id: "Core Push"
     waitFor: ["Core Containerize"]
     args: ["push", "us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA"]
-    dir: "core"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "Core Deploy"
