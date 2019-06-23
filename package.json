@@ -6,7 +6,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "ci:test": "lerna exec npm run ci:test",
-    "ci:build": "lerna exec npm run ci:build"
+    "ci:test": "lerna run ci:test",
+    "ci:build": "lerna run ci:build"
   }
 }
