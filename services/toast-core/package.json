@@ -18,7 +18,9 @@
     "start": "cross-env NODE_PATH=build node -r dotenv/config build/server.js",
     "migration:create": "neo4j-migrate create-migration --name=new-migration ./migrations",
     "migration:up": "neo4j-migrate up",
-    "migration:down": "neo4j-migrate down"
+    "migration:down": "neo4j-migrate down",
+    "devenv:start": "gcloud compute instances start neo4j-standalone --project=toast-cooking-dev",
+    "devenv:stop": "gcloud compute instances stop neo4j-standalone --project=toast-cooking-dev"
   },
   "repository": {
     "type": "git",
