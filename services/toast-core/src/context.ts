@@ -1,8 +1,6 @@
-import { v1 as neo4j } from 'neo4j-driver';
-import config from 'config';
+import { neo4j } from 'toast-common';
 import { pathOr } from 'ramda';
 import firestore from 'services/firestore';
-import logger from './logger';
 import { TransactionFunction } from 'types';
 import planning from 'services/planning';
 import gcloudStorage from 'services/gcloudStorage';
@@ -12,27 +10,8 @@ import { auth } from 'firebase-admin';
 import DataLoader from 'dataloader';
 import { PurchaseListItem } from 'models/PurchaseList';
 
-logger.info(`Neo4J connection on ${config.database.neo4j.endpoint}`);
-
-const driver = neo4j.driver(
-  config.database.neo4j.endpoint,
-  neo4j.auth.basic(config.database.neo4j.user, config.database.neo4j.password),
-  {
-    disableLosslessIntegers: true,
-    logging: {
-      level: 'warn',
-      logger: (level, message) =>
-        console.log(`${Date.now()} ${level.toUpperCase()} ${message}`),
-    },
-  },
-);
-
-process.on('exit', () => {
-  return driver.close();
-});
-
 export type Context = {
-  neo4jDriver: typeof driver;
+  neo4jDriver: typeof neo4j;
   transaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   writeTransaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   readTransaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
@@ -69,7 +48,7 @@ export const createContext = async (req): Promise<Context> => {
       return null;
     }
 
-    const session = driver.session();
+    const session = neo4j.session();
     let result: string;
 
     try {
@@ -107,10 +86,10 @@ export const createContext = async (req): Promise<Context> => {
   };
 
   const context: Context = {
-    neo4jDriver: driver,
+    neo4jDriver: neo4j,
     // interop / legacy
     transaction: txFunction => {
-      const sess = driver.session();
+      const sess = neo4j.session();
       if (isMutation) {
         return sess.writeTransaction(txFunction);
       } else {
@@ -118,11 +97,11 @@ export const createContext = async (req): Promise<Context> => {
       }
     },
     writeTransaction: txFunction => {
-      const sess = driver.session();
+      const sess = neo4j.session();
       return sess.writeTransaction(txFunction);
     },
     readTransaction: txFunction => {
-      const sess = driver.session();
+      const sess = neo4j.session();
       return sess.readTransaction(txFunction);
     },
 

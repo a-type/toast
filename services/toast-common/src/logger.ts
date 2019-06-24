@@ -1,19 +1,17 @@
 import chalk from 'chalk';
-import { ApolloError } from 'apollo-server-core';
 
 const DEBUG = process.env.NODE_ENV !== 'production';
 
-const isApolloError = (err: Error): err is ApolloError =>
-  !!err['originalError'];
+const isApolloError = (err: Error) => !!err['originalError'];
 
 const keyBlacklist = ['password', 'secret'];
 const convert = item => {
   if (item instanceof Error) {
     if (isApolloError(item)) {
       return `${item.name}: ${item.message}
-      Path: ${item.path}, Pos: ${item.positions}
+      Path: ${item['path']}, Pos: ${item['positions']}
       Original Error:
-      ${convert(item.originalError)}
+      ${convert(item['originalError'])}
       `;
     }
 
@@ -33,26 +31,24 @@ const convert = item => {
   return item;
 };
 
-export const info = (...items) =>
-  console.info(chalk.blue(...items.map(convert)));
+const info = (...items) => console.info(chalk.blue(...items.map(convert)));
 info.important = (...items) =>
   console.info(
     chalk.whiteBright.bgBlue.bold('\n', ...items.map(convert), '\n'),
   );
 
-export const warn = (...items) =>
-  console.warn(chalk.yellow(...items.map(convert)));
+const warn = (...items) => console.warn(chalk.yellow(...items.map(convert)));
 warn.important = (...items) =>
   console.warn(
     chalk.whiteBright.bgYellow.bold('\n', ...items.map(convert), '\n'),
   );
 
-export const fatal = (...items) =>
+const fatal = (...items) =>
   console.error(
     chalk.whiteBright.bgRed.bold('\n', ...items.map(convert), '\n'),
   );
 
-export const debug = (...items) => {
+const debug = (...items) => {
   if (DEBUG) {
     console.debug(
       chalk.black.bgWhiteBright.bold('\n', ...items.map(convert), '\n'),
@@ -60,7 +56,7 @@ export const debug = (...items) => {
   }
 };
 
-export default {
+export const logger = {
   info,
   warn,
   fatal,

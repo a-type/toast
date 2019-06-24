@@ -2,7 +2,7 @@ import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
 import config from 'config';
 import { createContext } from './context';
-import logger, { info, warn } from 'logger';
+import { logger } from 'toast-common';
 import minimist from 'minimist';
 import { path as get } from 'ramda';
 import mockAuthMiddleware from 'mocks/mockAuthMiddleware';
@@ -77,7 +77,7 @@ const apollo = new ApolloServer({
     return context;
   },
   formatError: error => {
-    warn(error);
+    logger.warn(error);
 
     if (get(['extensions', 'code'], error) === 'INTERNAL_SERVER_ERROR') {
       error.message = 'Something went wrong on our end. Reloading may help.';
@@ -90,6 +90,8 @@ const apollo = new ApolloServer({
 apollo.applyMiddleware({ app, path: '/api', cors: false });
 
 app.listen(config.port, () => {
-  info(`Server ready on http://localhost:${config.port}`);
-  info.important(`Playground on http://localhost:${config.port}/playground`);
+  logger.info(`Server ready on http://localhost:${config.port}`);
+  logger.info.important(
+    `Playground on http://localhost:${config.port}/playground`,
+  );
 });

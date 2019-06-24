@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Box, Typography, Button } from '@material-ui/core';
+import { useAuth } from 'contexts/AuthContext';
 
 export interface SubscribePageProps {}
 
@@ -10,6 +11,7 @@ const successUrl = `${basePath}/success`;
 const cancelUrl = `${basePath}/canceled`;
 
 export const SubscribePage: FC<SubscribePageProps> = ({}) => {
+  const { user } = useAuth();
   const [stripe, setStripe] = useState(null);
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export const SubscribePage: FC<SubscribePageProps> = ({}) => {
       items: [{ plan: CONFIG.stripe.planId, quantity: 1 }],
       successUrl,
       cancelUrl,
+      clientReferenceId: user.uid,
     });
 
     console.log(result);
@@ -46,7 +49,7 @@ export const SubscribePage: FC<SubscribePageProps> = ({}) => {
     if (!result) {
       // user canceled the checkout
     } else {
-      // send token to core API
+      // checkout success
     }
   };
 

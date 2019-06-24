@@ -1,6 +1,6 @@
 import config from 'config';
 import { InternalError } from 'errors';
-import logger from 'logger';
+import { logger } from 'toast-common';
 import { invokeCloudRun } from 'services/common';
 
 export default {

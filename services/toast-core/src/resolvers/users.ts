@@ -1,5 +1,5 @@
 import { Context } from 'context';
-import logger from 'logger';
+import { logger } from 'toast-common';
 import firebase from 'services/firebase';
 
 const supplementUserData = async (

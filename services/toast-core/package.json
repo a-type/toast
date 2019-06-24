@@ -4,9 +4,7 @@
   "description": "Toast Core API",
   "main": "src/server.js",
   "scripts": {
-    "dev:run": "node --inspect=9229 -r ts-node/register src/server.ts",
-    "dev": "cross-env NODE_PATH=src ts-node-dev --respawn --no-deps --prefer-ts --inspect -- src/server.ts",
-    "dev:mock": "cross-env NODE_PATH=src nodemon --config nodemon-mock.json",
+    "dev": "cross-env NODE_PATH=src ts-node-dev --respawn --no-deps --prefer-ts --inspect -r dotenv/config -- src/server.ts",
     "test": "cross-env NODE_PATH=src jest",
     "ci:test": "cross-env NODE_PATH=src jest",
     "db:index": "node ./db/indexes.js",
@@ -17,7 +15,7 @@
     "build": "run-s build:*",
     "ci:build": "run-s build:*",
     "mock": "npm run dev:mock",
-    "start": "cross-env NODE_PATH=build node build/server.js",
+    "start": "cross-env NODE_PATH=build node -r dotenv/config build/server.js",
     "migration:create": "neo4j-migrate create-migration --name=new-migration ./migrations",
     "migration:up": "neo4j-migrate up",
     "migration:down": "neo4j-migrate down"
@@ -81,6 +79,7 @@
     "shortid": "^2.2.12",
     "string-similarity": "^1.2.2",
     "text2num": "0.0.1",
+    "toast-common": "^0.1.0",
     "typescript": "^3.5.2",
     "uuid": "^3.2.1",
     "yup": "^0.26.10"

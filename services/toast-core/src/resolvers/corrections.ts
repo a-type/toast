@@ -1,7 +1,6 @@
 import { Context } from 'context';
 import { id } from 'tools';
-import logger from 'logger';
-import { NotFoundError, ValidationError } from 'errors';
+import { ValidationError } from 'errors';
 import { parse, isValid } from 'date-fns';
 
 enum IngredientCorrectionType {

@@ -1,6 +1,6 @@
 import firebase from 'firebase-admin';
 import config from 'config';
-import logger from 'logger';
+import { logger } from 'toast-common';
 
 logger.info('Firebase URL: ', config.firebase.databaseURL);
 

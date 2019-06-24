@@ -1,6 +1,6 @@
 import { Context } from 'context';
 import GroupInvitation from 'models/GroupInvitation';
-import logger from 'logger';
+import { logger } from 'toast-common';
 import { NotFoundError } from 'errors';
 
 export default {

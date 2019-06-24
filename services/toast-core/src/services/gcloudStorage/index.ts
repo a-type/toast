@@ -1,7 +1,7 @@
 import { Storage } from '@google-cloud/storage';
 import config from 'config';
 import uuid from 'uuid';
-import logger from 'logger';
+import { logger } from 'toast-common';
 import { File } from 'types';
 
 logger.info('GCloud Project ID: ', config.gcloud.projectId);
