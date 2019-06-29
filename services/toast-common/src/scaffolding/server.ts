@@ -10,7 +10,14 @@ export type Route = {
 
 export const server = (routes: Route[], config: { defaultPort: number }) => {
   const app = express();
-  app.use(express.json());
+  // adds the raw, unparsed body to 'rawBody' on req
+  app.use(
+    express.json({
+      verify: (req, res, buf) => {
+        req['rawBody'] = buf.toString();
+      },
+    }),
+  );
   app.use((err, req, res, next) => {
     console.error(err);
     if (res.headersSent) {

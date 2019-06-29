@@ -4,11 +4,10 @@ import { useAuth } from 'contexts/AuthContext';
 
 export interface SubscribePageProps {}
 
-const basePath = `${window.location.protocol}//${window.location.origin}${
-  window.location.port ? `:${window.location.port}` : ''
-}`;
-const successUrl = `${basePath}/success`;
-const cancelUrl = `${basePath}/canceled`;
+const successUrl = `${window.location.origin}/success`;
+const cancelUrl = `${window.location.origin}/canceled`;
+
+console.log(successUrl, cancelUrl);
 
 export const SubscribePage: FC<SubscribePageProps> = ({}) => {
   const { user } = useAuth();
