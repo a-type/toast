@@ -1,39 +1,16 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Box, Typography, Button } from '@material-ui/core';
 import { useAuth } from 'contexts/AuthContext';
+import { useLoadStripe } from 'features/subscription/useLoadStripe';
 
-export interface SubscribePageProps {}
+export interface SubscriptionSignupProps {}
 
 const successUrl = `${window.location.origin}/success`;
 const cancelUrl = `${window.location.origin}/canceled`;
 
-console.log(successUrl, cancelUrl);
-
-export const SubscribePage: FC<SubscribePageProps> = ({}) => {
+export const SubscriptionSignup: FC<SubscriptionSignupProps> = ({}) => {
   const { user } = useAuth();
-  const [stripe, setStripe] = useState(null);
-
-  useEffect(() => {
-    const stripeKey = CONFIG.stripe.key;
-    const stripeUrl = 'https://js.stripe.com/v3/';
-    if (!document.querySelector('#stripe-js')) {
-      const script = document.createElement('script');
-      script.async = true;
-      script.id = 'stripe-js';
-      script.onload = () => {
-        if (!window['Stripe']) {
-          throw new Error('Stripe failed to load');
-        }
-        const stripe = window['Stripe'](stripeKey);
-        setStripe(stripe);
-      };
-      document.head.appendChild(script);
-      script.src = stripeUrl;
-    } else if (window['Stripe']) {
-      const stripe = window['Stripe'](stripeKey);
-      setStripe(stripe);
-    }
-  }, []);
+  const stripe = useLoadStripe();
 
   const checkout = async () => {
     const result = await stripe.redirectToCheckout({
@@ -51,6 +28,10 @@ export const SubscribePage: FC<SubscribePageProps> = ({}) => {
       // checkout success
     }
   };
+
+  if (!stripe) {
+    return null;
+  }
 
   return (
     <Box p={3}>

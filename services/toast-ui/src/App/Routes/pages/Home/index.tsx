@@ -5,6 +5,6 @@ import { Redirect } from 'react-router';
 
 export default () => (
   <IsLoggedIn fallback={<AnonLanding />}>
-    <Redirect to="/plan" />
+    <Redirect to="/home" />
   </IsLoggedIn>
 );

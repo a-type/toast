@@ -19,6 +19,15 @@
         "$tsc-watch"
       ],
       "isBackground": true
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "services/toast-planning/",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "isBackground": true
     }
   ]
 }

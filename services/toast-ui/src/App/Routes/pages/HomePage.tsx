@@ -6,7 +6,8 @@ import { PlanSetup } from 'features/plan/Setup/Setup';
 import PlanView from 'features/plan/PlanView/PlanView';
 import { ShoppingList } from 'features/shoppingList/ShoppingList';
 import { NavTabs } from 'components/layout/NavTabs';
-import { Container } from '@material-ui/core';
+import { pathOr } from 'ramda';
+import { SubscriptionSignup } from 'features/subscription/SubscriptionSignup';
 
 export const HomePlan = () => {
   const paths = [
@@ -20,7 +21,7 @@ export const HomePlan = () => {
   ];
 
   return (
-    <NavTabs paths={paths} tabLabels={['Home', 'Shopping List']}>
+    <NavTabs paths={paths} tabLabels={['Plan', 'Shopping List']}>
       <PlanView />
       <ShoppingList />
     </NavTabs>
@@ -30,7 +31,9 @@ export const HomePlan = () => {
 interface HomePageProps {}
 
 export const HomePage: FC<HomePageProps> = () => {
-  const [plan, planLoading, planError, planResult] = usePlan();
+  const { data, loading: planLoading, error: planError, refetch } = usePlan();
+
+  console.log(data);
 
   if (planError) {
     return <ErrorMessage full error={planError} />;
@@ -40,13 +43,14 @@ export const HomePage: FC<HomePageProps> = () => {
     return <Loader />;
   }
 
-  return !plan.length ? (
-    <Container>
-      <PlanSetup onCreated={planResult.refetch} />
-    </Container>
-  ) : (
-    <HomePlan />
-  );
+  if (!data.stripeSubscriptionId) {
+    // unsubscribed user
+    return <SubscriptionSignup />;
+  }
+
+  const plan = pathOr([], ['planDaysConnection', 'nodes'], data);
+
+  return !plan.length ? <PlanSetup onCreated={refetch} /> : <HomePlan />;
 };
 
 export default HomePage;

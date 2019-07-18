@@ -29,6 +29,7 @@ export const GetPlanQuery = gql`
       id
       group {
         id
+        stripeSubscriptionId
         planDaysConnection {
           nodes {
             id
@@ -48,31 +49,26 @@ export const GetPlanQuery = gql`
   ${PlanDayCookingEdgeFragment}
 `;
 
-export type GetPlanQueryResult = {
-  me: {
-    id: string;
-    group?: {
-      id: string;
-      planDaysConnection: {
-        nodes: PlanDayData[];
-      };
-    };
+export type GetPlanGroup = {
+  id: string;
+  stripeSubscriptionId: string | null;
+  planDaysConnection: {
+    nodes: PlanDayData[];
   };
 };
 
-export default (): [
-  PlanDayData[],
-  boolean,
-  ApolloError,
-  QueryHookResult<GetPlanQueryResult, {}>
-] => {
+export type GetPlanQueryResult = {
+  me: {
+    id: string;
+    group?: GetPlanGroup;
+  };
+};
+
+export default () => {
   const result = useQuery<GetPlanQueryResult>(GetPlanQuery);
 
-  const planDays = pathOr(
-    [],
-    ['me', 'group', 'planDaysConnection', 'nodes'],
-    result.data,
-  ).sort((a, b) => a.date.localeCompare(b.date));
-
-  return [planDays, result.loading, result.error, result];
+  return {
+    ...result,
+    data: pathOr(null, ['me', 'group'], result.data) as GetPlanGroup,
+  };
 };

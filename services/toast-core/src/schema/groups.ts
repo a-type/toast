@@ -53,6 +53,7 @@ export default gql`
   type Group {
     id: ID!
     groceryDay: Weekday!
+    stripeSubscriptionId: String
 
     """
     Returns the available planned meals of the group's meal plan

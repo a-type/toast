@@ -2,9 +2,10 @@ import { Handler } from 'express';
 import Stripe from 'stripe';
 import { stripe } from '../stripe';
 import { Session } from '../types';
-import { neo4j, ApiError, createId } from 'toast-common';
+import { neo4j, ApiError, createId, logger } from 'toast-common';
 
 export const checkoutCompleted: Handler = async (req, res) => {
+  logger.info(`Processing checkout complete event`);
   const sig = req.headers['stripe-signature'];
 
   let event: Stripe.events.IEvent;
@@ -25,6 +26,9 @@ export const checkoutCompleted: Handler = async (req, res) => {
       subscription: subscriptionId,
       client_reference_id: userId,
     } = event.data.object as Session;
+    logger.info(
+      `Customer checkout info: [id: ${userId}] [customer: ${customerId}] [sub: ${subscriptionId}]`,
+    );
     // add subscription info to the Group and customer info to the User.
     const session = neo4j.session();
     await session.writeTransaction(async tx => {
