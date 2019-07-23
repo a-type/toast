@@ -16,7 +16,7 @@ export default gql`
   }
 
   interface IngredientCorrection {
-    id: ID!
+    id: ID! @key
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
@@ -28,8 +28,8 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
-    food: Food! @cypher(match: "(food:Food{id: parent.foodId})", return: "food")
+      @node(edgeCollection: "Corrects", direction: OUTBOUND)
+    food: Food! @node(edgeCollection: "AssignsFood", direction: OUTBOUND)
   }
 
   type ChangeQuantityIngredientCorrection implements IngredientCorrection {
@@ -38,7 +38,7 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+      @node(edgeCollection: "Corrects", direction: OUTBOUND)
     quantity: Float!
   }
 
@@ -48,7 +48,7 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+      @node(edgeCollection: "Corrects", direction: OUTBOUND)
     unit: String!
   }
 
@@ -58,8 +58,7 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     text: String!
-    recipe: Recipe!
-      @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
+    recipe: Recipe! @node(edgeCollection: "ForRecipe", direction: OUTBOUND)
   }
 
   type RemoveIngredientCorrection implements IngredientCorrection {
@@ -68,7 +67,7 @@ export default gql`
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+      @node(edgeCollection: "Corrects", direction: OUTBOUND)
   }
 
   type IngredientCorrectionsConnection {

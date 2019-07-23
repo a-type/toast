@@ -15,7 +15,7 @@ export default gql`
     You may only view the group associated with your own User
     """
     group: Group
-      @cypherNode(relationship: "MEMBER_OF", direction: OUT)
+      @node(edgeCollection: "MemberOf", direction: OUTBOUND)
       @authenticated
 
     authoredRecipesConnection(

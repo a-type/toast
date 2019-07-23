@@ -1,4 +1,4 @@
-import { directiveTypeDefs } from 'graphql-cypher';
+import { directiveTypeDefs } from 'graphql-arangodb';
 import { gql } from 'apollo-server-core';
 import foods from './foods';
 import globals from './globals';
@@ -12,7 +12,7 @@ import corrections from './corrections';
 
 export default [
   gql`
-    ${directiveTypeDefs()}
+    ${directiveTypeDefs}
     directive @authenticated on FIELD_DEFINITION
     directive @generateSlug(fromArg: String, type: String) on FIELD_DEFINITION
     directive @hasClaim(claim: String!) on FIELD_DEFINITION
