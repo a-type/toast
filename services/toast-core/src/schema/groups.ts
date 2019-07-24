@@ -7,7 +7,7 @@ export default gql`
   A user in the system
   """
   type User {
-    id: ID!
+    id: ID! @key
     displayName: String
     photoUrl: String
 
@@ -19,31 +19,28 @@ export default gql`
       @authenticated
 
     authoredRecipesConnection(
-      input: UserAuthoredRecipesConnectionInput = { published: Published }
+      first: Int = 10
+      after: String
     ): UserAuthoredRecipesConnection!
-  }
-
-  enum RecipePublishedStateFilter {
-    Published
-    Unpublished
-    Any
-  }
-
-  input UserAuthoredRecipesConnectionInput {
-    published: RecipePublishedStateFilter
-  }
-
-  type UserAuthoredRecipesConnection @cypherVirtual {
-    nodes: [Recipe!]!
-      @cypherNode(
-        relationship: "AUTHOR_OF"
-        direction: OUT
-        where: """
-        $virtual.input.published = 'Any' OR
-        ($virtual.input.published = 'Published' AND coalesce(node.published, false)) OR
-        ($virtual.input.published = 'Unpublished' AND NOT coalesce(node.published, false))
-        """
+      @relayConnection(
+        edgeCollection: "AuthorOf"
+        direction: OUTBOUND
+        cursorProperty: "createdAt"
       )
+  }
+
+  type UserAuthoredRecipesConnection {
+    edges: [UserRecipeEdge!]! @relayEdges
+    pageInfo: UserRecipePageInfo! @relayPageInfo
+  }
+
+  type UserRecipeEdge {
+    cursor: String!
+    node: Recipe! @relayNode
+  }
+
+  type UserRecipePageInfo {
+    hasNextPage: Boolean!
   }
 
   """
@@ -51,84 +48,93 @@ export default gql`
   or more Users.
   """
   type Group {
-    id: ID!
+    id: ID! @key
     groceryDay: Weekday!
 
     """
     Returns the available planned meals of the group's meal plan
     """
     planDaysConnection: GroupPlanDayConnection!
-
-    """
-    Get a specific plan day by ID
-    """
-    planDay(input: PlanDayGetInput!): PlanDay
-      @cypherNode(
-        relationship: "HAS_PLAN_DAY"
-        direction: "OUT"
-        where: "node.id = $args.input.id"
+      @relayConnection(
+        edgeCollection: "HasNextPlanDay"
+        edgeDirection: OUTBOUND
+        cursorProperty: "date"
       )
 
     """
     Collections of recipes group users have created
     """
     recipeCollectionsConnection: GroupRecipeCollectionConnection!
+      @relayConnection(
+        edgeCollection: "HasRecipeCollection"
+        edgeDirection: OUTBOUND
+        cursorProperty: "_key"
+      )
 
     """
     Gets a specific recipe collection
     """
     recipeCollection(input: RecipeCollectionGetInput!): RecipeCollection
-      @cypherNode(
-        relationship: "HAS_COLLECTION"
-        direction: "OUT"
-        where: "node.id = $args.input.id"
-      )
+      @node(edgeCollection: "HasRecipeCollection", direction: OUTBOUND)
+      @filter(statement: "$field.id == $args.input.id")
+      @limit(count: 1)
 
     """
     A list of items to purchase for next week's plan
     """
-    shoppingList: ShoppingList! @cypherSkip
-  }
-
-  input PlanDayGetInput {
-    id: ID!
+    shoppingList: ShoppingList!
   }
 
   input RecipeCollectionGetInput {
     id: ID!
   }
 
-  type GroupPlanDayConnection @cypherVirtual {
-    nodes: [PlanDay!]!
-      @cypherLinkedNodes(relationship: "HAS_NEXT_PLAN_DAY", direction: OUT)
+  type GroupPlanDayConnection {
+    edges: [GroupPlanDayEdge!]! @relayEdges
+    pageInfo: GroupPlanDayPageInfo! @relayPageInfo
   }
 
-  type GroupRecipeCollectionConnection @cypherVirtual {
-    nodes: [RecipeCollection!]!
-      @cypherNode(relationship: "HAS_COLLECTION", direction: OUT)
+  type GroupPlanDayEdge {
+    cursor: String!
+    node: PlanDay! @relayNode
+  }
+
+  type GroupPlanDayPageInfo {
+    hasNextPage: Boolean!
+  }
+
+  type GroupRecipeCollectionConnection {
+    edges: [GroupRecipeCollectionEdge!]! @relayEdges
+    pageInfo: GroupRecipeCollectionPageInfo! @relayPageInfo
+  }
+
+  type GroupRecipeCollectionEdge {
+    cursor: String!
+    node: RecipeCollection! @relayNode
+  }
+
+  type GroupRecipeCollectionPageInfo {
+    hasNextPage: Boolean!
   }
 
   type GroupInvitationAcceptResult {
-    group: Group!
-      @cypher(match: "(group:Group{id: parent.groupId})", return: "group")
+    group: Group! @document(collection: "Groups", id: "$parent.groupId")
   }
 
   extend type Query {
-    me: User @cypher(match: "(user:User{id:$context.userId})", return: "user")
-
-    """
-    Group functions as a Viewer node; it is the starting point for most queries.
-    """
-    group: Group
-      @cypher(
-        match: "(user:User{id:$context.userId})-[:MEMBER_OF]->(group:Group)"
-        return: "group"
-      )
-      @authenticated
+    viewer: User @document(collection: "Users", id: "$context.userId")
   }
 
   input SetGroceryDayInput {
     groceryDay: Weekday!
+  }
+
+  type GroupCreateResult {
+    group: Group! @aql(expression: "$parent.group")
+  }
+
+  type GroupSetGroceryDayResult {
+    group: Group! @aql(expression: "$parent.group")
   }
 
   extend type Mutation {
@@ -139,23 +145,46 @@ export default gql`
     user info.
     """
     mergeUser: User!
-      @cypher(merge: "(user:User {id: $context.userId})", return: "user")
+      @subquery(
+        query: """
+        UPSERT {_key: $context.userId}
+          INSERT {_key: $context.userId}
+          UPDATE {}
+        IN Users
+        LET $field = NEW
+        """
+      )
       @authenticated
 
-    createGroup: Group!
-      @generateId
-      @cypher(
-        match: "(user:User {id: $context.userId})"
-        create: "(user)-[:MEMBER_OF]->(group:Group {id: $generated.id, groceryDay: 0})"
-        return: "group"
+    createGroup: GroupCreateResult!
+      @subquery(
+        query: """
+        LET user = DOCUMENT(Users, $context.userId)
+        LET group = (
+          INSERT {groceryDay: 0} INTO Groups
+          RETURN NEW
+        )
+        LET edge = (
+          INSERT {_from: user, _to: group} INTO MemberOf
+        )
+        RETURN {
+          group: group
+        }
+        """
       )
       @authenticated
 
     setGroceryDay(input: SetGroceryDayInput!): Group
-      @cypher(
-        match: "(:User {id: $context.userId})-[:MEMBER_OF]->(group:Group)"
-        set: "group.groceryDay = $args.input.groceryDay"
-        return: "group"
+      @subquery(
+        query: """
+        LET group = (
+          FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
+            LIMIT 1
+            RETURN group_0
+        )
+        UPDATE {_key: group._key, groceryDay: $args.input.groceryDay} IN Groups
+        $field = NEW
+        """
       )
       @authenticated
 

@@ -6,19 +6,28 @@ export default gql`
     date: Date!
 
     cookingConnection: PlanDayCookingRecipeConnection!
+      @relayConnection(
+        edgeCollection: "Cooking"
+        edgeDirection: OUTBOUND
+        cursorProperty: "createdAt"
+      )
   }
 
-  type PlanDayCookingRecipeConnection @cypherVirtual {
-    nodes: [Recipe!]! @cypherNode(relationship: "PLANS_TO_COOK", direction: OUT)
-    edges: [PlanDayCookingRecipeEdge!]!
-      @cypherRelationship(type: "PLANS_TO_COOK", direction: OUT)
+  type PlanDayCookingRecipeConnection {
+    edges: [PlanDayCookingRecipeEdge!]! @relayEdge
+    pageInfo: PlanDayCookingRecipePageInfo! @relayPageInfo
   }
 
   type PlanDayCookingRecipeEdge {
     servings: Int!
     mealName: String!
+    cursor: String!
 
-    node: Recipe! @cypherNode(relationship: "PLANS_TO_COOK", direction: "OUT")
+    node: Recipe! @relayNode
+  }
+
+  type PlanDayCookingRecipePageInfo {
+    hasNextPage: Boolean!
   }
 
   input AssignPlanDayCookingInput {
@@ -33,8 +42,26 @@ export default gql`
     mealName: String!
   }
 
+  type AssignPlanDayCookingResult {
+    planDay: PlanDay! @aql(expression: "$parent.planDay")
+  }
+
+  type UnassignPlanDayCookingResult {
+    planDay: PlanDay! @aql(expression: "$parent.planDay")
+  }
+
   extend type Mutation {
     assignPlanDayCooking(input: AssignPlanDayCookingInput!): PlanDay!
+      @subquery(
+        query: """
+        LET group = (
+
+        )
+        LET planDay = (
+
+        )
+        """
+      )
       @cypher(
         match: """
         (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_NEXT_PLAN_DAY*]->

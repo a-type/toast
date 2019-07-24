@@ -15,28 +15,7 @@ export default gql`
     comments: [String!]! @defaultValue(value: [])
     preparations: [String!]! @defaultValue(value: [])
 
-    food: Food @cypherNode(relationship: "USED_IN", direction: IN)
-    recipe: Recipe! @cypherNode(relationship: "INGREDIENT_OF", direction: OUT)
-  }
-
-  type IngredientCreateResult {
-    recipeIngredient: Ingredient!
-      @cypher(
-        match: "(recipeIngredient:Ingredient{id:$parent.recipeIngredientId})"
-        return: "recipeIngredient"
-      )
-  }
-
-  type IngredientUpdateResult {
-    recipeIngredient: Ingredient
-      @cypher(
-        match: "(recipeIngredient:Ingredient{id:$parent.recipeIngredientId})"
-        return: "recipeIngredient"
-      )
-  }
-
-  type RecipeFoodDeleteResult {
-    foo: Boolean
-    # empty type... perhaps one day we will return something.
+    food: Food @node(edge: "UsedIn", direction: INBOUND)
+    recipe: Recipe! @node(edge: "IngredientOf", direction: OUTBOUND)
   }
 `;
