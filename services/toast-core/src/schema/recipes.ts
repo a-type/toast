@@ -37,20 +37,19 @@ export default gql`
     steps: [String!]
     ingredientsConnection: RecipeIngredientConnection!
 
-    containedInViewerCollectionsConnection: RecipeRecipeCollectionConnection!
-      @authenticated
-  }
-
-  type RecipeRecipeCollectionConnection @cypherVirtual {
-    nodes: [RecipeCollection!]!
-      @cypherCustom(
-        statement: """
-        MATCH (parent)-[:COLLECTED_IN]->
-          (collection:RecipeCollection)<-[:HAS_COLLECTION]-(:Group)
-          <-[:MEMBER_OF]-(:User{id:$context.userId})
-        RETURN collection
+    containedInViewerCollections: [RecipeCollection!]!
+      @aqlSubquery(
+        query: """
+        LET collections = (
+          FOR user_group IN OUTBOUND DOCUMENT(Users, $context.userId) MemberOf
+            FOR group_collection IN OUTBOUND user_group HasRecipeCollection
+              FOR group_collection_recipe IN INBOUND group_collection CollectedIn
+                RETURN group_collection
+        )
         """
+        return: "collections"
       )
+      @authenticated
   }
 
   type RecipeCollection {
@@ -59,22 +58,40 @@ export default gql`
     default: Boolean!
     createdAt: Date!
 
-    recipesConnection: RecipeCollectionRecipeConnection!
+    recipesConnection: RecipeCollectionRecipesConnection!
+      @aqlRelayConnection(
+        edgeCollection: "CollectedIn"
+        edgeDirection: INBOUND
+        cursorProperty: "createdAt"
+      )
   }
 
-  type RecipeCollectionRecipeConnection @cypherVirtual {
-    nodes: [Recipe!]! @cypherNode(relationship: "COLLECTED_IN", direction: IN)
+  type RecipeCollectionRecipesConnection {
+    edges: [RecipeCollectionRecipesEdge!]! @aqlRelayEdges
+    pageInfo: RecipeCollectionRecipesPageInfo! @aqlRelayPageInfo
   }
 
-  type RecipeIngredientConnection @cypherVirtual {
-    nodes: [Ingredient!]!
-      @cypherNode(relationship: "INGREDIENT_OF", direction: IN)
-    edges: [RecipeIngredientEdge!]!
-      @cypherRelationship(type: "INGREDIENT_OF", direction: IN)
+  type RecipeCollectionRecipesEdge {
+    cursor: String!
+    node: Recipe! @aqlRelayNode
   }
 
-  type RecipeIngredientEdge {
-    node: Ingredient! @cypherNode(relationship: "INGREDIENT_OF", direction: IN)
+  type RecipeCollectionRecipesPageInfo {
+    hasNextPage: Boolean!
+  }
+
+  type RecipeIngredientsConnection {
+    edges: [RecipeIngredientsEdge!]! @aqlRelayEdges
+    pageInfo: RecipeIngredientsPageInfo! @aqlRelayPageInfo
+  }
+
+  type RecipeIngredientsEdge {
+    cursor: String!
+    node: Ingredient! @aqlRelayNode
+  }
+
+  type RecipeIngredientsPageInfo {
+    hasNextPage: Boolean!
   }
 
   enum RecipeLinkProblem {
@@ -85,7 +102,6 @@ export default gql`
 
   type RecipeLinkResult {
     recipe: Recipe
-      @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
     problems: [RecipeLinkProblem!]!
   }
 
@@ -95,20 +111,33 @@ export default gql`
 
   extend type Query {
     recipe(input: RecipeGetInput!): Recipe
-      @cypherCustom(
-        statement: """
-        MATCH (recipe:Recipe{id:$args.input.id})
-        OPTIONAL MATCH (currentUser:User{id:$context.userId})
-        OPTIONAL MATCH author = (currentUser)-[:AUTHOR_OF]->(recipe)
-        OPTIONAL MATCH (currentUser)-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->
-            (collection:RecipeCollection)<-[:COLLECTED_IN]-(recipe)
-        RETURN CASE
-          WHEN coalesce(recipe.published, false) AND NOT coalesce(recipe.private, true)
-            THEN recipe
-          WHEN author IS NOT NULL OR collection IS NOT NULL
-            THEN recipe
-          ELSE NULL
-        END
+      @aqlSubquery(
+        query: """
+        LET recipe_candidate = DOCUMENT(Recipes, $args.input.id)
+        LET $field = recipe_candidate.public && recipe_candidate.published ? recipe_candidate : (
+          LET user = DOCUMENT(Users, $context.userId)
+          LET authored_recipe = FIRST(
+            FOR candidate_authored_recipe IN OUTBOUND user AuthorOf
+              LIMIT 1
+              RETURN candidate_authored_recipe
+          )
+          RETURN authored_recipe ?: FIRST(
+            LET group = FIRST(
+              FOR user_group IN OUTBOUND user MemberOf
+                LIMIT 1
+                RETURN user_group
+            )
+            LET collections = (
+              FOR group_collection IN OUTBOUND group HasRecipeCollection
+                RETURN group_collection
+            )
+            LET collected_recipe = FIRST(
+              FOR collection IN collections
+                FOR candidate_collected_recipe IN INBOUND collection CollectedIn
+                  FILTER candidate_collected_recipe._key == $args.input.id
+            )
+          )
+        )
         """
       )
   }
@@ -139,7 +168,7 @@ export default gql`
 
   input RecipeUpdateInput {
     id: ID!
-    fields: RecipeUpdateFieldsInput
+    fields: RecipeUpdateFieldsInput = {}
     coverImage: RecipeUpdateCoverImageInput
   }
 
@@ -166,15 +195,23 @@ export default gql`
   extend type Mutation {
     createRecipe(input: RecipeCreateInput!): Recipe!
       @generateId
-      @cypher(
-        match: "(user:User{id:$context.userId})"
-        create: "(recipe:Recipe{id:$generated.id})<-[:AUTHOR_OF]-(user)"
-        setMany: [
-          "recipe += $args.input"
-          "recipe.displayType = 'FULL'"
-          "recipe.published = false"
-          "recipe.locked = false"
-        ]
+      @aqlSubquery(
+        query: """
+        LET user = DOCUMENT(Users, $context.userId)
+        LET recipe = (
+          INSERT {
+            title: $args.input.title,
+            description: $args.input.description,
+            servings: $args.input.servings,
+            cookTime: $args.input.cookTime,
+            prepTime: $args.input.prepTime,
+            unattendedTime: $args.input.unattendedTime,
+            private: $args.input.private,
+          } INTO Recipes
+          RETURN NEW
+        )
+        INSERT { _from: user, _to: recipe } INTO AuthorOf
+        """
         return: "recipe"
       )
       @authenticated
@@ -182,24 +219,28 @@ export default gql`
     linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated
 
     updateRecipe(input: RecipeUpdateInput!): Recipe
-      @cypher(
-        match: "(user:User{id:$context.userId})-[:AUTHOR_OF]->(recipe:Recipe{id:$args.input.id})"
-        set: "recipe += $args.input.fields"
-        return: "recipe"
+      @aqlSubquery(
+        query: """
+        LET recipe = FIRST(
+          FOR authored_recipe IN OUTBOUND user AuthorOf
+            FILTER authored_recipe._key == $args.input.id
+            LIMIT 1
+            RETURN authored_recipe
+        )
+        UPDATE recipe WITH {
+          title: NON_NULL($args.input.fields.title, recipe.title),
+          description: NON_NULL($args.input.fields.description, recipe.description),
+          servings: NON_NULL($args.input.fields.servings, recipe.servings),
+          cookTime: NON_NULL($args.input.fields.cookTime, recipe.cookTime),
+          prepTime: NON_NULL($args.input.fields.prepTime, recipe.prepTime),
+          unattendedTime: NON_NULL($args.input.fields.unattendedTime, recipe.unattendedTime),
+          private: NON_NULL($args.input.fields.private, recipe.private),
+          published: NON_NULL($args.input.fields.published, recipe.published)
+        } IN RECIPES
+        """
+        return: "NEW"
       )
       @authenticated
-
-    recordRecipeView(input: RecipeRecordViewInput!): Recipe
-      @cypherCustom(
-        statement: """
-        MATCH (recipe:Recipe{id:$args.input.id})
-        WITH recipe,
-          CASE WHEN datetime(coalesce(recipe.viewedAt, '2018-08-31T00:00:00')) + duration("PT1M") < datetime($args.input.time)
-          THEN 1 ELSE 0 END as increment
-        SET recipe.views = coalesce(recipe.views, 0) + increment, recipe.viewedAt = $args.input.time
-        RETURN recipe
-        """
-      )
 
     collectRecipe(input: RecipeCollectInput!): Recipe!
       @cypher(

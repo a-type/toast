@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export default gql`
   type Ingredient {
-    id: ID!
+    id: ID! @aqlKey
     text: String! @defaultValue(value: "")
     foodStart: Int
     foodEnd: Int

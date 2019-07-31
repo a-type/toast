@@ -16,14 +16,14 @@ export default gql`
   }
 
   interface IngredientCorrection {
-    id: ID! @key
+    id: ID!
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
   }
 
   type ChangeFoodIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @key
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
@@ -33,7 +33,7 @@ export default gql`
   }
 
   type ChangeQuantityIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @key
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
@@ -43,7 +43,7 @@ export default gql`
   }
 
   type ChangeUnitIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @key
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
@@ -53,7 +53,7 @@ export default gql`
   }
 
   type AddIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @key
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
@@ -62,7 +62,7 @@ export default gql`
   }
 
   type RemoveIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @key
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
@@ -90,6 +90,10 @@ export default gql`
     ingredientCorrectionsConnection(
       input: IngredientCorrectionsCollectionFilterInput
     ): IngredientCorrectionsConnection!
+      @aqlRelayConnection(
+        documentCollection: "IngredientCorrections"
+        cursorProperty: "submittedAt"
+      )
   }
 
   input IngredientCorrectionChangeFoodInput {

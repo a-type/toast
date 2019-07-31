@@ -59,6 +59,7 @@ export default gql`
         edgeCollection: "HasNextPlanDay"
         edgeDirection: OUTBOUND
         cursorProperty: "date"
+        linkedList: true
       )
 
     """
@@ -75,9 +76,12 @@ export default gql`
     Gets a specific recipe collection
     """
     recipeCollection(input: RecipeCollectionGetInput!): RecipeCollection
-      @node(edgeCollection: "HasRecipeCollection", direction: OUTBOUND)
-      @filter(statement: "$field.id == $args.input.id")
-      @limit(count: 1)
+      @node(
+        edgeCollection: "HasRecipeCollection"
+        direction: OUTBOUND
+        filter: "$field.id == $args.input.id"
+        limit: { count: 1 }
+      )
 
     """
     A list of items to purchase for next week's plan
@@ -145,7 +149,7 @@ export default gql`
     user info.
     """
     mergeUser: User!
-      @subquery(
+      @aqlSubquery(
         query: """
         UPSERT {_key: $context.userId}
           INSERT {_key: $context.userId}
@@ -157,7 +161,7 @@ export default gql`
       @authenticated
 
     createGroup: GroupCreateResult!
-      @subquery(
+      @aqlSubquery(
         query: """
         LET user = DOCUMENT(Users, $context.userId)
         LET group = (
@@ -175,7 +179,7 @@ export default gql`
       @authenticated
 
     setGroceryDay(input: SetGroceryDayInput!): Group
-      @subquery(
+      @aqlSubquery(
         query: """
         LET group = (
           FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
