@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export default gql`
   type Recipe {
-    id: ID!
+    id: ID! @aqlKey
     title: String!
 
     description: String
@@ -28,14 +28,20 @@ export default gql`
     createdAt: Date!
     updatedAt: Date!
     viewedAt: Date!
-    views: Int!
+    views: Int! @defaultValue(value: 0)
 
-    published: Boolean!
-    private: Boolean!
-    locked: Boolean!
+    published: Boolean! @defaultValue(value: false)
+    private: Boolean! @defaultValue(value: true)
+    locked: Boolean! @defaultValue(value: true)
 
     steps: [String!]
+
     ingredientsConnection: RecipeIngredientConnection!
+      @aqlRelayConnection(
+        edgeCollection: "IngredientOf"
+        edgeDirection: INBOUND
+        cursorProperty: "_key"
+      )
 
     containedInViewerCollections: [RecipeCollection!]!
       @aqlSubquery(
@@ -50,6 +56,20 @@ export default gql`
         return: "collections"
       )
       @authenticated
+  }
+
+  type RecipeIngredientConnection {
+    edges: [RecipeIngredientEdge!]! @aqlRelayEdges
+    pageInfo: RecipeIngredientPageInfo! @aqlPageInfo
+  }
+
+  type RecipeIngredientEdge {
+    cursor: String!
+    node: Ingredient! @aqlRelayNode
+  }
+
+  type RecipeIngredientPageInfo {
+    hasNextPage: Boolean!
   }
 
   type RecipeCollection {
@@ -101,7 +121,7 @@ export default gql`
   }
 
   type RecipeLinkResult {
-    recipe: Recipe
+    recipe: Recipe @aqlDocument(collection: "Recipes", id: "$parent.recipeId")
     problems: [RecipeLinkProblem!]!
   }
 
@@ -169,7 +189,6 @@ export default gql`
   input RecipeUpdateInput {
     id: ID!
     fields: RecipeUpdateFieldsInput = {}
-    coverImage: RecipeUpdateCoverImageInput
   }
 
   input RecipeUpdateFieldsInput {
@@ -181,11 +200,6 @@ export default gql`
     unattendedTime: Int
     private: Boolean
     published: Boolean
-  }
-
-  input RecipeUpdateCoverImageInput {
-    file: Upload
-    attribution: String
   }
 
   input RecipeRecordViewInput {

@@ -2,6 +2,7 @@ import { Context } from 'context';
 import { id } from 'tools';
 import { ValidationError } from 'errors';
 import { parse, isValid } from 'date-fns';
+import arango from 'graphql-arangodb';
 
 enum IngredientCorrectionType {
   ChangeFood = 'ChangeFood',
@@ -177,47 +178,7 @@ const applyCorrection = async (
 
 export default {
   Query: {
-    ingredientCorrectionsConnection: async (
-      _parent,
-      { input }: { input: IngredientCorrectionsCollectionFilterInput },
-      ctx: Context,
-    ) => {
-      const limit = input.first || 10;
-      const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
-      let query = collection.orderBy('submittedAt').limit(limit);
-      if (input.status) {
-        query = query.where('status', '==', input.status);
-      }
-      if (input.after) {
-        const afterTs = parse(input.after);
-        if (!isValid(afterTs)) {
-          throw new ValidationError(
-            `The cursor format is not correct. Please use a cursor from a previous query edge.`,
-          );
-        }
-        query = query.startAfter(afterTs);
-      }
-
-      const snapshots = await query.get();
-      const hasNextPage = snapshots.size === limit;
-
-      return {
-        pageInfo: {
-          hasNextPage,
-        },
-        edges: snapshots.docs.map(doc => {
-          const data = doc.data();
-          const cursor = data.submittedAt.toString();
-          return {
-            cursor,
-            node: {
-              id: doc.id,
-              ...data,
-            },
-          };
-        }),
-      };
-    },
+    ingredientCorrectionsConnection: arango,
   },
 
   Mutation: {
@@ -291,6 +252,7 @@ export default {
         return !recipe.public || !recipe.locked;
       });
 
+      // TODO
       const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
 
       const doc = await collection.add(correction);

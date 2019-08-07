@@ -7,7 +7,7 @@ export default gql`
   A user in the system
   """
   type User {
-    id: ID! @key
+    id: ID! @aqlKey
     displayName: String
     photoUrl: String
 
@@ -15,32 +15,8 @@ export default gql`
     You may only view the group associated with your own User
     """
     group: Group
-      @node(edgeCollection: "MemberOf", direction: OUTBOUND)
+      @aqlNode(edgeCollection: "MemberOf", direction: OUTBOUND)
       @authenticated
-
-    authoredRecipesConnection(
-      first: Int = 10
-      after: String
-    ): UserAuthoredRecipesConnection!
-      @relayConnection(
-        edgeCollection: "AuthorOf"
-        direction: OUTBOUND
-        cursorProperty: "createdAt"
-      )
-  }
-
-  type UserAuthoredRecipesConnection {
-    edges: [UserRecipeEdge!]! @relayEdges
-    pageInfo: UserRecipePageInfo! @relayPageInfo
-  }
-
-  type UserRecipeEdge {
-    cursor: String!
-    node: Recipe! @relayNode
-  }
-
-  type UserRecipePageInfo {
-    hasNextPage: Boolean!
   }
 
   """
@@ -48,25 +24,25 @@ export default gql`
   or more Users.
   """
   type Group {
-    id: ID! @key
+    id: ID! @aqlKey
     groceryDay: Weekday!
 
     """
     Returns the available planned meals of the group's meal plan
     """
-    planDaysConnection: GroupPlanDayConnection!
-      @relayConnection(
-        edgeCollection: "HasNextPlanDay"
+    planCookingConnection: GroupPlanCookingConnection!
+      @aqlRelayConnection(
+        edgeCollection: "PlansToCook"
         edgeDirection: OUTBOUND
         cursorProperty: "date"
-        linkedList: true
+        cursorOnEdge: true
       )
 
     """
     Collections of recipes group users have created
     """
     recipeCollectionsConnection: GroupRecipeCollectionConnection!
-      @relayConnection(
+      @aqlRelayConnection(
         edgeCollection: "HasRecipeCollection"
         edgeDirection: OUTBOUND
         cursorProperty: "_key"
@@ -76,7 +52,7 @@ export default gql`
     Gets a specific recipe collection
     """
     recipeCollection(input: RecipeCollectionGetInput!): RecipeCollection
-      @node(
+      @aqlNode(
         edgeCollection: "HasRecipeCollection"
         direction: OUTBOUND
         filter: "$field.id == $args.input.id"
@@ -93,28 +69,30 @@ export default gql`
     id: ID!
   }
 
-  type GroupPlanDayConnection {
-    edges: [GroupPlanDayEdge!]! @relayEdges
-    pageInfo: GroupPlanDayPageInfo! @relayPageInfo
+  type GroupPlanCookingConnection {
+    edges: [GroupPlanCookingEdge!]! @aqlRelayEdges
+    pageInfo: GroupPlanCookingPageInfo! @aqlRelayPageInfo
   }
 
-  type GroupPlanDayEdge {
+  type GroupPlanCookingEdge {
     cursor: String!
-    node: PlanDay! @relayNode
+    date: Date!
+    mealName: String!
+    node: Recipe! @aqlRelayNode
   }
 
-  type GroupPlanDayPageInfo {
+  type GroupPlanCookingPageInfo {
     hasNextPage: Boolean!
   }
 
   type GroupRecipeCollectionConnection {
-    edges: [GroupRecipeCollectionEdge!]! @relayEdges
-    pageInfo: GroupRecipeCollectionPageInfo! @relayPageInfo
+    edges: [GroupRecipeCollectionEdge!]! @aqlRelayEdges
+    pageInfo: GroupRecipeCollectionPageInfo! @aqlRelayPageInfo
   }
 
   type GroupRecipeCollectionEdge {
     cursor: String!
-    node: RecipeCollection! @relayNode
+    node: RecipeCollection! @aqlRelayNode
   }
 
   type GroupRecipeCollectionPageInfo {
@@ -122,11 +100,11 @@ export default gql`
   }
 
   type GroupInvitationAcceptResult {
-    group: Group! @document(collection: "Groups", id: "$parent.groupId")
+    group: Group! @aqlDocument(collection: "Groups", id: "$parent.groupId")
   }
 
   extend type Query {
-    viewer: User @document(collection: "Users", id: "$context.userId")
+    viewer: User @aqlDocument(collection: "Users", id: "$context.userId")
   }
 
   input SetGroceryDayInput {
@@ -139,6 +117,17 @@ export default gql`
 
   type GroupSetGroceryDayResult {
     group: Group! @aql(expression: "$parent.group")
+  }
+
+  type AddPlanToCookInput {
+    date: Date!
+    mealName: String!
+    recipeId: String!
+  }
+
+  type RemovePlanToCookInput {
+    date: Date!
+    mealName: String!
   }
 
   extend type Mutation {
@@ -194,6 +183,46 @@ export default gql`
 
     createGroupInvitation: String! @authenticated
     acceptGroupInvitation(id: String!): GroupInvitationAcceptResult
+      @authenticated
+
+    addPlanToCook(input: AddPlanToCookInput!): Group!
+      @aqlSubquery(
+        query: """
+        LET group = (
+          FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
+            LIMIT 1
+            RETURN group_0
+        )
+        LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
+        INSERT {
+          date: $args.input.date,
+          mealName: $args.input.mealName,
+          _from: group,
+          _to: recipe
+        } INTO PlansToCook
+        """
+        return: "group"
+      )
+      @authenticated
+
+    removePlanToCook(input: RemovePlanToCookInput!): Group!
+      @aqlSubquery(
+        query: """
+        LET group = (
+          FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
+            LIMIT 1
+            RETURN group_0
+        )
+        LET cookEdge = FIRST(
+          FOR n, e IN OUTBOUND group PlansToCook
+            PRUNE e.date == $args.input.date && e.mealName == $args.input.mealName
+            LIMIT 1
+            RETURN e
+        )
+        REMOVE cookEdge in PlansToCook
+        RETURN group
+        """
+      )
       @authenticated
   }
 `;

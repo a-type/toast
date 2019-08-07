@@ -1,4 +1,4 @@
-import { neo4j } from 'toast-common';
+import { neo4j, getArangoDb } from 'toast-common';
 import { pathOr } from 'ramda';
 import firestore from 'services/firestore';
 import { TransactionFunction } from 'types';
@@ -9,9 +9,11 @@ import firebase from 'services/firebase';
 import { auth } from 'firebase-admin';
 import DataLoader from 'dataloader';
 import { PurchaseListItem } from 'models/PurchaseList';
+import { Database } from 'arangojs';
 
 export type Context = {
   neo4jDriver: typeof neo4j;
+  arangoDb: Database;
   transaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   writeTransaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
   readTransaction: <T = any>(txFunction: TransactionFunction<T>) => Promise<T>;
@@ -85,8 +87,11 @@ export const createContext = async (req): Promise<Context> => {
     }
   };
 
+  const arangoDb = await getArangoDb();
+
   const context: Context = {
     neo4jDriver: neo4j,
+    arangoDb,
     // interop / legacy
     transaction: txFunction => {
       const sess = neo4j.session();

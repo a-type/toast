@@ -6,7 +6,7 @@ export default gql`
     date: Date!
 
     cookingConnection: PlanDayCookingRecipeConnection!
-      @relayConnection(
+      @aqlRelayConnection(
         edgeCollection: "Cooking"
         edgeDirection: OUTBOUND
         cursorProperty: "createdAt"
@@ -14,8 +14,8 @@ export default gql`
   }
 
   type PlanDayCookingRecipeConnection {
-    edges: [PlanDayCookingRecipeEdge!]! @relayEdge
-    pageInfo: PlanDayCookingRecipePageInfo! @relayPageInfo
+    edges: [PlanDayCookingRecipeEdge!]! @aqlRelayEdge
+    pageInfo: PlanDayCookingRecipePageInfo! @aqlRelayPageInfo
   }
 
   type PlanDayCookingRecipeEdge {
@@ -23,7 +23,7 @@ export default gql`
     mealName: String!
     cursor: String!
 
-    node: Recipe! @relayNode
+    node: Recipe! @aqlRelayNode
   }
 
   type PlanDayCookingRecipePageInfo {

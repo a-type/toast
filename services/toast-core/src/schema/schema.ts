@@ -4,10 +4,7 @@ import foods from './foods';
 import globals from './globals';
 import groups from './groups';
 import ingredients from './ingredients';
-import plan from './plan';
 import recipes from './recipes';
-import search from './search';
-import shoppingList from './shoppingList';
 import corrections from './corrections';
 
 export default [
@@ -22,9 +19,6 @@ export default [
   foods,
   groups,
   ingredients,
-  plan,
   recipes,
-  search,
-  shoppingList,
   corrections,
 ];

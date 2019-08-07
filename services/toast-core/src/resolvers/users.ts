@@ -1,6 +1,7 @@
 import { Context } from 'context';
 import { logger } from 'toast-common';
 import firebase from 'services/firebase';
+import arango from 'graphql-arangodb';
 
 const supplementUserData = async (
   dbUser: any,
@@ -28,11 +29,11 @@ const supplementUserData = async (
 
 export default {
   Query: {
-    me: async (parent, args, ctx: Context, info) => {
+    viewer: async (parent, args, ctx: Context, info) => {
       if (!ctx.user) {
         return null;
       }
-      const user = await parent.me();
+      const user = await arango(parent, args, ctx, info);
       if (user && user.group) {
         ctx.storeGroupId(user.group.id);
       }

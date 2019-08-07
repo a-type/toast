@@ -1,5 +1,7 @@
-import { Database } from 'arangojs';
+import { Database, aql } from 'arangojs';
 import { logger } from '../logger';
+import { AqlLiteral, AqlQuery } from 'arangojs/lib/cjs/aql-query';
+import { QueryOptions } from 'arangojs/lib/cjs/database';
 
 const host = process.env.ARANGODB_HOST || 'http://localhost:8529';
 
@@ -23,3 +25,17 @@ export const getArangoDb = async () => {
     throw err;
   }
 };
+
+export const aqlQuery = async (
+  query: string | AqlLiteral | AqlQuery,
+  bindVars?: any,
+  opts?: QueryOptions,
+) => {
+  const arangoDb = await getArangoDb();
+  if (!bindVars && !opts) {
+    return arangoDb.query(query);
+  }
+  return arangoDb.query(query as any, bindVars, opts);
+};
+
+export { aql, Database };

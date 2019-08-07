@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { saveFromUrl } from '../services/images/images';
 import lookupFoods from '../services/lookupFoods';
-import { neo4j, createId, neo4jTimestamp, ApiError } from 'toast-common';
+import { ApiError, aqlQuery, aql } from 'toast-common';
 import parser from '../services/parser';
 import { ParseResult } from '../services/parser/parser';
 import scraper from '../services/scraper';
@@ -78,281 +78,230 @@ export default async (req: Request, res: Response) => {
   // removing query string
   const sourceUrl = fullSourceUrl.replace(/\?.*/, '');
 
-  const session = neo4j.session();
-  const time = neo4jTimestamp();
+  const collectionResult = await aqlQuery(aql`
+    LET group = (
+      FOR group_0 IN DOCUMENT(Users, ${userId}) MemberOf
+        LIMIT 1
+        RETURN group_0
+    )
+    LET linkedCollection = FIRST(
+      FOR n IN OUTBOUND group HasRecipeCollection
+        FILTER n.name == "Scanned Recipes"
+        LIMIT 1
+        RETURN n
+    )
+    LET collection = linkedCollection ?: FIRST(
+      LET newCollection = FIRST(INSERT { name: "Scanned Recipes" } INTO RecipeCollections RETURN NEW)
+      LET edge = FIRST(INSERT { _from: group, _to: newCollection }) INTO HasRecipeCollection
+      RETURN newCollection
+    )
+    RETURN collection { _key }
+  `);
 
-  let defaultCollectionId = await session.readTransaction(async tx => {
-    const result = await tx.run(
-      `
-      MATCH (:User{id: $userId})-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->(collection:RecipeCollection{default:true})
-      RETURN collection {.id}
-      `,
-      { userId },
-    );
+  const { _key: collectionId } = collectionResult.hasNext()
+    ? await collectionResult.next()
+    : null;
 
-    if (!result.records.length) {
-      return null;
-    }
+  const existingRecipeResult = await aqlQuery(aql`
+    FOR recipe IN Recipes
+      FILTER recipe.sourceUrl == ${sourceUrl}
+      LIMIT 1
+      RETURN recipe { _key }
+  `);
 
-    return result.records[0].get('collection').id;
-  });
+  if (existingRecipeResult.hasNext()) {
+    // collect existing recipe and complete
+    const existingRecipe = await existingRecipeResult.next();
+    await aqlQuery(aql`
+      LET recipe = DOCUMENT(Recipes, ${existingRecipe._key})
+      LET collection = DOCUMENT(RecipeCollections, ${collectionId})
+      INSERT {
+        _to: collection,
+        _from: recipe
+      } INTO CollectedIn
+      RETURN recipe { _key }
+    `);
 
-  if (!defaultCollectionId) {
-    defaultCollectionId = await session.writeTransaction(async tx => {
-      const result = await tx.run(
-        `
-        MATCH (:User{id: $userId})-[:MEMBER_OF]->(group:Group)
-        CREATE (group)-[:HAS_COLLECTION]->(collection:RecipeCollection{default: true, id: $collectionId, name: "Saved"})
-        RETURN collection {.id}
-        `,
-        {
-          userId,
-          collectionId: createId('recipeCollection'),
-        },
-      );
-
-      return result.records[0].get('collection').id;
-    });
+    result.recipeId = existingRecipe._key;
+    return res.send(result);
   }
-
-  const existingRecipeId = await session.readTransaction(async tx => {
-    let recipeId: string;
-
-    /**
-     * Check if the recipe is already scanned
-     */
-    const existing = await tx.run(
-      `
-      MATCH (recipe:Recipe {sourceUrl: $sourceUrl})
-      WHERE coalesce(recipe.published, false) = true AND coalesce(recipe.private, false) = false
-      RETURN recipe {.id}
-      `,
-      {
-        sourceUrl,
-      },
-    );
-
-    if (existing.records.length) {
-      // like existing recipe
-      recipeId = existing.records[0].get('recipe').id;
-
-      await tx.run(
-        `
-        MATCH (recipe:Recipe{id: $recipeId}), (recipeCollection:Collection{id:$collectionId})
-        CREATE (collection)<-[:COLLECTED_IN]-(recipe)
-        `,
-        {
-          userId,
-          recipeId,
-          collectionId: defaultCollectionId,
-        },
-      );
-
-      return recipeId;
-    } else {
-      return null;
-    }
-  });
 
   /**
-   * Exit early if recipe has already been processed
+   * Scrape recipe
    */
-  if (existingRecipeId) {
-    result.recipeId = existingRecipeId;
-    return res.send(result);
-  } else {
-    /**
-     * Scrape recipe
-     */
-    const scraped = await scraper(sourceUrl);
+  const scraped = await scraper(sourceUrl);
 
-    if (!scraped.title && !scraped.ingredients.length) {
-      throw new ApiError(
-        "We couldn't extract any recipe data from the provided webpage.",
-        400,
-      );
-    }
-
-    const recipeData = {
-      title: scraped.title || `Scanned Recipe (${sourceUrl})`,
-      description: scraped.description,
-      attribution: scraped.attribution || sourceUrl,
-      cookTime: scraped.cookTimeMinutes,
-      prepTime: scraped.prepTimeMinutes,
-      unattendedTime: scraped.unaccountedForTimeMinutes,
-      servings: scraped.servings || 1,
-      sourceUrl,
-      locked: scraped.title && scraped.ingredients.length > 3,
-    };
-
-    /**
-     * Parse ingredients
-     */
-    let ingredients: RecipeIngredient[] = [];
-    if (!scraped.ingredients.length) {
-      // no ingredients, add problem
-      result.problems.push(RecipeLinkProblem.FailedIngredients);
-    } else {
-      // parse strings
-      const parsedIngredients = scraped.ingredients.map(parser);
-      // search db for matches or null
-      const foundFoods = await lookupFoods(
-        session,
-        parsedIngredients.map(parsed => parsed.food.normalized),
-      );
-
-      // if any null, add problem and create new foods for them
-      if (foundFoods.some(food => !food)) {
-        result.problems.push(RecipeLinkProblem.IncompleteIngredients);
-        parsedIngredients
-          .filter((_, idx) => !foundFoods[idx])
-          .reduce<Promise<any>>(async (prevOperation, parsed, idx) => {
-            await prevOperation;
-            try {
-              const foodName = parsed.food.normalized;
-              const result = await session.writeTransaction(async tx =>
-                tx.run(
-                  `
-              CREATE (food:Food {id: $id, name: $name, alternateNames: [], searchHelpers: [], verified: false})
-              RETURN food
-              `,
-                  {
-                    id: createId(foodName),
-                    name: foodName,
-                  },
-                ),
-              );
-              const food = result.records[0].get('food');
-              foundFoods[idx] = food;
-            } catch (err) {
-              console.error(
-                'Failed to create food ' + parsed.food.normalized,
-                err,
-              );
-            }
-          }, Promise.resolve());
-      }
-
-      ingredients = parsedIngredients.map((parsed, idx) =>
-        parsedToRecipeIngredient(parsed, foundFoods[idx] && foundFoods[idx].id),
-      );
-    }
-
-    /**
-     * Copy image
-     */
-    let image: { id: string; url: string } = null;
-    if (scraped.image) {
-      try {
-        image = await saveFromUrl(scraped.image);
-      } catch (err) {
-        console.error('Image upload failed for link recipe', err);
-        result.problems.push(RecipeLinkProblem.FailedImage);
-      }
-    }
-
-    /**
-     * Create recipe and associate ingredients
-     */
-    result.recipeId = await session.writeTransaction(async tx => {
-      const createResult = await tx.run(
-        `
-        MERGE (recipe:Recipe {sourceUrl:$sourceUrl})
-          ON CREATE SET recipe += $input, recipe.id = $id, recipe.private = false, recipe.published = true
-        WITH recipe
-        MATCH (user:User {id:$userId}), (collection:RecipeCollection{id: $collectionId})
-        CREATE (user)-[:DISCOVERER_OF]->(recipe)
-        CREATE (collection)<-[:COLLECTED_IN]-(recipe)
-        RETURN recipe {.id}
-        `,
-        {
-          sourceUrl: recipeData.sourceUrl,
-          input: {
-            ...recipeData,
-            displayType: 'LINK',
-            published: true,
-            createdAt: time,
-            updatedAt: time,
-            viewedAt: time,
-          },
-          id: createId(scraped.title || 'recipe'),
-          userId,
-          collectionId: defaultCollectionId,
-        },
-      );
-
-      return createResult.records[0].get('recipe').id;
-    });
-
-    if (ingredients) {
-      try {
-        await session.writeTransaction(async tx => {
-          await Promise.all(
-            ingredients.map(async found => {
-              const { foodId, ...rest } = found;
-
-              const query = foodId
-                ? `
-                MATCH (recipe:Recipe {id: $recipeId}), (food:Food {id: $foodId})
-                OPTIONAL MATCH (recipe)<-[allRels:INGREDIENT_OF]-()
-                WITH recipe, count(allRels) as index, food
-                CREATE (recipe)<-[rel:INGREDIENT_OF { index: index }]-(ingredient:Ingredient $props)<-[:USED_IN]-(food)
-                RETURN ingredient {.id}
-                `
-                : `
-                MATCH (recipe:Recipe {id: $recipeId})
-                OPTIONAL MATCH (recipe)<-[allRels:INGREDIENT_OF]-()
-                WITH recipe, count(allRels) as index
-                CREATE (recipe)<-[rel:INGREDIENT_OF { index: index }]-(ingredient:Ingredient $props)
-                RETURN ingredient {.id}
-            `;
-
-              await tx.run(query, {
-                recipeId: result.recipeId,
-                foodId,
-                props: {
-                  ...rest,
-                  id: createId('ingredient'),
-                },
-              });
-            }),
-          );
-        });
-      } catch (err) {
-        console.error(
-          'Ingredient links failed for linked recipe',
-          result.recipeId,
-        );
-        console.error(err);
-        result.problems.push(RecipeLinkProblem.FailedIngredients);
-      }
-    }
-
-    if (image) {
-      try {
-        await session.writeTransaction(async tx => {
-          await tx.run(
-            `
-            MATCH (recipe:Recipe{id: $recipeId})
-            SET recipe.coverImageId = $props.id, recipe.coverImageUrl = $props.url, recipe.coverImageAttribution = $props.attribution
-            RETURN recipe {.id}
-            `,
-            {
-              recipeId: result.recipeId,
-              props: {
-                ...image,
-                attribution: scraped.attribution,
-              },
-            },
-          );
-        });
-      } catch (err) {
-        console.error('Image link failed for linked recipe ', result.recipeId);
-        console.error(err);
-        result.problems.push(RecipeLinkProblem.FailedImage);
-      }
-    }
-
-    res.send(result);
+  if (!scraped.title && !scraped.ingredients.length) {
+    throw new ApiError(
+      "We couldn't extract any recipe data from the provided webpage.",
+      400,
+    );
   }
+
+  const recipeData = {
+    title: scraped.title || `Scanned Recipe (${sourceUrl})`,
+    description: scraped.description,
+    attribution: scraped.attribution || sourceUrl,
+    cookTime: scraped.cookTimeMinutes,
+    prepTime: scraped.prepTimeMinutes,
+    unattendedTime: scraped.unaccountedForTimeMinutes,
+    servings: scraped.servings || 1,
+    sourceUrl,
+    locked: scraped.title && scraped.ingredients.length > 3,
+  };
+
+  /**
+   * Parse ingredients
+   */
+  let ingredients: RecipeIngredient[] = [];
+  if (!scraped.ingredients.length) {
+    // no ingredients, add problem
+    result.problems.push(RecipeLinkProblem.FailedIngredients);
+  } else {
+    // parse strings
+    const parsedIngredients = scraped.ingredients.map(parser);
+    // search db for matches or null
+    const foundFoods = await lookupFoods(
+      parsedIngredients.map(parsed => parsed.food.normalized),
+    );
+
+    // if any null, add problem and create new foods for them
+    if (foundFoods.some(food => !food)) {
+      result.problems.push(RecipeLinkProblem.IncompleteIngredients);
+      parsedIngredients
+        .filter((_, idx) => !foundFoods[idx])
+        .reduce<Promise<any>>(async (prevOperation, parsed, idx) => {
+          await prevOperation;
+          try {
+            const foodName = parsed.food.normalized;
+            const result = await aqlQuery(aql`
+              INSERT {
+                name: ${foodName},
+                alternateNames: [],
+                searchHelpers: [],
+                verified: false
+              } INTO Foods
+              RETURN NEW
+            `);
+
+            const food = await result.next();
+            foundFoods[idx] = food;
+          } catch (err) {
+            console.error(
+              'Failed to create food ' + parsed.food.normalized,
+              err,
+            );
+          }
+        }, Promise.resolve());
+    }
+
+    ingredients = parsedIngredients.map((parsed, idx) =>
+      parsedToRecipeIngredient(parsed, foundFoods[idx] && foundFoods[idx].id),
+    );
+  }
+
+  /**
+   * Copy image
+   */
+  let image: { id: string; url: string } = null;
+  if (scraped.image) {
+    try {
+      image = await saveFromUrl(scraped.image);
+    } catch (err) {
+      console.error('Image upload failed for link recipe', err);
+      result.problems.push(RecipeLinkProblem.FailedImage);
+    }
+  }
+
+  /**
+   * Create recipe and associate ingredients
+   */
+  const time = new Date().getTime();
+  const recipeResult = await aqlQuery(aql`
+      LET recipe = FIRST(
+        INSERT {
+          sourceUrl: ${sourceUrl},
+          private: false,
+          published: true,
+          title: ${recipeData.title},
+          description: ${recipeData.description},
+          attribution: ${recipeData.attribution},
+          cookTime: ${recipeData.cookTime},
+          prepTime: ${recipeData.prepTime},
+          unattendedTime: ${recipeData.unattendedTime},
+          servings: ${recipeData.servings},
+          locked: ${recipeData.locked},
+          displayType: 'LINK',
+          createdAt: ${time},
+          updatedAt: ${time},
+          viewedAt: ${time},
+          coverImageUrl: ${image ? image.url : null},
+          coverImageId: ${image ? image.id : null}
+        } INTO Recipes
+        RETURN NEW
+      )
+      LET user = DOCUMENT(Users, ${userId})
+      LET collection = DOCUMENT(RecipeCollections, ${collectionId})
+      LET collRes = (
+        INSERT { _from: recipe, _to: collection } INTO CollectedIn RETURN NEW
+      )
+      LET discoverRes = (
+        INSERT { _from: user, _to: recipe } INTO DiscovererOf
+      )
+      RETURN recipe { _key }
+    `);
+
+  const recipe = await recipeResult.next();
+  result.recipeId = recipe._key;
+
+  if (ingredients) {
+    try {
+      await Promise.all(
+        ingredients.map(async (found, index) => {
+          await aqlQuery(aql`
+            LET recipe = DOCUMENT(Recipes, ${recipe._key})
+            LET food = DOCUMENT(Foods, ${found.foodId})
+            LET ingredient = FIRST(
+              INSERT {
+                text: ${found.text},
+                foodStart: ${found.foodStart},
+                foodEnd: ${found.foodEnd},
+                quantity: ${found.quantity || 0},
+                quantityStart: ${found.quantityStart},
+                quantityEnd: ${found.quantityEnd},
+                unit: ${found.unit || null},
+                unitStart: ${found.unitStart},
+                unitEnd: ${found.unitEnd},
+              } INTO Ingredients
+              RETURN NEW
+            )
+            LET usedEdge = FIRST(
+              INSERT {
+                _from: food,
+                _to: ingredient
+              } INTO UsedIn
+              RETURN NEW
+            )
+            LET ingredientEdge = FIRST(
+              INSERT {
+                _from: ingredient,
+                _to: recipe,
+                index: ${index}
+              } INTO IngredientOf
+              RETURN NEW
+            )
+          `);
+        }),
+      );
+    } catch (err) {
+      console.error(
+        'Ingredient links failed for linked recipe',
+        result.recipeId,
+      );
+      console.error(err);
+      result.problems.push(RecipeLinkProblem.FailedIngredients);
+    }
+  }
+
+  res.send(result);
 };
