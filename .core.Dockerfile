@@ -7,6 +7,7 @@ RUN npm i lerna -g --loglevel notice
 COPY package.json package-lock.json ./
 RUN npm ci --loglevel notice
 
+COPY services/toast-common ./services/toast-common
 COPY services/toast-core ./services/toast-core
 
 COPY lerna.json ./
