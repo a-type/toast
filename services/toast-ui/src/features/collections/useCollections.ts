@@ -5,14 +5,16 @@ import { ApolloError } from 'apollo-boost';
 
 const CollectionsQuery = gql`
   query Collections {
-    me {
+    viewer {
       id
       group {
         id
         recipeCollectionsConnection {
-          nodes {
-            id
-            name
+          edges {
+            node {
+              id
+              name
+            }
           }
         }
       }
@@ -26,12 +28,14 @@ export type Collection = {
 };
 
 export type CollectionsQueryResult = {
-  me: {
+  viewer: {
     id: string;
     group: {
       id: string;
       recipeCollectionsConnection: {
-        nodes: Collection[];
+        edges: {
+          node: Collection;
+        }[];
       };
     };
   };
@@ -59,9 +63,9 @@ export default (
 
   const collections = pathOr(
     [],
-    ['me', 'group', 'recipeCollectionsConnection', 'nodes'],
+    ['viewer', 'group', 'recipeCollectionsConnection', 'edges'],
     result.data,
-  );
+  ).map(({ node }) => node);
 
   return [collections, result.loading, result.error, result];
 };

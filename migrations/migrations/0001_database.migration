@@ -1,0 +1,6 @@
+type: database
+action: create
+name: toast
+allowed:
+  - username: ${toastUsername}
+  - password: ${toastPassword}

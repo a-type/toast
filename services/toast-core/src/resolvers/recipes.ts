@@ -1,5 +1,5 @@
 import { Context } from 'context';
-import arango from 'graphql-arangodb';
+import { resolver as arango } from 'graphql-arangodb';
 
 export default {
   Query: {

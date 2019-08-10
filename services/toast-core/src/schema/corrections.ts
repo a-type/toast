@@ -23,61 +23,61 @@ export default gql`
   }
 
   type ChangeFoodIngredientCorrection implements IngredientCorrection {
-    id: ID! @key
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @node(edgeCollection: "Corrects", direction: OUTBOUND)
-    food: Food! @node(edgeCollection: "AssignsFood", direction: OUTBOUND)
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
+    food: Food! @aqlNode(edgeCollection: "AssignsFood", direction: OUTBOUND)
   }
 
   type ChangeQuantityIngredientCorrection implements IngredientCorrection {
-    id: ID! @key
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @node(edgeCollection: "Corrects", direction: OUTBOUND)
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
     quantity: Float!
   }
 
   type ChangeUnitIngredientCorrection implements IngredientCorrection {
-    id: ID! @key
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @node(edgeCollection: "Corrects", direction: OUTBOUND)
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
     unit: String!
   }
 
   type AddIngredientCorrection implements IngredientCorrection {
-    id: ID! @key
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     text: String!
-    recipe: Recipe! @node(edgeCollection: "ForRecipe", direction: OUTBOUND)
+    recipe: Recipe! @aqlNode(edgeCollection: "ForRecipe", direction: OUTBOUND)
   }
 
   type RemoveIngredientCorrection implements IngredientCorrection {
-    id: ID! @key
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @node(edgeCollection: "Corrects", direction: OUTBOUND)
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
   }
 
   type IngredientCorrectionsConnection {
-    edges: [IngredientCorrectionEdge!]!
-    pageInfo: PageInfo!
+    edges: [IngredientCorrectionEdge!]! @aqlRelayEdges
+    pageInfo: PageInfo! @aqlRelayPageInfo
   }
 
   type IngredientCorrectionEdge {
     cursor: String!
-    node: IngredientCorrection!
+    node: IngredientCorrection! @aqlRelayNode
   }
 
   input IngredientCorrectionsCollectionFilterInput {

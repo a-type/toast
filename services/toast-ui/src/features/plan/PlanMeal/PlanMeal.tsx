@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import { PlanMealData } from '../types';
+import { PlanCookingEdge } from '../types';
 import { TextSkeleton, CardSkeleton } from 'components/skeletons';
 import EmptyMeal from './EmptyMeal';
 import PlannedMeal from './PlannedMeal';
@@ -7,7 +7,7 @@ import { Box, Typography } from '@material-ui/core';
 
 interface MealProps {
   planDayId: string;
-  meal: PlanMealData;
+  meal: PlanCookingEdge;
   mealName: string;
   variant?: 'full' | 'compact';
 }

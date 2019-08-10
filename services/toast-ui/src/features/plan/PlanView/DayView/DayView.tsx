@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import { PlanDayData, PlanMealData } from '../../types';
+import { PlanDayData, PlanCookingEdge } from '../../types';
 import { formatDay } from 'formatters/date';
 import MealGrid from './MealGrid';
 import Meal, { MealSkeleton } from 'features/plan/PlanMeal/PlanMeal';
@@ -27,7 +27,7 @@ const DayView: SFC<DayViewProps> = ({ day }) => {
   }
 
   const { date } = day;
-  const meals = path(['cookingConnection', 'edges'], day) as PlanMealData[];
+  const meals = path(['cookingConnection', 'edges'], day) as PlanCookingEdge[];
   // TODO: support non-standard meals
   const standardMeals = ['breakfast', 'lunch', 'dinner'].map(
     mealName =>

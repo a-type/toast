@@ -8,10 +8,12 @@ import useStoredFlag from 'hooks/useStoredFlag';
 import React, { useState } from 'react';
 import { useMutation } from 'react-apollo-hooks';
 
-export const Document = gql`
+export const CreatePlanMutation = gql`
   mutation CreatePlan {
     createGroup {
-      id
+      group {
+        id
+      }
     }
   }
 `;
@@ -27,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
   const [showJoinInfo, setShowJoinInfo] = useState(false);
   const [loading, setLoading] = useState(false);
-  const mutate = useMutation(Document);
+  const mutate = useMutation(CreatePlanMutation);
   const [_, setTutorialFlag] = useStoredFlag('onboarding');
   const [__, { queueGuide }] = useGuides();
   const [error, setError] = useState(null);

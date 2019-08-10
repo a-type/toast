@@ -1,4 +1,4 @@
-import arango from 'graphql-arangodb';
+import { resolver as arango } from 'graphql-arangodb';
 
 export default {
   Query: {
@@ -8,5 +8,7 @@ export default {
     mergeUser: arango,
     createGroup: arango,
     setGroceryDay: arango,
+    addPlanToCook: arango,
+    removePlanToCook: arango,
   },
 };

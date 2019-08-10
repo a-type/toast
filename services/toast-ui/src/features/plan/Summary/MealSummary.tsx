@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { PlanMealData } from '../types';
+import { PlanCookingEdge } from '../types';
 import { Spotlight } from 'features/recipes/components/Spotlight';
 import { Typography } from '@material-ui/core';
 
 interface PlanMealSummaryProps {
-  meal: PlanMealData | null;
+  meal: PlanCookingEdge | null;
 }
 
 export const PlanMealSummary: FC<PlanMealSummaryProps> = ({ meal }) => {

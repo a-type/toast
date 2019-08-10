@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import { PlanDayCookingEdgeFragment } from './usePlan';
-import { PlanMealData } from './types';
+import { PlanCookingEdgeFragment } from './usePlan';
+import { PlanCookingEdge } from './types';
 import { useMutation } from 'react-apollo-hooks';
 
 const AssignRecipeMutation = gql`
@@ -10,7 +10,7 @@ const AssignRecipeMutation = gql`
     $servings: Int!
     $mealName: String!
   ) {
-    assignPlanDayCooking(
+    addPlanToCook(
       input: {
         planDayId: $planDayId
         recipeId: $recipeId
@@ -19,18 +19,18 @@ const AssignRecipeMutation = gql`
       }
     ) {
       id
-      cookingConnection {
+      planCookingConnection {
         edges {
-          ...PlanDayCookingEdgeFragment
+          ...PlanCookingEdgeFragment
         }
       }
     }
   }
-  ${PlanDayCookingEdgeFragment}
+  ${PlanCookingEdgeFragment}
 `;
 
 export type AssignRecipeMutationResult = {
-  assignPlanMealRecipe: PlanMealData;
+  assignPlanMealRecipe: PlanCookingEdge;
 };
 
 export default (): ((vars: {

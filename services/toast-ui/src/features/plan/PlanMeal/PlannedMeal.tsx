@@ -1,11 +1,11 @@
 import React, { SFC } from 'react';
-import { PlanMealData } from '../types';
+import { PlanCookingEdge } from '../types';
 import RecipeCard from 'features/recipes/RecipeCards/RecipeCard';
 import { path } from 'ramda';
 import { makeStyles } from '@material-ui/core';
 
 interface MealProps {
-  meal: PlanMealData;
+  meal: PlanCookingEdge;
   variant?: 'full' | 'compact';
 }
 

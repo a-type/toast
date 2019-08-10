@@ -5,7 +5,7 @@ import { ApolloError } from 'apollo-boost';
 
 const DraftRecipeQuery = gql`
   query DraftRecipes {
-    me {
+    viewer {
       id
       authoredRecipesConnection(input: { published: false }) {
         nodes {
@@ -27,7 +27,7 @@ export type DraftRecipe = {
 };
 
 export type DraftRecipeQueryResult = {
-  me: {
+  viewer: {
     id: string;
     authoredRecipesConnection: DraftRecipe[];
   };
@@ -41,7 +41,11 @@ export default (): [
 ] => {
   const result = useQuery<DraftRecipeQueryResult>(DraftRecipeQuery);
 
-  const recipes = pathOr([], ['me', 'authoredRecipesConnection'], result.data);
+  const recipes = pathOr(
+    [],
+    ['viewer', 'authoredRecipesConnection'],
+    result.data,
+  );
 
   return [recipes, result.loading, result.error, result];
 };

@@ -74,106 +74,106 @@ const applyCorrection = async (
   if (data.correctionType === IngredientCorrectionType.Add) {
     const [parsed] = await ctx.scanning.parseIngredients([data.text]);
     const ingredient = ctx.scanning.parsedIngredientToRecipeIngredient(parsed);
-    await ctx.writeTransaction(async tx => {
-      if (!ingredient.foodId) {
-        const foodRes = await tx.run(
-          `
-          CREATE (food:Food {id: $id, name: $name, alternateNames: [], searchHelpers: []})
-          RETURN food {.id}
-        `,
-          {
-            id: id(),
-            name: parsed.food.normalized,
-          },
-        );
+    // await ctx.writeTransaction(async tx => {
+    //   if (!ingredient.foodId) {
+    //     const foodRes = await tx.run(
+    //       `
+    //       CREATE (food:Food {id: $id, name: $name, alternateNames: [], searchHelpers: []})
+    //       RETURN food {.id}
+    //     `,
+    //       {
+    //         id: id(),
+    //         name: parsed.food.normalized,
+    //       },
+    //     );
 
-        ingredient.foodId = foodRes.records[0].get('food').id;
-      }
+    //     ingredient.foodId = foodRes.records[0].get('food').id;
+    //   }
 
-      await tx.run(
-        `
-        MATCH (recipe:Recipe{id:$recipeId}), (food:Food{id:$foodId})
-        CREATE (recipe)<-[:INGREDIENT_OF]-(ing:Ingredient)<-[:USED_IN]-(food)
-        SET ing += props
-      `,
-        {
-          recipeId: data.recipeId,
-          foodId: ingredient.foodId,
-          props: {
-            text: ingredient.text,
-            quantity: ingredient.quantity,
-            unit: ingredient.unit,
-            foodStart: ingredient.foodStart,
-            foodEnd: ingredient.foodEnd,
-            quantityStart: ingredient.quantityStart,
-            quantityEnd: ingredient.quantityEnd,
-            unitStart: ingredient.unitStart,
-            unitEnd: ingredient.unitEnd,
-          },
-        },
-      );
-    });
+    //   await tx.run(
+    //     `
+    //     MATCH (recipe:Recipe{id:$recipeId}), (food:Food{id:$foodId})
+    //     CREATE (recipe)<-[:INGREDIENT_OF]-(ing:Ingredient)<-[:USED_IN]-(food)
+    //     SET ing += props
+    //   `,
+    //     {
+    //       recipeId: data.recipeId,
+    //       foodId: ingredient.foodId,
+    //       props: {
+    //         text: ingredient.text,
+    //         quantity: ingredient.quantity,
+    //         unit: ingredient.unit,
+    //         foodStart: ingredient.foodStart,
+    //         foodEnd: ingredient.foodEnd,
+    //         quantityStart: ingredient.quantityStart,
+    //         quantityEnd: ingredient.quantityEnd,
+    //         unitStart: ingredient.unitStart,
+    //         unitEnd: ingredient.unitEnd,
+    //       },
+    //     },
+    //   );
+    // });
   } else if (data.correctionType === IngredientCorrectionType.Remove) {
-    await ctx.writeTransaction(async tx => {
-      await tx.run(`MATCH (ing:Ingredient{id:$id}) DETACH DELETE ing`, {
-        id: data.ingredientId,
-      });
-    });
+    // await ctx.writeTransaction(async tx => {
+    //   await tx.run(`MATCH (ing:Ingredient{id:$id}) DETACH DELETE ing`, {
+    //     id: data.ingredientId,
+    //   });
+    // });
   } else if (data.correctionType === IngredientCorrectionType.ChangeFood) {
-    await ctx.writeTransaction(async tx => {
-      await tx.run(
-        `
-        MATCH (ing:Ingredient{id:$id}), (food:Food{id:$foodId})
-        MERGE (ing)<-[:USED_IN]-(food)
-      `,
-        {
-          id: data.ingredientId,
-          foodId: data.foodId,
-        },
-      );
-    });
+    // await ctx.writeTransaction(async tx => {
+    //   await tx.run(
+    //     `
+    //     MATCH (ing:Ingredient{id:$id}), (food:Food{id:$foodId})
+    //     MERGE (ing)<-[:USED_IN]-(food)
+    //   `,
+    //     {
+    //       id: data.ingredientId,
+    //       foodId: data.foodId,
+    //     },
+    //   );
+    // });
   } else if (data.correctionType === IngredientCorrectionType.ChangeQuantity) {
-    await ctx.writeTransaction(async tx => {
-      await tx.run(
-        `
-        MATCH (ing:Ingredient{id:$id})
-        SET ing.quantity = $quantity
-      `,
-        {
-          id: data.ingredientId,
-          quantity: data.quantity,
-        },
-      );
-    });
+    // await ctx.writeTransaction(async tx => {
+    //   await tx.run(
+    //     `
+    //     MATCH (ing:Ingredient{id:$id})
+    //     SET ing.quantity = $quantity
+    //   `,
+    //     {
+    //       id: data.ingredientId,
+    //       quantity: data.quantity,
+    //     },
+    //   );
+    // });
   } else if (data.correctionType === IngredientCorrectionType.ChangeUnit) {
-    await ctx.writeTransaction(async tx => {
-      await tx.run(
-        `
-        MATCH (ing:Ingredient{id:$id})
-        SET ing.unit = $unit
-      `,
-        {
-          id: data.ingredientId,
-          unit: data.unit,
-        },
-      );
-    });
+    // await ctx.writeTransaction(async tx => {
+    //   await tx.run(
+    //     `
+    //     MATCH (ing:Ingredient{id:$id})
+    //     SET ing.unit = $unit
+    //   `,
+    //     {
+    //       id: data.ingredientId,
+    //       unit: data.unit,
+    //     },
+    //   );
+    // });
   } else {
     throw new ValidationError(
       `Unrecognized correction type ${(data as any).correctionType}`,
     );
   }
 
-  const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
-  const doc = collection.doc(data.id);
-  await doc.set(
-    {
-      status: IngredientCorrectionStatus.Accepted,
-    },
-    {
-      merge: true,
-    },
-  );
+  // const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
+  // const doc = collection.doc(data.id);
+  // await doc.set(
+  //   {
+  //     status: IngredientCorrectionStatus.Accepted,
+  //   },
+  //   {
+  //     merge: true,
+  //   },
+  // );
 };
 
 export default {
@@ -230,71 +230,71 @@ export default {
         );
       }
 
-      const isImmediatelyApplied = await ctx.readTransaction(async tx => {
-        const res = await tx.run(
-          `
-          MATCH (recipe:Recipe{id:$id})
-          OPTIONAL MATCH authorPath=(:User{id:$userId})-[:AUTHOR_OF]->(recipe)
-          RETURN recipe {.public, .locked}, size(authorPath) as authorCount
-          `,
-          { id: input.recipeId, userId: ctx.user.id },
-        );
+      // const isImmediatelyApplied = await ctx.readTransaction(async tx => {
+      //   const res = await tx.run(
+      //     `
+      //     MATCH (recipe:Recipe{id:$id})
+      //     OPTIONAL MATCH authorPath=(:User{id:$userId})-[:AUTHOR_OF]->(recipe)
+      //     RETURN recipe {.public, .locked}, size(authorPath) as authorCount
+      //     `,
+      //     { id: input.recipeId, userId: ctx.user.id },
+      //   );
 
-        if (!res.records || res.records.length === 0) {
-          return false;
-        }
+      //   if (!res.records || res.records.length === 0) {
+      //     return false;
+      //   }
 
-        if (res.records[0].get('authorCount')) {
-          return true;
-        }
+      //   if (res.records[0].get('authorCount')) {
+      //     return true;
+      //   }
 
-        const recipe = res.records[0].get('recipe');
-        return !recipe.public || !recipe.locked;
-      });
+      //   const recipe = res.records[0].get('recipe');
+      //   return !recipe.public || !recipe.locked;
+      // });
 
       // TODO
-      const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
+      // const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
 
-      const doc = await collection.add(correction);
+      // const doc = await collection.add(correction);
 
-      if (isImmediatelyApplied) {
-        await applyCorrection({ ...correction, id: doc.id }, ctx);
-      }
+      // if (isImmediatelyApplied) {
+      //   await applyCorrection({ ...correction, id: doc.id }, ctx);
+      // }
 
-      return {
-        id: doc.id,
-        ...correction,
-      };
+      // return {
+      //   id: doc.id,
+      //   ...correction,
+      // };
     },
 
     acceptIngredientCorrection: async (_parent, args, ctx: Context) => {
-      const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
-      const doc = collection.doc(args.input.ingredientCorrectionId);
-      const snapshot = await doc.get();
-      const data = snapshot.data() as IngredientCorrectionData;
-      await applyCorrection({ ...data, id: doc.id }, ctx);
-      return {
-        ...data,
-        id: doc.id,
-        status: IngredientCorrectionStatus.Accepted,
-      };
+      // const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
+      // const doc = collection.doc(args.input.ingredientCorrectionId);
+      // const snapshot = await doc.get();
+      // const data = snapshot.data() as IngredientCorrectionData;
+      // await applyCorrection({ ...data, id: doc.id }, ctx);
+      // return {
+      //   ...data,
+      //   id: doc.id,
+      //   status: IngredientCorrectionStatus.Accepted,
+      // };
     },
 
     rejectIngredientCorrection: async (_parent, args, ctx: Context) => {
-      const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
-      const doc = collection.doc(args.input.ingredientCorrectionId);
-      await doc.set(
-        {
-          status: IngredientCorrectionStatus.Rejected,
-        },
-        {
-          merge: true,
-        },
-      );
-      return {
-        id: doc.id,
-        status: IngredientCorrectionStatus.Rejected,
-      };
+      // const collection = ctx.firestore.firestore.collection(COLLECTION_NAME);
+      // const doc = collection.doc(args.input.ingredientCorrectionId);
+      // await doc.set(
+      //   {
+      //     status: IngredientCorrectionStatus.Rejected,
+      //   },
+      //   {
+      //     merge: true,
+      //   },
+      // );
+      // return {
+      //   id: doc.id,
+      //   status: IngredientCorrectionStatus.Rejected,
+      // };
     },
   },
 

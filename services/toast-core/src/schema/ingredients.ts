@@ -15,7 +15,8 @@ export default gql`
     comments: [String!]! @defaultValue(value: [])
     preparations: [String!]! @defaultValue(value: [])
 
-    food: Food @aqlNode(edge: "UsedIn", direction: INBOUND)
-    recipe: Recipe! @aqlNode(edge: "IngredientOf", direction: OUTBOUND)
+    food: Food @aqlNode(edgeCollection: "UsedIn", direction: INBOUND)
+    recipe: Recipe!
+      @aqlNode(edgeCollection: "IngredientOf", direction: OUTBOUND)
   }
 `;

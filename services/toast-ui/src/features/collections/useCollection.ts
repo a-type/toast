@@ -5,7 +5,7 @@ import { ApolloError } from 'apollo-boost';
 
 const CollectionQuery = gql`
   query Collection($input: RecipeCollectionGetInput!) {
-    me {
+    viewer {
       id
       group {
         id
@@ -13,11 +13,13 @@ const CollectionQuery = gql`
           id
           name
           recipesConnection {
-            nodes {
-              id
-              title
-              coverImageUrl
-              coverImageAttribution
+            edges {
+              node {
+                id
+                title
+                coverImageUrl
+                coverImageAttribution
+              }
             }
           }
         }
@@ -37,12 +39,14 @@ export type Collection = {
   id: string;
   name: string;
   recipesConnection: {
-    nodes: CollectionRecipe[];
+    edges: {
+      node: CollectionRecipe;
+    }[];
   };
 };
 
 export type CollectionQueryResult = {
-  me: {
+  viewer: {
     id: string;
     group: {
       id: string;
@@ -88,7 +92,7 @@ export default (
 
   const collection = pathOr(
     [],
-    ['me', 'group', 'recipeCollection'],
+    ['viewer', 'group', 'recipeCollection'],
     result.data,
   );
 

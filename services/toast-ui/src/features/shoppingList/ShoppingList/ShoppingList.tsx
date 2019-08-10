@@ -11,7 +11,7 @@ import { Typography } from '@material-ui/core';
 
 const GetShoppingListQuery = gql`
   query GetShoppingListQuery {
-    me {
+    viewer {
       id
 
       group {
@@ -47,7 +47,7 @@ const GetShoppingListQuery = gql`
 `;
 
 type GetShoppingListResult = {
-  me: {
+  viewer: {
     id: string;
     group: {
       id: string;
@@ -126,7 +126,7 @@ export const ShoppingList: FC<ShoppingListProps> = () => {
   }
 
   const {
-    me: {
+    viewer: {
       group: {
         shoppingList: { startDate, endDate, items },
       },

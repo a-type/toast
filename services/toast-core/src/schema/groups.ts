@@ -30,7 +30,10 @@ export default gql`
     """
     Returns the available planned meals of the group's meal plan
     """
-    planCookingConnection: GroupPlanCookingConnection!
+    planCookingConnection(
+      first: Int = 10
+      after: String
+    ): GroupPlanCookingConnection!
       @aqlRelayConnection(
         edgeCollection: "PlansToCook"
         edgeDirection: OUTBOUND
@@ -41,7 +44,10 @@ export default gql`
     """
     Collections of recipes group users have created
     """
-    recipeCollectionsConnection: GroupRecipeCollectionConnection!
+    recipeCollectionsConnection(
+      first: Int = 10
+      after: String
+    ): GroupRecipeCollectionConnection!
       @aqlRelayConnection(
         edgeCollection: "HasRecipeCollection"
         edgeDirection: OUTBOUND
@@ -58,11 +64,6 @@ export default gql`
         filter: "$field.id == $args.input.id"
         limit: { count: 1 }
       )
-
-    """
-    A list of items to purchase for next week's plan
-    """
-    shoppingList: ShoppingList!
   }
 
   input RecipeCollectionGetInput {
@@ -78,6 +79,7 @@ export default gql`
     cursor: String!
     date: Date!
     mealName: String!
+    servings: Int! @defaultValue(value: 1)
     node: Recipe! @aqlRelayNode
   }
 
@@ -100,11 +102,11 @@ export default gql`
   }
 
   type GroupInvitationAcceptResult {
-    group: Group! @aqlDocument(collection: "Groups", id: "$parent.groupId")
+    group: Group! @aqlDocument(collection: "Groups", key: "$parent.groupId")
   }
 
   extend type Query {
-    viewer: User @aqlDocument(collection: "Users", id: "$context.userId")
+    viewer: User @aqlDocument(collection: "Users", key: "$context.userId")
   }
 
   input SetGroceryDayInput {
@@ -112,20 +114,21 @@ export default gql`
   }
 
   type GroupCreateResult {
-    group: Group! @aql(expression: "$parent.group")
+    group: Group! @aqlSubquery(query: "LET $field = $parent.group")
   }
 
   type GroupSetGroceryDayResult {
-    group: Group! @aql(expression: "$parent.group")
+    group: Group! @aqlSubquery(query: "LET $field = $parent.group")
   }
 
-  type AddPlanToCookInput {
+  input AddPlanToCookInput {
     date: Date!
     mealName: String!
     recipeId: String!
+    servings: Int!
   }
 
-  type RemovePlanToCookInput {
+  input RemovePlanToCookInput {
     date: Date!
     mealName: String!
   }
@@ -144,8 +147,8 @@ export default gql`
           INSERT {_key: $context.userId}
           UPDATE {}
         IN Users
-        LET $field = NEW
         """
+        return: "NEW"
       )
       @authenticated
 
@@ -153,14 +156,14 @@ export default gql`
       @aqlSubquery(
         query: """
         LET user = DOCUMENT(Users, $context.userId)
-        LET group = (
+        LET group = FIRST(
           INSERT {groceryDay: 0} INTO Groups
           RETURN NEW
         )
-        LET edge = (
-          INSERT {_from: user, _to: group} INTO MemberOf
+        LET edge = FIRST(
+          INSERT {_from: user._id, _to: group._id} INTO MemberOf
         )
-        RETURN {
+        LET $field = {
           group: group
         }
         """
@@ -170,7 +173,7 @@ export default gql`
     setGroceryDay(input: SetGroceryDayInput!): Group
       @aqlSubquery(
         query: """
-        LET group = (
+        LET group = FIRST(
           FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
             LIMIT 1
             RETURN group_0
@@ -188,7 +191,7 @@ export default gql`
     addPlanToCook(input: AddPlanToCookInput!): Group!
       @aqlSubquery(
         query: """
-        LET group = (
+        LET group = FIRST(
           FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
             LIMIT 1
             RETURN group_0
@@ -197,6 +200,7 @@ export default gql`
         INSERT {
           date: $args.input.date,
           mealName: $args.input.mealName,
+          servings: $args.input.servings,
           _from: group,
           _to: recipe
         } INTO PlansToCook
@@ -208,7 +212,7 @@ export default gql`
     removePlanToCook(input: RemovePlanToCookInput!): Group!
       @aqlSubquery(
         query: """
-        LET group = (
+        LET group = FIRST(
           FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
             LIMIT 1
             RETURN group_0

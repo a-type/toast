@@ -45,6 +45,7 @@
     "dotenv": "^8.0.0",
     "express-async-errors": "^3.1.1",
     "extract-domain": "^2.0.4",
+    "graphql-arangodb": "0.1.1",
     "ingredients-parser": "^1.4.0",
     "is-tracking-domain": "^1.1.6",
     "iso8601-duration": "^1.1.7",

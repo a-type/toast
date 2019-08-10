@@ -1,10 +1,10 @@
-import { PlanDayData } from './types';
+import { PlanMealRecipeData, PlanCookingEdge } from './types';
 import gql from 'graphql-tag';
 import { useQuery, QueryHookResult } from 'react-apollo-hooks';
 import { ApolloError } from 'apollo-boost';
 import { pathOr } from 'ramda';
 
-export const PlanDayCookingEdgeFragment = gql`
+export const PlanCookingEdgeFragment = gql`
   fragment MealRecipeFragment on Recipe {
     id
     title
@@ -14,7 +14,7 @@ export const PlanDayCookingEdgeFragment = gql`
     coverImageUrl
   }
 
-  fragment PlanDayCookingEdgeFragment on PlanDayCookingRecipeEdge {
+  fragment PlanCookingEdgeFragment on GroupPlanCookingEdge {
     servings
     mealName
     node {
@@ -25,43 +25,36 @@ export const PlanDayCookingEdgeFragment = gql`
 
 export const GetPlanQuery = gql`
   query GetPlanQuery {
-    me {
+    viewer {
       id
       group {
         id
-        planDaysConnection {
-          nodes {
-            id
-            date
-
-            cookingConnection {
-              edges {
-                ...PlanDayCookingEdgeFragment
-              }
-            }
+        planCookingConnection {
+          edges {
+            ...PlanCookingEdgeFragment
           }
         }
       }
     }
   }
 
-  ${PlanDayCookingEdgeFragment}
+  ${PlanCookingEdgeFragment}
 `;
 
 export type GetPlanQueryResult = {
-  me: {
+  viewer: {
     id: string;
     group?: {
       id: string;
-      planDaysConnection: {
-        nodes: PlanDayData[];
+      planCookingConnection: {
+        edges: PlanCookingEdge[];
       };
     };
   };
 };
 
 export default (): [
-  PlanDayData[],
+  PlanCookingEdge[],
   boolean,
   ApolloError,
   QueryHookResult<GetPlanQueryResult, {}>
@@ -70,7 +63,7 @@ export default (): [
 
   const planDays = pathOr(
     [],
-    ['me', 'group', 'planDaysConnection', 'nodes'],
+    ['viewer', 'group', 'planCookingConnection', 'edges'],
     result.data,
   ).sort((a, b) => a.date.localeCompare(b.date));
 

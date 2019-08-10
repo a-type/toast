@@ -7,16 +7,9 @@ export type PlanMealRecipeData = {
   coverImageUrl: string;
 };
 
-export type PlanMealData = {
+export type PlanCookingEdge = {
   servings: number;
   mealName: string;
-  node: PlanMealRecipeData;
-};
-
-export type PlanDayData = {
-  id: string;
   date: number;
-  cookingConnection: {
-    edges: PlanMealData[];
-  };
+  node: PlanMealRecipeData;
 };

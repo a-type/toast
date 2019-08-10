@@ -60,7 +60,7 @@ export default gql`
 
   type RecipeIngredientConnection {
     edges: [RecipeIngredientEdge!]! @aqlRelayEdges
-    pageInfo: RecipeIngredientPageInfo! @aqlPageInfo
+    pageInfo: RecipeIngredientPageInfo! @aqlRelayPageInfo
   }
 
   type RecipeIngredientEdge {
@@ -78,7 +78,10 @@ export default gql`
     default: Boolean!
     createdAt: Date!
 
-    recipesConnection: RecipeCollectionRecipesConnection!
+    recipesConnection(
+      first: Int = 10
+      after: String
+    ): RecipeCollectionRecipesConnection!
       @aqlRelayConnection(
         edgeCollection: "CollectedIn"
         edgeDirection: INBOUND
@@ -121,7 +124,7 @@ export default gql`
   }
 
   type RecipeLinkResult {
-    recipe: Recipe @aqlDocument(collection: "Recipes", id: "$parent.recipeId")
+    recipe: Recipe @aqlDocument(collection: "Recipes", key: "$parent.recipeId")
     problems: [RecipeLinkProblem!]!
   }
 
@@ -208,7 +211,6 @@ export default gql`
 
   extend type Mutation {
     createRecipe(input: RecipeCreateInput!): Recipe!
-      @generateId
       @aqlSubquery(
         query: """
         LET user = DOCUMENT(Users, $context.userId)
@@ -257,27 +259,55 @@ export default gql`
       @authenticated
 
     collectRecipe(input: RecipeCollectInput!): Recipe!
-      @cypher(
-        match: """
-        (recipe:Recipe{id:$args.input.recipeId}),
-          (user:User{id:$context.userId})-[:MEMBER_OF]->(group:Group)-[:HAS_COLLECTION]->
-          (collection:RecipeCollection{id:$args.input.collectionId})
+      @aqlSubquery(
+        query: """
+        LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
+        LET collection = DOCUMENT(RecipeCollections, $args.input.collectionId)
+        LET hasAccess = FIRST(
+          LET user = DOCUMENT(Users, $context.userId)
+          FOR group IN OUTBOUND 1..1 user MemberOf
+            LIMIT 1
+            RETURN FIRST(
+              FOR groupCollection IN OUTBOUND 1..1 group HasRecipeCollection
+                PRUNE groupCollection._key == collection._key
+                LIMIT 1
+                RETURN groupCollection
+            )
+        ) != null
+        LET $field = hasAccess ? FIRST(
+          INSERT { _from: recipe, _to: collection } INTO CollectedIn
+          RETURN recipe
+        ) : null
         """
-        merge: "(recipe)-[:COLLECTED_IN]->(collection)"
-        return: "recipe"
       )
       @authenticated
 
     uncollectRecipe(input: RecipeUncollectInput!): Recipe
-      @cypher(
-        match: "(recipe:Recipe{id:$args.input.recipeId})"
-        optionalMatch: """
-        (user:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_COLLECTION]->
-          (coll:RecipeCollection)<-[rel:COLLECTED_IN]-(recipe)
-        WHERE $args.input.collectionId IS NULL OR coll.id = $args.input.collectionId
+      @aqlSubquery(
+        query: """
+        LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
+        LET collection = DOCUMENT(RecipeCollections, $args.input.collectionId)
+        LET hasAccess = FIRST(
+          LET user = DOCUMENT(Users, $context.userId)
+          FOR group IN OUTBOUND 1..1 user MemberOf
+            LIMIT 1
+            RETURN FIRST(
+              FOR groupCollection IN OUTBOUND 1..1 group HasRecipeCollection
+                PRUNE groupCollection._key == collection._key
+                LIMIT 1
+                RETURN groupCollection
+            )
+        ) != null
+        LET $field = hasAccess ? FIRST(
+          LET edge = FIRST(
+            FOR n, e IN INBOUND collection CollectedIn
+              PRUNE n._key == recipe._key
+              RETURN e
+          )
+          REMOVE edge FROM CollectedIn
+          RETURN recipe
+        ) : null
         """
-        delete: "rel"
-        return: "recipe"
       )
       @authenticated
   }
