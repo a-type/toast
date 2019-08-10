@@ -19,6 +19,14 @@
         "$tsc-watch"
       ],
       "isBackground": true
+    },
+    {
+      "type": "npm",
+      "script": "ci:build",
+      "path": "services/toast-billing/",
+      "problemMatcher": [
+        "$tsc"
+      ]
     }
   ]
 }
