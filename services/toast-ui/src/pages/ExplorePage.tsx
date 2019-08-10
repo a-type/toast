@@ -1,9 +1,11 @@
 import React, { FC } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Container } from '@material-ui/core';
 import { NavTabs } from 'components/layout/NavTabs';
 import LinkRecipeForm from 'components/features/recipes/LinkRecipeForm';
 import { parse } from 'query-string';
 import useRouter from 'use-react-router';
+import { Center } from 'components/layout/Center';
+import { FindInPageTwoTone } from '@material-ui/icons';
 
 const findUrl = (text: string | string[]) => {
   if (text instanceof Array) {
@@ -26,25 +28,13 @@ export const Scan: FC = ({}) => {
           The share didn't work. Try copying the URL and pasting it.
         </Typography>
       )}
-      <LinkRecipeForm prefilledValue={scanUrl || ''} />
+      <Center title="Scan a recipe" Icon={FindInPageTwoTone}>
+        <LinkRecipeForm prefilledValue={scanUrl || ''} />
+      </Center>
     </>
   );
 };
 
 export const ExplorePage: FC = () => {
-  const paths = [
-    {
-      path: '/explore',
-      exact: true,
-    },
-    {
-      path: '/explore/scan',
-    },
-  ];
-
-  return (
-    <NavTabs paths={paths} tabLabels={['Explore', 'Scan']}>
-      <Scan />
-    </NavTabs>
-  );
+  return <Scan />;
 };

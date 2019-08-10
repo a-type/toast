@@ -5,6 +5,8 @@ import {
   makeStyles,
   TextField,
   Typography,
+  InputAdornment,
+  IconButton,
 } from '@material-ui/core';
 import Icon from 'components/generic/Icon';
 import Link from 'components/generic/Link';
@@ -16,6 +18,7 @@ import useMedia from 'hooks/useMedia';
 import logger from 'logger';
 import React, { FC, useState } from 'react';
 import { useMutation } from 'react-apollo-hooks';
+import { ClearTwoTone } from '@material-ui/icons';
 
 const MESSAGES = {
   EXPLANATION:
@@ -25,7 +28,9 @@ const MESSAGES = {
 };
 
 const UninstalledMessage = () => (
-  <Typography gutterBottom>{MESSAGES.EXPLANATION}</Typography>
+  <Typography variant="body1" gutterBottom>
+    {MESSAGES.EXPLANATION}
+  </Typography>
 );
 
 const InstalledMessage = () => {
@@ -33,7 +38,7 @@ const InstalledMessage = () => {
 
   return (
     <div>
-      <Typography gutterBottom>
+      <Typography variant="body1" gutterBottom>
         The easiest way to add a recipe from the web is to share it straight to
         the Toast app.
       </Typography>
@@ -77,7 +82,7 @@ export interface LinkRecipeFormProps {
   prefilledValue?: string;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   button: {},
 }));
 
@@ -205,15 +210,30 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   return (
     <form onSubmit={submit}>
       {isInstalled ? <InstalledMessage /> : <UninstalledMessage />}
-      <TextField
-        fullWidth
-        label="Recipe URL"
-        value={url}
-        onChange={ev => setUrl(ev.target.value)}
-        name="recipeUrl"
-        type="url"
-      />
+
       <Row>
+        <TextField
+          fullWidth
+          label="Recipe URL"
+          value={url}
+          onChange={ev => setUrl(ev.target.value)}
+          name="recipeUrl"
+          type="url"
+          variant="filled"
+          color="secondary"
+          InputProps={{
+            endAdornment: !!url ? (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="clear recipe URL field"
+                  onClick={() => setUrl('')}
+                >
+                  <ClearTwoTone />
+                </IconButton>
+              </InputAdornment>
+            ) : null,
+          }}
+        />
         <Button
           className={classes.button}
           type="submit"
@@ -223,16 +243,6 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
         >
           Scan
         </Button>
-        {url && (
-          <Button
-            className={classes.button}
-            variant="text"
-            type="reset"
-            onClick={() => setUrl('')}
-          >
-            Clear
-          </Button>
-        )}
       </Row>
     </form>
   );
