@@ -30,6 +30,7 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
     marginTop: 'auto',
     marginBottom: 'auto',
     flex: '0 0 auto',
+    marginLeft: theme.spacing(3),
   },
   title: {
     fontFamily: '"Pacifico", "PlayFair Display", "PT Serif", serif',
@@ -37,12 +38,6 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
   },
   settingsButton: {},
   logo: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: '32px',
-    borderBottomRightRadius: '32px',
-    borderBottomLeftRadius: 0,
-    padding: '0 40px 0 32px',
-    width: 'auto',
     fontSize: '24px',
   },
   toolbar: {
@@ -63,7 +58,7 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
   return (
     <AppBar className={classes.appBar}>
       <Link to="/" className={classes.titleArea}>
-        <Logo className={classes.logo} size="48px" />
+        <Logo className={classes.logo} variant="small" size="48px" />
       </Link>
       <Toolbar className={classes.toolbar}>
         <Link to="/settings">
