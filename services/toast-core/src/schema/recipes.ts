@@ -275,7 +275,7 @@ export default gql`
             )
         ) != null
         LET $field = hasAccess ? FIRST(
-          INSERT { _from: recipe, _to: collection } INTO CollectedIn
+          INSERT { _from: recipe._id, _to: collection._id } INTO CollectedIn
           RETURN recipe
         ) : null
         """

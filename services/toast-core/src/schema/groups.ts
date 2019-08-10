@@ -30,15 +30,14 @@ export default gql`
     """
     Returns the available planned meals of the group's meal plan
     """
-    planCookingConnection(
+    planMealsConnection(
       first: Int = 10
       after: String
-    ): GroupPlanCookingConnection!
+    ): GroupPlanMealsConnection!
       @aqlRelayConnection(
-        edgeCollection: "PlansToCook"
+        edgeCollection: "HasPlanMeal"
         edgeDirection: OUTBOUND
         cursorProperty: "date"
-        cursorOnEdge: true
       )
 
     """
@@ -70,21 +69,27 @@ export default gql`
     id: ID!
   }
 
-  type GroupPlanCookingConnection {
-    edges: [GroupPlanCookingEdge!]! @aqlRelayEdges
-    pageInfo: GroupPlanCookingPageInfo! @aqlRelayPageInfo
+  type GroupPlanMealsConnection {
+    edges: [GroupPlanMealsEdge!]! @aqlRelayEdges
+    pageInfo: GroupPlanMealsPageInfo! @aqlRelayPageInfo
   }
 
-  type GroupPlanCookingEdge {
+  type GroupPlanMealsEdge {
     cursor: String!
+    node: PlanMeal! @aqlRelayNode
+  }
+
+  type GroupPlanMealsPageInfo {
+    hasNextPage: Boolean!
+  }
+
+  type PlanMeal {
+    id: ID! @aqlKey
     date: Date!
     mealName: String!
     servings: Int! @defaultValue(value: 1)
-    node: Recipe! @aqlRelayNode
-  }
-
-  type GroupPlanCookingPageInfo {
-    hasNextPage: Boolean!
+    note: String
+    cooking: Recipe @aqlNode(edgeCollection: "PlansToCook", direction: OUTBOUND)
   }
 
   type GroupRecipeCollectionConnection {
@@ -197,12 +202,22 @@ export default gql`
             RETURN group_0
         )
         LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
+        LET planMeal = FIRST(
+          INSERT {
+            date: $args.input.date,
+            mealName: $args.input.mealName,
+            servings: $args.input.servings,
+          } INTO PlanMeals
+        )
+        LET groupEdge = FIRST(
+          INSERT {
+            _from: group._id,
+            _to: planMeal._id
+          } INTO HasPlanMeal
+        )
         INSERT {
-          date: $args.input.date,
-          mealName: $args.input.mealName,
-          servings: $args.input.servings,
-          _from: group,
-          _to: recipe
+          _from: planMeal._id,
+          _to: recipe._id
         } INTO PlansToCook
         """
         return: "group"
@@ -217,13 +232,20 @@ export default gql`
             LIMIT 1
             RETURN group_0
         )
+        LET found = FIRST(
+          FOR n, e IN OUTBOUND group HasPlanMeal
+            PRUNE n.date == $args.input.date && n.mealName == $args.input.mealName
+            LIMIT 1
+            RETURN { planMeal: n, mealEdge: e }
+        )
+        REMOVE found.mealEdge in HasPlanMeal
         LET cookEdge = FIRST(
-          FOR n, e IN OUTBOUND group PlansToCook
-            PRUNE e.date == $args.input.date && e.mealName == $args.input.mealName
+          FOR n, e IN OUTBOUND found.planMeal PlansToCook
             LIMIT 1
             RETURN e
         )
         REMOVE cookEdge in PlansToCook
+        REMOVE found.planMeal in PlanMeals
         RETURN group
         """
       )

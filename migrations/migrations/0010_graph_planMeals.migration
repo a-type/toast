@@ -1,0 +1,14 @@
+type: graph
+action: modify
+name: Main
+edgedefinitions:
+  - collection: PlansToCook
+    from:
+      - PlanMeals
+    to:
+      - Recipes
+  - collection: HasPlanMeal
+    from:
+      - Groups
+    to:
+      - PlanMeals

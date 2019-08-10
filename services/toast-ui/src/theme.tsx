@@ -1,26 +1,8 @@
+import React from 'react';
 import { css, Global } from '@emotion/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
-  typography: {
-    fontFamily: '"PT Serif", "Noto Serif", serif',
-
-    h1: {
-      fontFamily: '"PlayFair Display", "PT Serif", "Noto Serif", serif',
-      fontSize: '2.75rem',
-    },
-    h2: {
-      fontFamily: '"PlayFair Display", "PT Serif", "Noto Serif", serif',
-      fontSize: '2rem',
-    },
-    h3: {
-      fontSize: '1.5rem',
-    },
-    h4: {
-      fontSize: '1.25rem',
-    },
-  },
-
   palette: {
     secondary: {
       main: '#1ecbb4',
@@ -71,9 +53,7 @@ const theme = createMuiTheme({
     MuiButton: {
       root: {
         textTransform: 'capitalize',
-        fontStyle: 'italic',
         color: '#290f34',
-        fontSize: '1rem',
       },
       contained: {
         backgroundColor: '#e1e1ee',
@@ -108,20 +88,8 @@ const theme = createMuiTheme({
   },
 
   props: {
-    MuiButton: {
-      variant: 'outlined',
-    },
-
-    MuiTextField: {
-      variant: 'outlined',
-    },
-
     MuiTabs: {
       indicatorColor: 'primary',
-    },
-
-    MuiSelect: {
-      variant: 'outlined',
     },
   },
 });
