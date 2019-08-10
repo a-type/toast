@@ -1,0 +1,6 @@
+type: skiplistindex
+action: create
+collection: PlanMeals
+fields:
+  - date
+unique: false

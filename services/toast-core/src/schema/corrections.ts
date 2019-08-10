@@ -23,62 +23,61 @@ export default gql`
   }
 
   type ChangeFoodIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
-    food: Food! @cypher(match: "(food:Food{id: parent.foodId})", return: "food")
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
+    food: Food! @aqlNode(edgeCollection: "AssignsFood", direction: OUTBOUND)
   }
 
   type ChangeQuantityIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
     quantity: Float!
   }
 
   type ChangeUnitIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
     unit: String!
   }
 
   type AddIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     text: String!
-    recipe: Recipe!
-      @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
+    recipe: Recipe! @aqlNode(edgeCollection: "ForRecipe", direction: OUTBOUND)
   }
 
   type RemoveIngredientCorrection implements IngredientCorrection {
-    id: ID!
+    id: ID! @aqlKey
     status: IngredientCorrectionStatus!
     correctionType: IngredientCorrectionType!
     submittedAt: Date!
     ingredient: Ingredient!
-      @cypher(match: "(ing:Ingredient{id: parent.ingredientId})", return: "ing")
+      @aqlNode(edgeCollection: "Corrects", direction: OUTBOUND)
   }
 
   type IngredientCorrectionsConnection {
-    edges: [IngredientCorrectionEdge!]!
-    pageInfo: PageInfo!
+    edges: [IngredientCorrectionEdge!]! @aqlRelayEdges
+    pageInfo: PageInfo! @aqlRelayPageInfo
   }
 
   type IngredientCorrectionEdge {
     cursor: String!
-    node: IngredientCorrection!
+    node: IngredientCorrection! @aqlRelayNode
   }
 
   input IngredientCorrectionsCollectionFilterInput {
@@ -91,6 +90,10 @@ export default gql`
     ingredientCorrectionsConnection(
       input: IngredientCorrectionsCollectionFilterInput
     ): IngredientCorrectionsConnection!
+      @aqlRelayConnection(
+        documentCollection: "IngredientCorrections"
+        cursorProperty: "submittedAt"
+      )
   }
 
   input IngredientCorrectionChangeFoodInput {

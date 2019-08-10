@@ -20,8 +20,8 @@ const renderApp = (AppComponent = App) => {
 renderApp();
 
 if (module.hot) {
-  module.hot.accept('./App/index.tsx', () => {
-    const NewApp = require('./App/index').default;
+  module.hot.accept('./App.tsx', () => {
+    const NewApp = require('./App').default;
     renderApp(NewApp);
   });
 }

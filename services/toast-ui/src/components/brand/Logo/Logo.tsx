@@ -4,11 +4,15 @@ import Wrapper from './Wrapper';
 import BackdropArt from '../BackdropArt';
 
 const Logo: SFC<
-  { pattern?: boolean; size?: string } & HTMLAttributes<HTMLDivElement>
-> = ({ pattern = true, size = '80px', ...rest }) => (
+  {
+    pattern?: boolean;
+    size?: string;
+    variant?: 'default' | 'small';
+  } & HTMLAttributes<HTMLDivElement>
+> = ({ pattern = true, size = '80px', variant = 'default', ...rest }) => (
   <Wrapper {...rest} size={size}>
     {pattern && <BackdropArt />}
-    <Text>Toast</Text>
+    <Text>{variant === 'default' ? 'Toast' : 'T'}</Text>
   </Wrapper>
 );
 

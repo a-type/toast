@@ -1,53 +1,55 @@
-import { gql } from 'apollo-server-core';
+// Temporariliy removed to be reworked for new DB!
 
-export default gql`
-  type ShoppingListItem {
-    id: ID!
-    totalQuantity: Float!
-    purchasedQuantity: Float!
-    unit: String
-    foodId: String
-    displayName: String!
+// import { gql } from 'apollo-server-core';
 
-    plannedUses: [ShoppingListItemUsage!]!
+// export default gql`
+//   type ShoppingListItem {
+//     id: ID!
+//     totalQuantity: Float!
+//     purchasedQuantity: Float!
+//     unit: String
+//     foodId: String
+//     displayName: String!
 
-    food: Food @cypher(match: "(food:Food{id: parent.foodId})", return: "food")
-  }
+//     plannedUses: [ShoppingListItemUsage!]!
 
-  """
-  Provides a snapshot of the usage of an ingredient from the shopping
-  list in the week's planned recipes. Expand edges to fetch more data.
-  """
-  type ShoppingListItemUsage {
-    ingredientText: String
-    recipeTitle: String
-    recipeId: String
+//     food: Food @cypher(match: "(food:Food{id: parent.foodId})", return: "food")
+//   }
 
-    ingredient: Ingredient
-      @cypher(match: "(ri:Ingredient{id: parent.ingredientId})", return: "ri")
-    recipe: Recipe
-      @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
-  }
+//   """
+//   Provides a snapshot of the usage of an ingredient from the shopping
+//   list in the week's planned recipes. Expand edges to fetch more data.
+//   """
+//   type ShoppingListItemUsage {
+//     ingredientText: String
+//     recipeTitle: String
+//     recipeId: String
 
-  type ShoppingList {
-    id: ID!
-    startDate: Date!
-    endDate: Date!
-    items: [ShoppingListItem!]!
-  }
+//     ingredient: Ingredient
+//       @cypher(match: "(ri:Ingredient{id: parent.ingredientId})", return: "ri")
+//     recipe: Recipe
+//       @cypher(match: "(recipe:Recipe{id: parent.recipeId})", return: "recipe")
+//   }
 
-  input ShoppingListMarkItemInput {
-    shoppingListItemId: ID!
-  }
+//   type ShoppingList {
+//     id: ID!
+//     startDate: Date!
+//     endDate: Date!
+//     items: [ShoppingListItem!]!
+//   }
 
-  input ShoppingListUnmarkItemInput {
-    shoppingListItemId: ID!
-  }
+//   input ShoppingListMarkItemInput {
+//     shoppingListItemId: ID!
+//   }
 
-  extend type Mutation {
-    markShoppingListItem(input: ShoppingListMarkItemInput!): ShoppingListItem!
-    unmarkShoppingListItem(
-      input: ShoppingListUnmarkItemInput!
-    ): ShoppingListItem!
-  }
-`;
+//   input ShoppingListUnmarkItemInput {
+//     shoppingListItemId: ID!
+//   }
+
+//   extend type Mutation {
+//     markShoppingListItem(input: ShoppingListMarkItemInput!): ShoppingListItem!
+//     unmarkShoppingListItem(
+//       input: ShoppingListUnmarkItemInput!
+//     ): ShoppingListItem!
+//   }
+// `;

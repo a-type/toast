@@ -1,0 +1,6 @@
+type: skiplistindex
+action: create
+collection: Recipes
+fields:
+  - createdAt
+sparse: true

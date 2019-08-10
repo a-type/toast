@@ -2,7 +2,7 @@ import { Handler } from 'express';
 import Stripe from 'stripe';
 import { stripe } from '../stripe';
 import { Session } from '../types';
-import { neo4j, ApiError } from 'toast-common';
+import { neo4j, ApiError, aqlQuery, aql } from 'toast-common';
 
 export const checkoutCompleted: Handler = async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -26,33 +26,25 @@ export const checkoutCompleted: Handler = async (req, res) => {
       client_reference_id: userId,
     } = event.data.object as Session;
     // add subscription info to the Group and customer info to the User.
-    const session = neo4j.session();
-    await session.writeTransaction(async tx => {
-      const result = await tx.run(
-        `
-      MATCH (user:User{id: $userId})-[:BELONGS_TO]->(group:Group)
-      SET user.stripeCustomerId = $customerId
-      SET group.stripeSubscriptionId = $subscriptionId
-      RETURN group {.id}
-      `,
-        {
-          userId,
-          customerId,
-          subscriptionId,
-        },
-      );
+    const result = await aqlQuery(aql`
+      LET user = DOCUMENT("Users", ${userId})
+      LET group = FIRST(
+        FOR group IN OUTBOUND user MemberOf
+        LIMIT 1
+        RETURN group
+      )
+      UPDATE { _key: user._key, stripeCustomerId: ${customerId} } IN Users
+      UPDATE { _key: group._key, stripeSubscriptionId: ${subscriptionId} } IN Groups
+      RETURN user, group
+    `);
 
-      if (!result.records.length) {
-        throw new ApiError("The user doesn't have a group", 400);
-      }
-      if (result.records.length > 1) {
-        console.error(
-          `Paid subscription applied to multiple groups due to user being a member of multiple groups. Group IDs are [${result.records
-            .map(r => r.get('group').id)
-            .join(',')}]`,
-        );
-      }
-    });
+    const firstValue = await result.next();
+    if (!firstValue.user) {
+      throw new ApiError(`The user was not found`, 500);
+    }
+    if (!firstValue.group) {
+      throw new ApiError(`The user doesn't have a group`, 500);
+    }
   } else {
     console.warn(`Got unrecognized event for checkoutCompleted: ${event.type}`);
   }

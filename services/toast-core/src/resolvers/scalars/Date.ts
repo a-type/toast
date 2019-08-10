@@ -8,9 +8,9 @@ export default new GraphQLScalarType({
   description: 'A Date value. For use in inputs, send the getTime() value.',
   parseValue: value => {
     if (typeof value === 'number') {
-      return new Date(value);
+      return value;
     } else {
-      return parse(value);
+      return parse(value).getTime();
     }
   },
   serialize: (value: v1.Date | Date) => {
@@ -31,9 +31,9 @@ export default new GraphQLScalarType({
   },
   parseLiteral: ast => {
     if (ast.kind === Kind.INT) {
-      return new Date(ast.value);
+      return ast.value;
     } else if (ast.kind === Kind.STRING) {
-      return parse(ast.value);
+      return parse(ast.value).getTime();
     }
     return null;
   },

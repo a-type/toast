@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export default gql`
   type Ingredient {
-    id: ID!
+    id: ID! @aqlKey
     text: String! @defaultValue(value: "")
     foodStart: Int
     foodEnd: Int
@@ -15,28 +15,8 @@ export default gql`
     comments: [String!]! @defaultValue(value: [])
     preparations: [String!]! @defaultValue(value: [])
 
-    food: Food @cypherNode(relationship: "USED_IN", direction: IN)
-    recipe: Recipe! @cypherNode(relationship: "INGREDIENT_OF", direction: OUT)
-  }
-
-  type IngredientCreateResult {
-    recipeIngredient: Ingredient!
-      @cypher(
-        match: "(recipeIngredient:Ingredient{id:$parent.recipeIngredientId})"
-        return: "recipeIngredient"
-      )
-  }
-
-  type IngredientUpdateResult {
-    recipeIngredient: Ingredient
-      @cypher(
-        match: "(recipeIngredient:Ingredient{id:$parent.recipeIngredientId})"
-        return: "recipeIngredient"
-      )
-  }
-
-  type RecipeFoodDeleteResult {
-    foo: Boolean
-    # empty type... perhaps one day we will return something.
+    food: Food @aqlNode(edgeCollection: "UsedIn", direction: INBOUND)
+    recipe: Recipe!
+      @aqlNode(edgeCollection: "IngredientOf", direction: OUTBOUND)
   }
 `;

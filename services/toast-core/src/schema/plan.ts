@@ -6,19 +6,28 @@ export default gql`
     date: Date!
 
     cookingConnection: PlanDayCookingRecipeConnection!
+      @aqlRelayConnection(
+        edgeCollection: "Cooking"
+        edgeDirection: OUTBOUND
+        cursorProperty: "createdAt"
+      )
   }
 
-  type PlanDayCookingRecipeConnection @cypherVirtual {
-    nodes: [Recipe!]! @cypherNode(relationship: "PLANS_TO_COOK", direction: OUT)
-    edges: [PlanDayCookingRecipeEdge!]!
-      @cypherRelationship(type: "PLANS_TO_COOK", direction: OUT)
+  type PlanDayCookingRecipeConnection {
+    edges: [PlanDayCookingRecipeEdge!]! @aqlRelayEdge
+    pageInfo: PlanDayCookingRecipePageInfo! @aqlRelayPageInfo
   }
 
   type PlanDayCookingRecipeEdge {
     servings: Int!
     mealName: String!
+    cursor: String!
 
-    node: Recipe! @cypherNode(relationship: "PLANS_TO_COOK", direction: "OUT")
+    node: Recipe! @aqlRelayNode
+  }
+
+  type PlanDayCookingRecipePageInfo {
+    hasNextPage: Boolean!
   }
 
   input AssignPlanDayCookingInput {
@@ -33,27 +42,57 @@ export default gql`
     mealName: String!
   }
 
+  type AssignPlanDayCookingResult {
+    planDay: PlanDay! @aql(expression: "$parent.planDay")
+  }
+
+  type UnassignPlanDayCookingResult {
+    planDay: PlanDay! @aql(expression: "$parent.planDay")
+  }
+
   extend type Mutation {
     assignPlanDayCooking(input: AssignPlanDayCookingInput!): PlanDay!
-      @cypher(
-        match: """
-        (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_NEXT_PLAN_DAY*]->
-          (planDay:PlanDay{id:$args.input.planDayId}),
-          (recipe:Recipe{id:$args.input.recipeId})
+      @aqlSubquery(
+        query: """
+        LET group = FIRST(
+          FOR user_group IN DOCUMENT(Users, $context.userId) MemberOf
+            LIMIT 1
+            RETURN user_group
+        )
+        LET planDay = FIRST(
+          FOR group_planDay IN 1 group HasNextPlanDay
+            FILTER group_planDay._key == input.planDayId
+            LIMIT 1
+            RETURN group_planDay
+        )
+        LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
+        INSERT { _from: planDay, _to: recipe } INTO Cooking
         """
-        merge: "(planDay)-[:PLANS_TO_COOK {servings: $args.input.servings, mealName: $args.input.mealName}]->(recipe)"
         return: "planDay"
       )
       @authenticated
 
     unassignPlanDayCooking(input: UnassignPlanDayCookingInput!): PlanDay!
-      @cypher(
-        match: """
-        (:User{id:$context.userId})-[:MEMBER_OF]->(:Group)-[:HAS_NEXT_PLAN_DAY*]->
-          (planDay:PlanDay{id:$args.input.planDayId})-[cookRel:PLANS_TO_COOK {mealName: $args.input.mealName}]->
-          (:Recipe)
+      @aqlSubquery(
+        query: """
+        LET group = FIRST(
+          FOR user_group IN DOCUMENT(Users, $context.userId) MemberOf
+            LIMIT 1
+            RETURN user_group
+        )
+        LET planDay = FIRST(
+          FOR group_planDay IN 1 group HasNextPlanDay
+            FILTER group_planDay._key == input.planDayId
+            LIMIT 1
+            RETURN group_planDay
+        )
+        LET cookingEdge = FIRST(
+          FOR cooking_recipe, planDay_cookingEdge IN planDay Cooking
+            FILTER planDay_cookingEdge.mealName == $args.input.mealName
+            LIMIT 1
+        )
+        REMOVE cookingEdge IN Cooking
         """
-        delete: "cookRel"
         return: "planDay"
       )
       @authenticated

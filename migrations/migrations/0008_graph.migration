@@ -1,0 +1,39 @@
+type: graph
+action: create
+name: Main
+edgedefinitions:
+  - collection: MemberOf
+    from:
+      - Users
+    to:
+      - Groups
+  - collection: AuthorOf
+    from:
+      - Users
+    to:
+      - Recipes
+  - collection: HasRecipeCollection
+    from:
+      - Groups
+    to:
+      - RecipeCollections
+  - collection: PlansToCook
+    from:
+      - Groups
+    to:
+      - Recipes
+  - collection: CollectedIn
+    from:
+      - Recipes
+    to:
+      - RecipeCollections
+  - collection: IngredientOf
+    from:
+      - Ingredients
+    to:
+      - Recipes
+  - collection: UsedIn
+    from:
+      - Foods
+    to:
+      - Ingredients
