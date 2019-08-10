@@ -16,7 +16,7 @@ import usePlan from '../usePlan';
 import useGroceryDay from '../useGroceryDay';
 import getNextDay from 'utils/getNextDay';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 
 const isCookingSomething = (day: PlanDayData) =>
   !!day.cookingConnection.edges.length;
@@ -43,6 +43,14 @@ const PlanView: SFC<PlanViewProps> = ({}) => {
   const selectedDay = planDays.find(planDay => {
     return isSameDay(parse(planDay.date), date);
   });
+
+  if (!planDays.length) {
+    return (
+      <Box>
+        <Typography>Nothing planned yet</Typography>
+      </Box>
+    );
+  }
 
   const startDate = parse(planDays[0].date);
   const endDate = parse(planDays[planDays.length - 1].date);

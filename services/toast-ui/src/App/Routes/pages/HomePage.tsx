@@ -40,7 +40,7 @@ export const HomePage: FC<HomePageProps> = () => {
     return <Loader />;
   }
 
-  return !plan.length ? (
+  return !planResult.data.viewer.group ? (
     <Container>
       <PlanSetup onCreated={planResult.refetch} />
     </Container>
