@@ -1,11 +1,9 @@
 {
   "compilerOptions": {
     "outDir": "./build",
-    "allowJs": true,
     "target": "es6",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
     "moduleResolution": "node",
     "module": "commonjs",
     "lib": [

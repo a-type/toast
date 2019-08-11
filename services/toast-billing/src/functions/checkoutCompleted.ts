@@ -1,8 +1,8 @@
 import { Handler } from 'express';
-import Stripe from 'stripe';
+import { Stripe } from 'stripe';
 import { stripe } from '../stripe';
 import { Session } from '../types';
-import { neo4j, ApiError, aqlQuery, aql } from 'toast-common';
+import { ApiError, aqlQuery, aql } from 'toast-common';
 
 export const checkoutCompleted: Handler = async (req, res) => {
   const sig = req.headers['stripe-signature'];
