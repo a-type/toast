@@ -172,7 +172,6 @@ steps:
 images:
   - "us.gcr.io/$PROJECT_ID/toast-web:$SHORT_SHA"
   - "us.gcr.io/$PROJECT_ID/toast-core:$SHORT_SHA"
-  - "us.gcr.io/$PROJECT_ID/toast-planning:$SHORT_SHA"
   - "us.gcr.io/$PROJECT_ID/toast-scanning:$SHORT_SHA"
   - "us.gcr.io/$PROJECT_ID/toast-billing:$SHORT_SHA"
 
