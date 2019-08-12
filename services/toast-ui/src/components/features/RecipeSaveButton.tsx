@@ -13,10 +13,8 @@ const RecipeSaveButtonQuery = gql`
   query RecipeSaveButton($id: ID!) {
     recipe(input: { id: $id }) {
       id
-      containedInViewerCollectionsConnection {
-        nodes {
-          id
-        }
+      containedInViewerCollections {
+        id
       }
     }
   }
@@ -42,7 +40,7 @@ export const RecipeSaveButton = ({ recipeId, ...props }) => {
   );
 
   const isSaved = !!path(
-    ['recipe', 'containedInViewerCollectionsConnection', 'nodes', 'length'],
+    ['recipe', 'containedInViewerCollections', 'length'],
     data,
   );
 

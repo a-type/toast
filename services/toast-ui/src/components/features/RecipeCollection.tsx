@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
-import useCollection from 'hooks/features/useCollection';
+import useCollection, {
+  RecipeCollectionRecipe,
+} from 'hooks/features/useCollection';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { Loader } from 'components/generic/Loader/Loader';
 import { path } from 'ramda';
@@ -16,7 +18,7 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
   collectionId,
   onRecipeSelected,
 }) => {
-  const [collection, loading, error] = useCollection(collectionId);
+  const { data, loading, error } = useCollection(collectionId);
 
   if (error) {
     return <ErrorMessage error={error} />;
@@ -26,11 +28,16 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
     return <Loader />;
   }
 
+  const collection = data.viewer.group.recipeCollection;
+
   if (!collection) {
     return <ErrorMessage error="This collection doesn't exist" />;
   }
 
-  const recipes = path(['recipesConnection', 'nodes'], collection) as any[];
+  const recipes = (path(
+    ['recipesConnection', 'edges'],
+    collection,
+  ) as any[]).map(({ node }) => node) as RecipeCollectionRecipe[];
 
   return (
     <>

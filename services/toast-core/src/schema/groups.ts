@@ -60,7 +60,7 @@ export default gql`
       @aqlNode(
         edgeCollection: "HasRecipeCollection"
         direction: OUTBOUND
-        filter: "$field.id == $args.input.id"
+        filter: "$field._key == $args.input.id"
         limit: { count: 1 }
       )
   }

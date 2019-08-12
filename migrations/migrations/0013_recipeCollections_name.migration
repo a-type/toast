@@ -1,6 +1,6 @@
 type: hashindex
 action: create
-collection: Recipes
+collection: RecipeCollections
 fields:
-  - title
+  - name
 unique: false

@@ -13,10 +13,6 @@
       "name": "Core"
     },
     {
-      "path": "services/toast-planning",
-      "name": "Planning"
-    },
-    {
       "path": "services/toast-scanning",
       "name": "Scanning"
     },
@@ -25,7 +21,16 @@
       "name": "Common"
     },
     {
-      "path": "."
+      "path": "services/toast-billing",
+      "name": "Billing"
+    },
+    {
+      "path": "migrations",
+      "name": "migrations"
+    },
+    {
+      "path": ".",
+      "name": "Root"
     }
   ]
 }

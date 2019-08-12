@@ -21,6 +21,11 @@
       "type": "npm",
       "script": "migration:up",
       "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "devenv:start",
+      "problemMatcher": []
     }
   ]
 }

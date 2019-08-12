@@ -49,11 +49,14 @@ export default gql`
     containedInViewerCollections: [RecipeCollection!]!
       @aqlSubquery(
         query: """
-        LET collections = (
+        LET collections = FLATTEN(
           FOR user_group IN OUTBOUND DOCUMENT(Users, $context.userId) MemberOf
-            FOR group_collection IN OUTBOUND user_group HasRecipeCollection
-              FOR group_collection_recipe IN INBOUND group_collection CollectedIn
+            RETURN FLATTEN(FOR group_collection IN OUTBOUND user_group HasRecipeCollection
+              RETURN FLATTEN(FOR group_collection_recipe IN INBOUND group_collection CollectedIn
+                FILTER group_collection_recipe._key == $parent._key
                 RETURN group_collection
+              )
+            )
         )
         """
         return: "collections"
@@ -76,7 +79,7 @@ export default gql`
   }
 
   type RecipeCollection {
-    id: ID!
+    id: ID! @aqlKey
     name: String!
     default: Boolean!
     createdAt: Date!

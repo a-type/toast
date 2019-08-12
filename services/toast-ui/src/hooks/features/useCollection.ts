@@ -1,7 +1,5 @@
 import gql from 'graphql-tag';
-import { useQuery, QueryHookResult } from 'react-apollo-hooks';
-import { pathOr } from 'ramda';
-import { ApolloError } from 'apollo-boost';
+import { useQuery } from 'react-apollo-hooks';
 
 const CollectionQuery = gql`
   query Collection($input: RecipeCollectionGetInput!) {
@@ -17,6 +15,7 @@ const CollectionQuery = gql`
               node {
                 id
                 title
+                attribution
                 coverImageUrl
                 coverImageAttribution
               }
@@ -28,19 +27,20 @@ const CollectionQuery = gql`
   }
 `;
 
-export type CollectionRecipe = {
+export type RecipeCollectionRecipe = {
   id: string;
   title: string;
+  attribution: string;
   coverImageUrl: string;
   coverImageAttribution: string;
 };
 
-export type Collection = {
+export type RecipeCollection = {
   id: string;
   name: string;
   recipesConnection: {
     edges: {
-      node: CollectionRecipe;
+      node: RecipeCollectionRecipe;
     }[];
   };
 };
@@ -50,7 +50,7 @@ export type CollectionQueryResult = {
     id: string;
     group: {
       id: string;
-      collection: Collection;
+      recipeCollection: RecipeCollection;
     };
   };
 };
@@ -60,22 +60,8 @@ export type Pagination = {
   offset?: number;
 };
 
-export default (
-  id: string,
-): [
-  Collection,
-  boolean,
-  ApolloError,
-  QueryHookResult<
-    CollectionQueryResult,
-    {
-      input: {
-        id: string;
-      };
-    }
-  >
-] => {
-  const result = useQuery<
+export default (id: string) =>
+  useQuery<
     CollectionQueryResult,
     {
       input: {
@@ -89,12 +75,3 @@ export default (
       },
     },
   });
-
-  const collection = pathOr(
-    [],
-    ['viewer', 'group', 'recipeCollection'],
-    result.data,
-  );
-
-  return [collection, result.loading, result.error, result];
-};
