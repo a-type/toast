@@ -4,11 +4,11 @@ import { format as doFormat, distanceInWordsToNow } from 'date-fns';
 export type DateFormat = 'date' | 'dateTime' | 'relative';
 
 export type DateProps = {
-  date: string;
+  date: string | Date;
   format?: DateFormat;
 };
 
-const formatString = (date: string, format: DateFormat) => {
+const formatString = (date: string | Date, format: DateFormat) => {
   switch (format) {
     case 'date':
       return doFormat(date, 'ddd, MMM Do');
