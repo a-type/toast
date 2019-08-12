@@ -37,4 +37,8 @@ export default {
           ? Math.round(parent.views()) || 0
           : Math.round(parent.views) || 0,
   },
+
+  RecipeLinkResult: {
+    recipe: arango,
+  },
 };

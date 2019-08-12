@@ -36,7 +36,10 @@ export default gql`
 
     steps: [String!]
 
-    ingredientsConnection: RecipeIngredientConnection!
+    ingredientsConnection(
+      first: Int = 50
+      after: String = "0"
+    ): RecipeIngredientConnection!
       @aqlRelayConnection(
         edgeCollection: "IngredientOf"
         edgeDirection: INBOUND
@@ -137,27 +140,27 @@ export default gql`
       @aqlSubquery(
         query: """
         LET recipe_candidate = DOCUMENT(Recipes, $args.input.id)
-        LET $field = recipe_candidate.public && recipe_candidate.published ? recipe_candidate : (
+        LET $field = recipe_candidate.public && recipe_candidate.published ? recipe_candidate : FIRST(
           LET user = DOCUMENT(Users, $context.userId)
           LET authored_recipe = FIRST(
             FOR candidate_authored_recipe IN OUTBOUND user AuthorOf
               LIMIT 1
               RETURN candidate_authored_recipe
           )
-          RETURN authored_recipe ?: FIRST(
+          RETURN authored_recipe ? : FIRST(
             LET group = FIRST(
               FOR user_group IN OUTBOUND user MemberOf
                 LIMIT 1
                 RETURN user_group
             )
-            LET collections = (
-              FOR group_collection IN OUTBOUND group HasRecipeCollection
-                RETURN group_collection
-            )
-            LET collected_recipe = FIRST(
-              FOR collection IN collections
-                FOR candidate_collected_recipe IN INBOUND collection CollectedIn
-                  FILTER candidate_collected_recipe._key == $args.input.id
+            RETURN FIRST(
+              FOR collection IN OUTBOUND group HasRecipeCollection
+                RETURN FIRST(
+                  FOR candidate_collected_recipe IN INBOUND collection CollectedIn
+                    FILTER candidate_collected_recipe._key == $args.input.id
+                    LIMIT 1
+                    RETURN candidate_collected_recipe
+                )
             )
           )
         )

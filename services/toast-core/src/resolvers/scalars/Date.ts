@@ -1,7 +1,6 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import { format, parse } from 'date-fns';
-import { v1 } from 'neo4j-driver';
 
 export default new GraphQLScalarType({
   name: 'Date',
@@ -13,21 +12,11 @@ export default new GraphQLScalarType({
       return parse(value).getTime();
     }
   },
-  serialize: (value: v1.Date | Date) => {
+  serialize: (value: Date) => {
     if (value instanceof Date) {
       return format(value, 'YYYY-MM-DD');
     }
-
-    const date = new Date(
-      (value.year as any) as number,
-      ((value.month as any) as number) - 1,
-      (value.day as any) as number,
-      0,
-      0,
-      0,
-      0,
-    );
-    return format(date, 'YYYY-MM-DD');
+    return null;
   },
   parseLiteral: ast => {
     if (ast.kind === Kind.INT) {

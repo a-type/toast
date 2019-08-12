@@ -18,7 +18,7 @@ export interface RecipeViewProps {
 
 export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
   const { user } = useAuth();
-  const [recipe, loading, error] = useFullRecipe(recipeId);
+  const { data, loading, error } = useFullRecipe(recipeId);
 
   if (loading) {
     return <Loader />;
@@ -27,6 +27,8 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
   if (error) {
     return <ErrorMessage error={error} />;
   }
+
+  const recipe = data.recipe;
 
   if (recipe && !recipe.published) {
     if (pathOr('none', ['author', 'id'], recipe) === path(['uid'], user)) {
@@ -44,7 +46,9 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
       <Ingredients
         recipeId={recipeId}
         servings={path(['servings'], recipe)}
-        ingredients={pathOr([], ['ingredientsConnection', 'nodes'], recipe)}
+        ingredients={pathOr([], ['ingredientsConnection', 'edges'], recipe).map(
+          ({ node }) => node,
+        )}
       />
       <RecipeStepsLink recipeId={recipeId} />
       <ViewSpy recipeId={recipeId} />

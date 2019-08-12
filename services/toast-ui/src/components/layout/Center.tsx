@@ -47,7 +47,7 @@ export const Center: FC<CenterProps> = ({ title, Icon, children }) => {
       <Paper className={classes.paper}>
         {Icon && <Icon className={classes.icon} />}
         {title && (
-          <Typography variant="h2" className={classes.title}>
+          <Typography variant="h2" className={classes.title} gutterBottom>
             {title}
           </Typography>
         )}

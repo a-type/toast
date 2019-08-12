@@ -1,0 +1,6 @@
+type: hashindex
+action: create
+collection: Foods
+fields:
+  - name
+unique: true

@@ -47,10 +47,15 @@ export default async (ingredientTexts: string[]): Promise<Food[]> =>
   Promise.all(
     ingredientTexts.map(async text => {
       const result = await aqlQuery(aql`
-    FOR ing IN IngredientSearchView SEARCH PHRASE(ing.name, ${text}, 'text_en')
-      SORT BM25(ing) DESC
+    FOR food IN FoodSearchView SEARCH PHRASE(food.name, ${text}, 'text_en') OR PHRASE(food.alternateNames, ${text}, 'text_en') OR PHRASE(food.searchHelpers, ${text}, 'text_en')
+      SORT BM25(food) DESC
       LIMIT 10
-      RETURN ing
+      RETURN {
+        id: food._key,
+        name: food.name,
+        searchHelpers: food.searchHelpers,
+        alternateNames: food.alternateNames
+      }
   `);
 
       const candidates = await result.all();

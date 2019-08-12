@@ -12,7 +12,6 @@ import resolvers from './resolvers';
 import * as directives from './directives';
 import { makeExecutableSchema } from 'graphql-tools';
 import { applyMiddleware } from 'graphql-middleware';
-import { middleware } from 'graphql-cypher';
 import typeDefs from './schema/schema';
 
 const argv = minimist(process.argv.slice(2));
@@ -59,16 +58,13 @@ app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
-const schema = applyMiddleware(
-  makeExecutableSchema({
-    typeDefs,
-    resolvers: resolvers as any,
-    schemaDirectives: {
-      ...directives,
-    },
-  }),
-  middleware,
-);
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers: resolvers as any,
+  schemaDirectives: {
+    ...directives,
+  },
+});
 
 const apollo = new ApolloServer({
   schema,

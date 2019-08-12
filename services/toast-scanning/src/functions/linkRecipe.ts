@@ -79,8 +79,8 @@ export default async (req: Request, res: Response) => {
   const sourceUrl = fullSourceUrl.replace(/\?.*/, '');
 
   const collectionResult = await aqlQuery(aql`
-    LET group = (
-      FOR group_0 IN DOCUMENT(Users, ${userId}) MemberOf
+    LET group = FIRST(
+      FOR group_0 IN OUTBOUND DOCUMENT(Users, ${userId}) MemberOf
         LIMIT 1
         RETURN group_0
     )
@@ -92,10 +92,10 @@ export default async (req: Request, res: Response) => {
     )
     LET collection = linkedCollection ?: FIRST(
       LET newCollection = FIRST(INSERT { name: "Scanned Recipes" } INTO RecipeCollections RETURN NEW)
-      LET edge = FIRST(INSERT { _from: group, _to: newCollection }) INTO HasRecipeCollection
+      LET edge = FIRST(INSERT { _from: group._id, _to: newCollection._id } INTO HasRecipeCollection RETURN NEW)
       RETURN newCollection
     )
-    RETURN collection { _key }
+    RETURN collection
   `);
 
   const { _key: collectionId } = collectionResult.hasNext()
@@ -106,7 +106,7 @@ export default async (req: Request, res: Response) => {
     FOR recipe IN Recipes
       FILTER recipe.sourceUrl == ${sourceUrl}
       LIMIT 1
-      RETURN recipe { _key }
+      RETURN recipe
   `);
 
   if (existingRecipeResult.hasNext()) {
@@ -116,10 +116,10 @@ export default async (req: Request, res: Response) => {
       LET recipe = DOCUMENT(Recipes, ${existingRecipe._key})
       LET collection = DOCUMENT(RecipeCollections, ${collectionId})
       INSERT {
-        _to: collection,
-        _from: recipe
+        _to: collection._id,
+        _from: recipe._id
       } INTO CollectedIn
-      RETURN recipe { _key }
+      RETURN recipe
     `);
 
     result.recipeId = existingRecipe._key;
@@ -167,11 +167,17 @@ export default async (req: Request, res: Response) => {
 
     // if any null, add problem and create new foods for them
     if (foundFoods.some(food => !food)) {
-      result.problems.push(RecipeLinkProblem.IncompleteIngredients);
-      parsedIngredients
-        .filter((_, idx) => !foundFoods[idx])
-        .reduce<Promise<any>>(async (prevOperation, parsed, idx) => {
-          await prevOperation;
+      console.info(
+        `Could not find foods for: `,
+        parsedIngredients
+          .filter((_, idx) => !foundFoods[idx])
+          .map(ing => ing.food.normalized)
+          .join(', '),
+      );
+
+      for (let i = 0; i < parsedIngredients.length; i++) {
+        if (!foundFoods[i]) {
+          const parsed = parsedIngredients[i];
           try {
             const foodName = parsed.food.normalized;
             const result = await aqlQuery(aql`
@@ -185,14 +191,44 @@ export default async (req: Request, res: Response) => {
             `);
 
             const food = await result.next();
-            foundFoods[idx] = food;
+            console.log(food);
+            foundFoods[i] = {
+              id: food._key,
+              name: food.name,
+            };
           } catch (err) {
-            console.error(
-              'Failed to create food ' + parsed.food.normalized,
-              err,
-            );
+            if (err.statusCode === 409) {
+              const result = await aqlQuery(aql`
+                FOR food IN Foods
+                  FILTER food.name == ${parsed.food.normalized}
+                  LIMIT 1
+                  RETURN food
+              `);
+
+              if (!result.hasNext()) {
+                // this is weird. we got a conflict but no duplicate food
+                console.error(
+                  `Food creation conflicted, but no duplicate food found by name ${
+                    parsed.food.normalized
+                  }`,
+                );
+              } else {
+                const food = await result.next();
+                foundFoods[i] = {
+                  id: food._key,
+                  name: food.name,
+                };
+              }
+            } else {
+              console.error(
+                'Failed to create food ' + parsed.food.normalized,
+                err,
+              );
+              result.problems.push(RecipeLinkProblem.IncompleteIngredients);
+            }
           }
-        }, Promise.resolve());
+        }
+      }
     }
 
     ingredients = parsedIngredients.map((parsed, idx) =>
@@ -218,19 +254,21 @@ export default async (req: Request, res: Response) => {
    */
   const time = new Date().getTime();
   const recipeResult = await aqlQuery(aql`
+      LET user = DOCUMENT(Users, ${userId})
+      LET collection = DOCUMENT(RecipeCollections, ${collectionId})
       LET recipe = FIRST(
         INSERT {
           sourceUrl: ${sourceUrl},
           private: false,
           published: true,
           title: ${recipeData.title},
-          description: ${recipeData.description},
-          attribution: ${recipeData.attribution},
-          cookTime: ${recipeData.cookTime},
-          prepTime: ${recipeData.prepTime},
-          unattendedTime: ${recipeData.unattendedTime},
-          servings: ${recipeData.servings},
-          locked: ${recipeData.locked},
+          description: ${recipeData.description || null},
+          attribution: ${recipeData.attribution || null},
+          cookTime: ${recipeData.cookTime || null},
+          prepTime: ${recipeData.prepTime || null},
+          unattendedTime: ${recipeData.unattendedTime || null},
+          servings: ${recipeData.servings || 1},
+          locked: ${recipeData.locked || false},
           displayType: 'LINK',
           createdAt: ${time},
           updatedAt: ${time},
@@ -240,67 +278,73 @@ export default async (req: Request, res: Response) => {
         } INTO Recipes
         RETURN NEW
       )
-      LET user = DOCUMENT(Users, ${userId})
-      LET collection = DOCUMENT(RecipeCollections, ${collectionId})
       LET collRes = (
-        INSERT { _from: recipe, _to: collection } INTO CollectedIn RETURN NEW
+        INSERT { _from: recipe._id, _to: collection._id } INTO CollectedIn RETURN NEW
       )
       LET discoverRes = (
-        INSERT { _from: user, _to: recipe } INTO DiscovererOf
+        INSERT { _from: user._id, _to: recipe._id } INTO DiscovererOf
       )
-      RETURN recipe { _key }
+      RETURN recipe
     `);
 
   const recipe = await recipeResult.next();
   result.recipeId = recipe._key;
 
   if (ingredients) {
-    try {
-      await Promise.all(
-        ingredients.map(async (found, index) => {
-          await aqlQuery(aql`
-            LET recipe = DOCUMENT(Recipes, ${recipe._key})
-            LET food = DOCUMENT(Foods, ${found.foodId})
-            LET ingredient = FIRST(
-              INSERT {
-                text: ${found.text},
-                foodStart: ${found.foodStart},
-                foodEnd: ${found.foodEnd},
-                quantity: ${found.quantity || 0},
-                quantityStart: ${found.quantityStart},
-                quantityEnd: ${found.quantityEnd},
-                unit: ${found.unit || null},
-                unitStart: ${found.unitStart},
-                unitEnd: ${found.unitEnd},
-              } INTO Ingredients
-              RETURN NEW
-            )
-            LET usedEdge = FIRST(
-              INSERT {
-                _from: food,
-                _to: ingredient
-              } INTO UsedIn
-              RETURN NEW
-            )
-            LET ingredientEdge = FIRST(
-              INSERT {
-                _from: ingredient,
-                _to: recipe,
-                index: ${index}
-              } INTO IngredientOf
-              RETURN NEW
-            )
-          `);
-        }),
-      );
-    } catch (err) {
-      console.error(
-        'Ingredient links failed for linked recipe',
-        result.recipeId,
-      );
-      console.error(err);
-      result.problems.push(RecipeLinkProblem.FailedIngredients);
-    }
+    await Promise.all(
+      ingredients.map(async (found, index) => {
+        try {
+          if (!found.foodId) {
+            console.error(`Failed to create food for ${JSON.stringify(found)}`);
+            result.problems.push(RecipeLinkProblem.IncompleteIngredients);
+          } else {
+            await aqlQuery(aql`
+              LET recipe = DOCUMENT(Recipes, ${recipe._key})
+              LET food = DOCUMENT(Foods, ${found.foodId})
+              LET ingredient = FIRST(
+                INSERT {
+                  text: ${found.text},
+                  foodStart: ${found.foodStart},
+                  foodEnd: ${found.foodEnd},
+                  quantity: ${found.quantity || 0},
+                  quantityStart: ${found.quantityStart},
+                  quantityEnd: ${found.quantityEnd},
+                  unit: ${found.unit || null},
+                  unitStart: ${found.unitStart},
+                  unitEnd: ${found.unitEnd}
+                } INTO Ingredients
+                RETURN NEW
+              )
+              LET usedEdge = FIRST(
+                INSERT {
+                  _from: food._id,
+                  _to: ingredient._id
+                } INTO UsedIn
+                RETURN NEW
+              )
+              LET ingredientEdge = FIRST(
+                INSERT {
+                  _from: ingredient._id,
+                  _to: recipe._id,
+                  index: ${index}
+                } INTO IngredientOf
+                RETURN NEW
+              )
+              RETURN ingredient
+            `);
+          }
+        } catch (err) {
+          console.error(
+            `Ingredient link failed for ingredient ${JSON.stringify(
+              found,
+            )} linked recipe`,
+            result.recipeId,
+          );
+          console.error(err);
+          result.problems.push(RecipeLinkProblem.FailedIngredients);
+        }
+      }),
+    );
   }
 
   res.send(result);

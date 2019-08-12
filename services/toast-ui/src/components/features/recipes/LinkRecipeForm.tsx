@@ -28,7 +28,7 @@ const MESSAGES = {
 };
 
 const UninstalledMessage = () => (
-  <Typography variant="body1" gutterBottom>
+  <Typography variant="body1" paragraph>
     {MESSAGES.EXPLANATION}
   </Typography>
 );
@@ -38,24 +38,24 @@ const InstalledMessage = () => {
 
   return (
     <div>
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" paragraph>
         The easiest way to add a recipe from the web is to share it straight to
         the Toast app.
       </Typography>
       <Button onClick={() => setShowHelp(true)}>Show me how</Button>
-      <Typography gutterBottom>You can also paste a URL below.</Typography>
+      <Typography paragraph>You can also paste a URL below.</Typography>
       <Dialog open={showHelp} onClose={() => setShowHelp(false)}>
-        <Typography variant="h2" gutterBottom>
+        <Typography variant="h2" paragraph>
           Sharing to Toast
         </Typography>
-        <Typography gutterBottom>
+        <Typography paragraph>
           In your device's web browser, visit the page which contains the recipe
           you want to add. Then, tap the <Icon name="share" /> Share button.
         </Typography>
-        <Typography gutterBottom>
+        <Typography paragraph>
           When a list of apps comes up, look for Toast and choose it.
         </Typography>
-        <Typography gutterBottom>
+        <Typography paragraph>
           If you don't see Toast come up, your device might not support sharing
           directly to this app. Copy the URL instead and paste it into the
           "Recipe URL" field on this page instead.
@@ -145,24 +145,28 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   }
 
   if (lastResult) {
-    const linkTo = lastResult.recipe.locked
-      ? `/recipes/${lastResult.recipe.id}`
-      : `/recipes/${lastResult.recipe.id}/edit`;
+    const linkTo = lastResult.recipe
+      ? lastResult.recipe.locked
+        ? `/recipes/${lastResult.recipe.id}`
+        : `/recipes/${lastResult.recipe.id}/edit`
+      : null;
 
     if (lastResult.problems.length) {
       return (
         <Box>
-          <Typography variant="h4" color="secondary" gutterBottom>
+          <Typography variant="h4" color="secondary" paragraph>
             We didn't quite get everything.
           </Typography>
-          <Typography gutterBottom>
+          <Typography paragraph>
             That one was a little tough. We need to hand it over to you to
             finish off.
           </Typography>
           <Row>
-            <Link to={linkTo}>
-              <Button className={classes.button}>Manage Recipe</Button>
-            </Link>
+            {linkTo && (
+              <Link to={linkTo}>
+                <Button className={classes.button}>Manage Recipe</Button>
+              </Link>
+            )}
             <Button
               variant="contained"
               onClick={reset}
@@ -177,8 +181,10 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
 
     return (
       <Box>
-        <Typography color="secondary">Nice!</Typography>
-        <Typography>
+        <Typography color="secondary" paragraph>
+          Nice!
+        </Typography>
+        <Typography paragraph>
           We scanned <i>{lastResult.recipe.title}</i> for you.{' '}
           <Link to={linkTo}>
             Give it a once-over just to make sure we got things right.
@@ -194,8 +200,10 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   if (error) {
     return (
       <Box>
-        <Typography color="error">Bummer.</Typography>
-        <Typography>
+        <Typography color="error" paragraph>
+          Bummer.
+        </Typography>
+        <Typography paragraph>
           This is totally our fault... We couldn't scan that recipe page. We're
           working on some options for situations like this, but for now we're
           sorry for the disappointment.

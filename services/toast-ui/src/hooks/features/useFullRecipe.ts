@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 import { useQuery, QueryHookResult } from 'react-apollo-hooks';
-import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
 
 export const FullRecipeQuery = gql`
@@ -16,22 +15,25 @@ export const FullRecipeQuery = gql`
       coverImageUrl
       coverImageAttribution
       ingredientsConnection {
-        nodes {
-          id
-          unit
-          unitStart
-          unitEnd
-          quantity
-          quantityStart
-          quantityEnd
-          text
-          foodStart
-          foodEnd
-          comments
-          preparations
-          food {
+        edges {
+          cursor
+          node {
             id
-            name
+            unit
+            unitStart
+            unitEnd
+            quantity
+            quantityStart
+            quantityEnd
+            text
+            foodStart
+            foodEnd
+            comments
+            preparations
+            food {
+              id
+              name
+            }
           }
         }
       }
@@ -53,22 +55,25 @@ export type FullRecipe = {
   coverImageUrl: string;
   coverImageAttribution: string;
   ingredientsConnection: {
-    nodes: {
-      id: string;
-      unit?: string;
-      unitStart?: number;
-      unitEnd?: number;
-      quantity: number;
-      quantityStart?: number;
-      quantityEnd?: number;
-      text: string;
-      foodStart?: number;
-      foodEnd?: number;
-      comments: string[];
-      preparations: string[];
-      food: {
+    edges: {
+      cursor: string;
+      node: {
         id: string;
-        name: string;
+        unit?: string;
+        unitStart?: number;
+        unitEnd?: number;
+        quantity: number;
+        quantityStart?: number;
+        quantityEnd?: number;
+        text: string;
+        foodStart?: number;
+        foodEnd?: number;
+        comments: string[];
+        preparations: string[];
+        food: {
+          id: string;
+          name: string;
+        };
       };
     }[];
   };
@@ -82,14 +87,7 @@ export type FullRecipeData = {
   recipe: FullRecipe;
 };
 
-export default (
-  id: string,
-): [
-  FullRecipe,
-  boolean,
-  ApolloError,
-  QueryHookResult<FullRecipeData, { recipeId: string }>
-] =>
+export default (id: string) =>
   useQuery<FullRecipeData, { recipeId: string }>(FullRecipeQuery, {
     variables: {
       recipeId: id,
