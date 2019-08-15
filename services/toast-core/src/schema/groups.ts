@@ -139,8 +139,7 @@ export default gql`
   }
 
   input RemovePlanMealInput {
-    date: Date!
-    mealName: String!
+    id: ID!
   }
 
   type RemovePlanMealPayload {
@@ -244,22 +243,22 @@ export default gql`
       @aqlSubquery(
         query: """
         LET group = FIRST(
-          FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
+          FOR group_0 IN OUTBOUND DOCUMENT(Users, $context.userId) MemberOf
             LIMIT 1
             RETURN group_0
         )
         LET found = FIRST(
           FOR n, e IN OUTBOUND group HasPlanMeal
-            PRUNE n.date == $args.input.date && n.mealName == $args.input.mealName
+            FILTER n._key == $args.input.id
             LIMIT 1
             RETURN { planMeal: n, mealEdge: e }
         )
-        REMOVE found.mealEdge in HasPlanMeal
         LET cookEdge = FIRST(
           FOR n, e IN OUTBOUND found.planMeal PlansToCook
             LIMIT 1
             RETURN e
         )
+        REMOVE found.mealEdge in HasPlanMeal
         REMOVE cookEdge in PlansToCook
         REMOVE found.planMeal in PlanMeals
         LET $field = {
