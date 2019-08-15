@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-core';
 import foods from './foods';
 import globals from './globals';
 import groups from './groups';
+import plan from './plan';
 import ingredients from './ingredients';
 import recipes from './recipes';
 import corrections from './corrections';
@@ -18,6 +19,7 @@ export default [
   globals,
   foods,
   groups,
+  plan,
   ingredients,
   recipes,
   corrections,

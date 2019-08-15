@@ -7,7 +7,6 @@ export const GroupPlanMealsEdgeFragment = gql`
     title
     attribution
     sourceUrl
-    description
     coverImageUrl
   }
 
@@ -74,7 +73,6 @@ export type PlanRecipe = {
   title: string;
   attribution: string | null;
   sourceUrl: string | null;
-  description: string | null;
   coverImageUrl: string;
 };
 

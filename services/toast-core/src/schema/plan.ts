@@ -1,99 +1,102 @@
 import { gql } from 'apollo-server-core';
 
 export default gql`
-  type PlanDay {
-    id: ID!
+  type PlanMeal {
+    id: ID! @aqlKey
     date: Date!
-
-    cookingConnection: PlanDayCookingRecipeConnection!
-      @aqlRelayConnection(
-        edgeCollection: "Cooking"
-        edgeDirection: OUTBOUND
-        cursorExpression: "$node.createdAt"
-      )
-  }
-
-  type PlanDayCookingRecipeConnection {
-    edges: [PlanDayCookingRecipeEdge!]! @aqlRelayEdge
-    pageInfo: PlanDayCookingRecipePageInfo! @aqlRelayPageInfo
-  }
-
-  type PlanDayCookingRecipeEdge {
-    servings: Int!
     mealName: String!
-    cursor: String!
-
-    node: Recipe! @aqlRelayNode
+    servings: Int! @defaultValue(value: 1)
+    note: String
+    cooking: Recipe @aqlNode(edgeCollection: "PlansToCook", direction: OUTBOUND)
   }
 
-  type PlanDayCookingRecipePageInfo {
-    hasNextPage: Boolean!
-  }
-
-  input AssignPlanDayCookingInput {
-    planDayId: ID!
+  input AddPlanMealInput {
+    date: Date!
     mealName: String!
-    recipeId: ID!
-    servings: Int!
+    recipeId: String
+    note: String
+    servings: Int
   }
 
-  input UnassignPlanDayCookingInput {
-    planDayId: ID!
-    mealName: String!
+  type AddPlanMealPayload {
+    planMealEdge: GroupPlanMealsEdge!
+      @aqlSubquery(query: "LET $field = $parent.planMealEdge")
   }
 
-  type AssignPlanDayCookingResult {
-    planDay: PlanDay! @aql(expression: "$parent.planDay")
+  input RemovePlanMealInput {
+    id: ID!
   }
 
-  type UnassignPlanDayCookingResult {
-    planDay: PlanDay! @aql(expression: "$parent.planDay")
+  type RemovePlanMealPayload {
+    planMeal: PlanMeal! @aqlSubquery(query: "LET $field = $parent.planMeal")
+    group: Group!
   }
 
   extend type Mutation {
-    assignPlanDayCooking(input: AssignPlanDayCookingInput!): PlanDay!
+    addPlanMeal(input: AddPlanMealInput!): AddPlanMealPayload!
       @aqlSubquery(
         query: """
+        LET user = DOCUMENT(Users, $context.userId)
         LET group = FIRST(
-          FOR user_group IN DOCUMENT(Users, $context.userId) MemberOf
+          FOR group_0 IN OUTBOUND user MemberOf
             LIMIT 1
-            RETURN user_group
-        )
-        LET planDay = FIRST(
-          FOR group_planDay IN 1 group HasNextPlanDay
-            FILTER group_planDay._key == input.planDayId
-            LIMIT 1
-            RETURN group_planDay
+            RETURN group_0
         )
         LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
-        INSERT { _from: planDay, _to: recipe } INTO Cooking
+        LET planMeal = FIRST(
+          INSERT {
+            date: $args.input.date,
+            mealName: $args.input.mealName,
+            servings: $args.input.servings,
+            note: $args.input.note
+          } INTO PlanMeals
+          RETURN NEW
+        )
+        LET groupEdge = FIRST(
+          INSERT {
+            _from: group._id,
+            _to: planMeal._id
+          } INTO HasPlanMeal
+          RETURN NEW
+        )
+        INSERT {
+          _from: planMeal._id,
+          _to: recipe._id
+        } INTO PlansToCook
+        LET $field = {
+          planMealEdge: MERGE(groupEdge, { cursor: CONCAT(planMeal.date, planMeal.mealName), node: planMeal })
+        }
         """
-        return: "planDay"
       )
       @authenticated
 
-    unassignPlanDayCooking(input: UnassignPlanDayCookingInput!): PlanDay!
+    removePlanMeal(input: RemovePlanMealInput!): RemovePlanMealPayload!
       @aqlSubquery(
         query: """
         LET group = FIRST(
-          FOR user_group IN DOCUMENT(Users, $context.userId) MemberOf
+          FOR group_0 IN OUTBOUND DOCUMENT(Users, $context.userId) MemberOf
             LIMIT 1
-            RETURN user_group
+            RETURN group_0
         )
-        LET planDay = FIRST(
-          FOR group_planDay IN 1 group HasNextPlanDay
-            FILTER group_planDay._key == input.planDayId
+        LET found = FIRST(
+          FOR n, e IN OUTBOUND group HasPlanMeal
+            FILTER n._key == $args.input.id
             LIMIT 1
-            RETURN group_planDay
+            RETURN { planMeal: n, mealEdge: e }
         )
-        LET cookingEdge = FIRST(
-          FOR cooking_recipe, planDay_cookingEdge IN planDay Cooking
-            FILTER planDay_cookingEdge.mealName == $args.input.mealName
+        LET cookEdge = FIRST(
+          FOR n, e IN OUTBOUND found.planMeal PlansToCook
             LIMIT 1
+            RETURN e
         )
-        REMOVE cookingEdge IN Cooking
+        REMOVE found.mealEdge in HasPlanMeal
+        REMOVE cookEdge in PlansToCook
+        REMOVE found.planMeal in PlanMeals
+        LET $field = {
+          group: group,
+          planMeal: found.planMeal
+        }
         """
-        return: "planDay"
       )
       @authenticated
   }
