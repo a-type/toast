@@ -40,7 +40,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
     <React.Fragment>
       <RecipeSpotlight recipe={recipe} />
       <Details recipe={recipe} />
-      <Typography variant="h2" gutterBottom>
+      <Typography variant="h3" component="h2" gutterBottom>
         Ingredients
       </Typography>
       <Ingredients

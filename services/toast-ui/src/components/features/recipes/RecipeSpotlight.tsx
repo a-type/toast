@@ -103,12 +103,12 @@ export const RecipeSpotlight: FC<SpotlightProps> = ({
       <Box data-grid-area="details">
         {linkTitle ? (
           <Link to={!!recipe.id && `/recipes/${recipe.id}`}>
-            <Typography variant="h1" gutterBottom>
+            <Typography component="h1" variant="h2" gutterBottom>
               {recipe.title}
             </Typography>
           </Link>
         ) : (
-          <Typography variant="h1" gutterBottom>
+          <Typography component="h1" variant="h2" gutterBottom>
             {recipe.title}
           </Typography>
         )}

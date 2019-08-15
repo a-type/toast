@@ -82,6 +82,7 @@ const theme = createMuiTheme({
       MuiContainer: {
         root: {
           marginTop: '32px',
+          marginBottom: '64px',
         },
       },
     } as any),
