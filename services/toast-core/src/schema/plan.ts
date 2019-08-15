@@ -9,7 +9,7 @@ export default gql`
       @aqlRelayConnection(
         edgeCollection: "Cooking"
         edgeDirection: OUTBOUND
-        cursorProperty: "createdAt"
+        cursorExpression: "$node.createdAt"
       )
   }
 

@@ -94,6 +94,7 @@ const RecipeCard: FC<
     recipe: RecipeCardRecipe;
     renderBadge?: () => ReactNode;
     variant?: 'full' | 'compact';
+    hideSave?: boolean;
   }
 > = ({
   recipe,
@@ -101,6 +102,7 @@ const RecipeCard: FC<
   actions = [],
   renderBadge,
   variant = 'full',
+  hideSave,
   ...props
 }) => {
   const { history } = useRouter();
@@ -131,7 +133,7 @@ const RecipeCard: FC<
       </MaybeBadge>
 
       <CardActions>
-        <RecipeSaveButton recipeId={recipe.id} />
+        {!hideSave && <RecipeSaveButton recipeId={recipe.id} />}
         {actions.map(action => (
           <Button size="small" color="primary" onClick={action.onClick}>
             {action.content}

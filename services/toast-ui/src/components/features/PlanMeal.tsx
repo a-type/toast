@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Typography } from '@material-ui/core';
-import { FormattedDate } from 'components/generic/FormattedDate';
+import { Box, Typography, makeStyles } from '@material-ui/core';
 import RecipeCard from './RecipeCard';
 
 export type PlanMealProps = {
@@ -25,10 +24,23 @@ export type PlanMealRecipe = {
 
 export const PlanMeal: FC<PlanMealProps> = ({ meal }) => (
   <Box>
-    <Typography>
-      <FormattedDate date={meal.date} />
-    </Typography>
-    {meal.note && <Typography>{meal.note}</Typography>}
-    {meal.cooking && <RecipeCard recipe={meal.cooking} />}
+    <Box display="flex" flexDirection="row">
+      <Typography variant="h5">{meal.mealName}</Typography>
+    </Box>
+    {meal.note && <PlanMealNote>{meal.note}</PlanMealNote>}
+    {meal.cooking && <RecipeCard hideSave recipe={meal.cooking} />}
   </Box>
 );
+
+const useNoteStyles = makeStyles(theme => ({
+  box: {
+    padding: theme.spacing(1),
+    border: `1px solid ${theme.palette.grey[300]}`,
+  },
+}));
+
+const PlanMealNote: FC = ({ children }) => {
+  const classes = useNoteStyles({ children });
+
+  return <Box className={classes.box}>{children}</Box>;
+};

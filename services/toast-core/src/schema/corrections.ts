@@ -92,7 +92,7 @@ export default gql`
     ): IngredientCorrectionsConnection!
       @aqlRelayConnection(
         documentCollection: "IngredientCorrections"
-        cursorProperty: "submittedAt"
+        cursorExpression: "$node.submittedAt"
       )
   }
 

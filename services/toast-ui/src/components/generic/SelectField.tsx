@@ -10,20 +10,26 @@ import {
   InputLabel,
   Select,
   OutlinedInput,
+  FilledInput,
 } from '@material-ui/core';
+import { SelectProps } from '@material-ui/core/Select';
 
-export interface SelectFieldProps {
-  value: any;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+export interface SelectFieldProps extends SelectProps {
+  value?: any;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
   id?: string;
-  label: string;
+  label?: string;
   name: string;
+  fullWidth?: boolean;
+  variant?: 'outlined' | 'filled';
 }
 
 export const SelectField: FC<SelectFieldProps> = ({
   id,
   label,
   name,
+  fullWidth,
+  variant = 'filled',
   ...props
 }) => {
   const labelRef = useRef<HTMLLabelElement>(null);
@@ -35,18 +41,16 @@ export const SelectField: FC<SelectFieldProps> = ({
     }
   }, []);
 
+  const Component = variant === 'filled' ? FilledInput : OutlinedInput;
+
   return (
-    <FormControl variant="outlined">
-      <InputLabel ref={labelRef} htmlFor={inputId.current}>
+    <FormControl variant={variant} fullWidth={fullWidth}>
+      <InputLabel variant={variant} ref={labelRef} htmlFor={inputId.current}>
         {label}
       </InputLabel>
       <Select
         input={
-          <OutlinedInput
-            labelWidth={labelWidth}
-            name={name}
-            id={inputId.current}
-          />
+          <Component labelWidth={labelWidth} name={name} id={inputId.current} />
         }
         {...props}
       />

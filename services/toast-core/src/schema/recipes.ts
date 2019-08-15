@@ -43,7 +43,6 @@ export default gql`
       @aqlRelayConnection(
         edgeCollection: "IngredientOf"
         edgeDirection: INBOUND
-        cursorProperty: "_key"
       )
 
     containedInViewerCollections: [RecipeCollection!]!
@@ -91,7 +90,7 @@ export default gql`
       @aqlRelayConnection(
         edgeCollection: "CollectedIn"
         edgeDirection: INBOUND
-        cursorProperty: "createdAt"
+        cursorExpression: "$node.createdAt"
       )
   }
 

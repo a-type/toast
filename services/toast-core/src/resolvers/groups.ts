@@ -8,7 +8,7 @@ export default {
     mergeUser: arango,
     createGroup: arango,
     setGroceryDay: arango,
-    addPlanToCook: arango,
-    removePlanToCook: arango,
+    addPlanMeal: arango,
+    removePlanMeal: arango,
   },
 };

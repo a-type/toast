@@ -37,7 +37,7 @@ export default gql`
       @aqlRelayConnection(
         edgeCollection: "HasPlanMeal"
         edgeDirection: OUTBOUND
-        cursorProperty: "date"
+        cursorExpression: "CONCAT($node.date, $node.mealName)"
       )
 
     """
@@ -50,7 +50,6 @@ export default gql`
       @aqlRelayConnection(
         edgeCollection: "HasRecipeCollection"
         edgeDirection: OUTBOUND
-        cursorProperty: "_key"
       )
 
     """
@@ -126,16 +125,27 @@ export default gql`
     group: Group! @aqlSubquery(query: "LET $field = $parent.group")
   }
 
-  input AddPlanToCookInput {
+  input AddPlanMealInput {
     date: Date!
     mealName: String!
-    recipeId: String!
-    servings: Int!
+    recipeId: String
+    note: String
+    servings: Int
   }
 
-  input RemovePlanToCookInput {
+  type AddPlanMealPayload {
+    planMealEdge: GroupPlanMealsEdge!
+      @aqlSubquery(query: "LET $field = $parent.planMealEdge")
+  }
+
+  input RemovePlanMealInput {
     date: Date!
     mealName: String!
+  }
+
+  type RemovePlanMealPayload {
+    planMeal: PlanMeal! @aqlSubquery(query: "LET $field = $parent.planMeal")
+    group: Group!
   }
 
   extend type Mutation {
@@ -193,11 +203,12 @@ export default gql`
     acceptGroupInvitation(id: String!): GroupInvitationAcceptResult
       @authenticated
 
-    addPlanToCook(input: AddPlanToCookInput!): Group!
+    addPlanMeal(input: AddPlanMealInput!): AddPlanMealPayload!
       @aqlSubquery(
         query: """
+        LET user = DOCUMENT(Users, $context.userId)
         LET group = FIRST(
-          FOR group_0 IN DOCUMENT(Users, $context.userId) MemberOf
+          FOR group_0 IN OUTBOUND user MemberOf
             LIMIT 1
             RETURN group_0
         )
@@ -207,24 +218,29 @@ export default gql`
             date: $args.input.date,
             mealName: $args.input.mealName,
             servings: $args.input.servings,
+            note: $args.input.note
           } INTO PlanMeals
+          RETURN NEW
         )
         LET groupEdge = FIRST(
           INSERT {
             _from: group._id,
             _to: planMeal._id
           } INTO HasPlanMeal
+          RETURN NEW
         )
         INSERT {
           _from: planMeal._id,
           _to: recipe._id
         } INTO PlansToCook
+        LET $field = {
+          planMealEdge: MERGE(groupEdge, { cursor: CONCAT(planMeal.date, planMeal.mealName), node: planMeal })
+        }
         """
-        return: "group"
       )
       @authenticated
 
-    removePlanToCook(input: RemovePlanToCookInput!): Group!
+    removePlanMeal(input: RemovePlanMealInput!): RemovePlanMealPayload!
       @aqlSubquery(
         query: """
         LET group = FIRST(
@@ -246,7 +262,10 @@ export default gql`
         )
         REMOVE cookEdge in PlansToCook
         REMOVE found.planMeal in PlanMeals
-        RETURN group
+        LET $field = {
+          group: group,
+          planMeal: found.planMeal
+        }
         """
       )
       @authenticated

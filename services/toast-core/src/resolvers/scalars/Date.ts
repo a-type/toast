@@ -12,11 +12,12 @@ export default new GraphQLScalarType({
       return parse(value).getTime();
     }
   },
-  serialize: (value: Date) => {
-    if (value instanceof Date) {
-      return format(value, 'YYYY-MM-DD');
+  serialize: (value: number | Date | string) => {
+    if (typeof value === 'number') {
+      return value;
+    } else {
+      return parse(value).getTime();
     }
-    return null;
   },
   parseLiteral: ast => {
     if (ast.kind === Kind.INT) {

@@ -77,6 +77,7 @@
     "react-firebaseui": "^3.1.2",
     "react-flip-toolkit": "^6.3.0",
     "react-helmet": "^5.2.0",
+    "react-hook-form": "^3.21.15",
     "react-intersection-visible-hook": "^1.4.2",
     "react-outside-click-handler": "^1.2.2",
     "react-popper": "^1.0.2",

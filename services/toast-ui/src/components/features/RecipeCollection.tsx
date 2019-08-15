@@ -6,10 +6,10 @@ import ErrorMessage from 'components/generic/ErrorMessage';
 import { Loader } from 'components/generic/Loader/Loader';
 import { path } from 'ramda';
 import { Typography } from '@material-ui/core';
-import CardGrid from 'components/generic/CardGrid';
+import CardGrid, { CardGridProps } from 'components/generic/CardGrid';
 import RecipeCard from './RecipeCard';
 
-export interface RecipeCollectionProps {
+export interface RecipeCollectionProps extends CardGridProps {
   collectionId: string;
   onRecipeSelected?(recipe: any): void;
 }
@@ -17,6 +17,7 @@ export interface RecipeCollectionProps {
 export const RecipeCollection: FC<RecipeCollectionProps> = ({
   collectionId,
   onRecipeSelected,
+  ...rest
 }) => {
   const { data, loading, error } = useCollection(collectionId);
 
@@ -42,7 +43,7 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
   return (
     <>
       {!!(recipes && recipes.length) ? (
-        <CardGrid>
+        <CardGrid {...rest}>
           {recipes.map(recipe => (
             <RecipeCard
               recipe={recipe}
