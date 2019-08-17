@@ -44,7 +44,7 @@ export const PlanMeal: FC<PlanMealProps> = ({ meal }) => {
   const classes = useStyles({ meal });
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  const removeMeal = useRemovePlanMeal();
+  const [removeMeal] = useRemovePlanMeal();
   const handleRemove = async () => {
     await removeMeal({
       variables: {
