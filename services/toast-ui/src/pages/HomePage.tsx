@@ -5,7 +5,7 @@ import ErrorMessage from 'components/generic/ErrorMessage';
 import { PlanSetup } from 'components/features/PlanSetup';
 import { Container } from '@material-ui/core';
 import { PlanFeed } from 'components/features/PlanFeed';
-import { NetworkStatus } from 'apollo-boost';
+import { NetworkStatus } from 'apollo-client';
 
 interface HomePageProps {}
 
@@ -26,11 +26,19 @@ export const HomePage: FC<HomePageProps> = () => {
     </Container>
   ) : (
     <Container>
-      <HomePlan plan={data.viewer.group.planMealsConnection.edges} />
+      <HomePlan
+        plan={data.viewer.group.planMealsConnection.edges}
+        groupId={data.viewer.group.id}
+        refetch={refetch}
+      />
     </Container>
   );
 };
 
-export const HomePlan: FC<{ plan: GroupPlanMealEdge[] }> = ({ plan }) => (
-  <PlanFeed mealEdges={plan} />
+export const HomePlan: FC<{
+  plan: GroupPlanMealEdge[];
+  groupId;
+  refetch: () => any;
+}> = ({ plan, groupId, refetch }) => (
+  <PlanFeed mealEdges={plan} groupId={groupId} refetch={refetch} />
 );

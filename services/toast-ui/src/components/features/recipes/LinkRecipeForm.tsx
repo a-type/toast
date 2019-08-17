@@ -17,7 +17,7 @@ import gql from 'graphql-tag';
 import useMedia from 'hooks/useMedia';
 import logger from 'logger';
 import React, { FC, useState } from 'react';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { ClearTwoTone } from '@material-ui/icons';
 
 const MESSAGES = {
@@ -97,7 +97,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
     handleFailed,
   } = useLinker();
   const [url, setUrl] = useState(prefilledValue || '');
-  const mutate = useMutation(LinkRecipeMutation);
+  const [mutate] = useMutation(LinkRecipeMutation);
   const isInstalled = useMedia('(display-mode: standalone)');
   const classes = useStyles({});
 

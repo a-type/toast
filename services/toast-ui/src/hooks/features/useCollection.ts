@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
 const CollectionQuery = gql`
   query Collection($input: RecipeCollectionGetInput!) {

@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { GetPlanQuery } from './usePlan';
 
 export const RemovePlanMealMutation = gql`

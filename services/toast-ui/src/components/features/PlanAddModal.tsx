@@ -22,6 +22,8 @@ import { useAddPlanMeal } from 'hooks/features/useAddPlanMeal';
 export type PlanAddModalProps = {
   onClose: () => any;
   day: Date;
+  groupId: string;
+  onAdd?: () => any;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -59,7 +61,12 @@ type PlanAddFormValues = {
   servings: string;
 };
 
-export const PlanAddModal: FC<PlanAddModalProps> = ({ onClose, day }) => {
+export const PlanAddModal: FC<PlanAddModalProps> = ({
+  onClose,
+  onAdd,
+  day,
+  groupId,
+}) => {
   const classes = useStyles({});
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
@@ -81,7 +88,7 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({ onClose, day }) => {
     setTimeout(onClose, 200);
   };
 
-  const addPlanMeal = useAddPlanMeal();
+  const [addPlanMeal] = useAddPlanMeal({ groupId });
 
   const onSubmit = async ({ note, servings, mealName }: PlanAddFormValues) => {
     await addPlanMeal({
@@ -95,6 +102,7 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({ onClose, day }) => {
         },
       },
     });
+    onAdd && onAdd();
     handleClose();
   };
 

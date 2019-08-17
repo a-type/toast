@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { useDebounce } from 'use-debounce';
 import gql from 'graphql-tag';
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { InputProps } from '@material-ui/core/Input';

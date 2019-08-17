@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
 const JoinGroupMutation = gql`
   mutation AcceptGroupInvitation($id: String!) {
@@ -21,7 +21,7 @@ const JoinGroup: React.SFC<JoinProps & RouteComponentProps> = ({
   invitationKey,
   history,
 }) => {
-  const mutate = useMutation(JoinGroupMutation, {
+  const [mutate] = useMutation(JoinGroupMutation, {
     variables: {
       id: invitationKey,
     },

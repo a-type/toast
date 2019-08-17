@@ -1,8 +1,9 @@
 import gql from 'graphql-tag';
-import { useQuery, QueryHookResult } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
 import { Day } from 'types/Day';
 import { ApolloError } from 'apollo-boost';
+import { QueryResult } from '@apollo/react-common';
 
 export const GetGroceryDayQuery = gql`
   query GroceryDay {
@@ -30,7 +31,7 @@ export default (): [
   { name: string; index: number },
   boolean,
   ApolloError,
-  QueryHookResult<GroceryDayQueryResult, {}>
+  QueryResult<GroceryDayQueryResult, {}>
 ] => {
   const result = useQuery<GroceryDayQueryResult>(GetGroceryDayQuery);
   const groceryDayIndex = pathOr(

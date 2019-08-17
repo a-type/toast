@@ -2,7 +2,7 @@ import * as React from 'react';
 import Copy from 'react-copy-to-clipboard';
 import { Box, Button, Typography, Dialog } from '@material-ui/core';
 import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
 const CreateGroupInvitationMutation = gql`
   mutation CreateGroupInvitation {
@@ -23,7 +23,7 @@ export const GroupInviteButton: React.SFC<GroupInviteButtonProps> = ({}) => {
       }, 3000);
     }
   }, [copied]);
-  const mutate = useMutation(CreateGroupInvitationMutation);
+  const [mutate] = useMutation(CreateGroupInvitationMutation);
   const createAndSend = async () => {
     const result = await mutate();
     if (!result) {

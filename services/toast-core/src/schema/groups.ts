@@ -33,11 +33,19 @@ export default gql`
     planMealsConnection(
       first: Int = 10
       after: String
+      filter: GroupPlanMealsFilterInput
     ): GroupPlanMealsConnection!
       @aqlRelayConnection(
         edgeCollection: "HasPlanMeal"
         edgeDirection: OUTBOUND
         cursorExpression: "CONCAT($node.date, $node.mealName)"
+        filter: """
+        ($args['filter'] == null || (
+          $args['filter'].dateBefore == null || $node.date < $args['filter'].dateBefore
+        ) && (
+          $args['filter'].dateAfter == null || $node.date > $args['filter'].dateAfter
+        ))
+        """
       )
 
     """
@@ -62,6 +70,11 @@ export default gql`
         filter: "$field._key == $args.input.id"
         limit: { count: 1 }
       )
+  }
+
+  input GroupPlanMealsFilterInput {
+    dateBefore: Date
+    dateAfter: Date
   }
 
   input RecipeCollectionGetInput {

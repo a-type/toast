@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from 'react-apollo-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { useCallback, useState } from 'react';
 import { ApolloError } from 'apollo-boost';
 import useRouter from 'use-react-router';
@@ -25,10 +25,13 @@ export default ({ recipeId }: { recipeId?: string }) => {
     skip: isCreate,
   });
 
-  const saveMutate = useMutation<{
-    id?: string;
-    input: RecipeUpdateInput | RecipeCreateInput;
-  }>(SaveMutation);
+  const [saveMutate] = useMutation<
+    any,
+    {
+      id?: string;
+      input: RecipeUpdateInput | RecipeCreateInput;
+    }
+  >(SaveMutation);
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<ApolloError>(null);
@@ -63,7 +66,7 @@ export default ({ recipeId }: { recipeId?: string }) => {
     [saveMutate],
   );
 
-  const createIngredientMutate = useMutation(CreateRecipeIngredientMutation);
+  const [createIngredientMutate] = useMutation(CreateRecipeIngredientMutation);
   const createIngredient = useCallback(
     async ({ ingredientText }: EditRecipeCreateIngredientInput) => {
       setSaving(true);
@@ -93,7 +96,7 @@ export default ({ recipeId }: { recipeId?: string }) => {
     [createIngredientMutate],
   );
 
-  const publishMutate = useMutation(PublishRecipeMutation);
+  const [publishMutate] = useMutation(PublishRecipeMutation);
   const publish = useCallback(
     () =>
       publishMutate({

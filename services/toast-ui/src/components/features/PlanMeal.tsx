@@ -27,7 +27,6 @@ export type PlanMealPlanMeal = {
 export type PlanMealRecipe = {
   id: string;
   title: string;
-  description: string | null;
   coverImageUrl: string | null;
   attribution: string | null;
 };

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
 const CollectRecipeRecipeFragment = gql`
   fragment CollectRecipeRecipe on Recipe {
@@ -53,10 +53,10 @@ type UnsaveRecipeMutationResult = {
 };
 
 export default ({ refetchQueries }: { refetchQueries?: any[] } = {}) => {
-  const mutateSave = useMutation<CollectRecipeMutationResult>(
+  const [mutateSave] = useMutation<CollectRecipeMutationResult>(
     CollectRecipeMutation,
   );
-  const mutateUnsave = useMutation<UnsaveRecipeMutationResult>(
+  const [mutateUnsave] = useMutation<UnsaveRecipeMutationResult>(
     UnsaveRecipeMutation,
   );
 

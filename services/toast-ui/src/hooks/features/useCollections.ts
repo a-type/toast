@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
-import { useQuery, QueryHookResult } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
 import { ApolloError } from 'apollo-boost';
+import { QueryResult } from '@apollo/react-common';
 
 const CollectionsQuery = gql`
   query Collections {
@@ -52,7 +53,7 @@ export const useCollections = (
   Collection[],
   boolean,
   ApolloError,
-  QueryHookResult<CollectionsQueryResult, Pagination>
+  QueryResult<CollectionsQueryResult, Pagination>
 ] => {
   const result = useQuery<CollectionsQueryResult, Pagination>(
     CollectionsQuery,

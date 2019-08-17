@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Day } from 'types/Day';
 import { MenuItem } from '@material-ui/core';
 import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import SelectField from 'components/generic/SelectField';
 
 const SetGroceryDayMutation = gql`
@@ -23,7 +23,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
   groceryDay,
   onSaved = () => {},
 }) => {
-  const mutate = useMutation(SetGroceryDayMutation);
+  const [mutate] = useMutation(SetGroceryDayMutation);
 
   const handleChange = async ev => {
     await mutate({

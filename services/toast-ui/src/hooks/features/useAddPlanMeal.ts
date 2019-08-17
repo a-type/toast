@@ -1,22 +1,23 @@
 import gql from 'graphql-tag';
-import { useMutation } from 'react-apollo-hooks';
-import { GetPlanQuery, GetPlanQueryResult } from './usePlan';
+import { useMutation } from '@apollo/react-hooks';
+import {
+  GetPlanQuery,
+  GetPlanQueryResult,
+  GroupPlanMealsEdgeFragment,
+  GroupPlanMealEdge,
+} from './usePlan';
+import logger from 'logger';
 
 export const AddPlanMealMutation = gql`
   mutation AddPlanMealMutation($input: AddPlanMealInput!) {
     addPlanMeal(input: $input) {
       planMealEdge {
-        cursor
-        node {
-          id
-          date
-          mealName
-          servings
-          note
-        }
+        ...GroupPlanMealsEdgeFragment
       }
     }
   }
+
+  ${GroupPlanMealsEdgeFragment}
 `;
 
 export type AddPlanMealInput = {
@@ -44,14 +45,60 @@ export type AddPlanMealPlanMeal = {
   servings: number | null;
 };
 
-export const useAddPlanMeal = () =>
+const GroupPlanMealsFragment = gql`
+  fragment GroupPlanMeals on Group {
+    planMealsConnection {
+      edges {
+        ...GroupPlanMealsEdgeFragment
+      }
+    }
+  }
+  ${GroupPlanMealsEdgeFragment}
+`;
+
+export const useAddPlanMeal = ({ groupId }: { groupId: string }) =>
   useMutation<AddPlanMealResult, { input: AddPlanMealInput }>(
     AddPlanMealMutation,
     {
-      refetchQueries: [
-        {
-          query: GetPlanQuery,
-        },
-      ],
+      update: async (cache, result) => {
+        const id = `Group:${groupId}`;
+
+        const group = await cache.readFragment<{
+          id: string;
+          planMealsConnection: {
+            edges: GroupPlanMealEdge[];
+          };
+        }>({
+          id,
+          fragmentName: 'GroupPlanMeals',
+          fragment: GroupPlanMealsFragment,
+        });
+
+        if (!group) {
+          logger.warn(
+            `Could not query group fragment ${groupId} to update plan after meal add`,
+          );
+          return;
+        }
+
+        const edges = [
+          ...group.planMealsConnection.edges,
+
+          result.data.addPlanMeal.planMealEdge,
+        ];
+
+        await cache.writeFragment({
+          id,
+          fragmentName: 'GroupPlanMeals',
+          fragment: GroupPlanMealsFragment,
+          data: {
+            __typename: 'Group',
+            planMealsConnection: {
+              __typename: 'GroupPlanMealsConnection',
+              edges,
+            },
+          },
+        });
+      },
     },
   );

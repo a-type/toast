@@ -5,4 +5,7 @@ export default {
     addPlanMeal: arango,
     removePlanMeal: arango,
   },
+  AddPlanMealPayload: {
+    planMealEdge: arango,
+  },
 };

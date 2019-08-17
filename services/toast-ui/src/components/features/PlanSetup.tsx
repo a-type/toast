@@ -6,7 +6,7 @@ import useGuides from 'hooks/features/useGuides';
 import gql from 'graphql-tag';
 import useStoredFlag from 'hooks/useStoredFlag';
 import React, { useState } from 'react';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
 export const CreatePlanMutation = gql`
   mutation CreatePlan {
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
   const [showJoinInfo, setShowJoinInfo] = useState(false);
   const [loading, setLoading] = useState(false);
-  const mutate = useMutation(CreatePlanMutation);
+  const [mutate] = useMutation(CreatePlanMutation);
   const [_, setTutorialFlag] = useStoredFlag('onboarding');
   const [__, { queueGuide }] = useGuides();
   const [error, setError] = useState(null);

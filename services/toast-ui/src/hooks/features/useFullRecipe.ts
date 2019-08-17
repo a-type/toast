@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
-import { useQuery, QueryHookResult } from 'react-apollo-hooks';
-import { ApolloError } from 'apollo-boost';
+import { useQuery } from '@apollo/react-hooks';
 
 export const FullRecipeQuery = gql`
   query FullRecipe($recipeId: ID!) {

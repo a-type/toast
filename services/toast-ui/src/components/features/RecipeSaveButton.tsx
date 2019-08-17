@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import gql from 'graphql-tag';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import useCollectRecipe from '../../hooks/features/useCollectRecipe';
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import { path } from 'ramda';
 import RecipeCollections from 'components/features/RecipeCollections';
 import { Button, Dialog, Theme } from '@material-ui/core';

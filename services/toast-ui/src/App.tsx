@@ -1,8 +1,7 @@
 import React, { FC, Suspense } from 'react';
 import { Pages } from 'pages/Pages';
 import { TokenProvider } from 'contexts/TokenContext';
-import { ApolloProvider } from 'react-apollo';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
 import history from 'browserHistory';
@@ -51,56 +50,54 @@ const App: FC<{}> = props => {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <ApolloHooksProvider client={apolloClient}>
-        <MuiThemeProvider theme={theme}>
-          <AlertProvider>
-            <Router history={history}>
-              <TokenProvider>
-                <LinkerContextProvider>
-                  <Suspense fallback={<Loader />}>
-                    <Helmet title="Toast" />
-                    <Box className={classes.mainGrid}>
+      <MuiThemeProvider theme={theme}>
+        <AlertProvider>
+          <Router history={history}>
+            <TokenProvider>
+              <LinkerContextProvider>
+                <Suspense fallback={<Loader />}>
+                  <Helmet title="Toast" />
+                  <Box className={classes.mainGrid}>
+                    <ErrorBoundary>
+                      <ToastAppBar gridArea="appBar" />
+                    </ErrorBoundary>
+                    <ErrorBoundary>
+                      <Navigation gridArea="nav" />
+                    </ErrorBoundary>
+                    <Box className={classes.content}>
                       <ErrorBoundary>
-                        <ToastAppBar gridArea="appBar" />
+                        <Pages />
                       </ErrorBoundary>
-                      <ErrorBoundary>
-                        <Navigation gridArea="nav" />
-                      </ErrorBoundary>
-                      <Box className={classes.content}>
-                        <ErrorBoundary>
-                          <Pages />
-                        </ErrorBoundary>
-                      </Box>
-                      <Guides gridArea="guides" />
                     </Box>
-                  </Suspense>
-                </LinkerContextProvider>
-              </TokenProvider>
-            </Router>
-            <AlertRenderer />
-            <UpdateChecker />
-            <CssBaseline />
-            <Global
-              styles={css`
-                html,
-                body,
-                #main {
-                  height: 100vh;
-                }
-                body {
-                  overflow-y: hidden;
-                  position: relative;
-                }
-                ::selection,
-                ::moz-selection {
-                  background: #ffe6bd;
-                }
-              `}
-            />
-            <GlobalCssVariables />
-          </AlertProvider>
-        </MuiThemeProvider>
-      </ApolloHooksProvider>
+                    <Guides gridArea="guides" />
+                  </Box>
+                </Suspense>
+              </LinkerContextProvider>
+            </TokenProvider>
+          </Router>
+          <AlertRenderer />
+          <UpdateChecker />
+          <CssBaseline />
+          <Global
+            styles={css`
+              html,
+              body,
+              #main {
+                height: 100vh;
+              }
+              body {
+                overflow-y: hidden;
+                position: relative;
+              }
+              ::selection,
+              ::moz-selection {
+                background: #ffe6bd;
+              }
+            `}
+          />
+          <GlobalCssVariables />
+        </AlertProvider>
+      </MuiThemeProvider>
     </ApolloProvider>
   );
 };

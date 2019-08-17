@@ -14,6 +14,8 @@ import { PlanAddModal } from './PlanAddModal';
 
 export type PlanFeedProps = {
   mealEdges: PlanFeedMealEdge[];
+  groupId: string;
+  refetch: () => any;
 };
 
 export type PlanFeedMealEdge = {
@@ -21,7 +23,11 @@ export type PlanFeedMealEdge = {
   node: PlanMealPlanMeal;
 };
 
-export const PlanFeed: FC<PlanFeedProps> = ({ mealEdges }) => {
+export const PlanFeed: FC<PlanFeedProps> = ({
+  mealEdges,
+  groupId,
+  refetch,
+}) => {
   const [visibleDayCount, setVisibleDayCount] = useState(14);
 
   const visibleDays = useMemo(
@@ -58,7 +64,12 @@ export const PlanFeed: FC<PlanFeedProps> = ({ mealEdges }) => {
         />
       ))}
       {addModalDay && (
-        <PlanAddModal onClose={onCloseAddPlan} day={addModalDay} />
+        <PlanAddModal
+          onClose={onCloseAddPlan}
+          day={addModalDay}
+          groupId={groupId}
+          onAdd={refetch}
+        />
       )}
     </Box>
   );

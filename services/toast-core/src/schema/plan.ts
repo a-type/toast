@@ -19,8 +19,18 @@ export default gql`
   }
 
   type AddPlanMealPayload {
+    # NOTE: this is specifically structured this way to create a separate, second query after
+    # the original mutation query due to AQL consistency constraints
     planMealEdge: GroupPlanMealsEdge!
-      @aqlSubquery(query: "LET $field = $parent.planMealEdge")
+      @aqlNewQuery
+      @aqlSubquery(
+        query: """
+        LET $field = {
+          cursor: $parent.planMealEdge.cursor,
+          node: DOCUMENT(PlanMeals, $parent.planMealEdge.node._key)
+        }
+        """
+      )
   }
 
   input RemovePlanMealInput {
@@ -50,6 +60,7 @@ export default gql`
             servings: $args.input.servings,
             note: $args.input.note
           } INTO PlanMeals
+          OPTIONS { waitForSync: true }
           RETURN NEW
         )
         LET groupEdge = FIRST(
@@ -57,12 +68,14 @@ export default gql`
             _from: group._id,
             _to: planMeal._id
           } INTO HasPlanMeal
+          OPTIONS { waitForSync: true }
           RETURN NEW
         )
         INSERT {
           _from: planMeal._id,
           _to: recipe._id
         } INTO PlansToCook
+        OPTIONS { waitForSync: true }
         LET $field = {
           planMealEdge: MERGE(groupEdge, { cursor: CONCAT(planMeal.date, planMeal.mealName), node: planMeal })
         }
