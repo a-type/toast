@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { subDays, addDays } from 'date-fns';
+import { subDays, addDays, parse } from 'date-fns';
 import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
 
@@ -16,6 +16,7 @@ export const GetShoppingListQuery = gql`
           edges {
             node {
               id
+              date
               cooking {
                 id
                 ingredientsConnection {
@@ -57,6 +58,7 @@ export type GetShoppingListResult = {
 
 type ShoppingListMeal = {
   id: string;
+  date: string;
   cooking: {
     id: string;
     ingredientsConnection: {
@@ -81,6 +83,12 @@ export type ShoppingListIngredient = {
     id: string;
     name: string;
   };
+};
+
+export type ShoppingListItem = {
+  key: string;
+  mealDate: Date;
+  ingredient: ShoppingListIngredient;
 };
 
 export const useShoppingList = ({
@@ -108,20 +116,25 @@ export const useShoppingList = ({
     ['viewer', 'group', 'planMealsConnection', 'edges'],
     data,
   ) as { node: ShoppingListMeal }[];
-  const ingredients = meals.reduce<ShoppingListIngredient[]>(
-    (ings, mealEdge) => [
-      ...ings,
-      ...(pathOr(
+
+  const items: ShoppingListItem[] = meals.reduce<ShoppingListItem[]>(
+    (items, mealEdge) => [
+      ...items,
+      ...pathOr(
         [],
         ['node', 'cooking', 'ingredientsConnection', 'edges'],
         mealEdge,
-      ).map(edge => edge.node) as ShoppingListIngredient[]),
+      ).map(edge => ({
+        key: `${parse(mealEdge.node.date).getTime()}_${edge.node.id}`,
+        mealDate: parse(mealEdge.node.date),
+        ingredient: edge.node as ShoppingListIngredient,
+      })),
     ],
     [],
   );
 
   return {
-    data: ingredients,
+    data: items,
     ...rest,
   };
 };
