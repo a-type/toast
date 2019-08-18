@@ -14,6 +14,8 @@ import { useRemovePlanMeal } from 'hooks/features/useRemovePlanMeal';
 
 export type PlanMealProps = {
   meal: PlanMealPlanMeal;
+  groupId: string;
+  onRemove?: () => any;
 };
 
 export type PlanMealPlanMeal = {
@@ -40,11 +42,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const PlanMeal: FC<PlanMealProps> = ({ meal }) => {
+export const PlanMeal: FC<PlanMealProps> = ({ meal, groupId, onRemove }) => {
   const classes = useStyles({ meal });
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  const [removeMeal] = useRemovePlanMeal();
+  const [removeMeal] = useRemovePlanMeal({ groupId });
   const handleRemove = async () => {
     await removeMeal({
       variables: {
@@ -53,6 +55,7 @@ export const PlanMeal: FC<PlanMealProps> = ({ meal }) => {
         },
       },
     });
+    onRemove && onRemove();
     setMenuAnchor(null);
   };
 

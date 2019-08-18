@@ -78,6 +78,8 @@ export const PlanFeed: FC<PlanFeedProps> = ({
           date={group.date}
           key={group.date.getTime()}
           onAddPlan={onAddPlan}
+          onRemovePlan={refetch}
+          groupId={groupId}
         />
       ))}
       {hasNextPage && <Button onClick={fetchMore}>Load more</Button>}
@@ -94,9 +96,11 @@ export const PlanFeed: FC<PlanFeedProps> = ({
 };
 
 type PlanFeedDayProps = {
+  groupId: string;
   meals: PlanMealPlanMeal[];
   date: Date;
   onAddPlan: (params: { day: Date }) => any;
+  onRemovePlan: () => any;
 };
 
 const usePlanFeedDayStyles = makeStyles(theme => ({
@@ -105,7 +109,13 @@ const usePlanFeedDayStyles = makeStyles(theme => ({
   },
 }));
 
-const PlanFeedDay: FC<PlanFeedDayProps> = ({ meals, date: day, onAddPlan }) => {
+const PlanFeedDay: FC<PlanFeedDayProps> = ({
+  meals,
+  date: day,
+  onAddPlan,
+  groupId,
+  onRemovePlan,
+}) => {
   const handleAddPlan = () => onAddPlan({ day });
   const classes = usePlanFeedDayStyles({ meals, day });
 
@@ -117,7 +127,12 @@ const PlanFeedDay: FC<PlanFeedDayProps> = ({ meals, date: day, onAddPlan }) => {
       {meals.length ? (
         meals.map(meal => (
           <Box mb={2}>
-            <PlanMeal meal={meal} key={meal.id} />
+            <PlanMeal
+              meal={meal}
+              key={meal.id}
+              groupId={groupId}
+              onRemove={onRemovePlan}
+            />
           </Box>
         ))
       ) : (

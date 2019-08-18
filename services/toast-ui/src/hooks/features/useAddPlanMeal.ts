@@ -64,7 +64,6 @@ export const useAddPlanMeal = ({ groupId }: { groupId: string }) =>
         const id = `Group:${groupId}`;
 
         const group = await cache.readFragment<{
-          id: string;
           planMealsConnection: {
             edges: GroupPlanMealEdge[];
           };
