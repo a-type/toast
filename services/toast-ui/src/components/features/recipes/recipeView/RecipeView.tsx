@@ -10,7 +10,6 @@ import useFullRecipe from 'hooks/features/useFullRecipe';
 import { RecipeStepsLink } from './StepsLink';
 import Details from './Details';
 import Ingredients from './Ingredients';
-import ViewSpy from './ViewSpy';
 
 export interface RecipeViewProps {
   recipeId: string;
@@ -51,7 +50,6 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
         )}
       />
       <RecipeStepsLink recipeId={recipeId} />
-      <ViewSpy recipeId={recipeId} />
     </React.Fragment>
   );
 };

@@ -7,6 +7,7 @@ import corrections from './corrections';
 import groupInvitations from './groupInvitations';
 import groups from './groups';
 import plan from './plan';
+import foods from './foods';
 
 export default [
   recipes,
@@ -16,6 +17,7 @@ export default [
   scalars,
   groups,
   plan,
+  foods,
 ].reduce(mergeDeepRight, {
   Query: {
     foo: () => false,
