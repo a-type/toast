@@ -7,19 +7,28 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core';
-import { addDays, startOfToday, isSameDay } from 'date-fns';
+import {
+  addDays,
+  startOfToday,
+  isSameDay,
+  compareAsc,
+  parse,
+  differenceInDays,
+} from 'date-fns';
 import { FormattedDate } from 'components/generic/FormattedDate';
 import { AddTwoTone } from '@material-ui/icons';
 import { PlanAddModal } from './PlanAddModal';
 
 export type PlanFeedProps = {
+  startDate: Date;
   mealEdges: PlanFeedMealEdge[];
   groupId: string;
   refetch: () => any;
+  fetchMore: () => any;
+  hasNextPage: boolean;
 };
 
 export type PlanFeedMealEdge = {
-  cursor: string;
   node: PlanMealPlanMeal;
 };
 
@@ -27,28 +36,35 @@ export const PlanFeed: FC<PlanFeedProps> = ({
   mealEdges,
   groupId,
   refetch,
+  startDate,
+  hasNextPage,
+  fetchMore,
 }) => {
-  const [visibleDayCount, setVisibleDayCount] = useState(14);
+  const endDate: Date = useMemo(() => {
+    const lastMeal = mealEdges
+      .sort((a, b) => compareAsc(a.node.date, b.node.date))
+      .pop();
+    return parse(lastMeal.node.date);
+  }, [mealEdges]);
 
-  const visibleDays = useMemo(
+  const dateRange = Math.max(14, differenceInDays(startDate, endDate));
+  const dates = new Array(dateRange)
+    .fill(null)
+    .map((_, idx) => addDays(startDate, idx));
+
+  const mealsGroupedByDay = useMemo(
     () =>
-      new Array(visibleDayCount)
-        .fill(null)
-        .map((_, dayIdx) => addDays(startOfToday(), dayIdx)),
-    [visibleDayCount],
+      dates.map(date => {
+        const meals = mealEdges.filter(mealEdge =>
+          isSameDay(mealEdge.node.date, date),
+        );
+        return {
+          date,
+          meals: meals.map(({ node }) => node),
+        };
+      }),
+    [mealEdges, dates],
   );
-
-  const mealsGroupedByDay = visibleDays.map(day => {
-    const meals = mealEdges.filter(mealEdge =>
-      isSameDay(day, mealEdge.node.date),
-    );
-    return {
-      day,
-      meals: meals.map(({ node }) => node),
-      lastCursor: meals.length ? meals[meals.length - 1].cursor : null,
-      firstCursor: meals.length ? meals[0].cursor : null,
-    };
-  });
 
   const [addModalDay, setAddModalDay] = useState<Date>(null);
   const onAddPlan = ({ day }: { day: Date }) => setAddModalDay(day);
@@ -58,11 +74,13 @@ export const PlanFeed: FC<PlanFeedProps> = ({
     <Box>
       {mealsGroupedByDay.map(group => (
         <PlanFeedDay
-          {...group}
-          key={group.day.getTime()}
+          meals={group.meals}
+          date={group.date}
+          key={group.date.getTime()}
           onAddPlan={onAddPlan}
         />
       ))}
+      {hasNextPage && <Button onClick={fetchMore}>Load more</Button>}
       {addModalDay && (
         <PlanAddModal
           onClose={onCloseAddPlan}
@@ -77,9 +95,7 @@ export const PlanFeed: FC<PlanFeedProps> = ({
 
 type PlanFeedDayProps = {
   meals: PlanMealPlanMeal[];
-  day: Date;
-  lastCursor: string;
-  firstCursor: string;
+  date: Date;
   onAddPlan: (params: { day: Date }) => any;
 };
 
@@ -89,7 +105,7 @@ const usePlanFeedDayStyles = makeStyles(theme => ({
   },
 }));
 
-const PlanFeedDay: FC<PlanFeedDayProps> = ({ meals, day, onAddPlan }) => {
+const PlanFeedDay: FC<PlanFeedDayProps> = ({ meals, date: day, onAddPlan }) => {
   const handleAddPlan = () => onAddPlan({ day });
   const classes = usePlanFeedDayStyles({ meals, day });
 

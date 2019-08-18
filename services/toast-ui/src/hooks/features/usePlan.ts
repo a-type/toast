@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import { useCallback } from 'react';
+import { path } from 'ramda';
 
 export const GroupPlanMealsEdgeFragment = gql`
   fragment MealRecipeFragment on Recipe {
@@ -11,7 +13,6 @@ export const GroupPlanMealsEdgeFragment = gql`
   }
 
   fragment GroupPlanMealsEdgeFragment on GroupPlanMealsEdge {
-    cursor
     node {
       id
       date
@@ -26,14 +27,22 @@ export const GroupPlanMealsEdgeFragment = gql`
 `;
 
 export const GetPlanQuery = gql`
-  query GetPlanQuery {
+  query GetPlanQuery(
+    $first: Int
+    $after: String
+    $filter: GroupPlanMealsFilterInput
+  ) {
     viewer {
       id
       group {
         id
-        planMealsConnection {
+        planMealsConnection(filter: $filter, first: $first, after: $after) {
           edges {
             ...GroupPlanMealsEdgeFragment
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
           }
         }
       }
@@ -50,13 +59,16 @@ export type GetPlanQueryResult = {
       id: string;
       planMealsConnection: {
         edges: GroupPlanMealEdge[];
+        pageInfo: {
+          endCursor: string | null;
+          hasNextPage: boolean;
+        };
       };
     };
   };
 };
 
 export type GroupPlanMealEdge = {
-  cursor: string;
   node: PlanMeal;
 };
 
@@ -76,4 +88,96 @@ export type PlanRecipe = {
   coverImageUrl: string;
 };
 
-export default () => useQuery<GetPlanQueryResult>(GetPlanQuery);
+export type GetPlanFilter = {
+  dateBefore?: Date;
+  dateAfter?: Date;
+};
+
+const processFilters = (filter: GetPlanFilter) => ({
+  dateBefore: filter.dateBefore && filter.dateBefore.getTime(),
+  dateAfter: filter.dateAfter && filter.dateAfter.getTime(),
+});
+
+export default ({
+  filter,
+  first,
+  after,
+}: {
+  filter?: GetPlanFilter;
+  first?: number;
+  after?: string;
+} = {}) => {
+  const { fetchMore, ...rest } = useQuery<
+    GetPlanQueryResult,
+    {
+      filter?: {
+        dateBefore?: number;
+        dateAfter?: number;
+      };
+      first?: number;
+      after?: string;
+    }
+  >(GetPlanQuery, {
+    variables: {
+      filter: processFilters(filter),
+      first,
+      after,
+    },
+  });
+
+  const fetchNext = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          first,
+          filter: processFilters(filter),
+          after:
+            rest.data.viewer.group &&
+            rest.data.viewer.group.planMealsConnection.pageInfo.endCursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const {
+            edges,
+            pageInfo,
+          } = fetchMoreResult.viewer.group.planMealsConnection;
+          return edges.length
+            ? {
+                ...previousResult,
+                viewer: {
+                  ...previousResult.viewer,
+                  group: {
+                    ...previousResult.viewer.group,
+                    planMealsConnection: {
+                      ...previousResult.viewer.group.planMealsConnection,
+                      edges: [
+                        ...previousResult.viewer.group.planMealsConnection
+                          .edges,
+                        ...edges,
+                      ],
+                      pageInfo,
+                    },
+                  },
+                },
+              }
+            : previousResult;
+        },
+      }),
+    [first, filter, fetchMore],
+  );
+
+  return {
+    ...rest,
+    fetchMore: fetchNext,
+    hasNextPage: path(
+      [
+        'data',
+        'viewer',
+        'group',
+        'planMealsConnection',
+        'pageInfo',
+        'hasNextPage',
+      ],
+      rest,
+    ) as boolean,
+  };
+};
