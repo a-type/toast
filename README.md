@@ -29,3 +29,23 @@ I'm not honestly sure how to set up a development environment that doesn't rely 
 ### Deploying
 
 Commits to `master` deploy to prod automatically. See the `cloudbuild.yaml`.
+
+## Services
+
+Toast has a few core services:
+
+### toast-core
+
+The main GraphQL API. Does most of the talking to the database. Runs on a library I created called [`graphql-arangodb`](https://github.com/a-type/graphql-arangodb) which translates GraphQL queries into ArangoDB queries. Most of the querying logic is found in the schema itself, in the form of directives which contain database query fragments.
+
+### toast-ui
+
+The React UI. Speaks only to the core API. Written as a progressive app, which is meant to be 'installed' on phones.
+
+### toast-scanning
+
+A microservice to scrape recipe websites and process the data into the Toast schema. It powers the scanner feature which allows users to bring their own recipes from around the internet.
+
+### toast-billing
+
+Responsible for handling Stripe webhooks and updating user subscription information.
