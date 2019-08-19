@@ -16,7 +16,7 @@ export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
           <Logo
             pattern
             style={{ margin: 'auto auto var(--spacing-lg) auto' }}
-            size="10vw"
+            size="20vh"
           />
           <Login returnTo={returnTo} />
         </Container>

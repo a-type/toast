@@ -27,8 +27,8 @@ const useStyles = makeStyles<Theme, {}>(theme => ({
     width: '100%',
     height: '100%',
     display: 'grid',
-    gridTemplateAreas: "'appBar' 'content' 'guides' 'nav'",
-    gridTemplateRows: 'auto 1fr auto auto',
+    gridTemplateAreas: "'content' 'guides' 'nav'",
+    gridTemplateRows: '1fr auto auto',
     gridTemplateColumns: '100%',
 
     [`@media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px)`]: {
@@ -59,12 +59,12 @@ const App: FC<{}> = props => {
                   <Helmet title="Toast" />
                   <Box className={classes.mainGrid}>
                     <ErrorBoundary>
-                      <ToastAppBar gridArea="appBar" />
-                    </ErrorBoundary>
-                    <ErrorBoundary>
                       <Navigation gridArea="nav" />
                     </ErrorBoundary>
                     <Box className={classes.content}>
+                      <ErrorBoundary>
+                        <ToastAppBar gridArea="appBar" />
+                      </ErrorBoundary>
                       <ErrorBoundary>
                         <Pages />
                       </ErrorBoundary>

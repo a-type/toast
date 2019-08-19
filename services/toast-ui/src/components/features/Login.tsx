@@ -47,14 +47,12 @@ const Login: React.SFC<LoginProps> = ({ returnTo }) => {
         firebaseAuth={firebase.auth()}
       />
       <div>
-        <Typography variant="h1">Log in or join for free</Typography>
-        <Typography variant="body1">
+        <Typography variant="h2" component="h1" paragraph>
+          Log in or join
+        </Typography>
+        <Typography variant="body1" paragraph>
           Sign up for Toast to start planning meals that fit your
           life&mdash;your schedule, your recipes, your taste.
-        </Typography>
-        <Typography variant="body1">
-          Joining, planning, and collecting recipes is totally free. Time to get
-          control of weeknight meals.
         </Typography>
       </div>
     </Layout>
