@@ -111,10 +111,6 @@ export default gql`
     hasNextPage: Boolean!
   }
 
-  type GroupInvitationAcceptResult {
-    group: Group! @aqlDocument(collection: "Groups", key: "$parent.groupId")
-  }
-
   extend type Query {
     viewer: User @aqlDocument(collection: "Users", key: "$context.userId")
   }
@@ -124,11 +120,21 @@ export default gql`
   }
 
   type GroupCreateResult {
-    group: Group! @aqlSubquery(query: "LET $field = $parent.group")
+    group: Group!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = DOCUMENT($parent.group._key)")
   }
 
-  type GroupSetGroceryDayResult {
-    group: Group! @aqlSubquery(query: "LET $field = $parent.group")
+  type GroupSetGroceryDayPayload {
+    group: Group!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = DOCUMENT($parent.group._key)")
+  }
+
+  type AcceptGroupInvitationPayload {
+    group: Group!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = DOCUMENT($parent.group._key)")
   }
 
   extend type Mutation {
@@ -168,7 +174,7 @@ export default gql`
       )
       @authenticated
 
-    setGroceryDay(input: SetGroceryDayInput!): Group
+    setGroceryDay(input: SetGroceryDayInput!): GroupSetGroceryDayPayload
       @aqlSubquery(
         query: """
         LET group = FIRST(
@@ -177,13 +183,15 @@ export default gql`
             RETURN group_0
         )
         UPDATE {_key: group._key, groceryDay: $args.input.groceryDay} IN Groups
-        $field = NEW
+        $field = {
+          group: NEW
+        }
         """
       )
       @authenticated
 
-    createGroupInvitation: String! @authenticated
-    acceptGroupInvitation(id: String!): GroupInvitationAcceptResult
-      @authenticated
+    # these use custom resolvers
+    createGroupInvitation: String!
+    acceptGroupInvitation: AcceptGroupInvitationPayload!
   }
 `;

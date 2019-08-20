@@ -1,0 +1,6 @@
+type: hashindex
+action: create
+collection: GroupInvitations
+fields:
+  - hash
+sparse: true
