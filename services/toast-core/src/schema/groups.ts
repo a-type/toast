@@ -192,6 +192,6 @@ export default gql`
 
     # these use custom resolvers
     createGroupInvitation: String!
-    acceptGroupInvitation: AcceptGroupInvitationPayload!
+    acceptGroupInvitation(key: String!): AcceptGroupInvitationPayload!
   }
 `;

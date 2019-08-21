@@ -15,19 +15,14 @@ import { BackdropArt } from 'components/brand';
 const useStyles = makeStyles(theme => ({
   emphasis: {
     color: theme.palette.primary.main,
+  },
+  tagline: {
+    color: theme.palette.secondary.light,
     textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${
       theme.palette.text.primary
     }, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${
       theme.palette.text.primary
     }, 3px 3px 0 ${theme.palette.text.primary}`,
-  },
-  tagline: {
-    color: theme.palette.primary.contrastText,
-    textShadow: `-1px -1px 0 ${theme.palette.primary.main}, -1px 1px 0 ${
-      theme.palette.primary.main
-    }, 1px -1px 0 ${theme.palette.primary.main}, 1px 1px 0 ${
-      theme.palette.primary.main
-    }`,
   },
   paper: {
     padding: theme.spacing(2),
@@ -50,7 +45,7 @@ export const LandingPage = () => {
           component="h1"
           gutterBottom
         >
-          <span className={classes.emphasis}>Finally</span>, meal planning with{' '}
+          <span className={classes.emphasis}>Meal planning</span> with{' '}
           <span className={classes.emphasis}>your recipes</span>
         </Typography>
         <Paper className={classes.paper}>

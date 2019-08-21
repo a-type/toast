@@ -26,7 +26,7 @@ export default {
 
       const sha256 = createHash('sha256');
       sha256.update(secret);
-      const hash = sha256.digest();
+      const hash = sha256.digest('base64');
 
       // store the hash in the db. it will be looked up later by hashing the secret provided by a user
       await ctx.arangoDb.query(aql`
@@ -38,21 +38,21 @@ export default {
         } INTO GroupInvitations
       `);
 
-      return hash;
+      return secret;
     },
 
     acceptGroupInvitation: async (
       _parent,
-      { id }: { id: string },
+      { key }: { key: string },
       ctx: Context,
     ) => {
       const sha256 = createHash('sha256');
-      sha256.update(id);
-      const hash = sha256.digest();
+      sha256.update(key);
+      const hash = sha256.digest('base64');
 
       const invitations = await ctx.arangoDb.query(aql`
         FOR groupInvitation IN GroupInvitations
-          FILTER groupInvitation.hash = ${hash}
+          FILTER groupInvitation.hash == ${hash}
           LIMIT 1
           RETURN groupInvitation
       `);
@@ -65,8 +65,8 @@ export default {
 
       if (
         isAfter(
-          addHours(invitation.createdAt, invitation.lifetimeHours),
           new Date(),
+          addHours(invitation.createdAt, invitation.lifetimeHours),
         )
       ) {
         throw new NotFoundError('GroupInvitation');
@@ -76,7 +76,8 @@ export default {
       if (oldGroup) {
         // move the user from their old group
         await ctx.arangoDb.query(aql`
-          FOR node, edge IN OUTBOUND "Users/${ctx.user.id}" MemberOf
+          LET user = DOCUMENT(Users, ${ctx.user.id})
+          FOR node, edge IN OUTBOUND user MemberOf
             FILTER node._key == ${oldGroup._key}
             LIMIT 1
             REMOVE edge FROM MemberOf
@@ -94,7 +95,7 @@ export default {
 
       // finally, delete the invitation
       await ctx.arangoDb.query(aql`
-        REMOVE { hash: ${hash} } FROM GroupInvitations
+        REMOVE { hash: ${hash} } IN GroupInvitations
       `);
 
       return {
@@ -113,7 +114,8 @@ export default {
  */
 const getUserGroup = async (ctx: Context) => {
   const groups = await ctx.arangoDb.query(aql`
-    FOR group IN OUTBOUND "Users/${ctx.user.id}" MemberOf
+    LET user = DOCUMENT(Users, ${ctx.user.id})
+    FOR group IN OUTBOUND user MemberOf
       LIMIT 1
       RETURN group
   `);

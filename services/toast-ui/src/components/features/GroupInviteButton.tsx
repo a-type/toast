@@ -1,14 +1,8 @@
 import * as React from 'react';
 import Copy from 'react-copy-to-clipboard';
 import { Box, Button, Typography, Dialog } from '@material-ui/core';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
-
-const CreateGroupInvitationMutation = gql`
-  mutation CreateGroupInvitation {
-    createGroupInvitation
-  }
-`;
+import { useCreateGroupInvite } from 'hooks/features/useCreateGroupInvite';
+import ErrorMessage from 'components/generic/ErrorMessage';
 
 export interface GroupInviteButtonProps {}
 
@@ -23,31 +17,35 @@ export const GroupInviteButton: React.SFC<GroupInviteButtonProps> = ({}) => {
       }, 3000);
     }
   }, [copied]);
-  const [mutate] = useMutation(CreateGroupInvitationMutation);
+  const [error, setError] = React.useState(null);
+  const [mutate] = useCreateGroupInvite();
   const createAndSend = async () => {
-    const result = await mutate();
-    if (!result) {
-      // TODO: failure case
-      return <div>Error</div>;
-    }
-    const link =
-      window.location.origin +
-      '/joinGroup?key=' +
-      result.data.createGroupInvitation;
-    if (window.navigator['share']) {
-      window.navigator['share']({
-        title: 'Join my meal planning group',
-        text: "Join my meal planning group in Toast - let's make some food!",
-        url: link,
-      });
-    } else {
-      setLink(link);
+    try {
+      const result = await mutate();
+      const link =
+        window.location.origin +
+        '/joinGroup?key=' +
+        result.data.createGroupInvitation;
+      if (window.navigator['share']) {
+        window.navigator['share']({
+          title: 'Join my meal planning group',
+          text: "Join my meal planning group in Toast - let's make some food!",
+          url: link,
+        });
+      } else {
+        setLink(link);
+      }
+    } catch (err) {
+      setError(err);
     }
   };
 
   return (
     <>
-      <Button onClick={createAndSend}>Invite someone to your plan</Button>
+      <Button variant="outlined" onClick={createAndSend}>
+        Invite someone to your plan
+      </Button>
+      {error && <ErrorMessage error={error} />}
       <Dialog open={!!link} onClose={() => setLink(null)}>
         <Box flexDirection="column" alignItems="center" p={2}>
           <Copy text={link} onCopy={() => setCopied(true)}>

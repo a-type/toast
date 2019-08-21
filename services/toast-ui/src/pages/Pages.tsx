@@ -9,11 +9,13 @@ import { SettingsPage } from './SettingsPage';
 import { CollectionsPage } from './CollectionsPage';
 import { HomePage } from './HomePage';
 import { SubscribePage } from './SubscribePage';
+import { JoinGroupPage } from './JoinGroupPage';
 
 export const Pages = () => (
   <Switch>
     <Route path="/" exact component={LandingPage} />
     <Route path="/login" exact component={LoginPage} />
+    <Route path="/joinGroup" exact component={JoinGroupPage} />
     <PrivateRoute path="/subscribe" component={SubscribePage} />
     <PrivateRoute path="/home" component={HomePage} />
     <PrivateRoute path="/explore" component={ExplorePage} />
