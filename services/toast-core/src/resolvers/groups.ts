@@ -107,6 +107,9 @@ export default {
       };
     },
   },
+  Group: {
+    planMealsConnection: arango,
+  },
 };
 
 /**

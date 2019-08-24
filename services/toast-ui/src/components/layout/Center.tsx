@@ -5,6 +5,7 @@ import {
   makeStyles,
   Typography,
   Container,
+  Theme,
 } from '@material-ui/core';
 
 export type CenterProps = {
@@ -12,17 +13,17 @@ export type CenterProps = {
   Icon?: ComponentClass<any> | FC<any>;
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, any>(theme => ({
   container: {},
-  paper: {
+  box: ({ Icon }) => ({
     margin: 'auto',
     marginTop: theme.spacing(16),
     padding: theme.spacing(3),
     textAlign: 'center',
     position: 'relative',
-    paddingTop: theme.spacing(3) + 60,
+    paddingTop: theme.spacing(3) + (Icon ? 60 : 0),
     maxWidth: '700px',
-  },
+  }),
   title: {},
   icon: {
     position: 'absolute',
@@ -31,11 +32,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'translate(-50%, -50%)',
     width: '120px',
     height: '120px',
-    padding: '20px',
-    borderRadius: '120px',
-    background: theme.palette.secondary.light,
-    color: theme.palette.secondary.dark,
-    boxShadow: theme.shadows[2],
+    opacity: 0.6,
   },
 }));
 
@@ -44,7 +41,7 @@ export const Center: FC<CenterProps> = ({ title, Icon, children }) => {
 
   return (
     <Container className={classes.container}>
-      <Paper className={classes.paper}>
+      <Box className={classes.box}>
         {Icon && <Icon className={classes.icon} />}
         {title && (
           <Typography variant="h2" className={classes.title} gutterBottom>
@@ -52,7 +49,7 @@ export const Center: FC<CenterProps> = ({ title, Icon, children }) => {
           </Typography>
         )}
         {children}
-      </Paper>
+      </Box>
     </Container>
   );
 };

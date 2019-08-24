@@ -81,7 +81,7 @@ export default gql`
         }
         """
       )
-      @authenticated
+      @subscribed
 
     removePlanMeal(input: RemovePlanMealInput!): RemovePlanMealPayload!
       @aqlSubquery(
@@ -111,6 +111,6 @@ export default gql`
         }
         """
       )
-      @authenticated
+      @subscribed
   }
 `;

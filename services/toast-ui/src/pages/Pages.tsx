@@ -8,7 +8,7 @@ import { ExplorePage } from './ExplorePage';
 import { SettingsPage } from './SettingsPage';
 import { CollectionsPage } from './CollectionsPage';
 import { HomePage } from './HomePage';
-import { SubscribePage } from './SubscribePage';
+import { SubscriptionPage } from './SubscriptionPage';
 import { JoinGroupPage } from './JoinGroupPage';
 
 export const Pages = () => (
@@ -16,7 +16,7 @@ export const Pages = () => (
     <Route path="/" exact component={LandingPage} />
     <Route path="/login" exact component={LoginPage} />
     <Route path="/joinGroup" exact component={JoinGroupPage} />
-    <PrivateRoute path="/subscribe" component={SubscribePage} />
+    <PrivateRoute path="/subscription" component={SubscriptionPage} />
     <PrivateRoute path="/home" component={HomePage} />
     <PrivateRoute path="/explore" component={ExplorePage} />
     <Route path="/recipes" component={RecipePage} />

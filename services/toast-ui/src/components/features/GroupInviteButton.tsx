@@ -3,10 +3,11 @@ import Copy from 'react-copy-to-clipboard';
 import { Box, Button, Typography, Dialog } from '@material-ui/core';
 import { useCreateGroupInvite } from 'hooks/features/useCreateGroupInvite';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { ButtonProps } from '@material-ui/core/Button';
 
-export interface GroupInviteButtonProps {}
+export interface GroupInviteButtonProps extends ButtonProps {}
 
-export const GroupInviteButton: React.SFC<GroupInviteButtonProps> = ({}) => {
+export const GroupInviteButton: React.SFC<GroupInviteButtonProps> = props => {
   const [link, setLink] = React.useState<string>(null);
   const [copied, setCopied] = React.useState<boolean>(null);
   React.useEffect(() => {
@@ -42,7 +43,7 @@ export const GroupInviteButton: React.SFC<GroupInviteButtonProps> = ({}) => {
 
   return (
     <>
-      <Button variant="outlined" onClick={createAndSend}>
+      <Button onClick={createAndSend} {...props}>
         Invite someone to your plan
       </Button>
       {error && <ErrorMessage error={error} />}

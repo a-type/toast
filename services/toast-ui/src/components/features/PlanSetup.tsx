@@ -52,7 +52,7 @@ export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h1" gutterBottom>
+      <Typography component="h1" variant="h2" gutterBottom>
         Let's get started
       </Typography>
       <Typography variant="body1" gutterBottom>

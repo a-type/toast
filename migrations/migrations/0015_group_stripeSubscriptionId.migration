@@ -1,0 +1,6 @@
+type: hashindex
+action: create
+collection: Groups
+fields:
+  - stripeSubscriptionId
+unique: false

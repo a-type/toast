@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { GetPlanQuery } from './usePlan';
 import logger from 'logger';
 
 export const RemovePlanMealMutation = gql`
@@ -26,7 +25,7 @@ export type RemovePlanMealResult = {
 };
 
 const GroupPlanMealsFragment = gql`
-  fragment GroupPlanMeals on Group {
+  fragment GroupPlanMealsRemove on Group {
     planMealsConnection {
       edges {
         node {
@@ -46,7 +45,7 @@ export const useRemovePlanMeal = ({ groupId }: { groupId: string }) =>
 
         const group = await cache.readFragment<any>({
           id,
-          fragmentName: 'GroupPlanMeals',
+          fragmentName: 'GroupPlanMealsRemove',
           fragment: GroupPlanMealsFragment,
         });
 
@@ -63,7 +62,7 @@ export const useRemovePlanMeal = ({ groupId }: { groupId: string }) =>
 
         await cache.writeFragment({
           id,
-          fragmentName: 'GroupPlanMeals',
+          fragmentName: 'GroupPlanMealsRemove',
           fragment: GroupPlanMealsFragment,
           data: {
             __typename: 'Group',

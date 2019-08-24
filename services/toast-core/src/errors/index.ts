@@ -18,3 +18,11 @@ export class NotFoundError extends UserInputError {
     }
   }
 }
+
+export class UnsubscribedError extends ApolloError {
+  constructor(wasSubscribed: boolean = true) {
+    super('Your subscription is inactive or has expired.', 'UNSUBSCRIBED', {
+      wasSubscribed,
+    });
+  }
+}

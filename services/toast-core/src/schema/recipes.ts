@@ -235,9 +235,9 @@ export default gql`
         """
         return: "recipe"
       )
-      @authenticated
+      @subscribed
 
-    linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @authenticated
+    linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @subscribed
 
     updateRecipe(input: RecipeUpdateInput!): Recipe
       @aqlSubquery(
@@ -261,7 +261,7 @@ export default gql`
         """
         return: "NEW"
       )
-      @authenticated
+      @subscribed
 
     collectRecipe(input: RecipeCollectInput!): Recipe!
       @aqlSubquery(
@@ -285,7 +285,7 @@ export default gql`
         ) : null
         """
       )
-      @authenticated
+      @subscribed
 
     uncollectRecipe(input: RecipeUncollectInput!): Recipe
       @aqlSubquery(
@@ -314,6 +314,6 @@ export default gql`
         ) : null
         """
       )
-      @authenticated
+      @subscribed
   }
 `;

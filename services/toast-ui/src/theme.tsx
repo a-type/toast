@@ -52,7 +52,7 @@ const theme = createMuiTheme({
   overrides: {
     MuiButton: {
       root: {
-        textTransform: 'capitalize',
+        //textTransform: 'capitalize',
         color: '#290f34',
       },
       contained: {

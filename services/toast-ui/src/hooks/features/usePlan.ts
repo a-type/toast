@@ -13,6 +13,7 @@ export const GroupPlanMealsEdgeFragment = gql`
   }
 
   fragment GroupPlanMealsEdgeFragment on GroupPlanMealsEdge {
+    cursor
     node {
       id
       date
@@ -118,6 +119,8 @@ export default ({
       after?: string;
     }
   >(GetPlanQuery, {
+    // fetchPolicy: 'cache-and-network',
+    // returnPartialData: true,
     variables: {
       filter: processFilters(filter),
       first,
@@ -125,45 +128,43 @@ export default ({
     },
   });
 
-  const fetchNext = useCallback(
-    () =>
-      fetchMore({
-        variables: {
-          first,
-          filter: processFilters(filter),
-          after:
-            rest.data.viewer.group &&
-            rest.data.viewer.group.planMealsConnection.pageInfo.endCursor,
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          const {
-            edges,
-            pageInfo,
-          } = fetchMoreResult.viewer.group.planMealsConnection;
-          return edges.length
-            ? {
-                ...previousResult,
-                viewer: {
-                  ...previousResult.viewer,
-                  group: {
-                    ...previousResult.viewer.group,
-                    planMealsConnection: {
-                      ...previousResult.viewer.group.planMealsConnection,
-                      edges: [
-                        ...previousResult.viewer.group.planMealsConnection
-                          .edges,
-                        ...edges,
-                      ],
-                      pageInfo,
-                    },
+  const fetchNext = useCallback(() => {
+    console.log(`Fetching next page of plan...`);
+    return fetchMore({
+      variables: {
+        first,
+        filter: processFilters(filter),
+        after:
+          rest.data.viewer.group &&
+          rest.data.viewer.group.planMealsConnection.pageInfo.endCursor,
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const {
+          edges,
+          pageInfo,
+        } = fetchMoreResult.viewer.group.planMealsConnection;
+        return edges.length
+          ? {
+              ...previousResult,
+              viewer: {
+                ...previousResult.viewer,
+                group: {
+                  ...previousResult.viewer.group,
+                  planMealsConnection: {
+                    ...previousResult.viewer.group.planMealsConnection,
+                    edges: [
+                      ...previousResult.viewer.group.planMealsConnection.edges,
+                      ...edges,
+                    ],
+                    pageInfo,
                   },
                 },
-              }
-            : previousResult;
-        },
-      }),
-    [first, filter, fetchMore],
-  );
+              },
+            }
+          : previousResult;
+      },
+    });
+  }, [first, filter, fetchMore]);
 
   return {
     ...rest,

@@ -41,13 +41,17 @@ export const PlanFeed: FC<PlanFeedProps> = ({
   fetchMore,
 }) => {
   const endDate: Date = useMemo(() => {
-    const lastMeal = mealEdges
-      .sort((a, b) => compareAsc(a.node.date, b.node.date))
-      .pop();
-    return parse(lastMeal.node.date);
+    const lastMeal = mealEdges.sort((a, b) =>
+      compareAsc(a.node.date, b.node.date),
+    )[mealEdges.length - 1];
+    return lastMeal ? parse(lastMeal.node.date) : null;
   }, [mealEdges]);
 
-  const dateRange = Math.max(14, differenceInDays(startDate, endDate));
+  const dateRange = Math.max(
+    14,
+    endDate ? differenceInDays(startDate, endDate) : 0,
+  );
+
   const dates = new Array(dateRange)
     .fill(null)
     .map((_, idx) => addDays(startDate, idx));
@@ -126,13 +130,8 @@ const PlanFeedDay: FC<PlanFeedDayProps> = ({
       </Typography>
       {meals.length ? (
         meals.map(meal => (
-          <Box mb={2}>
-            <PlanMeal
-              meal={meal}
-              key={meal.id}
-              groupId={groupId}
-              onRemove={onRemovePlan}
-            />
+          <Box mb={2} key={`${meal.id}`}>
+            <PlanMeal meal={meal} groupId={groupId} onRemove={onRemovePlan} />
           </Box>
         ))
       ) : (

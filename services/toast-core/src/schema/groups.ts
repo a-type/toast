@@ -11,6 +11,7 @@ export default gql`
     displayName: String
     photoUrl: String
 
+    # TODO authorization!
     """
     You may only view the group associated with your own User
     """
@@ -28,6 +29,12 @@ export default gql`
     groceryDay: Weekday!
 
     """
+    The date your subscription officially expires, if the group is subscribed. Services may extend
+    for a grace period after expiration before terminating.
+    """
+    subscriptionExpiresAt: Date
+
+    """
     Returns the available planned meals of the group's meal plan
     """
     planMealsConnection(
@@ -35,6 +42,7 @@ export default gql`
       after: String
       filter: GroupPlanMealsFilterInput
     ): GroupPlanMealsConnection!
+      @aqlNewQuery
       @aqlRelayConnection(
         edgeCollection: "HasPlanMeal"
         edgeDirection: OUTBOUND
@@ -47,6 +55,7 @@ export default gql`
         ))
         """
       )
+      @subscribed
 
     """
     Collections of recipes group users have created
@@ -188,10 +197,11 @@ export default gql`
         }
         """
       )
-      @authenticated
+      @subscribed
 
     # these use custom resolvers
-    createGroupInvitation: String!
+    createGroupInvitation: String! @subscribed
     acceptGroupInvitation(key: String!): AcceptGroupInvitationPayload!
+      @authenticated
   }
 `;

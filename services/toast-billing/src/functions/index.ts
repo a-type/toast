@@ -1,1 +1,1 @@
-export * from './checkoutCompleted';
+export * from './stripeWebhook';

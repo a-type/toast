@@ -1,6 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import { ApolloError } from 'apollo-boost';
-import Icon, { GenericIconName } from './Icon';
 import logger from 'logger';
 import { differenceInMinutes } from 'date-fns';
 import Link from './Link';
@@ -13,6 +11,7 @@ import {
   Theme,
 } from '@material-ui/core';
 import { WarningTwoTone, CloudOffTwoTone } from '@material-ui/icons';
+import { ApolloError } from 'apollo-client';
 
 const LAST_ERROR_REFRESH_KEY = 'lastErrorRefresh';
 const UNKNOWN_MESSAGE =

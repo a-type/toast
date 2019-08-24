@@ -6,9 +6,7 @@
     {
       "type": "npm",
       "script": "start",
-      "problemMatcher": [
-        "$awesometsc"
-      ]
+      "problemMatcher": ["$awesometsc"]
     },
     {
       "type": "npm",
@@ -18,24 +16,12 @@
     {
       "type": "npm",
       "script": "storybook",
-      "problemMatcher": [
-        "$awesometsc"
-      ]
+      "problemMatcher": ["$awesometsc"]
     },
     {
       "type": "npm",
       "script": "build",
-      "problemMatcher": [
-        "$awesometsc"
-      ]
-    },
-    {
-      "type": "npm",
-      "script": "start",
-      "path": "server/",
-      "problemMatcher": [
-        "$awesometsc"
-      ]
+      "problemMatcher": ["$awesometsc"]
     }
   ]
 }

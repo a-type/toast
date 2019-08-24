@@ -15,6 +15,7 @@ export default [
     directive @generateSlug(fromArg: String, type: String) on FIELD_DEFINITION
     directive @hasClaim(claim: String!) on FIELD_DEFINITION
     directive @defaultValue(value: Any!) on FIELD_DEFINITION
+    directive @subscribed on FIELD_DEFINITION
   `,
   globals,
   foods,

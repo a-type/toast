@@ -2,21 +2,27 @@ import * as React from 'react';
 import EditForm from './EditForm';
 import { GroceryDayEventCreator } from './eventCreator/GroceryDayEventCreator';
 import useGroceryDay from 'hooks/features/useGroceryDay';
-import { Box } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 
 export const GroceryDay: React.SFC<{}> = ({}) => {
-  const [{ index }, loading, error] = useGroceryDay();
+  const {
+    data: { index },
+    loading,
+    error,
+  } = useGroceryDay();
 
   if (loading || error) {
     return null;
   }
 
   return (
-    <Box display="flex" flexDirection="row" alignItems="center">
-      <EditForm groceryDay={index || 0} />
-      <Box ml={2}>
+    <Grid container spacing={2}>
+      <Grid item lg={4} md={6} sm={12} xs={12}>
+        <EditForm groceryDay={index || 0} />
+      </Grid>
+      <Grid item lg={8} md={6} sm={12} xs={12}>
         <GroceryDayEventCreator dayIndex={index || 0} />
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
