@@ -132,14 +132,17 @@ const RecipeCard: FC<
         </CardActionArea>
       </MaybeBadge>
 
-      <CardActions>
-        {!hideSave && <RecipeSaveButton recipeId={recipe.id} />}
-        {actions.map(action => (
-          <Button size="small" color="primary" onClick={action.onClick}>
-            {action.content}
-          </Button>
+      {!hideSave ||
+        (!!actions.length && (
+          <CardActions>
+            {!hideSave && <RecipeSaveButton recipeId={recipe.id} />}
+            {actions.map(action => (
+              <Button size="small" color="primary" onClick={action.onClick}>
+                {action.content}
+              </Button>
+            ))}
+          </CardActions>
         ))}
-      </CardActions>
     </Card>
   );
 };

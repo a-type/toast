@@ -14,11 +14,8 @@ const RecipeDetails = ({ recipe }) => {
   const { servings, cookTime, prepTime, unattendedTime, sourceUrl } = recipe;
 
   return (
-    <Box mb={3}>
-      <Typography variant="h5" gutterBottom>
-        Details
-      </Typography>
-      <Typography gutterBottom>
+    <Box width="100%">
+      <Typography gutterBottom style={{ overflowX: 'hidden' }}>
         Source: <TextLink to={sourceUrl}>{sourceUrl}</TextLink>
       </Typography>
       <Servings servings={servings || 'Not specified'} />
@@ -27,9 +24,6 @@ const RecipeDetails = ({ recipe }) => {
         prepTime={prepTime}
         unattendedTime={unattendedTime}
       />
-      <Link to={`/recipes/${recipe.id}/correct`}>
-        <Button>Suggest correction</Button>
-      </Link>
     </Box>
   );
 };

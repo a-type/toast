@@ -31,7 +31,7 @@ const useStyles = makeStyles<Theme, {}>(theme => ({
     gridTemplateRows: '1fr auto auto',
     gridTemplateColumns: '100%',
 
-    [`@media (min-width: ${NAV_SIDEBAR_MIN_WIDTH_PX}px)`]: {
+    [theme.breakpoints.up('md')]: {
       gridTemplateAreas: "'nav content' 'nav guides'",
       gridTemplateRows: '1fr auto',
       gridTemplateColumns: 'auto 1fr',
@@ -49,57 +49,59 @@ const App: FC<{}> = props => {
   const classes = useStyles(props);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <MuiThemeProvider theme={theme}>
-        <AlertProvider>
-          <Router history={history}>
-            <TokenProvider>
-              <LinkerContextProvider>
-                <Suspense fallback={<Loader />}>
-                  <Helmet title="Toast" />
-                  <Box className={classes.mainGrid}>
-                    <ErrorBoundary>
-                      <Navigation gridArea="nav" />
-                    </ErrorBoundary>
-                    <Box className={classes.content}>
-                      <ErrorBoundary>
-                        <ToastAppBar gridArea="appBar" />
-                      </ErrorBoundary>
-                      <ErrorBoundary>
-                        <Pages />
-                      </ErrorBoundary>
-                    </Box>
-                    <Guides gridArea="guides" />
-                  </Box>
-                </Suspense>
-              </LinkerContextProvider>
-            </TokenProvider>
-          </Router>
-          <AlertRenderer />
-          <UpdateChecker />
-          <CssBaseline />
-          <Global
-            styles={css`
-              html,
-              body,
-              #main {
-                height: 100vh;
-              }
-              body {
-                overflow-y: hidden;
-                position: relative;
-              }
-              ::selection,
-              ::moz-selection {
-                background: #ffe6bd;
-              }
-            `}
-          />
-          <GlobalCssVariables />
-        </AlertProvider>
-      </MuiThemeProvider>
-    </ApolloProvider>
+    <AlertProvider>
+      <Router history={history}>
+        <TokenProvider>
+          <LinkerContextProvider>
+            <Suspense fallback={<Loader />}>
+              <Helmet title="Toast" />
+              <Box className={classes.mainGrid}>
+                <ErrorBoundary>
+                  <Navigation gridArea="nav" />
+                </ErrorBoundary>
+                <Box className={classes.content}>
+                  <ErrorBoundary>
+                    <ToastAppBar gridArea="appBar" />
+                  </ErrorBoundary>
+                  <ErrorBoundary>
+                    <Pages />
+                  </ErrorBoundary>
+                </Box>
+                <Guides gridArea="guides" />
+              </Box>
+            </Suspense>
+          </LinkerContextProvider>
+        </TokenProvider>
+      </Router>
+      <AlertRenderer />
+      <UpdateChecker />
+      <CssBaseline />
+      <Global
+        styles={css`
+          html,
+          body,
+          #main {
+            height: 100vh;
+          }
+          body {
+            overflow-y: hidden;
+            position: relative;
+          }
+          ::selection,
+          ::moz-selection {
+            background: #ffe6bd;
+          }
+        `}
+      />
+      <GlobalCssVariables />
+    </AlertProvider>
   );
 };
 
-export default hot(App);
+export default hot(props => (
+  <ApolloProvider client={apolloClient}>
+    <MuiThemeProvider theme={theme}>
+      <App {...props} />
+    </MuiThemeProvider>
+  </ApolloProvider>
+));

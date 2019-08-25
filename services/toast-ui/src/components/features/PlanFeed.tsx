@@ -6,6 +6,7 @@ import {
   IconButton,
   Button,
   makeStyles,
+  Grid,
 } from '@material-ui/core';
 import {
   addDays,
@@ -108,7 +109,15 @@ type PlanFeedDayProps = {
 };
 
 const usePlanFeedDayStyles = makeStyles(theme => ({
+  grid: {
+    marginBottom: theme.spacing(1),
+  },
+  gridItem: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   planButton: {
+    width: 'auto',
     alignSelf: 'flex-start',
   },
 }));
@@ -124,22 +133,31 @@ const PlanFeedDay: FC<PlanFeedDayProps> = ({
   const classes = usePlanFeedDayStyles({ meals, day });
 
   return (
-    <Box mb={3} display="flex" flexDirection="column">
+    <Box mb={5} display="flex" flexDirection="column">
       <Typography variant="overline">
         <FormattedDate date={day} />
       </Typography>
-      {meals.length ? (
-        meals.map(meal => (
-          <Box mb={2} key={`${meal.id}`}>
+      <Grid container spacing={2} className={classes.grid}>
+        {meals.map(meal => (
+          <Grid
+            item
+            key={`${meal.id}`}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            xl={3}
+            className={classes.gridItem}
+          >
             <PlanMeal meal={meal} groupId={groupId} onRemove={onRemovePlan} />
-          </Box>
-        ))
-      ) : (
-        <Typography variant="caption" paragraph>
-          Nothing planned
-        </Typography>
-      )}
-      <Button onClick={handleAddPlan} className={classes.planButton}>
+          </Grid>
+        ))}
+      </Grid>
+      <Button
+        variant="outlined"
+        onClick={handleAddPlan}
+        className={classes.planButton}
+      >
         <AddTwoTone />
         Plan something
       </Button>

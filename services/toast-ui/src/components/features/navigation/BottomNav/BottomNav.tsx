@@ -56,20 +56,7 @@ export const BottomNav: FC<BottomNavProps> = props => {
   const { index, onChange } = useNavState(paths);
 
   if (!isLoggedIn) {
-    return (
-      <BottomNavigation
-        showLabels
-        onChange={onChange}
-        className={classes.bottomNav}
-        value={index}
-      >
-        <BottomNavigationAction icon={<HomeTwoTone />} label="Home" />
-        <BottomNavigationAction
-          icon={<LocalDiningTwoTone />}
-          label="Join or log in"
-        />
-      </BottomNavigation>
-    );
+    return null;
   }
 
   return (

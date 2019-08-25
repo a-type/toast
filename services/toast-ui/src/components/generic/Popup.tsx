@@ -7,9 +7,12 @@ import {
   IconButton,
   Typography,
   Slide,
+  useMediaQuery,
+  Theme,
 } from '@material-ui/core';
 import { CloseTwoTone } from '@material-ui/icons';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
+import { useTheme } from '@material-ui/styles';
 
 export interface PopupProps {
   open: boolean;
@@ -35,10 +38,12 @@ const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
 export const Popup: FC<PopupProps> = props => {
   const { open, onClose, title, children } = props;
   const classes = useStyles(props);
+  const theme = useTheme<Theme>();
+  const isLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
   return (
     <Dialog
-      fullScreen
+      fullScreen={!isLarge}
       open={!!open}
       onClose={onClose}
       TransitionComponent={Transition}
