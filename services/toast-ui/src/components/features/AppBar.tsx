@@ -8,10 +8,12 @@ import {
   Theme,
   makeStyles,
   useMediaQuery,
+  Button,
 } from '@material-ui/core';
 import Link from 'components/generic/Link';
 import { SettingsTwoTone } from '@material-ui/icons';
 import { useTheme } from '@material-ui/core/styles';
+import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 
 export interface ToastAppBarProps {
   gridArea: string;
@@ -60,14 +62,26 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
   return (
     <AppBar className={classes.appBar}>
       <Link to="/" className={classes.titleArea}>
-        <Logo className={classes.logo} variant="small" size="48px" />
+        <Logo className={classes.logo} variant="small" size="42px" />
       </Link>
+
       <Toolbar className={classes.toolbar}>
-        <Link to="/settings">
-          <IconButton aria-label="Settings" className={classes.settingsButton}>
+        <IsLoggedIn
+          fallback={
+            <Button component={Link} to="/login">
+              Log in
+            </Button>
+          }
+        >
+          <IconButton
+            aria-label="Settings"
+            className={classes.settingsButton}
+            component={Link}
+            to="/settings"
+          >
             <SettingsTwoTone />
           </IconButton>
-        </Link>
+        </IsLoggedIn>
       </Toolbar>
     </AppBar>
   );
