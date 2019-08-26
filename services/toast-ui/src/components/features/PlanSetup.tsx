@@ -28,26 +28,12 @@ const useStyles = makeStyles(theme => ({
 
 export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
   const [showJoinInfo, setShowJoinInfo] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [mutate] = useMutation(CreatePlanMutation);
-  const [_, setTutorialFlag] = useStoredFlag('onboarding');
-  const [__, { queueGuide }] = useGuides();
-  const [error, setError] = useState(null);
+  const [mutate, { error, loading }] = useMutation(CreatePlanMutation);
   const classes = useStyles({});
 
   const create = async () => {
-    setLoading(true);
-    try {
-      await mutate();
-      setTutorialFlag(true);
-      queueGuide('addRecipes');
-      queueGuide('plan');
-      onCreated();
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
+    await mutate();
+    onCreated();
   };
 
   return (
@@ -98,7 +84,7 @@ export const PlanSetup = ({ onCreated }: { onCreated: () => any }) => {
           </Button>
         </Paper>
       )}
-      {error && <ErrorMessage error={error} onClose={() => setError(null)} />}
+      {error && <ErrorMessage error={error} />}
     </React.Fragment>
   );
 };

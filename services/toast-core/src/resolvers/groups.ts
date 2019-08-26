@@ -110,6 +110,15 @@ export default {
   Group: {
     planMealsConnection: arango,
   },
+  GroupCreateResult: {
+    group: arango,
+  },
+  GroupSetGroceryDayPayload: {
+    group: arango,
+  },
+  AcceptGroupInvitationPayload: {
+    group: arango,
+  },
 };
 
 /**

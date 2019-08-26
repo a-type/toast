@@ -30,6 +30,8 @@ export const RecipeStepsLink: React.SFC<StepsLinkProps> = ({ recipe }) => {
       variant="extended"
       href={recipe.sourceUrl}
       className={classes.fab}
+      target="_blank"
+      rel="noopener"
     >
       Start Cooking
       <ArrowForwardIosTwoTone />

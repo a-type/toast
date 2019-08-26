@@ -129,21 +129,15 @@ export default gql`
   }
 
   type GroupCreateResult {
-    group: Group!
-      @aqlNewQuery
-      @aqlSubquery(query: "LET $field = DOCUMENT($parent.group._key)")
+    group: Group! @aqlNewQuery @aqlSubquery(query: "LET $field = $parent.group")
   }
 
   type GroupSetGroceryDayPayload {
-    group: Group!
-      @aqlNewQuery
-      @aqlSubquery(query: "LET $field = DOCUMENT($parent.group._key)")
+    group: Group! @aqlNewQuery @aqlSubquery(query: "LET $field = $parent.group")
   }
 
   type AcceptGroupInvitationPayload {
-    group: Group!
-      @aqlNewQuery
-      @aqlSubquery(query: "LET $field = DOCUMENT($parent.group._key)")
+    group: Group! @aqlNewQuery @aqlSubquery(query: "LET $field = $parent.group")
   }
 
   extend type Mutation {

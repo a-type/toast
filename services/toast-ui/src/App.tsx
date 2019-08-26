@@ -9,7 +9,6 @@ import Navigation from 'components/features/navigation/Navigation';
 import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { Loader } from 'components/generic/Loader/Loader';
 import Helmet from 'react-helmet';
-import Guides from 'components/features/guides/Guides';
 import { NAV_SIDEBAR_MIN_WIDTH_PX } from 'constants/breakpoints';
 import UpdateChecker from './UpdateChecker';
 import { Global, css } from '@emotion/core';
@@ -27,13 +26,13 @@ const useStyles = makeStyles<Theme, {}>(theme => ({
     width: '100%',
     height: '100%',
     display: 'grid',
-    gridTemplateAreas: "'content' 'guides' 'nav'",
-    gridTemplateRows: '1fr auto auto',
+    gridTemplateAreas: "'content' 'guides'",
+    gridTemplateRows: '1fr auto',
     gridTemplateColumns: '100%',
 
     [theme.breakpoints.up('md')]: {
-      gridTemplateAreas: "'nav content' 'nav guides'",
-      gridTemplateRows: '1fr auto',
+      gridTemplateAreas: "'nav content'",
+      gridTemplateRows: '1fr',
       gridTemplateColumns: 'auto 1fr',
     },
   },
@@ -67,7 +66,6 @@ const App: FC<{}> = props => {
                     <Pages />
                   </ErrorBoundary>
                 </Box>
-                <Guides gridArea="guides" />
               </Box>
             </Suspense>
           </LinkerContextProvider>
