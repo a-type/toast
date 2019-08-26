@@ -26,7 +26,7 @@ const useStyles = makeStyles<Theme, {}>(theme => ({
     width: '100%',
     height: '100%',
     display: 'grid',
-    gridTemplateAreas: "'content' 'guides'",
+    gridTemplateAreas: "'content' 'nav'",
     gridTemplateRows: '1fr auto',
     gridTemplateColumns: '100%',
 
