@@ -53,6 +53,7 @@
     "favicons-webpack-plugin": "0.0.9",
     "firebase": "^5.8.0",
     "formik": "^1.5.4",
+    "framer-motion": "^1.6.3",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "history": "^4.7.2",

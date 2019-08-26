@@ -11,6 +11,7 @@ import {
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import { Redirect } from 'react-router';
 import { BackdropArt } from 'components/brand';
+import { ScanGraphic } from 'components/graphics/landingPage/ScanGraphic';
 
 const useStyles = makeStyles(theme => ({
   emphasis: {
@@ -63,6 +64,14 @@ export const LandingPage = () => {
           <Typography variant="h4" component="h2" paragraph>
             All of the Internet's Recipes
           </Typography>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+            width="100%"
+          >
+            <ScanGraphic />
+          </Box>
           <Typography variant="body1" paragraph>
             Bring all your favorites. We make it easy to scan recipes from
             across the web and add them to your plan.
