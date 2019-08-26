@@ -16,14 +16,19 @@ import { ScanGraphic } from 'components/graphics/landingPage/ScanGraphic';
 const useStyles = makeStyles(theme => ({
   emphasis: {
     color: theme.palette.primary.main,
-  },
-  tagline: {
-    color: theme.palette.secondary.light,
     textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${
       theme.palette.text.primary
     }, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${
       theme.palette.text.primary
     }, 3px 3px 0 ${theme.palette.text.primary}`,
+  },
+  tagline: {
+    color: theme.palette.primary.main,
+    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${
+      theme.palette.text.primary
+    }, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${
+      theme.palette.text.primary
+    }`,
   },
   paper: {
     padding: theme.spacing(2),
