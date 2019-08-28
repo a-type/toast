@@ -19,5 +19,6 @@ module.exports = {
 
   stripe: {
     key: 'pk_live_aZ7kiJFNwm8cUvhpgw7hN334',
+    planId: 'plan_FHnthoOv8zXdtL',
   },
 };
