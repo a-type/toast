@@ -17,14 +17,18 @@ export const GetShoppingListQuery = gql`
             node {
               id
               date
+              servings
               cooking {
                 id
+                servings
                 ingredientsConnection {
                   edges {
                     node {
                       id
                       text
                       quantity
+                      quantityStart
+                      quantityEnd
                       unit
                       food {
                         id
@@ -78,6 +82,8 @@ export type ShoppingListIngredient = {
   id: string;
   text: string;
   quantity: number;
+  quantityStart: number;
+  quantityEnd: number;
   unit: string;
   food: {
     id: string;
@@ -89,6 +95,7 @@ export type ShoppingListItem = {
   key: string;
   mealDate: Date;
   ingredient: ShoppingListIngredient;
+  quantityMultiplier: number;
 };
 
 export const useShoppingList = ({
@@ -124,11 +131,21 @@ export const useShoppingList = ({
         [],
         ['node', 'cooking', 'ingredientsConnection', 'edges'],
         mealEdge,
-      ).map(edge => ({
-        key: `${parse(mealEdge.node.date).getTime()}_${edge.node.id}`,
-        mealDate: parse(mealEdge.node.date),
-        ingredient: edge.node as ShoppingListIngredient,
-      })),
+      ).map(edge => {
+        const naturalServings = pathOr(
+          1,
+          ['node', 'cooking', 'servings'],
+          mealEdge,
+        );
+        const cookedServings = pathOr(1, ['node', 'servings'], mealEdge);
+
+        return {
+          key: `${parse(mealEdge.node.date).getTime()}_${edge.node.id}`,
+          mealDate: parse(mealEdge.node.date),
+          ingredient: edge.node as ShoppingListIngredient,
+          quantityMultiplier: cookedServings / naturalServings,
+        };
+      }),
     ],
     [],
   );

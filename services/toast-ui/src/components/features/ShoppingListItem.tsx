@@ -3,6 +3,7 @@ import { ShoppingListItem as ShoppingListItemData } from 'hooks/features/useShop
 import { usePurchaseItemState } from 'hooks/features/purchasedItems';
 import { FormControlLabel, Checkbox } from '@material-ui/core';
 import ErrorMessage from 'components/generic/ErrorMessage';
+import { IngredientDisplay } from './IngredientDisplay';
 
 export type ShoppingListItemProps = {
   item: ShoppingListItemData;
@@ -31,7 +32,12 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({ item }) => {
             value={item.key}
           />
         }
-        label={item.ingredient.text}
+        label={
+          <IngredientDisplay
+            ingredient={item.ingredient}
+            multiplier={item.quantityMultiplier}
+          />
+        }
       />
       {error && <ErrorMessage error={error} />}
     </>

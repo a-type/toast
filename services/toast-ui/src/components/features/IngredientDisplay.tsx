@@ -1,15 +1,52 @@
 import React, { FC } from 'react';
+import { toReadableFraction } from 'readable-fractions';
+import { makeStyles } from '@material-ui/core';
 
 export type IngredientDisplayProps = {
   ingredient: {
     id: string;
     text: string;
+    quantityStart: number;
+    quantityEnd: number;
+    quantity: number;
   };
-  recipeId: string;
+  multiplier?: number;
+  recipeId?: string;
+  showMultiplier?: boolean;
 };
+
+const useStyles = makeStyles(theme => ({
+  text: {},
+  multiplier: {
+    color: theme.palette.grey[500],
+  },
+}));
 
 export const IngredientDisplay: FC<IngredientDisplayProps> = ({
   ingredient,
+  multiplier,
+  showMultiplier,
 }) => {
-  return <span>{ingredient.text}</span>;
+  const classes = useStyles({});
+
+  const newQuantity = multiplier
+    ? toReadableFraction(ingredient.quantity * multiplier, true)
+    : `${ingredient.quantity}`;
+  const newText = [
+    ingredient.text.slice(0, ingredient.quantityStart),
+    newQuantity,
+    ingredient.text.slice(ingredient.quantityEnd),
+  ].join('');
+
+  return (
+    <span className={classes.text}>
+      {newText}
+      {showMultiplier && multiplier && (
+        <span className={classes.multiplier}>
+          {' '}
+          (x{toReadableFraction(multiplier, true)})
+        </span>
+      )}
+    </span>
+  );
 };

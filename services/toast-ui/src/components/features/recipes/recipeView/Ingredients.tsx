@@ -5,11 +5,13 @@ import { IngredientDisplay } from 'components/features/IngredientDisplay';
 export default ({
   recipeId,
   ingredients,
-  servings,
+  servingsOverride,
+  naturalServings,
 }: {
   recipeId: string;
   ingredients: any[]; // FIXME
-  servings: number;
+  servingsOverride?: number;
+  naturalServings: number;
 }) => (
   <List>
     {ingredients.map((ingredient: any, index) => (
@@ -18,6 +20,7 @@ export default ({
           ingredient={ingredient}
           recipeId={recipeId}
           key={ingredient.id + index}
+          multiplier={servingsOverride && servingsOverride / naturalServings}
         />
       </ListItem>
     ))}

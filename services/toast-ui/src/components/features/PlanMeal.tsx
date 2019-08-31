@@ -24,6 +24,7 @@ export type PlanMealPlanMeal = {
   mealName: string;
   note: string | null;
   cooking: PlanMealRecipe | null;
+  servings: number;
 };
 
 export type PlanMealRecipe = {
@@ -83,7 +84,9 @@ export const PlanMeal: FC<PlanMealProps> = ({ meal, groupId, onRemove }) => {
         </Menu>
       </Box>
       {meal.note && <PlanMealNote>{meal.note}</PlanMealNote>}
-      {meal.cooking && <RecipeCard hideSave recipe={meal.cooking} />}
+      {meal.cooking && (
+        <RecipeCard hideSave recipe={meal.cooking} servings={meal.servings} />
+      )}
     </Box>
   );
 };

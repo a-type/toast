@@ -21,6 +21,7 @@ import { ExpandMoreTwoTone } from '@material-ui/icons';
 
 export interface RecipeViewProps {
   recipeId: string;
+  servings?: number;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
+export const RecipeView: FC<RecipeViewProps> = ({ recipeId, servings }) => {
   const { user } = useAuth();
   const { data, loading, error } = useFullRecipe(recipeId);
   const classes = useStyles({});
@@ -67,7 +68,7 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
           <Typography variant="h3">Details</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Details recipe={recipe} />
+          <Details recipe={recipe} servingsOverride={servings} />
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel defaultExpanded>
@@ -77,7 +78,8 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId }) => {
         <ExpansionPanelDetails>
           <Ingredients
             recipeId={recipeId}
-            servings={path(['servings'], recipe)}
+            naturalServings={pathOr(1, ['servings'], recipe)}
+            servingsOverride={servings}
             ingredients={pathOr(
               [],
               ['ingredientsConnection', 'edges'],

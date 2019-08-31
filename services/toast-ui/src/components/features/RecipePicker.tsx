@@ -1,9 +1,10 @@
 import React, { FC, useState } from 'react';
 import RecipeCollections from './RecipeCollections';
 import RecipeCollection from './RecipeCollection';
+import { RecipeCollectionRecipe } from 'hooks/features/useCollection';
 
 export interface RecipePickerProps {
-  onRecipeSelected(recipe: any): void;
+  onRecipeSelected(recipe: RecipeCollectionRecipe): void;
 }
 
 export const RecipePicker: FC<RecipePickerProps> = ({ onRecipeSelected }) => {

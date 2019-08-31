@@ -11,7 +11,7 @@ import RecipeCard from './RecipeCard';
 
 export interface RecipeCollectionProps extends CardGridProps {
   collectionId: string;
-  onRecipeSelected?(recipe: any): void;
+  onRecipeSelected?(recipe: RecipeCollectionRecipe): void;
 }
 
 export const RecipeCollection: FC<RecipeCollectionProps> = ({

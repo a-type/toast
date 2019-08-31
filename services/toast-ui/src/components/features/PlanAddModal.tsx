@@ -1,23 +1,21 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, FormEvent } from 'react';
 import Popup from 'components/generic/Popup';
-import SelectField from 'components/generic/SelectField';
 import {
   MenuItem,
   Box,
   Button,
-  TextField,
   makeStyles,
   InputLabel,
-  FormControl,
   Divider,
 } from '@material-ui/core';
-import useForm from 'react-hook-form';
 import RecipeCollections from './RecipeCollections';
 import RecipeCollection from './RecipeCollection';
 import { ArrowBackIosTwoTone, ClearTwoTone } from '@material-ui/icons';
 import { Row } from 'components/generic/Row';
 import RecipeCard from './RecipeCard';
 import { useAddPlanMeal } from 'hooks/features/useAddPlanMeal';
+import { RecipeCollectionRecipe } from 'hooks/features/useCollection';
+import { TextField, SliderField } from 'components/fields';
 
 export type PlanAddModalProps = {
   onClose: () => any;
@@ -55,12 +53,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type PlanAddFormValues = {
-  mealName: string;
-  note: string;
-  servings: string;
-};
-
 export const PlanAddModal: FC<PlanAddModalProps> = ({
   onClose,
   onAdd,
@@ -68,14 +60,20 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
   groupId,
 }) => {
   const classes = useStyles({});
-  const { register, handleSubmit, setValue, watch } = useForm({
-    defaultValues: {
-      mealName: 'Dinner',
-      note: '',
-    },
-  });
   const [selectedCollection, setSelectedCollection] = useState(null);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [
+    selectedRecipe,
+    setSelectedRecipe,
+  ] = useState<RecipeCollectionRecipe | null>(null);
+  const [mealName, setMealName] = useState('Dinner');
+  const [servings, setServings] = useState(1);
+  const [note, setNote] = useState('');
+
+  const handleRecipeSelected = (recipe: RecipeCollectionRecipe) => {
+    setSelectedRecipe(recipe);
+    setServings(recipe.servings);
+  };
+
   const resetCollection = () => {
     setSelectedCollection(null);
     setSelectedRecipe(null);
@@ -90,12 +88,14 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
 
   const [addPlanMeal] = useAddPlanMeal({ groupId });
 
-  const onSubmit = async ({ note, servings, mealName }: PlanAddFormValues) => {
+  const onSubmit = async (ev: FormEvent) => {
+    ev.preventDefault();
+
     await addPlanMeal({
       variables: {
         input: {
           date: day.getTime(),
-          servings: servings !== undefined && parseInt(servings),
+          servings,
           mealName,
           note,
           recipeId: selectedRecipe && selectedRecipe.id,
@@ -108,21 +108,22 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
 
   return (
     <Popup open={open} onClose={handleClose} title="Plan a meal">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <SelectField
+      <form onSubmit={onSubmit}>
+        <TextField
+          select
           label="Meal name"
           name="mealName"
+          variant="filled"
           fullWidth
           className={classes.field}
-          //onChange={ev => setValue('mealName', ev.target.value)}
-          value={watch('mealName', 'Dinner')}
+          onChange={ev => setMealName(ev.target.value)}
+          value={mealName}
           defaultValue="Dinner"
-          inputRef={register}
         >
           <MenuItem value="Breakfast">Breakfast</MenuItem>
           <MenuItem value="Lunch">Lunch</MenuItem>
           <MenuItem value="Dinner">Dinner</MenuItem>
-        </SelectField>
+        </TextField>
         {!selectedRecipe ? (
           <Box className={classes.recipeBox}>
             <InputLabel className={classes.recipeLabel}>
@@ -138,7 +139,7 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
                 ) : (
                   <RecipeCollection
                     collectionId={selectedCollection.id}
-                    onRecipeSelected={setSelectedRecipe}
+                    onRecipeSelected={handleRecipeSelected}
                     small
                   />
                 )}
@@ -170,23 +171,48 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
             <Divider className={classes.divider} />
           </Box>
         )}
-        <TextField
-          fullWidth
-          label="Servings"
-          name="servings"
-          inputRef={register}
-          className={classes.field}
-          variant="filled"
-          type="number"
-        />
+        {selectedRecipe && (
+          <SliderField
+            fullWidth
+            className={classes.field}
+            label={`Servings: ${servings}`}
+            SliderProps={{
+              defaultValue: selectedRecipe.servings,
+              step: null,
+              marks: [
+                {
+                  value: selectedRecipe.servings / 2,
+                  label: '1/2',
+                },
+                {
+                  value: selectedRecipe.servings,
+                  label: 'x1',
+                },
+                {
+                  value: selectedRecipe.servings * 2,
+                  label: 'x2',
+                },
+                {
+                  value: selectedRecipe.servings * 3,
+                  label: 'x3',
+                },
+              ],
+              min: selectedRecipe.servings / 2,
+              max: selectedRecipe.servings * 3,
+              value: servings,
+              onChange: (_ev, value) => setServings(value as number),
+            }}
+          />
+        )}
         <TextField
           multiline
           fullWidth
           label="Note"
           name="note"
-          inputRef={register}
+          onChange={ev => setNote(ev.target.value)}
+          value={note}
           className={classes.field}
-          variant="filled"
+          variant="outlined"
         />
         <Row>
           <Button variant="contained" color="primary" type="submit">

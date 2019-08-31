@@ -71,6 +71,9 @@ const theme = createMuiTheme({
   },
 
   overrides: {
+    MuiTextField: {
+      variant: 'filled',
+    },
     MuiButton: {
       root: {
         //textTransform: 'capitalize',

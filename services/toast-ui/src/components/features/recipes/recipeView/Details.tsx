@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { FC } from 'react';
 import Servings from './Servings';
-import gql from 'graphql-tag';
 import Time from './Time';
-import Link from 'components/generic/Link';
 import TextLink from 'components/text/Link';
-import { Box, Typography, Button } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 
-const RecipeDetails = ({ recipe }) => {
+const RecipeDetails: FC<{ recipe: any; servingsOverride?: number }> = ({
+  recipe,
+  servingsOverride,
+}) => {
   if (!recipe) {
     return null;
   }
@@ -18,7 +19,10 @@ const RecipeDetails = ({ recipe }) => {
       <Typography gutterBottom style={{ overflowX: 'hidden' }}>
         Source: <TextLink to={sourceUrl}>{sourceUrl}</TextLink>
       </Typography>
-      <Servings servings={servings || 'Not specified'} />
+      <Servings
+        servingsOverride={servingsOverride}
+        servings={servings || 'Not specified'}
+      />
       <Time
         cookTime={cookTime}
         prepTime={prepTime}
@@ -26,22 +30,6 @@ const RecipeDetails = ({ recipe }) => {
       />
     </Box>
   );
-};
-
-RecipeDetails.fragments = {
-  Recipe: gql`
-    fragment RecipeDetails on Recipe {
-      id
-      title
-      description
-      attribution
-      sourceUrl
-      servings
-      cookTime
-      prepTime
-      unattendedTime
-    }
-  `,
 };
 
 export default RecipeDetails;

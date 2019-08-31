@@ -20,7 +20,7 @@ const REPEAT_MESSAGE =
   "Looks like reloading didn't solve the problem. This might be a temporary issue, but feel free to contact us if it persists.";
 
 export interface ErrorMessageProps {
-  error?: ApolloError | string;
+  error?: ApolloError | Error | string;
   full?: boolean;
   onClose?: () => any;
 }
@@ -53,7 +53,7 @@ const useStyles = makeStyles<Theme>(theme => ({
   },
 }));
 
-const isWarning = (error: ApolloError | string): boolean => {
+const isWarning = (error: ApolloError | Error | string): boolean => {
   if (typeof error === 'string') {
     return true;
   }
@@ -68,7 +68,7 @@ const isWarning = (error: ApolloError | string): boolean => {
 };
 
 const getText = (
-  error: ApolloError | string,
+  error: ApolloError | Error | string,
   isRepeatError: boolean,
 ): string => {
   if (!error) {

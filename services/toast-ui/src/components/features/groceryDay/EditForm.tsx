@@ -3,7 +3,7 @@ import { Day } from 'types/Day';
 import { MenuItem } from '@material-ui/core';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import SelectField from 'components/generic/SelectField';
+import { TextField } from 'components/fields';
 
 const SetGroceryDayMutation = gql`
   mutation SetGroceryDay($groceryDay: WeekDay!) {
@@ -35,7 +35,8 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
   };
 
   return (
-    <SelectField
+    <TextField
+      select
       onChange={handleChange}
       value={groceryDay}
       label="Grocery day"
@@ -47,7 +48,7 @@ const GroceryDayEditForm: React.SFC<GroceryDayEditFormProps> = ({
           {Day[dayIndex]}
         </MenuItem>
       ))}
-    </SelectField>
+    </TextField>
   );
 };
 

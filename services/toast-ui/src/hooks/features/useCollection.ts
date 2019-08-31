@@ -18,6 +18,7 @@ const CollectionQuery = gql`
                 attribution
                 coverImageUrl
                 coverImageAttribution
+                servings
               }
             }
           }
@@ -33,6 +34,7 @@ export type RecipeCollectionRecipe = {
   attribution: string;
   coverImageUrl: string;
   coverImageAttribution: string;
+  servings: number;
 };
 
 export type RecipeCollection = {

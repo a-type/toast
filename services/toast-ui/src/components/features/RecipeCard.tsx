@@ -95,6 +95,7 @@ const RecipeCard: FC<
     renderBadge?: () => ReactNode;
     variant?: 'full' | 'compact';
     hideSave?: boolean;
+    servings?: number;
   }
 > = ({
   recipe,
@@ -103,12 +104,16 @@ const RecipeCard: FC<
   renderBadge,
   variant = 'full',
   hideSave,
+  servings,
   ...props
 }) => {
   const { history } = useRouter();
   const classes = useStyles(props);
 
-  const defaultOnClick = () => history.push(`/recipes/${recipe.id}`);
+  const defaultOnClick = () =>
+    history.push(
+      `/recipes/${recipe.id}${servings ? `?servings=${servings}` : ''}`,
+    );
 
   return (
     <Card {...props} className={classNames(classes.card, props.className)}>
