@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Box } from '@material-ui/core';
+import { Box, DialogContent } from '@material-ui/core';
 import { useShoppingList } from 'hooks/features/useShoppingList';
 import { ShoppingListItem } from './ShoppingListItem';
 import { useCleanOldPurchasedItems } from 'hooks/features/purchasedItems';
@@ -16,10 +16,12 @@ export const ShoppingList: FC<ShoppingListProps> = ({}) => {
   }, []);
 
   return (
-    <Box display="flex" flexDirection="column">
-      {data.map(i => (
-        <ShoppingListItem item={i} key={i.key} />
-      ))}
-    </Box>
+    <DialogContent>
+      <Box display="flex" flexDirection="column">
+        {data.map(i => (
+          <ShoppingListItem item={i} key={i.key} />
+        ))}
+      </Box>
+    </DialogContent>
   );
 };

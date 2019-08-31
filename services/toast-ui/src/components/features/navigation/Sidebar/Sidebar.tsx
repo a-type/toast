@@ -43,8 +43,8 @@ const useStyles = makeStyles<Theme, SidebarProps>(theme => ({
   },
   listItemLink: {
     '&.link-matching': {
-      color: theme.palette.primary.dark,
-      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.primary[900],
+      backgroundColor: theme.palette.primary['A100'],
 
       '& svg': {
         color: theme.palette.primary.dark,

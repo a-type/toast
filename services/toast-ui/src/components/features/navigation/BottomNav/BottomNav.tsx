@@ -20,12 +20,11 @@ export interface BottomNavProps {
   gridArea?: string;
 }
 
-const useStyles = makeStyles<Theme, BottomNavProps>({
+const useStyles = makeStyles<Theme, BottomNavProps>(theme => ({
   bottomNav: props => ({
     gridArea: props.gridArea,
-    borderTop: '1px solid #00000010',
   }),
-});
+}));
 
 export const BottomNav: FC<BottomNavProps> = props => {
   const { isLoggedIn } = useContext(AuthContext);

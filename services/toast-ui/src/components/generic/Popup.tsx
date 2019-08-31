@@ -9,10 +9,13 @@ import {
   Slide,
   useMediaQuery,
   Theme,
+  DialogTitle,
+  DialogContent,
 } from '@material-ui/core';
 import { CloseTwoTone } from '@material-ui/icons';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
-import { useTheme } from '@material-ui/styles';
+import { useTheme, ThemeProvider } from '@material-ui/styles';
+import baseTheme from 'themes/baseTheme';
 
 export interface PopupProps {
   open: boolean;
@@ -42,32 +45,30 @@ export const Popup: FC<PopupProps> = props => {
   const isLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
   return (
-    <Dialog
-      fullScreen={!isLarge}
-      open={!!open}
-      onClose={onClose}
-      TransitionComponent={Transition}
-    >
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="flex-end"
-        pl={2}
-        pr={2}
+    <ThemeProvider theme={baseTheme}>
+      <Dialog
+        fullScreen={!isLarge}
+        open={!!open}
+        onClose={onClose}
+        TransitionComponent={Transition}
+        maxWidth="md"
+        fullWidth
       >
-        {title && (
-          <Typography variant="h4" className={classes.title}>
-            {title}
-          </Typography>
-        )}
-        <IconButton onClick={onClose}>
-          <CloseTwoTone />
-        </IconButton>
-      </Box>
-      <Container>
-        <Box pt={2}>{children}</Box>
-      </Container>
-    </Dialog>
+        <DialogTitle>
+          <Box display="flex" flexDirection="row" justifyContent="flex-end">
+            {title && (
+              <Typography variant="h4" className={classes.title}>
+                {title}
+              </Typography>
+            )}
+            <IconButton onClick={onClose}>
+              <CloseTwoTone />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        {children}
+      </Dialog>
+    </ThemeProvider>
   );
 };
 

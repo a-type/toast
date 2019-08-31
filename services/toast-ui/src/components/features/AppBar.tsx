@@ -28,7 +28,6 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     boxShadow: 'none',
-    borderBottom: `2px solid ${theme.palette.primary.main}`,
   }),
   titleArea: {
     marginTop: 'auto',

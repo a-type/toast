@@ -7,6 +7,8 @@ import {
   makeStyles,
   InputLabel,
   Divider,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 import RecipeCollections from './RecipeCollections';
 import RecipeCollection from './RecipeCollection';
@@ -16,6 +18,7 @@ import RecipeCard from './RecipeCard';
 import { useAddPlanMeal } from 'hooks/features/useAddPlanMeal';
 import { RecipeCollectionRecipe } from 'hooks/features/useCollection';
 import { TextField, SliderField } from 'components/fields';
+import { fade } from '@material-ui/core/styles';
 
 export type PlanAddModalProps = {
   onClose: () => any;
@@ -36,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
   recipeBox: {
     marginBottom: theme.spacing(2),
-    border: `1px solid ${theme.palette.grey[300]}`,
+    border: `1px solid ${fade(theme.palette.text.primary, 0.2)}`,
     borderRadius: theme.shape.borderRadius,
   },
   scrollArea: {
@@ -109,116 +112,118 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
   return (
     <Popup open={open} onClose={handleClose} title="Plan a meal">
       <form onSubmit={onSubmit}>
-        <TextField
-          select
-          label="Meal name"
-          name="mealName"
-          variant="filled"
-          fullWidth
-          className={classes.field}
-          onChange={ev => setMealName(ev.target.value)}
-          value={mealName}
-          defaultValue="Dinner"
-        >
-          <MenuItem value="Breakfast">Breakfast</MenuItem>
-          <MenuItem value="Lunch">Lunch</MenuItem>
-          <MenuItem value="Dinner">Dinner</MenuItem>
-        </TextField>
-        {!selectedRecipe ? (
-          <Box className={classes.recipeBox}>
-            <InputLabel className={classes.recipeLabel}>
-              Choose a recipe
-            </InputLabel>
-            <>
-              <div className={classes.scrollArea}>
-                {!selectedCollection ? (
-                  <RecipeCollections
-                    onCollectionSelected={setSelectedCollection}
-                    small
-                  />
-                ) : (
-                  <RecipeCollection
-                    collectionId={selectedCollection.id}
-                    onRecipeSelected={handleRecipeSelected}
-                    small
-                  />
-                )}
-              </div>
-              {!!selectedCollection && (
-                <>
-                  <Divider className={classes.divider} />
-                  <Button
-                    variant="text"
-                    onClick={resetCollection}
-                    className={classes.resetButton}
-                  >
-                    <ArrowBackIosTwoTone /> Back
-                  </Button>
-                </>
-              )}
-            </>
-          </Box>
-        ) : (
-          <Box mb={2}>
-            <RecipeCard recipe={selectedRecipe} hideSave />
-            <Button
-              variant="text"
-              onClick={resetCollection}
-              className={classes.resetButton}
-            >
-              <ClearTwoTone /> Change recipe
-            </Button>
-            <Divider className={classes.divider} />
-          </Box>
-        )}
-        {selectedRecipe && (
-          <SliderField
+        <DialogContent>
+          <TextField
+            select
+            label="Meal name"
+            name="mealName"
+            variant="filled"
             fullWidth
             className={classes.field}
-            label={`Servings: ${servings}`}
-            SliderProps={{
-              defaultValue: selectedRecipe.servings,
-              step: null,
-              marks: [
-                {
-                  value: selectedRecipe.servings / 2,
-                  label: '1/2',
-                },
-                {
-                  value: selectedRecipe.servings,
-                  label: 'x1',
-                },
-                {
-                  value: selectedRecipe.servings * 2,
-                  label: 'x2',
-                },
-                {
-                  value: selectedRecipe.servings * 3,
-                  label: 'x3',
-                },
-              ],
-              min: selectedRecipe.servings / 2,
-              max: selectedRecipe.servings * 3,
-              value: servings,
-              onChange: (_ev, value) => setServings(value as number),
-            }}
+            onChange={ev => setMealName(ev.target.value)}
+            value={mealName}
+            defaultValue="Dinner"
+          >
+            <MenuItem value="Breakfast">Breakfast</MenuItem>
+            <MenuItem value="Lunch">Lunch</MenuItem>
+            <MenuItem value="Dinner">Dinner</MenuItem>
+          </TextField>
+          {!selectedRecipe ? (
+            <Box className={classes.recipeBox}>
+              <InputLabel className={classes.recipeLabel}>
+                Choose a recipe
+              </InputLabel>
+              <>
+                <div className={classes.scrollArea}>
+                  {!selectedCollection ? (
+                    <RecipeCollections
+                      onCollectionSelected={setSelectedCollection}
+                      small
+                    />
+                  ) : (
+                    <RecipeCollection
+                      collectionId={selectedCollection.id}
+                      onRecipeSelected={handleRecipeSelected}
+                      small
+                    />
+                  )}
+                </div>
+                {!!selectedCollection && (
+                  <>
+                    <Divider className={classes.divider} />
+                    <Button
+                      variant="text"
+                      onClick={resetCollection}
+                      className={classes.resetButton}
+                    >
+                      <ArrowBackIosTwoTone /> Back
+                    </Button>
+                  </>
+                )}
+              </>
+            </Box>
+          ) : (
+            <Box mb={2}>
+              <RecipeCard recipe={selectedRecipe} hideSave />
+              <Button
+                variant="text"
+                onClick={resetCollection}
+                className={classes.resetButton}
+              >
+                <ClearTwoTone /> Change recipe
+              </Button>
+              <Divider className={classes.divider} />
+            </Box>
+          )}
+          {selectedRecipe && (
+            <SliderField
+              fullWidth
+              className={classes.field}
+              label={`Servings: ${servings}`}
+              SliderProps={{
+                defaultValue: selectedRecipe.servings,
+                step: null,
+                marks: [
+                  {
+                    value: selectedRecipe.servings / 2,
+                    label: '1/2',
+                  },
+                  {
+                    value: selectedRecipe.servings,
+                    label: 'x1',
+                  },
+                  {
+                    value: selectedRecipe.servings * 2,
+                    label: 'x2',
+                  },
+                  {
+                    value: selectedRecipe.servings * 3,
+                    label: 'x3',
+                  },
+                ],
+                min: selectedRecipe.servings / 2,
+                max: selectedRecipe.servings * 3,
+                value: servings,
+                onChange: (_ev, value) => setServings(value as number),
+              }}
+            />
+          )}
+          <TextField
+            multiline
+            fullWidth
+            label="Note"
+            name="note"
+            onChange={ev => setNote(ev.target.value)}
+            value={note}
+            className={classes.field}
+            variant="outlined"
           />
-        )}
-        <TextField
-          multiline
-          fullWidth
-          label="Note"
-          name="note"
-          onChange={ev => setNote(ev.target.value)}
-          value={note}
-          className={classes.field}
-          variant="outlined"
-        />
-        <Row>
+        </DialogContent>
+        <DialogActions>
           <Button variant="contained" color="primary" type="submit">
             Add
           </Button>
-        </Row>
+        </DialogActions>
       </form>
     </Popup>
   );

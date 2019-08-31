@@ -79,6 +79,7 @@ export type PlanMeal = {
   mealName: string;
   note: string | null;
   cooking: PlanRecipe | null;
+  servings: number;
 };
 
 export type PlanRecipe = {
