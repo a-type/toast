@@ -3,6 +3,6 @@ import createTheme from './createTheme';
 
 export default createTheme({
   main: colors.yellow,
-  contrast: colors.darkGreen,
+  contrast: colors.purple,
   mainText: colors.purple[500],
 });

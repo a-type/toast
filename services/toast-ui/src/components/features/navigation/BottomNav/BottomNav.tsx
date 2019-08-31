@@ -24,6 +24,7 @@ const useStyles = makeStyles<Theme, BottomNavProps>(theme => ({
   bottomNav: props => ({
     gridArea: props.gridArea,
   }),
+  navAction: {},
 }));
 
 export const BottomNav: FC<BottomNavProps> = props => {

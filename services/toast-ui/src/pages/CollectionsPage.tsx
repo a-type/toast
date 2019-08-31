@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RecipeCollections } from 'components/features/RecipeCollections';
-import { Container, makeStyles } from '@material-ui/core';
+import { Container, makeStyles, DialogContent } from '@material-ui/core';
 import RecipeCollection from 'components/features/RecipeCollection';
 import Popup from 'components/generic/Popup';
 
@@ -31,7 +31,9 @@ export const CollectionsPage = props => {
         onClose={handleClose}
       >
         {showCollection && (
-          <RecipeCollection collectionId={showCollection.id} />
+          <DialogContent>
+            <RecipeCollection collectionId={showCollection.id} />
+          </DialogContent>
         )}
       </Popup>
     </Container>
