@@ -1,20 +1,17 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useTheme } from '@material-ui/styles';
 import { Theme, makeStyles } from '@material-ui/core';
-import {
-  motion,
-  useTransform,
-  useViewportScroll,
-  useAnimation,
-} from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { Logo } from 'components/brand';
+import * as colors from 'themes/colors';
+import { darken } from '@material-ui/core/styles';
 
 export type ScanGraphicProps = {};
 
 const useStyles = makeStyles(theme => ({
   square: {},
   container: {
-    border: `2px solid ${theme.palette.grey[200]}`,
+    background: colors.white[50],
     borderRadius: '8px',
     padding: theme.spacing(2),
     overflow: 'hidden',
@@ -90,23 +87,23 @@ export const ScanGraphic: FC<ScanGraphicProps> = ({}) => {
 
   const recipeImageVariants = {
     default: {
-      backgroundColor: theme.palette.grey[100],
+      backgroundColor: colors.grey[200],
       borderRadius: '8px',
       width: '100%',
       height: '100%',
     },
     scan: {
-      backgroundColor: theme.palette.secondary.main,
+      backgroundColor: colors.darkGreen[500],
     },
     capture: {},
   };
 
   const recipeTitleVariants = {
     default: {
-      color: theme.palette.grey[100],
+      color: colors.grey[200],
     },
     scan: {
-      color: theme.palette.primary.main,
+      color: colors.yellow[500],
     },
     capture: {
       marginLeft: theme.spacing(1),
@@ -116,10 +113,10 @@ export const ScanGraphic: FC<ScanGraphicProps> = ({}) => {
 
   const recipeDescriptionVariants = {
     default: {
-      color: theme.palette.grey[100],
+      color: colors.grey[200],
     },
     scan: {
-      color: theme.palette.primary.light,
+      color: colors.yellow[100],
     },
     capture: {
       height: '20px',
@@ -131,11 +128,11 @@ export const ScanGraphic: FC<ScanGraphicProps> = ({}) => {
 
   const recipeIngredientVariants = {
     default: {
-      color: theme.palette.grey[100],
+      color: colors.grey[200],
       height: 'auto',
     },
     scan: {
-      color: theme.palette.error.main,
+      color: colors.red[500],
     },
     capture: {
       overflow: 'hidden',
@@ -148,7 +145,7 @@ export const ScanGraphic: FC<ScanGraphicProps> = ({}) => {
         position: 'relative',
         height: '200px',
         width: '100%',
-        maxWidth: '500px',
+        maxWidth: '400px',
         margin: '24px',
       }}
       initial="default"
@@ -161,7 +158,7 @@ export const ScanGraphic: FC<ScanGraphicProps> = ({}) => {
           marginTop: 'auto',
           marginBottom: 'auto',
           position: 'absolute',
-
+          zIndex: 1,
           transform: 'translate(-50%, -50%)',
         }}
         className={classes.container}
@@ -248,6 +245,7 @@ export const ScanGraphic: FC<ScanGraphicProps> = ({}) => {
           top: 0,
           height: '100%',
           transform: 'translate(-50%, 0)',
+          backgroundColor: colors.yellow[500],
         }}
         className={classes.container}
         variants={feedVariants}

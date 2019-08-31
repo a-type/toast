@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
-  const returnTo = (parse(location.search).r as string) || '/';
+  const returnTo = (parse(location.search).r as string) || '/home';
   const classes = useStyles({});
   return (
     <IsLoggedIn
@@ -37,7 +37,7 @@ export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
             sm={8}
             md={5}
             component={Paper}
-            {...{ elevation: 6, square: true } as any}
+            {...({ elevation: 6, square: true } as any)}
             className={classes.section}
           >
             <Typography variant="h2" component="h1" paragraph>

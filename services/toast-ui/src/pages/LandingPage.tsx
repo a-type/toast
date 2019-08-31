@@ -16,19 +16,11 @@ import { ScanGraphic } from 'components/graphics/landingPage/ScanGraphic';
 const useStyles = makeStyles(theme => ({
   emphasis: {
     color: theme.palette.primary.main,
-    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${
-      theme.palette.text.primary
-    }, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${
-      theme.palette.text.primary
-    }, 3px 3px 0 ${theme.palette.text.primary}`,
+    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${theme.palette.text.primary}, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${theme.palette.text.primary}, 3px 3px 0 ${theme.palette.text.primary}`,
   },
   tagline: {
     color: theme.palette.primary.main,
-    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${
-      theme.palette.text.primary
-    }, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${
-      theme.palette.text.primary
-    }`,
+    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${theme.palette.text.primary}, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${theme.palette.text.primary}`,
   },
   paper: {
     padding: theme.spacing(2),
@@ -51,7 +43,7 @@ export const LandingPage = () => {
           component="h1"
           gutterBottom
         >
-          <span className={classes.emphasis}>Meal planning</span> with{' '}
+          Meal planning with{' '}
           <span className={classes.emphasis}>your recipes</span>
         </Typography>
         <Paper className={classes.paper}>
@@ -60,7 +52,7 @@ export const LandingPage = () => {
             way.
           </Typography>
           <Box display="flex" flexDirection="row" mt={3} mb={3}>
-            <Link to="/login?r=/">
+            <Link to="/login?r=/home">
               <Button variant="contained" color="primary" size="large">
                 Join or log in
               </Button>
