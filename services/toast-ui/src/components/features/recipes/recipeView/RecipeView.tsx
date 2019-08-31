@@ -88,7 +88,12 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId, servings }) => {
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <RecipeStepsLink recipe={recipe} />
+      <RecipeStepsLink
+        recipe={recipe}
+        servingsMultiplier={
+          servings && servings / pathOr(1, ['servings'], recipe)
+        }
+      />
     </React.Fragment>
   );
 };
