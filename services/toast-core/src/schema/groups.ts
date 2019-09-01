@@ -102,8 +102,8 @@ export default gql`
 
   type GroupPlanMealsPageInfo {
     hasNextPage: Boolean!
-    startCursor: String!
-    endCursor: String!
+    startCursor: String
+    endCursor: String
   }
 
   type GroupRecipeCollectionConnection {
