@@ -21,6 +21,10 @@ export const stripeWebhook: Handler = async (req, res) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
+  // immediately acknowledge the webhook, per Stripe's recommendation
+  // to avoid timeouts. All processing beyond this is up to us...
+  res.status(200).send(`Webhook received`);
+
   if (event.type === 'checkout.session.completed') {
     await handleCheckoutCompleted(event);
   } else if (event.type === 'invoice.payment_succeeded') {
@@ -74,9 +78,7 @@ const handleCheckoutCompleted = async (event: Stripe.events.IEvent) => {
   }
 
   logger.info(
-    `New subscription complete for user ${userId}, group ${
-      firstValue.group._key
-    }, subscription ${subscriptionId}`,
+    `New subscription complete for user ${userId}, group ${firstValue.group._key}, subscription ${subscriptionId}`,
   );
 };
 
