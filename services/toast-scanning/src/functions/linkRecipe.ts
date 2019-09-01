@@ -84,23 +84,35 @@ export default async (req: Request, res: Response) => {
         LIMIT 1
         RETURN group_0
     )
-    LET linkedCollection = FIRST(
+    RETURN FIRST(
       FOR n IN OUTBOUND group HasRecipeCollection
         FILTER n.name == "Scanned Recipes"
         LIMIT 1
         RETURN n
     )
-    LET collection = linkedCollection ?: FIRST(
-      LET newCollection = FIRST(INSERT { name: "Scanned Recipes" } INTO RecipeCollections RETURN NEW)
-      LET edge = FIRST(INSERT { _from: group._id, _to: newCollection._id } INTO HasRecipeCollection RETURN NEW)
-      RETURN newCollection
-    )
-    RETURN collection
   `);
 
   const { _key: collectionId } = collectionResult.hasNext()
     ? await collectionResult.next()
-    : null;
+    : await (async () => {
+        const createCollectionResult = await aqlQuery(aql`
+          LET group = FIRST(
+            FOR group_0 IN OUTBOUND DOCUMENT(Users, ${userId}) MemberOf
+              LIMIT 1
+              RETURN group_0
+          )
+          LET newCollection = FIRST(INSERT { name: "Scanned Recipes" } INTO RecipeCollections RETURN NEW)
+          LET edge = FIRST(INSERT { _from: group._id, _to: newCollection._id } INTO HasRecipeCollection RETURN NEW)
+          RETURN newCollection
+        `);
+        if (!createCollectionResult.hasNext()) {
+          throw new ApiError(
+            'Could not create a collection to store saved recipes',
+            500,
+          );
+        }
+        return await createCollectionResult.next();
+      })();
 
   const existingRecipeResult = await aqlQuery(aql`
     FOR recipe IN Recipes
@@ -208,9 +220,7 @@ export default async (req: Request, res: Response) => {
               if (!result.hasNext()) {
                 // this is weird. we got a conflict but no duplicate food
                 console.error(
-                  `Food creation conflicted, but no duplicate food found by name ${
-                    parsed.food.normalized
-                  }`,
+                  `Food creation conflicted, but no duplicate food found by name ${parsed.food.normalized}`,
                 );
               } else {
                 const food = await result.next();
