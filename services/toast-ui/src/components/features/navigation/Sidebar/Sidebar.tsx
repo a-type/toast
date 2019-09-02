@@ -26,6 +26,7 @@ import firebase from 'services/firebase';
 import { makeStyles } from '@material-ui/styles';
 import ListItemLink from './SidebarLink';
 import { Logo } from 'components/brand';
+import Link from 'components/generic/Link';
 
 interface SidebarProps {
   gridArea?: string;
@@ -124,7 +125,9 @@ const Sidebar: SFC<SidebarProps> = props => {
       classes={{ paper: classes.drawerPaper }}
     >
       <Box p={3} alignItems="center" display="flex" flexDirection="column">
-        <Logo size="100px" />
+        <Link to="/">
+          <Logo size="100px" />
+        </Link>
       </Box>
       <Divider />
       {isLoggedIn ? authContent : anonContent}

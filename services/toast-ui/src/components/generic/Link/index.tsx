@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import { Link as LibLink, NavLink as LibNavLink } from 'react-router-dom';
-import { getSize } from 'theme';
 
 type InnerLinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
   to?: string;
@@ -39,7 +38,7 @@ export const BaseLink = React.forwardRef(
       );
     }
 
-    if (/^https?:\/\//.test(to) || forceRemote) {
+    if (/^https?:\/\//.test(to) || /^mailto:/.test(to) || forceRemote) {
       return (
         <a href={to} target="_blank" onClick={onClick} {...props} ref={ref}>
           {children}

@@ -49,23 +49,6 @@ const theme = createMuiTheme({
     MuiTextField: {
       variant: 'filled',
     },
-    MuiButton: {
-      // root: {
-      //   //textTransform: 'capitalize',
-      //   color: colors.purple[500],
-      // },
-      // contained: {
-      //   backgroundColor: colors.grey[100],
-      // },
-      // outlinedPrimary: {
-      //   color: colors.yellow[800],
-      //   borderColor: colors.yellow[800],
-      // },
-      // outlinedSecondary: {
-      //   color: colors.green[900],
-      //   borderColor: colors.green[900],
-      // },
-    },
 
     ...({
       MuiContainer: {

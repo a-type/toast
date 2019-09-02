@@ -1,13 +1,29 @@
 import React, { FC } from 'react';
 import { Wave } from './components';
+import { makeStyles } from '@material-ui/core';
 
 const colors = ['#290f34', '#b30753', '#f6c667'];
+
+const useStyles = makeStyles(() => ({
+  svg: {
+    width: '100%',
+    height: '100%',
+    overflowY: 'hidden',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+}));
 
 export const BackdropArt: FC<{
   fade?: boolean;
   [propName: string]: any;
 }> = ({ fade, ...props }) => {
   const [factor, setFactor] = React.useState(Math.random());
+  const classes = useStyles({});
 
   const artContent = (
     <>
@@ -27,17 +43,7 @@ export const BackdropArt: FC<{
   return (
     <svg
       viewBox="0 0 10 10"
-      css={{
-        width: '100%',
-        height: '100%',
-        overflowY: 'hidden',
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: -1,
-      }}
+      className={classes.svg}
       preserveAspectRatio="xMidYMid slice"
       {...props}
     >

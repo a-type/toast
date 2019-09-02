@@ -40,5 +40,5 @@ const useContentStyles = makeStyles<Theme, AppLayoutContentProps>(theme => ({
 export const AppLayoutContent: FC<AppLayoutContentProps> = props => {
   const classes = useContentStyles(props);
 
-  return <div className={classes.root} {...props} />;
+  return <div id="contentRoot" className={classes.root} {...props} />;
 };

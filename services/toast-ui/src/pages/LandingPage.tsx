@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Link from 'components/generic/Link';
 import {
   Typography,
@@ -10,20 +10,52 @@ import {
 } from '@material-ui/core';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import { Redirect } from 'react-router';
-import { BackdropArt } from 'components/brand';
-import { ScanGraphic } from 'components/graphics/landingPage/ScanGraphic';
+import { BackdropArt, Logo } from 'components/brand';
+import { PlanDeviceExample } from 'components/graphics/PlanDeviceExample/PlanDeviceExample';
+import * as colors from 'themes/colors';
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   emphasis: {
-    color: theme.palette.primary.main,
-    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${theme.palette.text.primary}, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${theme.palette.text.primary}, 3px 3px 0 ${theme.palette.text.primary}`,
+    color: theme.palette.primary.dark,
   },
-  tagline: {
-    color: theme.palette.primary.main,
-    textShadow: `-1px -1px 0 ${theme.palette.text.primary}, -1px 1px 0 ${theme.palette.text.primary}, 1px -1px 0 ${theme.palette.text.primary}, 1px 1px 0 ${theme.palette.text.primary}`,
-  },
+  tagline: {},
   paper: {
     padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  section: {
+    '&:not(:first-of-type)': {
+      height: '50vh',
+      alignSelf: 'flex-start',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      '& > * ': {
+        flex: `1 0 0`,
+      },
+    },
+    '&:first-of-type': {
+      height: '50vh',
+      justifyContent: 'flex-end',
+    },
+  },
+  graphic: {
+    margin: 'auto',
+  },
+  logo: {
+    margin: 'auto',
+    marginBottom: theme.spacing(3),
+  },
+  target: {
+    height: '300px',
+    width: '100%',
+    background: theme.palette.grey[200],
+    borderRadius: '12px',
   },
 }));
 
@@ -35,51 +67,39 @@ export const LandingPage = () => {
       <IsLoggedIn>
         <Redirect to="/home" />
       </IsLoggedIn>
-      <Container>
+      <Container className={classes.container} maxWidth="md">
         <BackdropArt />
-        <Typography
-          className={classes.tagline}
-          variant="h2"
-          component="h1"
-          gutterBottom
-        >
-          Meal planning with{' '}
-          <span className={classes.emphasis}>your recipes</span>
-        </Typography>
+        <Logo
+          size="20vmin"
+          className={classes.logo}
+          borderColor={colors.yellow[900]}
+        />
         <Paper className={classes.paper}>
-          <Typography variant="body1" paragraph>
-            Join Toast and start planning your daily meals in advance the easy
-            way.
+          <Typography className={classes.tagline} variant="h1" gutterBottom>
+            Meal planning with{' '}
+            <span className={classes.emphasis}>your recipes</span>
           </Typography>
-          <Box display="flex" flexDirection="row" mt={3} mb={3}>
-            <Link to="/login?r=/home">
-              <Button variant="contained" color="primary" size="large">
-                Join or log in
-              </Button>
-            </Link>
+
+          <PlanDeviceExample className={classes.graphic} />
+
+          <Box display="flex" flexDirection="column" mt={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              fullWidth
+              component={Link}
+              {...({ to: '/login?r=/home' } as any)}
+            >
+              Sign up
+            </Button>
+            <Typography
+              style={{ margin: 'auto', marginTop: 8 }}
+              variant="caption"
+            >
+              30 day free trial - $5 per month
+            </Typography>
           </Box>
-          <Typography variant="h4" component="h2" paragraph>
-            All of the Internet's Recipes
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            width="100%"
-          >
-            <ScanGraphic />
-          </Box>
-          <Typography variant="body1" paragraph>
-            Bring all your favorites. We make it easy to scan recipes from
-            across the web and add them to your plan.
-          </Typography>
-          <Typography variant="h4" component="h2" paragraph>
-            Shopping Made Simple
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Every week we create a shopping list for you based on the recipes
-            you've chosen.
-          </Typography>
         </Paper>
       </Container>
     </>

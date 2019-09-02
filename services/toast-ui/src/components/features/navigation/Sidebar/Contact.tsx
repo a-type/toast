@@ -19,7 +19,7 @@ export const SidebarContact: FC = props => {
       <Typography className={classes.text}>
         Made with love by Toast Cooking, © 2019
       </Typography>
-      <Link to="mailto:support@toastcooking.app">
+      <Link to="mailto:support@toastcooking.app" newTab>
         <Button>Contact us</Button>
       </Link>
     </Box>

@@ -28,9 +28,6 @@ export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
     <IsLoggedIn
       fallback={
         <Grid container style={{ height: '100%' }}>
-          <Grid item xs={false} sm={4} md={7} style={{ position: 'relative' }}>
-            <BackdropArt />
-          </Grid>
           <Grid
             item
             xs={12}
@@ -48,6 +45,9 @@ export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
               life&mdash;your schedule, your recipes, your taste.
             </Typography>
             <Login returnTo={returnTo} />
+          </Grid>
+          <Grid item xs={false} sm={4} md={7} style={{ position: 'relative' }}>
+            <BackdropArt />
           </Grid>
         </Grid>
       }

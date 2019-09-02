@@ -1,11 +1,13 @@
 import React, { SFC, HTMLAttributes } from 'react';
 import BackdropArt from '../BackdropArt';
 import { makeStyles, Theme } from '@material-ui/core';
+import clsx from 'clsx';
 
 export type LogoProps = {
   pattern?: boolean;
   size?: string;
   variant?: 'default' | 'small';
+  borderColor?: string;
 } & HTMLAttributes<HTMLDivElement>;
 
 const useStyles = makeStyles<Theme, LogoProps>(theme => ({
@@ -23,7 +25,7 @@ const useStyles = makeStyles<Theme, LogoProps>(theme => ({
 
     borderWidth: props.variant === 'small' ? '2px' : '6px',
     borderStyle: 'solid',
-    borderColor: theme.palette.background.default,
+    borderColor: props.borderColor || theme.palette.background.default,
 
     '& > *': {
       margin: 'auto',
@@ -46,12 +48,13 @@ const Logo: SFC<LogoProps> = ({
   pattern = true,
   size = '80px',
   variant = 'default',
+  borderColor,
   ...rest
 }) => {
-  const classes = useStyles({ size, variant });
+  const classes = useStyles({ size, variant, borderColor });
 
   return (
-    <div {...rest} className={classes.wrapper}>
+    <div {...rest} className={clsx(classes.wrapper, rest.className)}>
       {pattern && <BackdropArt />}
       <h1 className={classes.text} aria-label="Toast">
         {variant === 'default' ? 'Toast' : 'T'}
