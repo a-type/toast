@@ -7,6 +7,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  DialogContent,
 } from '@material-ui/core';
 import Icon from 'components/generic/Icon';
 import Link from 'components/generic/Link';
@@ -19,6 +20,7 @@ import logger from 'logger';
 import React, { FC, useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { ClearTwoTone } from '@material-ui/icons';
+import Popup from 'components/generic/Popup';
 
 const MESSAGES = {
   EXPLANATION:
@@ -42,25 +44,36 @@ const InstalledMessage = () => {
         The easiest way to add a recipe from the web is to share it straight to
         the Toast app.
       </Typography>
-      <Button onClick={() => setShowHelp(true)}>Show me how</Button>
+      <Button
+        onClick={() => setShowHelp(true)}
+        variant="contained"
+        color="primary"
+        style={{ marginBottom: 8 }}
+      >
+        Learn how
+      </Button>
       <Typography paragraph>You can also paste a URL below.</Typography>
-      <Dialog open={showHelp} onClose={() => setShowHelp(false)}>
-        <Typography variant="h2" paragraph>
-          Sharing to Toast
-        </Typography>
-        <Typography paragraph>
-          In your device's web browser, visit the page which contains the recipe
-          you want to add. Then, tap the <Icon name="share" /> Share button.
-        </Typography>
-        <Typography paragraph>
-          When a list of apps comes up, look for Toast and choose it.
-        </Typography>
-        <Typography paragraph>
-          If you don't see Toast come up, your device might not support sharing
-          directly to this app. Copy the URL instead and paste it into the
-          "Recipe URL" field on this page instead.
-        </Typography>
-      </Dialog>
+      <Popup
+        open={showHelp}
+        onClose={() => setShowHelp(false)}
+        title="Sharing to Toast"
+      >
+        <DialogContent>
+          <Typography paragraph>
+            In your device's web browser, visit the page which contains the
+            recipe you want to add. Then, tap the <Icon name="share" /> Share
+            button.
+          </Typography>
+          <Typography paragraph>
+            When a list of apps comes up, look for Toast and choose it.
+          </Typography>
+          <Typography paragraph>
+            If you don't see Toast come up, your device might not support
+            sharing directly to this app. Copy the URL instead and paste it into
+            the "Recipe URL" field on this page instead.
+          </Typography>
+        </DialogContent>
+      </Popup>
     </div>
   );
 };

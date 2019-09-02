@@ -16,7 +16,7 @@ import {
 import {
   LocalDiningTwoTone,
   CalendarTodayTwoTone,
-  SearchTwoTone,
+  FindInPageTwoTone,
   BookmarksTwoTone,
   SettingsTwoTone,
   WarningTwoTone,
@@ -87,9 +87,9 @@ const Sidebar: SFC<SidebarProps> = props => {
       </ListItemLink>
       <ListItemLink to="/explore" nav className={classes.listItemLink}>
         <ListItemIcon>
-          <SearchTwoTone />
+          <FindInPageTwoTone />
         </ListItemIcon>
-        <ListItemText>Explore</ListItemText>
+        <ListItemText>Scan</ListItemText>
       </ListItemLink>
       <ListItemLink to="/collections" nav className={classes.listItemLink}>
         <ListItemIcon>

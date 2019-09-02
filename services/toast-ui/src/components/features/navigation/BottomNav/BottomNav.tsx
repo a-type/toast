@@ -7,9 +7,7 @@ import {
 } from '@material-ui/core';
 import useRouter from 'use-react-router';
 import {
-  HomeTwoTone,
-  SearchTwoTone,
-  LocalDiningTwoTone,
+  FindInPageTwoTone,
   CalendarTodayTwoTone,
   BookmarksTwoTone,
 } from '@material-ui/icons';
@@ -67,7 +65,7 @@ export const BottomNav: FC<BottomNavProps> = props => {
       className={classes.bottomNav}
     >
       <BottomNavigationAction icon={<CalendarTodayTwoTone />} label="Home" />
-      <BottomNavigationAction icon={<SearchTwoTone />} label="Explore" />
+      <BottomNavigationAction icon={<FindInPageTwoTone />} label="Scan" />
       <BottomNavigationAction icon={<BookmarksTwoTone />} label="Collections" />
     </BottomNavigation>
   );
