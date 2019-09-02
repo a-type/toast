@@ -92,27 +92,30 @@ export default async (req: Request, res: Response) => {
     )
   `);
 
-  const { _key: collectionId } = collectionResult.hasNext()
+  let collection = collectionResult.hasNext()
     ? await collectionResult.next()
-    : await (async () => {
-        const createCollectionResult = await aqlQuery(aql`
-          LET group = FIRST(
-            FOR group_0 IN OUTBOUND DOCUMENT(Users, ${userId}) MemberOf
-              LIMIT 1
-              RETURN group_0
-          )
-          LET newCollection = FIRST(INSERT { name: "Scanned Recipes" } INTO RecipeCollections RETURN NEW)
-          LET edge = FIRST(INSERT { _from: group._id, _to: newCollection._id } INTO HasRecipeCollection RETURN NEW)
-          RETURN newCollection
-        `);
-        if (!createCollectionResult.hasNext()) {
-          throw new ApiError(
-            'Could not create a collection to store saved recipes',
-            500,
-          );
-        }
-        return await createCollectionResult.next();
-      })();
+    : null;
+  if (!collection) {
+    const createCollectionResult = await aqlQuery(aql`
+      LET group = FIRST(
+        FOR group_0 IN OUTBOUND DOCUMENT(Users, ${userId}) MemberOf
+          LIMIT 1
+          RETURN group_0
+      )
+      LET newCollection = FIRST(INSERT { name: "Scanned Recipes" } INTO RecipeCollections RETURN NEW)
+      LET edge = FIRST(INSERT { _from: group._id, _to: newCollection._id } INTO HasRecipeCollection RETURN NEW)
+      RETURN newCollection
+    `);
+    if (!createCollectionResult.hasNext()) {
+      throw new ApiError(
+        'Could not create a collection to store saved recipes',
+        500,
+      );
+    }
+    collection = await createCollectionResult.next();
+  }
+
+  const { _key: collectionId } = collection;
 
   const existingRecipeResult = await aqlQuery(aql`
     FOR recipe IN Recipes

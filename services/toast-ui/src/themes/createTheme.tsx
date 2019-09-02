@@ -23,7 +23,7 @@ export default (
   },
   overrides?: ThemeOptions,
 ) => {
-  const stylized = createMuiTheme({
+  const stylized = {
     palette: {
       type,
       primary: main,
@@ -57,9 +57,9 @@ export default (
         },
       },
     },
-  });
+  };
 
-  return [baseTheme, stylized, overrides]
-    .filter(Boolean)
-    .reduce(mergeDeepRight) as Theme;
+  return createMuiTheme(
+    [baseTheme, stylized, overrides].filter(Boolean).reduce(mergeDeepRight),
+  );
 };
