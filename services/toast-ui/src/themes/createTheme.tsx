@@ -38,12 +38,7 @@ export default (
             ? colors.purple[900]
             : baseTheme.palette.background.default,
       },
-      // text: {
-      //   primary: mainText,
-      //   secondary: lighten(mainText, 0.2),
-      //   disabled: fade(mainText, 0.2),
-      //   hint: lighten(mainText, 0.1),
-      // },
+      grey: colors.grey,
     },
 
     overrides: {

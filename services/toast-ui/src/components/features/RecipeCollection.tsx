@@ -8,6 +8,7 @@ import { path } from 'ramda';
 import { Typography } from '@material-ui/core';
 import CardGrid, { CardGridProps } from 'components/generic/CardGrid';
 import RecipeCard from './RecipeCard';
+import useRouter from 'use-react-router';
 
 export interface RecipeCollectionProps extends CardGridProps {
   collectionId: string;
@@ -20,6 +21,7 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
   ...rest
 }) => {
   const { data, loading, error } = useCollection(collectionId);
+  const { history } = useRouter();
 
   if (error) {
     return <ErrorMessage error={error} />;
@@ -40,6 +42,14 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
     collection,
   ) as any[]).map(({ node }) => node) as RecipeCollectionRecipe[];
 
+  const handleRecipeSelected = (recipe: RecipeCollectionRecipe) => {
+    if (onRecipeSelected) {
+      onRecipeSelected(recipe);
+    } else {
+      history.push(`/recipes/${recipe.id}`);
+    }
+  };
+
   return (
     <>
       {!!(recipes && recipes.length) ? (
@@ -47,7 +57,7 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
           {recipes.map(recipe => (
             <RecipeCard
               recipe={recipe}
-              onClick={() => onRecipeSelected(recipe)}
+              onClick={() => handleRecipeSelected(recipe)}
             />
           ))}
         </CardGrid>

@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme, fade } from '@material-ui/core/styles';
 import * as colors from './colors';
 
 const dummyTheme = createMuiTheme();
@@ -18,6 +18,7 @@ const theme = createMuiTheme({
       disabled: colors.grey[500],
       hint: colors.grey[700],
     },
+    grey: colors.grey,
   },
 
   typography: {
@@ -48,6 +49,20 @@ const theme = createMuiTheme({
   overrides: {
     MuiTextField: {
       variant: 'filled',
+    },
+
+    MuiFilledInput: {
+      root: {
+        backgroundColor: fade(colors.purple[500], 0.1),
+      },
+    },
+
+    MuiButton: {
+      contained: {
+        '&$disabled': {
+          backgroundColor: fade(colors.purple[500], 0.1),
+        },
+      },
     },
 
     ...({

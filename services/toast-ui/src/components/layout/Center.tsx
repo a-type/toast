@@ -33,6 +33,7 @@ const useStyles = makeStyles<Theme, any>(theme => ({
     width: '120px',
     height: '120px',
     opacity: 0.6,
+    color: theme.palette.grey[500],
   },
 }));
 

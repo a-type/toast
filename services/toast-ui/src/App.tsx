@@ -11,8 +11,6 @@ import { Loader } from 'components/generic/Loader/Loader';
 import Helmet from 'react-helmet';
 import UpdateChecker from './UpdateChecker';
 import { Global, css } from '@emotion/core';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from 'theme';
 import { CssBaseline } from '@material-ui/core';
 import { hot } from 'react-hot-loader/root';
 import { ToastAppBar } from 'components/features/AppBar';
