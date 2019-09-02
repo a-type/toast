@@ -9,8 +9,8 @@ const theme = createMuiTheme({
     secondary: colors.darkGreen,
     error: colors.red,
     background: {
-      paper: colors.grey[50],
-      default: colors.grey[100],
+      paper: colors.white[50],
+      default: colors.grey[50],
     },
     text: {
       primary: colors.purple[500],

@@ -7,6 +7,7 @@ import {
 import baseTheme from './baseTheme';
 import { ThemeOptions, Theme } from '@material-ui/core/styles/createMuiTheme';
 import { mergeDeepRight } from 'ramda';
+import * as colors from './colors';
 
 export default (
   {
@@ -25,18 +26,24 @@ export default (
   const stylized = createMuiTheme({
     palette: {
       type,
-      primary: contrast,
-      secondary: main,
+      primary: main,
+      secondary: contrast,
       background: {
-        paper: main[500],
-        default: main[900],
+        paper:
+          type === 'dark'
+            ? colors.purple[500]
+            : baseTheme.palette.background.paper,
+        default:
+          type === 'dark'
+            ? colors.purple[900]
+            : baseTheme.palette.background.default,
       },
-      text: {
-        primary: mainText,
-        secondary: lighten(mainText, 0.2),
-        disabled: fade(mainText, 0.2),
-        hint: lighten(mainText, 0.1),
-      },
+      // text: {
+      //   primary: mainText,
+      //   secondary: lighten(mainText, 0.2),
+      //   disabled: fade(mainText, 0.2),
+      //   hint: lighten(mainText, 0.1),
+      // },
     },
 
     overrides: {

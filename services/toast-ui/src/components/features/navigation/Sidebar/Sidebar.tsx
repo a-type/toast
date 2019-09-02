@@ -41,15 +41,17 @@ const useStyles = makeStyles<Theme, SidebarProps>(theme => ({
   }),
   drawerPaper: {
     position: 'relative',
+    backgroundColor: theme.palette.primary[500],
+    transition: theme.transitions.create('background-color'),
   },
   listItemLink: {
     '&.link-matching': {
-      color: theme.palette.primary[900],
-      backgroundColor: theme.palette.primary['A100'],
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary[900],
 
-      '& svg': {
-        color: theme.palette.primary.dark,
-      },
+      // '& svg': {
+      //   color: theme.palette.primary.dark,
+      // },
     },
   },
 }));

@@ -14,7 +14,7 @@ const themeMappings: [RegExp, Theme][] = [
   [/^\/home.*/, yellowTheme],
   [/^\/explore.*/, greenTheme],
   [/^\/collections.*/, redTheme],
-  [/^\/settings.*/, purpleTheme],
+  // [/^\/settings.*/, purpleTheme],
 ];
 
 export const DynamicThemeProvider: FC<DynamicThemeProviderProps> = ({

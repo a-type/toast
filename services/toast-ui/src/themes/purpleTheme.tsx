@@ -5,5 +5,4 @@ export default createTheme({
   main: colors.purple,
   contrast: colors.yellow,
   mainText: colors.white[500],
-  type: 'dark',
 });

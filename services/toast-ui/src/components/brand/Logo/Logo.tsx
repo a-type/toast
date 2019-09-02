@@ -25,7 +25,7 @@ const useStyles = makeStyles<Theme, LogoProps>(theme => ({
 
     borderWidth: props.variant === 'small' ? '2px' : '6px',
     borderStyle: 'solid',
-    borderColor: props.borderColor || theme.palette.background.default,
+    borderColor: props.borderColor || theme.palette.primary.dark,
 
     '& > *': {
       margin: 'auto',
