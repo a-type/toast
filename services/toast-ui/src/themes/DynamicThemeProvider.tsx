@@ -3,8 +3,6 @@ import useRouter from 'use-react-router';
 import yellowTheme from './yellowTheme';
 import greenTheme from './greenTheme';
 import redTheme from './redTheme';
-import purpleTheme from './purpleTheme';
-import baseTheme from './baseTheme';
 import { Theme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
@@ -14,7 +12,6 @@ const themeMappings: [RegExp, Theme][] = [
   [/^\/home.*/, yellowTheme],
   [/^\/explore.*/, greenTheme],
   [/^\/collections.*/, redTheme],
-  // [/^\/settings.*/, purpleTheme],
 ];
 
 export const DynamicThemeProvider: FC<DynamicThemeProviderProps> = ({
@@ -32,6 +29,8 @@ export const DynamicThemeProvider: FC<DynamicThemeProviderProps> = ({
   );
 
   return (
-    <ThemeProvider theme={matchedTheme || baseTheme}>{children}</ThemeProvider>
+    <ThemeProvider theme={matchedTheme || yellowTheme}>
+      {children}
+    </ThemeProvider>
   );
 };

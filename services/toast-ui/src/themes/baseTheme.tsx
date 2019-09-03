@@ -1,4 +1,4 @@
-import { createMuiTheme, fade } from '@material-ui/core/styles';
+import { createMuiTheme, fade, darken } from '@material-ui/core/styles';
 import * as colors from './colors';
 
 const dummyTheme = createMuiTheme();
@@ -13,12 +13,19 @@ const theme = createMuiTheme({
       default: colors.grey[50],
     },
     text: {
-      primary: colors.purple[500],
-      secondary: colors.grey[900],
+      primary: colors.black[500],
+      secondary: colors.black[300],
       disabled: colors.grey[500],
       hint: colors.grey[700],
     },
     grey: colors.grey,
+    action: {
+      active: fade(colors.black[500], 0.54),
+      hover: fade(colors.black[500], 0.08),
+      selected: fade(colors.black[500], 0.14),
+      disabled: fade(colors.black[500], 0.26),
+      disabledBackground: fade(colors.black[500], 0.12),
+    },
   },
 
   typography: {

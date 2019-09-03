@@ -14,14 +14,14 @@ import { Global, css } from '@emotion/core';
 import { CssBaseline } from '@material-ui/core';
 import { hot } from 'react-hot-loader/root';
 import { ToastAppBar } from 'components/features/AppBar';
-import { AlertRenderer, AlertProvider } from 'contexts/AlertContext';
+import { SnackbarProvider } from 'notistack';
 import { ErrorBoundary } from 'components/generic/ErrorBoundary';
 import { AppLayout, AppLayoutContent } from 'components/layout/AppLayout';
 import { DynamicThemeProvider } from 'themes/DynamicThemeProvider';
 
 const App: FC<{}> = props => {
   return (
-    <AlertProvider>
+    <SnackbarProvider maxSnack={2}>
       <TokenProvider>
         <LinkerContextProvider>
           <Suspense fallback={<Loader />}>
@@ -42,7 +42,6 @@ const App: FC<{}> = props => {
           </Suspense>
         </LinkerContextProvider>
       </TokenProvider>
-      <AlertRenderer />
       <UpdateChecker />
       <CssBaseline />
       <Global
@@ -62,7 +61,7 @@ const App: FC<{}> = props => {
           }
         `}
       />
-    </AlertProvider>
+    </SnackbarProvider>
   );
 };
 

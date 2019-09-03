@@ -107,6 +107,24 @@ export const grey = {
   contrastDefaultColor: 'dark',
 };
 
+export const black = {
+  50: '#e2e5e9',
+  100: '#b7bec8',
+  200: '#8792a3',
+  300: '#57667e',
+  400: '#334663',
+  500: '#0f2547',
+  600: '#0d2140',
+  700: '#0b1b37',
+  800: '#08162f',
+  900: '#040d20',
+  A100: '#5d87ff',
+  A200: '#2a62ff',
+  A400: '#0041f6',
+  A700: '#003adc',
+  contrastDefaultColor: 'light',
+};
+
 export const white = {
   50: '#fefeff',
   100: '#fefeff',

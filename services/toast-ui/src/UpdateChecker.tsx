@@ -1,24 +1,21 @@
 import React, { FC, useEffect } from 'react';
 import workbox from 'workbox';
-import { useAlerts } from 'contexts/AlertContext';
+import { useSnackbar } from 'notistack';
+import { Button } from '@material-ui/core';
 
 export interface UpdateCheckerProps {}
 
 export const UpdateChecker: FC<UpdateCheckerProps> = ({}) => {
-  const alerts = useAlerts();
+  const snackbars = useSnackbar();
 
   useEffect(() => {
     const handleInstalled = event => {
       if (event.isUpdate) {
         console.log('SW update: ', event);
-        alerts.showAlert({
-          content: 'A new version is available.',
-          actions: [
-            {
-              name: 'Update',
-              onClick: () => window.location.reload(),
-            },
-          ],
+        snackbars.enqueueSnackbar('A new version is available.', {
+          action: (
+            <Button onClick={() => window.location.reload()}>Update</Button>
+          ),
         });
       }
     };

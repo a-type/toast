@@ -39,6 +39,13 @@ export default (
             : baseTheme.palette.background.default,
       },
       grey: colors.grey,
+      action: {
+        active: fade(colors.black[500], 0.54),
+        hover: fade(colors.black[500], 0.08),
+        selected: fade(colors.black[500], 0.14),
+        disabled: fade(colors.black[500], 0.26),
+        disabledBackground: fade(colors.black[500], 0.12),
+      },
     },
 
     overrides: {
