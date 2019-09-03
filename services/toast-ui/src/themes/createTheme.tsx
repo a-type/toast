@@ -53,13 +53,20 @@ export default (
         root: {
           color: mainText,
         },
-        contained: {
+        containedPrimary: {
           backgroundColor: lighten(main[500], 0.1),
           '&:hover': {
             backgroundColor: lighten(main[500], 0.3),
           },
-          '&$focused': {
+          '&:focused': {
             backgroundColor: lighten(main[500], 0.2),
+          },
+        },
+      },
+      MuiBottomNavigationAction: {
+        root: {
+          '&$selected': {
+            color: main[900],
           },
         },
       },

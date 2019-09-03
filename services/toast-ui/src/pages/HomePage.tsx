@@ -76,7 +76,11 @@ export const HomePage: FC<HomePageProps> = () => {
         <Typography variant="h2" component="h1" className={classes.title}>
           Plan
         </Typography>
-        <Button variant="contained" onClick={() => setShowShoppingList(true)}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setShowShoppingList(true)}
+        >
           Shopping list
         </Button>
       </Box>
