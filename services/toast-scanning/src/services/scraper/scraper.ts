@@ -18,8 +18,23 @@ export default async (url: string) => {
 
   const browser = await puppeteer.launch({
     headless: true,
-    timeout: process.env.CHROME_TIMEOUT,
-    args: process.env.CHROME_ARGS ? process.env.CHROME_ARGS.split(' ') : [],
+    timeout: process.env.NODE_ENV === 'production' ? 60000 : 30000,
+    args:
+      process.env.NODE_ENV === 'production'
+        ? [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-notifications',
+            '--disable-offer-store-unmasked-wallet-cards',
+            '--disable-offer-upload-credit-cards',
+            '--enable-async-dns',
+            '--enable-simple-cache-backend',
+            '--enable-tcp-fast-open',
+            '--no-default-browser-check',
+            '--no-pings',
+            '--prerender-from-omnibox=disabled',
+          ]
+        : [],
   });
   const page = await browser.newPage();
   await page.setRequestInterception(true);
