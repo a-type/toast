@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import Icon from 'components/generic/Icon';
 import Link from 'components/generic/Link';
-import InlineLoader from 'components/generic/Loader/InlineLoader';
 import { Row } from 'components/generic/Row';
 import { useLinker } from 'contexts/LinkerContext';
 import gql from 'graphql-tag';
@@ -21,6 +20,7 @@ import React, { FC, useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { ClearTwoTone } from '@material-ui/icons';
 import Popup from 'components/generic/Popup';
+import { ScanGraphic } from 'components/graphics/ScanGraphic';
 
 const MESSAGES = {
   EXPLANATION:
@@ -151,7 +151,7 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
   if (working) {
     return (
       <Box display="flex" flexDirection="column" alignItems="center">
-        <InlineLoader size="20vh" />
+        <ScanGraphic />
         <Typography>Scanning your recipe...</Typography>
       </Box>
     );
@@ -171,13 +171,12 @@ const LinkRecipeForm: FC<LinkRecipeFormProps> = ({ prefilledValue }) => {
             We didn't quite get everything.
           </Typography>
           <Typography paragraph>
-            That one was a little tough. We need to hand it over to you to
-            finish off.
+            That one was a little tough. We may have gotten some things wrong.
           </Typography>
           <Row>
             {linkTo && (
               <Link to={linkTo}>
-                <Button className={classes.button}>Manage Recipe</Button>
+                <Button className={classes.button}>View Recipe</Button>
               </Link>
             )}
             <Button
