@@ -80,11 +80,19 @@ export default {
           FOR node, edge IN OUTBOUND user MemberOf
             FILTER node._key == ${oldGroup._key}
             LIMIT 1
-            REMOVE edge FROM MemberOf
+            REMOVE edge IN MemberOf
         `);
 
         // TODO: clean empty groups
       }
+
+      // upsert user to ensure they exist
+      await ctx.arangoDb.query(aql`
+        UPSERT {_key: ${ctx.user.id}}
+          INSERT {_key: ${ctx.user.id}, createdAt: ${new Date().getTime()}}
+          UPDATE {}
+          IN Users
+      `);
 
       await ctx.arangoDb.query(aql`
         INSERT {
@@ -95,7 +103,7 @@ export default {
 
       // finally, delete the invitation
       await ctx.arangoDb.query(aql`
-        REMOVE { hash: ${hash} } IN GroupInvitations
+        REMOVE { _key: ${invitation._key} } IN GroupInvitations
       `);
 
       return {

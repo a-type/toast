@@ -90,12 +90,12 @@ const useStyles = makeStyles<Theme, PlanDeviceExampleProps>(theme => ({
   container: {
     width: '100%',
     maxWidth: '500px',
-    height: '500px',
+    height: '450px',
     padding: 16,
   },
   copyContainer: {
     position: 'relative',
-    height: '200px',
+    height: '250px',
   },
   copy: {
     margin: 'auto',

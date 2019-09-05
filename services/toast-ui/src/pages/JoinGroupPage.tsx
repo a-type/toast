@@ -3,9 +3,8 @@ import { RouteComponentProps } from 'react-router';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import Login from 'components/features/Login';
 import { Center } from 'components/layout/Center';
-import { Typography, Box, Container } from '@material-ui/core';
+import { Typography, Box, Container, Paper } from '@material-ui/core';
 import GroupJoinButton from 'components/features/GroupJoinButton';
-import { BackdropArt } from 'components/brand';
 import { parse } from 'querystring';
 
 export type JoinGroupPageProps = RouteComponentProps & {};
@@ -28,7 +27,6 @@ export const JoinGroupPage: FC<JoinGroupPageProps> = ({ match, location }) => {
 
   return (
     <Container>
-      <BackdropArt />
       <Center title="Welcome!">
         {key ? (
           <>

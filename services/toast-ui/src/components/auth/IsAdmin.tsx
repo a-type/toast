@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TokenConsumer } from 'contexts/TokenContext';
+import { useAuth } from 'contexts/AuthContext';
 
 interface IsAdminProps {
   children: React.ReactNode;
@@ -9,8 +9,7 @@ interface IsAdminProps {
 export const IsAdmin: React.SFC<IsAdminProps> = ({
   children,
   fallback = null,
-}) => (
-  <TokenConsumer>
-    {ctx => (ctx && ctx.token.claims['admin'] ? children : fallback)}
-  </TokenConsumer>
-);
+}) => {
+  const ctx = useAuth();
+  return <>{ctx.token.claims['admin'] ? children : fallback}</>;
+};

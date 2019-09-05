@@ -7,6 +7,8 @@ import {
   makeStyles,
   Paper,
   Box,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import { Redirect } from 'react-router';
@@ -61,6 +63,8 @@ const useStyles = makeStyles(theme => ({
 
 export const LandingPage = () => {
   const classes = useStyles({});
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <>
@@ -68,12 +72,13 @@ export const LandingPage = () => {
         <Redirect to="/home" />
       </IsLoggedIn>
       <Container className={classes.container} maxWidth="md">
-        <BackdropArt />
-        <Logo
-          size="20vmin"
-          className={classes.logo}
-          borderColor={colors.yellow[900]}
-        />
+        {isMobile && (
+          <Logo
+            size="20vmin"
+            className={classes.logo}
+            borderColor={colors.yellow[900]}
+          />
+        )}
         <Paper className={classes.paper}>
           <Typography className={classes.tagline} variant="h1" gutterBottom>
             Meal planning with{' '}

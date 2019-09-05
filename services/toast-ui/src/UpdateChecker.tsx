@@ -13,6 +13,7 @@ export const UpdateChecker: FC<UpdateCheckerProps> = ({}) => {
       if (event.isUpdate) {
         console.log('SW update: ', event);
         snackbars.enqueueSnackbar('A new version is available.', {
+          persist: true,
           action: (
             <Button onClick={() => window.location.reload()}>Update</Button>
           ),

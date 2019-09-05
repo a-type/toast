@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TokenConsumer } from 'contexts/TokenContext';
+import { useAuth } from 'contexts/AuthContext';
 
 interface IsLoggedInProps {
   fallback?: React.ReactNode;
@@ -8,13 +8,8 @@ interface IsLoggedInProps {
 export const IsLoggedIn: React.SFC<IsLoggedInProps> = ({
   children,
   fallback = null,
-}) => (
-  <TokenConsumer>
-    {state => {
-      if (state.isLoggedIn === undefined) {
-        return null;
-      }
-      return state.isLoggedIn ? children : fallback;
-    }}
-  </TokenConsumer>
-);
+}) => {
+  const state = useAuth();
+
+  return <>{state.isLoggedIn ? children : fallback}</>;
+};

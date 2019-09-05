@@ -162,7 +162,11 @@ export default gql`
     createGroup: GroupCreateResult!
       @aqlSubquery(
         query: """
-        LET user = DOCUMENT(Users, $context.userId)
+        UPSERT { _key: $context.userId }
+          INSERT { _key: $context.userId }
+          UPDATE {}
+          IN Users
+        LET user = NEW
         LET group = FIRST(
           INSERT {groceryDay: 0} INTO Groups
           RETURN NEW

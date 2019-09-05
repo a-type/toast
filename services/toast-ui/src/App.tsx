@@ -1,6 +1,5 @@
 import React, { FC, Suspense } from 'react';
 import { Pages } from 'pages/Pages';
-import { TokenProvider } from 'contexts/TokenContext';
 import { ApolloProvider } from '@apollo/react-hooks';
 import apolloClient from 'apolloClient';
 import { Router } from 'react-router-dom';
@@ -18,11 +17,12 @@ import { SnackbarProvider } from 'notistack';
 import { ErrorBoundary } from 'components/generic/ErrorBoundary';
 import { AppLayout, AppLayoutContent } from 'components/layout/AppLayout';
 import { DynamicThemeProvider } from 'themes/DynamicThemeProvider';
+import { AuthProvider } from 'contexts/AuthContext';
 
 const App: FC<{}> = props => {
   return (
     <SnackbarProvider maxSnack={2}>
-      <TokenProvider>
+      <AuthProvider>
         <LinkerContextProvider>
           <Suspense fallback={<Loader />}>
             <Helmet title="Toast" />
@@ -41,7 +41,7 @@ const App: FC<{}> = props => {
             </AppLayout>
           </Suspense>
         </LinkerContextProvider>
-      </TokenProvider>
+      </AuthProvider>
       <UpdateChecker />
       <CssBaseline />
       <Global

@@ -1,8 +1,8 @@
-import { Consumer, AuthContext } from '../TokenContext';
 import React from 'react';
+import { AuthContextValue, useAuth } from 'contexts/AuthContext';
 
 export interface AuthGateProps {
-  condition(props: AuthContext): boolean;
+  condition(props: AuthContextValue): boolean;
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }
@@ -11,4 +11,7 @@ export const AuthGate: React.SFC<AuthGateProps> = ({
   condition,
   children,
   fallback = null,
-}) => <Consumer>{state => (condition(state) ? children : fallback)}</Consumer>;
+}) => {
+  const state = useAuth();
+  return <>{condition(state) ? children : fallback}</>;
+};
