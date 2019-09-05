@@ -5,6 +5,7 @@ import tasty from './extractors/tasty';
 import kitchenStories from './extractors/kitchenStories';
 import wprm from './extractors/wprm';
 import naive from './extractors/naive';
+import { URL } from 'url';
 
 const extractNumber = (numberOrString: number | string) => {
   if (typeof numberOrString === 'number') {
@@ -71,20 +72,29 @@ const tryParseOrFallback = async (page: Page) => {
   return {};
 };
 
+const getSiteName = async (page: Page) => {
+  try {
+    const name = await page.$eval(
+      'meta[property="og:site_name"]',
+      sitenameMeta => {
+        return sitenameMeta
+          ? sitenameMeta.getAttribute('content')
+          : window.location.hostname;
+      },
+    );
+  } catch (err) {
+    console.warn(err);
+    return new URL(page.url()).hostname;
+  }
+};
+
 const run = async (page: Page) => {
   const data = await tryParseOrFallback(page);
 
   console.info('Extracted data:');
   console.info(JSON.stringify(data));
 
-  const sitename = await page.$eval(
-    'meta[property="og:site_name"]',
-    sitenameMeta => {
-      return sitenameMeta
-        ? sitenameMeta.getAttribute('content')
-        : window.location.hostname;
-    },
-  );
+  const sitename = await getSiteName(page);
 
   const cookMinutes = isoToMinutes(data.cookTime);
   const prepMinutes = isoToMinutes(data.prepTime);

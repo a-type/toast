@@ -148,7 +148,7 @@ export default async (req: Request, res: Response) => {
 
   if (!scraped.title && !scraped.ingredients.length) {
     throw new ApiError(
-      "We couldn't extract any recipe data from the provided webpage.",
+      `We couldn't extract any recipe data from the provided webpage: ${sourceUrl}`,
       400,
     );
   }
