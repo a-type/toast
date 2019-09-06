@@ -10,6 +10,7 @@ import { CollectionsPage } from './CollectionsPage';
 import { HomePage } from './HomePage';
 import { SubscriptionPage } from './SubscriptionPage';
 import { JoinGroupPage } from './JoinGroupPage';
+import { ManagePage } from './ManagePage';
 
 export const Pages = () => (
   <Switch>
@@ -22,6 +23,7 @@ export const Pages = () => (
     <Route path="/recipes" component={RecipePage} />
     <PrivateRoute path="/collections" component={CollectionsPage} />
     <PrivateRoute path="/settings" component={SettingsPage} />
+    <PrivateRoute path="/manage" component={ManagePage} />
     <Route render={() => <div>Not found</div>} />
   </Switch>
 );

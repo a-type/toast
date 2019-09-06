@@ -4,4 +4,10 @@ export default {
   Mutation: {
     updateFood: arango,
   },
+  Query: {
+    foods: arango,
+  },
+  UpdateFoodPayload: {
+    food: arango,
+  },
 };

@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
   const returnTo = (parse(location.search).r as string) || '/home';
+  console.log(returnTo);
   const classes = useStyles({});
   return (
     <IsLoggedIn
@@ -52,7 +53,7 @@ export const LoginPage: React.SFC<RouteComponentProps> = ({ location }) => {
         </Grid>
       }
     >
-      <Redirect to="/" />
+      <Redirect to={returnTo} />
     </IsLoggedIn>
   );
 };
