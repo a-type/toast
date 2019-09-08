@@ -200,7 +200,8 @@ export default async (req: Request, res: Response) => {
                 name: ${foodName},
                 alternateNames: [],
                 searchHelpers: [],
-                verified: false
+                verified: false,
+                createdAt: ${new Date().getTime()}
               } INTO Foods
               RETURN NEW
             `);
