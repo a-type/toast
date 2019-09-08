@@ -106,6 +106,7 @@ export default gql`
 
   type RecipeCollectionRecipesPageInfo {
     hasNextPage: Boolean!
+    endCursor: String
   }
 
   type RecipeIngredientsConnection {

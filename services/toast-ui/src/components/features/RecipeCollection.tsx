@@ -5,7 +5,7 @@ import useCollection, {
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { Loader } from 'components/generic/Loader/Loader';
 import { path } from 'ramda';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import CardGrid, { CardGridProps } from 'components/generic/CardGrid';
 import RecipeCard from './RecipeCard';
 import useRouter from 'use-react-router';
@@ -20,7 +20,9 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
   onRecipeSelected,
   ...rest
 }) => {
-  const { data, loading, error } = useCollection(collectionId);
+  const { data, loading, error, fetchMore, hasNextPage } = useCollection(
+    collectionId,
+  );
   const { history } = useRouter();
 
   if (error) {
@@ -53,14 +55,21 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
   return (
     <>
       {!!(recipes && recipes.length) ? (
-        <CardGrid {...rest}>
-          {recipes.map(recipe => (
-            <RecipeCard
-              recipe={recipe}
-              onClick={() => handleRecipeSelected(recipe)}
-            />
-          ))}
-        </CardGrid>
+        <>
+          <CardGrid {...rest}>
+            {recipes.map(recipe => (
+              <RecipeCard
+                recipe={recipe}
+                onClick={() => handleRecipeSelected(recipe)}
+              />
+            ))}
+          </CardGrid>
+          {hasNextPage && (
+            <Button fullWidth onClick={fetchMore}>
+              Load more
+            </Button>
+          )}
+        </>
       ) : (
         <Typography variant="caption">
           This collection doesn't have any recipes in it
