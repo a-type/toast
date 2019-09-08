@@ -2,9 +2,8 @@ import { Page } from 'puppeteer';
 
 const microdata = async (page: Page) => {
   console.log('trying microdata');
-  const it = 'http://schema.org/Recipe';
 
-  return await page.evaluate(itemtype => {
+  return await page.evaluate(() => {
     /**
      * All extraction code must go inside this block
      * to be sent to the browser.
@@ -62,14 +61,19 @@ const microdata = async (page: Page) => {
     }
 
     var elems = document.querySelectorAll(
-        '[itemscope][itemtype="' + itemtype + '"]',
-      ),
-      arr = [];
+      '[itemscope][itemtype="http://schema.org/Recipe"]',
+    );
+    if (elems.length === 0) {
+      elems = document.querySelectorAll(
+        '[itemscope][itemtype="https://schema.org/Recipe"]',
+      );
+    }
+    var arr = [];
     for (var i = 0, len = elems.length; i < len; i++)
       arr.push(extract(elems[i]));
 
     return arr[0];
-  }, it);
+  });
 };
 
 export default microdata;
