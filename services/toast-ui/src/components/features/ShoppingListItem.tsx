@@ -1,7 +1,7 @@
 import React, { FC, useCallback, ChangeEvent } from 'react';
 import { ShoppingListItem as ShoppingListItemData } from 'hooks/features/useShoppingList';
 import { usePurchaseItemState } from 'hooks/features/purchasedItems';
-import { FormControlLabel, Checkbox } from '@material-ui/core';
+import { FormControlLabel, Checkbox, ListItem } from '@material-ui/core';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { IngredientDisplay } from './IngredientDisplay';
 
@@ -23,7 +23,7 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({ item }) => {
   );
 
   return (
-    <>
+    <ListItem>
       <FormControlLabel
         control={
           <Checkbox
@@ -40,6 +40,6 @@ export const ShoppingListItem: FC<ShoppingListItemProps> = ({ item }) => {
         }
       />
       {error && <ErrorMessage error={error} />}
-    </>
+    </ListItem>
   );
 };

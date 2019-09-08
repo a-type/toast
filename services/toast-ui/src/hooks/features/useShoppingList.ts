@@ -33,6 +33,7 @@ export const GetShoppingListQuery = gql`
                       food {
                         id
                         name
+                        category
                       }
                     }
                   }
@@ -88,6 +89,7 @@ export type ShoppingListIngredient = {
   food: {
     id: string;
     name: string;
+    category: string;
   };
 };
 
