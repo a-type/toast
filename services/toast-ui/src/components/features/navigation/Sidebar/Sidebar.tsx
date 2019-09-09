@@ -20,6 +20,7 @@ import {
   BookmarksTwoTone,
   SettingsTwoTone,
   WarningTwoTone,
+  ShoppingCartTwoTone,
 } from '@material-ui/icons';
 import useRouter from 'use-react-router';
 import firebase from 'services/firebase';
@@ -85,17 +86,17 @@ const Sidebar: SFC<SidebarProps> = props => {
         </ListItemIcon>
         <ListItemText>Home</ListItemText>
       </ListItemLink>
-      <ListItemLink to="/explore" nav className={classes.listItemLink}>
+      <ListItemLink to="/shopping" nav className={classes.listItemLink}>
         <ListItemIcon>
-          <FindInPageTwoTone />
+          <ShoppingCartTwoTone />
         </ListItemIcon>
-        <ListItemText>Scan</ListItemText>
+        <ListItemText>Shopping</ListItemText>
       </ListItemLink>
-      <ListItemLink to="/collections" nav className={classes.listItemLink}>
+      <ListItemLink to="/recipes" nav className={classes.listItemLink}>
         <ListItemIcon>
           <BookmarksTwoTone />
         </ListItemIcon>
-        <ListItemText>Collections</ListItemText>
+        <ListItemText>Recipes</ListItemText>
       </ListItemLink>
       <ListItemLink to="/settings" nav className={classes.listItemLink}>
         <ListItemIcon>

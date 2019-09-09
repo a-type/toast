@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, QueryHookOptions } from '@apollo/react-hooks';
 
 export const FullRecipeQuery = gql`
   query FullRecipe($recipeId: ID!) {
@@ -86,8 +86,9 @@ export type FullRecipeData = {
   recipe: FullRecipe;
 };
 
-export default (id: string) =>
+export default (id: string, options: QueryHookOptions = {}) =>
   useQuery<FullRecipeData, { recipeId: string }>(FullRecipeQuery, {
+    ...options,
     variables: {
       recipeId: id,
     },

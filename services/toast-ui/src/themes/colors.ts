@@ -29,9 +29,9 @@ export const green = {
   800: '#a9efe5',
   900: '#9bece0',
   A100: '#e4f9f6',
-  A200: '#bcefe9',
-  A400: '#1ac6ad',
-  A700: '#0aac8c',
+  A200: '#8fe5da',
+  A400: '#1ecbb4',
+  A700: '#16bea4',
   contrastDefaultColor: 'dark',
 };
 

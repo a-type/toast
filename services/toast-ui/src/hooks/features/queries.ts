@@ -115,7 +115,7 @@ export const EditRecipeRecipeFragment = gql`
 `;
 
 export const CreateRecipeMutation = gql`
-  mutation CreateRecipe($input: RecipeCreateInput!) {
+  mutation CreateRecipe($input: CreateRecipeInput!) {
     createRecipe(input: $input) {
       ...EditRecipeRecipe
     }
@@ -125,7 +125,7 @@ export const CreateRecipeMutation = gql`
 `;
 
 export const UpdateRecipeMutation = gql`
-  mutation UpdateRecipe($input: RecipeUpdateInput!) {
+  mutation UpdateRecipe($input: UpdateRecipeInput!) {
     updateRecipe(input: $input) {
       ...EditRecipeRecipe
     }
@@ -137,53 +137,6 @@ export const UpdateRecipeMutation = gql`
 export const GetRecipeQuery = gql`
   query EditGetRecipe($id: ID!) {
     recipe(id: $id) {
-      ...EditRecipeRecipe
-    }
-  }
-
-  ${EditRecipeRecipeFragment}
-`;
-
-export const CreateRecipeIngredientMutation = gql`
-  mutation CreateRecipeIngredient($recipeId: ID!, $ingredientText: String!) {
-    createRecipeIngredient(
-      recipeId: $recipeId
-      input: { text: $ingredientText }
-    ) {
-      id
-      ...EditRecipeRecipeIngredient
-    }
-  }
-
-  ${EditRecipeRecipeIngredientFragment}
-`;
-
-export const CreateRecipeStepMutation = gql`
-  mutation CreateRecipeStep($recipeId: ID!, $input: RecipeStepCreateInput!) {
-    createRecipeStep(recipeId: $recipeId, input: $input) {
-      id
-      ...EditRecipeRecipeStep
-    }
-  }
-
-  ${EditRecipeRecipeStepFragment}
-`;
-
-export const DeleteRecipeStepMutation = gql`
-  mutation DeleteRecipeStep($recipeStepId: ID!) {
-    deleteRecipeStep(id: $recipeStepId) {
-      id
-      ...EditRecipeRecipeStep
-    }
-  }
-
-  ${EditRecipeRecipeStepFragment}
-`;
-
-export const PublishRecipeMutation = gql`
-  mutation PublishRecipe($recipeId: ID!) {
-    publishRecipe(id: $recipeId) {
-      id
       ...EditRecipeRecipe
     }
   }

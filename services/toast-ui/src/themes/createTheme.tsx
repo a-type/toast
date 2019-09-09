@@ -50,10 +50,9 @@ export default (
 
     overrides: {
       MuiButton: {
-        root: {
-          color: mainText,
-        },
+        root: {},
         containedPrimary: {
+          color: mainText,
           backgroundColor: lighten(main[500], 0.1),
           '&:hover': {
             backgroundColor: lighten(main[500], 0.3),

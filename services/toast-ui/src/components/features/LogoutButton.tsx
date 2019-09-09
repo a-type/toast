@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import browserHistory from 'browserHistory';
 import firebase from 'services/firebase';
-import { Icon } from 'components/generic/Icon';
 import { Button } from '@material-ui/core';
+import { MeetingRoomTwoTone } from '@material-ui/icons';
 
 export interface LogoutButtonProps {}
 
@@ -14,7 +14,7 @@ export const LogoutButton: FC<LogoutButtonProps> = ({}) => {
         browserHistory.push('/');
       }}
     >
-      <Icon name="meeting_room" /> Log out
+      <MeetingRoomTwoTone /> Log out
     </Button>
   );
 };

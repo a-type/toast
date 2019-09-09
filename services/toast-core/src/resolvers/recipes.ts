@@ -38,7 +38,13 @@ export default {
           : Math.round(parent.views) || 0,
   },
 
-  RecipeLinkResult: {
+  LinkRecipeResult: {
+    recipe: arango,
+  },
+  CreateRecipeResult: {
+    recipe: arango,
+  },
+  UpdateRecipeResult: {
     recipe: arango,
   },
 };

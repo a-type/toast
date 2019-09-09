@@ -129,7 +129,7 @@ export default gql`
     FailedImage
   }
 
-  type RecipeLinkResult {
+  type LinkRecipeResult {
     recipe: Recipe @aqlDocument(collection: "Recipes", key: "$parent.recipeId")
     problems: [RecipeLinkProblem!]!
   }
@@ -171,7 +171,11 @@ export default gql`
       )
   }
 
-  input RecipeCreateInput {
+  input CreateRecipeInput {
+    fields: CreateRecipeFieldsInput!
+  }
+
+  input CreateRecipeFieldsInput {
     title: String!
     description: String
     servings: Int
@@ -181,26 +185,32 @@ export default gql`
     private: Boolean
   }
 
-  input RecipeLinkInput {
+  type CreateRecipeResult {
+    recipe: Recipe!
+      @aqlNewQuery
+      @aqlSubquery(query: "", return: "$parent.recipe")
+  }
+
+  input LinkRecipeInput {
     url: String!
   }
 
-  input RecipeCollectInput {
+  input CollectRecipeInput {
     recipeId: ID!
     collectionId: ID!
   }
 
-  input RecipeUncollectInput {
+  input UncollectRecipeInput {
     recipeId: ID!
     collectionId: ID
   }
 
-  input RecipeUpdateInput {
+  input UpdateRecipeInput {
     id: ID!
-    fields: RecipeUpdateFieldsInput = {}
+    fields: UpdateRecipeFieldsInput = {}
   }
 
-  input RecipeUpdateFieldsInput {
+  input UpdateRecipeFieldsInput {
     title: String
     description: String
     servings: Int
@@ -211,36 +221,40 @@ export default gql`
     published: Boolean
   }
 
-  input RecipeRecordViewInput {
-    id: ID!
+  type UpdateRecipeResult {
+    recipe: Recipe!
+      @aqlNewQuery
+      @aqlSubquery(query: "", return: "$parent.recipe")
   }
 
   extend type Mutation {
-    createRecipe(input: RecipeCreateInput!): Recipe!
+    createRecipe(input: CreateRecipeInput!): CreateRecipeResult!
       @aqlSubquery(
         query: """
         LET user = DOCUMENT(Users, $context.userId)
-        LET recipe = (
+        LET recipe = FIRST(
           INSERT {
-            title: $args.input.title,
-            description: $args.input.description,
-            servings: $args.input.servings,
-            cookTime: $args.input.cookTime,
-            prepTime: $args.input.prepTime,
-            unattendedTime: $args.input.unattendedTime,
-            private: $args.input.private,
+            title: $args.input.fields.title,
+            description: $args.input.fields.description,
+            servings: $args.input.fields.servings,
+            cookTime: $args.input.fields.cookTime,
+            prepTime: $args.input.fields.prepTime,
+            unattendedTime: $args.input.fields.unattendedTime,
+            private: $args.input.fields.private,
+            createdAt: DATE_NOW(),
+            updatedAt: DATE_NOW()
           } INTO Recipes
           RETURN NEW
         )
-        INSERT { _from: user, _to: recipe } INTO AuthorOf
+        INSERT { _from: user._id, _to: recipe._id } INTO AuthorOf
         """
-        return: "recipe"
+        return: "{ recipe: recipe }"
       )
       @subscribed
 
-    linkRecipe(input: RecipeLinkInput!): RecipeLinkResult! @subscribed
+    linkRecipe(input: LinkRecipeInput!): LinkRecipeResult! @subscribed
 
-    updateRecipe(input: RecipeUpdateInput!): Recipe
+    updateRecipe(input: UpdateRecipeInput!): Recipe
       @aqlSubquery(
         query: """
         LET recipe = FIRST(
@@ -249,7 +263,7 @@ export default gql`
             LIMIT 1
             RETURN authored_recipe
         )
-        UPDATE recipe WITH {
+        UPDATE recipe._key WITH {
           title: NON_NULL($args.input.fields.title, recipe.title),
           description: NON_NULL($args.input.fields.description, recipe.description),
           servings: NON_NULL($args.input.fields.servings, recipe.servings),
@@ -260,11 +274,11 @@ export default gql`
           published: NON_NULL($args.input.fields.published, recipe.published)
         } IN RECIPES
         """
-        return: "NEW"
+        return: "{ recipe: NEW }"
       )
       @subscribed
 
-    collectRecipe(input: RecipeCollectInput!): Recipe!
+    collectRecipe(input: CollectRecipeInput!): Recipe!
       @aqlSubquery(
         query: """
         LET recipe = DOCUMENT(Recipes, $args.input.recipeId)
@@ -280,7 +294,7 @@ export default gql`
                 RETURN groupCollection
             )
         ) != null
-        LET $field = hasAccess ? FIRST(
+        LET collected = hasAccess ? FIRST(
           INSERT { _from: recipe._id, _to: collection._id } INTO CollectedIn
           RETURN recipe
         ) : null
@@ -288,7 +302,7 @@ export default gql`
       )
       @subscribed
 
-    uncollectRecipe(input: RecipeUncollectInput!): Recipe
+    uncollectRecipe(input: UncollectRecipeInput!): Recipe
       @aqlSubquery(
         query: """
         LET recipe = DOCUMENT(Recipes, $args.input.recipeId)

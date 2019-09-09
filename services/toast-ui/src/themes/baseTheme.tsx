@@ -6,7 +6,7 @@ const dummyTheme = createMuiTheme();
 const theme = createMuiTheme({
   palette: {
     primary: colors.yellow,
-    secondary: colors.darkGreen,
+    secondary: colors.green,
     error: colors.red,
     background: {
       paper: colors.white[50],
@@ -85,6 +85,9 @@ const theme = createMuiTheme({
   props: {
     MuiTabs: {
       indicatorColor: 'primary',
+    },
+    MuiTextField: {
+      variant: 'outlined',
     },
   },
 });

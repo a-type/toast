@@ -1,12 +1,8 @@
-import React, { FC, useState } from 'react';
-import useEditRecipe from 'hooks/features/useEditRecipe';
-import { RecipeUpdateInput } from '../../../hooks/features/queries';
+import React, { FC, useCallback } from 'react';
 import { path } from 'ramda';
-import { Formik } from 'formik';
-import RecipeIngredientsEditor from './RecipeIngredientsEditor';
+import { Formik, FormikHelpers } from 'formik';
 import { Loader } from 'components/generic/Loader/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import { RecipeStepsEditor } from './RecipeStepsEditor';
 import {
   Box,
   Button,
@@ -17,15 +13,34 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
+  Grid,
+  makeStyles,
 } from '@material-ui/core';
-import Link from 'components/text/Link';
-import Icon from 'components/generic/Icon';
+import useFullRecipe from 'hooks/features/useFullRecipe';
+import { useCreateRecipe } from 'hooks/features/useCreateRecipe';
+import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
+import useRouter from 'use-react-router';
+import * as colors from 'themes/colors';
+import { LabelTwoTone } from '@material-ui/icons';
 
 export interface RecipeEditorProps {
   recipeId?: string;
 }
 
-const emptyRecipe: RecipeUpdateInput = {
+type RecipeValues = {
+  id: string;
+  title: string;
+  description: string;
+  servings: number;
+  cookTime: number;
+  prepTime: number;
+  unattendedTime: number;
+  published: boolean;
+  private: boolean;
+  steps: string[];
+};
+
+const emptyRecipe: RecipeValues = {
   id: null,
   title: '',
   description: '',
@@ -38,46 +53,134 @@ const emptyRecipe: RecipeUpdateInput = {
   steps: [],
 };
 
+const useStyles = makeStyles(theme => ({
+  optionalPanel: {
+    marginBottom: theme.spacing(2),
+    backgroundColor: 'transparent',
+    padding: 0,
+    '&:before': {
+      content: '',
+      display: 'none',
+    },
+  },
+  optionalPanelSummary: {
+    padding: 0,
+  },
+  optionalPanelDetails: {
+    padding: 0,
+  },
+  draftLabel: {
+    color: colors.darkGreen[900],
+    marginBottom: theme.spacing(1),
+  },
+  publishPanel: {
+    background: colors.green[500],
+    marginLeft: theme.spacing(-2),
+    marginRight: theme.spacing(-2),
+    marginTop: theme.spacing(-3),
+    padding: theme.spacing(2),
+  },
+  publishButton: {
+    marginBottom: theme.spacing(1),
+  },
+  titleField: {
+    '& input': {
+      fontSize: theme.typography.h2.fontSize,
+    },
+  },
+}));
+
 export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
-  const {
-    recipe,
-    initializing,
-    saving,
-    save,
-    error,
-    createIngredient,
-    refetchRecipe,
-    publish,
-  } = useEditRecipe({
+  const { history } = useRouter();
+
+  const { data, loading: recipeLoading, error: recipeError } = useFullRecipe(
     recipeId,
-  });
+    { skip: !recipeId },
+  );
+  const [createRecipe, { error: createError }] = useCreateRecipe();
+  const [updateRecipe, { error: updateError }] = useUpdateRecipe();
 
-  const [showOptional, setShowOptional] = useState(false);
+  const save = useCallback(
+    async (
+      { steps, published, ...fields }: RecipeValues,
+      form: FormikHelpers<RecipeValues>,
+    ) => {
+      form.setSubmitting(true);
+      try {
+        if (recipeId) {
+          await updateRecipe({
+            variables: {
+              input: {
+                id: recipeId,
+                fields,
+              },
+            },
+          });
+        } else {
+          const { id, ...createFields } = fields;
+          const result = await createRecipe({
+            variables: {
+              input: {
+                fields: createFields,
+              },
+            },
+          });
+          history.push(
+            `/recipes/${path(
+              ['data', 'createRecipe', 'recipe', 'id'],
+              result,
+            )}/edit`,
+          );
+        }
+      } finally {
+        form.setSubmitting(false);
+      }
+    },
+    [createRecipe, updateRecipe, recipeId],
+  );
 
-  if (initializing) {
+  const publish = useCallback(async () => {
+    if (!recipeId) {
+      return;
+    }
+
+    await updateRecipe({
+      variables: {
+        input: {
+          id: recipeId,
+          fields: {
+            published: true,
+          },
+        },
+      },
+    });
+  }, [updateRecipe, recipeId]);
+
+  const classes = useStyles({});
+
+  if (recipeLoading) {
     return <Loader />;
   }
 
+  const recipe = path(['recipe'], data) as RecipeValues;
   const published = !!path(['published'], recipe);
+  const error = recipeError || createError || updateError;
 
   return (
     <Box>
       {error && <ErrorMessage error={error} />}
       <Box>
-        {!!(!published && recipeId) && (
-          <span
-            css={{
-              fontSize: '18px',
-              color: 'var(--color-error)',
-              marginBottom: 'var(--spacing-md)',
-            }}
-          >
-            <Icon name="label" /> Draft
-          </span>
-        )}
-        {!published && (
-          <Box>
-            <Button variant="contained" color="primary" onClick={publish}>
+        {!published && recipeId && (
+          <Box mb={2} className={classes.publishPanel}>
+            <Typography className={classes.draftLabel}>
+              <LabelTwoTone /> Draft
+            </Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={publish}
+              className={classes.publishButton}
+            >
               Publish
             </Button>
             <Typography>
@@ -85,107 +188,133 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
             </Typography>
           </Box>
         )}
-        <Formik
+        <Formik<RecipeValues>
           initialValues={recipe || emptyRecipe}
           enableReinitialize
           onSubmit={save}
         >
-          {({ values, handleChange, handleSubmit }) => (
+          {({ values, handleChange, handleSubmit, isSubmitting }) => (
             <form onSubmit={handleSubmit}>
-              <TextField
-                required
-                label="Title"
-                css={{ fontSize: '64px' }}
-                value={values.title}
-                onChange={handleChange}
-                name="title"
-              />
-              <TextField
-                label="Description"
-                name="description"
-                onChange={handleChange}
-                value={values.description}
-              />
-              <TextField
-                label="Servings"
-                type="number"
-                name="servings"
-                onChange={handleChange}
-                value={values.servings}
-              />
-
-              <FormControlLabel
-                label="Private"
-                control={
-                  <Checkbox
-                    name="private"
-                    onChange={handleChange}
-                    checked={values.private}
-                  />
-                }
-              />
-              <Typography variant="caption">
-                Private recipes can only be seen by you and other members of
-                your plan
-              </Typography>
-
-              <Link onClick={() => setShowOptional(!showOptional)}>
-                {showOptional ? 'Hide' : 'Show'} optional fields
-              </Link>
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <Typography>Optional fields</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                   <TextField
-                    label="Cook time (minutes)"
-                    type="number"
-                    name="cookTime"
+                    required
+                    fullWidth
+                    label="Title"
+                    value={values.title}
                     onChange={handleChange}
-                    value={values.cookTime}
+                    name="title"
+                    className={classes.titleField}
                   />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                   <TextField
-                    label="Prep time (minutes)"
-                    type="number"
-                    name="prepTime"
+                    label="Description"
+                    name="description"
+                    multiline
+                    fullWidth
                     onChange={handleChange}
-                    value={values.prepTime}
+                    value={values.description}
                   />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                   <TextField
-                    label="Unattended time (minutes)"
+                    label="Servings"
                     type="number"
-                    name="unattendedTime"
+                    name="servings"
+                    fullWidth
                     onChange={handleChange}
-                    value={values.unattendedTime}
+                    value={values.servings}
                   />
-                  <Typography variant="caption">
-                    Unattended time is any time you spend slow cooking, baking,
-                    sous vide... any time you don't have to actively do anything
-                    during cooking.
+                </Grid>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                  <FormControlLabel
+                    label="Private"
+                    control={
+                      <Checkbox
+                        name="private"
+                        onChange={handleChange}
+                        checked={values.private}
+                      />
+                    }
+                  />
+                  <Typography variant="caption" paragraph>
+                    Private recipes can only be seen by you and other members of
+                    your plan
                   </Typography>
+                </Grid>
+              </Grid>
+
+              <ExpansionPanel elevation={0} className={classes.optionalPanel}>
+                <ExpansionPanelSummary className={classes.optionalPanelSummary}>
+                  <Typography variant="button">Optional fields</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.optionalPanelDetails}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+                      <TextField
+                        label="Cook time (minutes)"
+                        type="number"
+                        name="cookTime"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.cookTime}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+                      <TextField
+                        label="Prep time (minutes)"
+                        type="number"
+                        name="prepTime"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.prepTime}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+                      <TextField
+                        label="Unattended time (minutes)"
+                        type="number"
+                        name="unattendedTime"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.unattendedTime}
+                        helperText="Unattended time is any time you spend slow cooking, baking, sous vide... any time you don't have to actively do anything during cooking."
+                      />
+                    </Grid>
+                  </Grid>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
 
-              <Button variant="contained" color="primary" type="submit">
-                {!recipeId ? 'Continue' : 'Save'}
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Saving...' : !recipeId ? 'Continue' : 'Save'}
               </Button>
             </form>
           )}
         </Formik>
       </Box>
 
-      {recipe && (
+      {/* {recipe && (
         <>
-          <Typography variant="h3">Ingredients</Typography>
+          <Typography variant="h3" gutterBottom>
+            Ingredients
+          </Typography>
           <RecipeIngredientsEditor
             recipe={recipe}
             createIngredient={createIngredient}
             refetchRecipe={refetchRecipe}
           />
-          <Typography variant="h3">Steps</Typography>
+          <Typography variant="h3" gutterBottom>
+            Steps
+          </Typography>
           <RecipeStepsEditor recipe={recipe} updateRecipe={save} />
         </>
-      )}
+      )} */}
     </Box>
   );
 };

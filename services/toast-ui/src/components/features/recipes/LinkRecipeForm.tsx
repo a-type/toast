@@ -9,7 +9,6 @@ import {
   IconButton,
   DialogContent,
 } from '@material-ui/core';
-import Icon from 'components/generic/Icon';
 import Link from 'components/generic/Link';
 import { Row } from 'components/generic/Row';
 import { useLinker } from 'contexts/LinkerContext';
@@ -18,7 +17,7 @@ import useMedia from 'hooks/useMedia';
 import logger from 'logger';
 import React, { FC, useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { ClearTwoTone } from '@material-ui/icons';
+import { ClearTwoTone, ShareTwoTone } from '@material-ui/icons';
 import Popup from 'components/generic/Popup';
 import { ScanGraphic } from 'components/graphics/ScanGraphic';
 
@@ -61,8 +60,7 @@ const InstalledMessage = () => {
         <DialogContent>
           <Typography paragraph>
             In your device's web browser, visit the page which contains the
-            recipe you want to add. Then, tap the <Icon name="share" /> Share
-            button.
+            recipe you want to add. Then, tap the <ShareTwoTone /> Share button.
           </Typography>
           <Typography paragraph>
             When a list of apps comes up, look for Toast and choose it.

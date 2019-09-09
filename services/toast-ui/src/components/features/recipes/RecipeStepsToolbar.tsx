@@ -36,9 +36,7 @@ export const RecipeStepsToolbar: React.SFC<RecipeStepsToolbarProps> = ({
       </Link>
       <Box flexGrow={1} ml={2}>
         <Typography>Cooking</Typography>
-        <Typography css={{ margin: '0' }} variant="h3">
-          {recipe.title}
-        </Typography>
+        <Typography variant="h3">{recipe.title}</Typography>
       </Box>
       {/* <div>
         <Button.Icon name="index" />
