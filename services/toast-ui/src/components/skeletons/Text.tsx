@@ -1,5 +1,4 @@
 import React, { useRef, FC } from 'react';
-import styled from 'styled-components';
 import { Typography, makeStyles, Theme } from '@material-ui/core';
 
 export type TextSkeletonProps = {
@@ -33,7 +32,7 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({ size }) => {
 
 export const HeadingSkeleton: FC<any> = ({ size, ...rest }) => {
   return (
-    <Typography {...rest as any}>
+    <Typography {...(rest as any)}>
       <TextSkeleton size={size} />
     </Typography>
   );
@@ -49,7 +48,7 @@ export const ParagraphSkeleton: FC<TextSkeletonProps & { words?: number }> = ({
   );
 
   return (
-    <Typography variant="body1" {...rest as any}>
+    <Typography variant="body1" {...(rest as any)}>
       {new Array(wordCount)
         .fill(null)
         .reduce((all, _, idx) => [...all, <TextSkeleton key={idx} />, ' '], [])}

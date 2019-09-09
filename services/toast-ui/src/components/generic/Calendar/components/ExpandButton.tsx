@@ -1,30 +1,33 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import Icon from 'components/generic/Icon';
+import { makeStyles, Theme, ButtonBase } from '@material-ui/core';
+import { ExpandMoreTwoTone } from '@material-ui/icons';
 
-const ExpandOuterButton = styled.button`
-  background: var(--color-white);
-  width: 100%;
-  padding: var(--spacing-sm);
-  padding-top: var(--spacing-md);
-  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
-  margin-bottom: var(--spacing-lg);
-  border: 2px solid transparent;
-  border-top: 0;
-  cursor: pointer;
+const useStyles = makeStyles<Theme, { expanded?: boolean }>(theme => ({
+  button: {
+    background: theme.palette.common.white,
+    width: '100%',
+    padding: theme.spacing(1),
+    paddingTop: theme.spacing(2),
+    borderRadius: `0 0 8px 8px`,
+    marginBottom: theme.spacing(3),
+    border: `2px solid transparent`,
+    borderTop: 0,
+    cursor: 'pointer',
+    transition: '0.2s ease all',
+  },
+  icon: props => ({
+    transform: `rotate(${props.expanded ? '180deg' : '0deg'})`,
+  }),
+}));
 
-  transition: 0.2s ease all;
+const ExpandButton = props => {
+  const classes = useStyles(props);
 
-  &:focus {
-    outline: 0;
-    border-color: var(--color-primary);
-  }
-`;
-
-const ExpandButton = props => (
-  <ExpandOuterButton {...props}>
-    <Icon name="expand_more" rotation={props.expanded ? 180 : 0} />
-  </ExpandOuterButton>
-);
+  return (
+    <ButtonBase {...props} className={classes.button}>
+      <ExpandMoreTwoTone className={classes.icon} />
+    </ButtonBase>
+  );
+};
 
 export default ExpandButton;

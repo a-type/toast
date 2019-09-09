@@ -1,29 +1,34 @@
-import styled from 'styled-components';
 import { ROW_SPACING, DAY_SIZE } from '../constants';
+import React, { FC } from 'react';
+import { makeStyles, Theme } from '@material-ui/core';
 
 export interface GridProps {
   rows: number;
 }
 
-const Grid = styled<GridProps, 'div'>('div')`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: auto;
-  align-content: space-between;
-  justify-content: space-between;
-  justify-items: center;
-  row-gap: ${ROW_SPACING}px;
-  overflow: hidden;
+const useStyles = makeStyles<Theme, GridProps>(theme => ({
+  /* custom styles go here */
+  root: props => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(7, 1fr)',
+    gridAutoRows: 'auto',
+    alignContent: 'space-between',
+    justifyContent: 'space-between',
+    justifyItems: 'center',
+    rowGap: `${ROW_SPACING}px`,
+    overflow: 'hidden',
+    transition: '0.2s ease all',
+    height: `${props.rows * DAY_SIZE + (props.rows + 1) * ROW_SPACING}px`,
+    paddingTop: `${ROW_SPACING}px`,
+    paddingBottom: `${ROW_SPACING}px`,
 
-  transition: 0.2s ease all;
+    [theme.breakpoints.up('md')]: {
+      alignContent: 'space-around',
+    },
+  }),
+}));
 
-  height: ${props => props.rows * DAY_SIZE + (props.rows + 1) * ROW_SPACING}px;
-  padding-top: ${ROW_SPACING}px;
-  padding-bottom: ${ROW_SPACING}px;
-
-  @media (min-width: 768px) {
-    align-content: space-around;
-  }
-`;
-
-export default Grid;
+export const Grid: FC<GridProps> = props => {
+  const classes = useStyles(props);
+  return <div className={classes.root} />;
+};

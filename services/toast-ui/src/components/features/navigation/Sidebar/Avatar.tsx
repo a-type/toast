@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { AccountCircleTwoTone } from '@material-ui/icons';
 import { Avatar as MuiAvatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';

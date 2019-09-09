@@ -1,12 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
-
-const Path = styled<{ color: string; scale: number }, 'path'>('path')`
-  fill: ${props => props.color};
-  transform: scale(${props => props.scale});
-  transform-origin: 50% 50%;
-  transition: 0.2s ease all;
-`;
+import { makeStyles, Theme } from '@material-ui/core';
 
 export interface WaveProps {
   scale?: number;
@@ -15,13 +8,20 @@ export interface WaveProps {
   offset?: number;
 }
 
-// focal point
-const Y = 4.5;
-const X = 5;
-
 const factorOffset = factor => (Math.random() - 0.5) * factor;
 
+const useStyles = makeStyles<Theme, WaveProps>(theme => ({
+  root: props => ({
+    fill: props.color,
+    transform: `scale(${props.scale})`,
+    transformOrigin: '50% 50%',
+    transition: '0.2s ease all',
+  }),
+}));
+
 const Wave: React.SFC<WaveProps> = ({ scale, color, factor, offset }) => {
+  const classes = useStyles({ scale, color, factor, offset });
+
   const startPosition = [0, 0 + offset];
   const startCurveControlPoint = [
     2 + factorOffset(factor),
@@ -48,7 +48,14 @@ const Wave: React.SFC<WaveProps> = ({ scale, color, factor, offset }) => {
   d.push(`L 10 ${bottomY}`);
   d.push(`L 0 ${bottomY}`);
 
-  return <Path d={d.join(' ')} color={color} scale={scale} />;
+  return (
+    <path
+      d={d.join(' ')}
+      color={color}
+      scale={scale}
+      className={classes.root}
+    />
+  );
 };
 
 Wave.defaultProps = {

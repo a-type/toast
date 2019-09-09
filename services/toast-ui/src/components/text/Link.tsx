@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import BaseLink, { LinkProps } from 'components/generic/Link';
 import { Typography, Link, makeStyles } from '@material-ui/core';
 import { lighten, darken, emphasize } from '@material-ui/core/styles';

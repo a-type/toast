@@ -10,7 +10,6 @@
         "@babel/plugin-proposal-object-rest-spread",
         "@babel/plugin-proposal-class-properties",
         "graphql-tag",
-        "styled-components"
       ]
     },
     "development": {
@@ -23,7 +22,6 @@
         "@babel/plugin-proposal-object-rest-spread",
         "@babel/plugin-proposal-class-properties",
         "graphql-tag",
-        "styled-components",
         "react-hot-loader/babel"
       ]
     },
@@ -33,7 +31,6 @@
         "@babel/plugin-proposal-object-rest-spread",
         "@babel/plugin-proposal-class-properties",
         "graphql-tag",
-        "styled-components"
       ]
     }
   }

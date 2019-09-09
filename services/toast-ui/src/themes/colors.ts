@@ -142,3 +142,14 @@ export const white = {
   A700: '#ffffff',
   contrastDefaultColor: 'dark',
 };
+
+export const colors = {
+  yellow,
+  green,
+  red,
+  purple,
+  darkGreen,
+  grey,
+  black,
+  white,
+};

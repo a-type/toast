@@ -1,13 +1,21 @@
-import styled from 'styled-components';
-import { DAY_SIZE } from '../constants';
+import React, { FC } from 'react';
+import { makeStyles, Theme } from '@material-ui/core';
 
-const WeekdayRow = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  justify-items: center;
-  justify-content: space-between;
-  align-content: space-between;
-  margin-bottom: var(--spacing-md);
-`;
+export interface WeekdayRowProps {}
 
-export default WeekdayRow;
+const useStyles = makeStyles<Theme, WeekdayRowProps>(theme => ({
+  /* custom styles go here */
+  root: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(7, 1fr)',
+    justifyItems: 'center',
+    justifyContent: 'space-between',
+    alignContent: 'space-between',
+    marginBottom: theme.spacing(2),
+  },
+}));
+
+export const WeekdayRow: FC<WeekdayRowProps> = props => {
+  const classes = useStyles(props);
+  return <div className={classes.root} />;
+};
