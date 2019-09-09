@@ -208,6 +208,7 @@ export default gql`
   input UpdateRecipeInput {
     id: ID!
     fields: UpdateRecipeFieldsInput = {}
+    steps: UpdateRecipeStepsInput = {}
   }
 
   input UpdateRecipeFieldsInput {
@@ -219,6 +220,13 @@ export default gql`
     unattendedTime: Int
     private: Boolean
     published: Boolean
+  }
+
+  input UpdateRecipeStepsInput {
+    """
+    Simply assigns a list of strings as the steps of the recipe
+    """
+    set: [String!]
   }
 
   type UpdateRecipeResult {
@@ -264,14 +272,16 @@ export default gql`
             RETURN authored_recipe
         )
         UPDATE recipe._key WITH {
-          title: NON_NULL($args.input.fields.title, recipe.title),
-          description: NON_NULL($args.input.fields.description, recipe.description),
-          servings: NON_NULL($args.input.fields.servings, recipe.servings),
-          cookTime: NON_NULL($args.input.fields.cookTime, recipe.cookTime),
-          prepTime: NON_NULL($args.input.fields.prepTime, recipe.prepTime),
-          unattendedTime: NON_NULL($args.input.fields.unattendedTime, recipe.unattendedTime),
-          private: NON_NULL($args.input.fields.private, recipe.private),
-          published: NON_NULL($args.input.fields.published, recipe.published)
+          updatedAt: DATE_NOW(),
+          title: NOT_NULL($args.input.fields.title, recipe.title),
+          description: NOT_NULL($args.input.fields.description, recipe.description),
+          servings: NOT_NULL($args.input.fields.servings, recipe.servings),
+          cookTime: NOT_NULL($args.input.fields.cookTime, recipe.cookTime),
+          prepTime: NOT_NULL($args.input.fields.prepTime, recipe.prepTime),
+          unattendedTime: NOT_NULL($args.input.fields.unattendedTime, recipe.unattendedTime),
+          private: NOT_NULL($args.input.fields.private, recipe.private),
+          published: NOT_NULL($args.input.fields.published, recipe.published),
+          steps: NOT_NULL($args.input.steps.set, recipe.steps)
         } IN RECIPES
         """
         return: "{ recipe: NEW }"
