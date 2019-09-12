@@ -5,6 +5,7 @@ import { ApiError, aqlQuery, aql } from 'toast-common';
 import parser from '../services/parser';
 import { ParseResult } from '../services/parser/parser';
 import scraper from '../services/scraper';
+import { createFood } from './common';
 
 enum RecipeLinkProblem {
   FailedIngredients = 'FailedIngredients',
@@ -194,52 +195,9 @@ export default async (req: Request, res: Response) => {
         if (!foundFoods[i]) {
           const parsed = parsedIngredients[i];
           try {
-            const foodName = parsed.food.normalized;
-            const result = await aqlQuery(aql`
-              INSERT {
-                name: ${foodName},
-                alternateNames: [],
-                searchHelpers: [],
-                verified: false,
-                createdAt: ${new Date().getTime()}
-              } INTO Foods
-              RETURN NEW
-            `);
-
-            const food = await result.next();
-            console.log(food);
-            foundFoods[i] = {
-              id: food._key,
-              name: food.name,
-            };
+            foundFoods[i] = await createFood(parsed.food.normalized);
           } catch (err) {
-            if (err.statusCode === 409) {
-              const result = await aqlQuery(aql`
-                FOR food IN Foods
-                  FILTER food.name == ${parsed.food.normalized}
-                  LIMIT 1
-                  RETURN food
-              `);
-
-              if (!result.hasNext()) {
-                // this is weird. we got a conflict but no duplicate food
-                console.error(
-                  `Food creation conflicted, but no duplicate food found by name ${parsed.food.normalized}`,
-                );
-              } else {
-                const food = await result.next();
-                foundFoods[i] = {
-                  id: food._key,
-                  name: food.name,
-                };
-              }
-            } else {
-              console.error(
-                'Failed to create food ' + parsed.food.normalized,
-                err,
-              );
-              result.problems.push(RecipeLinkProblem.IncompleteIngredients);
-            }
+            result.problems.push(RecipeLinkProblem.IncompleteIngredients);
           }
         }
       }
