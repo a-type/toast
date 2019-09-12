@@ -147,6 +147,7 @@ export default gql`
           LET user = DOCUMENT(Users, $context.userId)
           LET authored_recipe = FIRST(
             FOR candidate_authored_recipe IN OUTBOUND user AuthorOf
+              FILTER candidate_authored_recipe._key == $args.input.id
               LIMIT 1
               RETURN candidate_authored_recipe
           )
@@ -230,7 +231,7 @@ export default gql`
   }
 
   type UpdateRecipeResult {
-    recipe: Recipe!
+    recipe: Recipe
       @aqlNewQuery
       @aqlSubquery(query: "", return: "$parent.recipe")
   }
@@ -262,11 +263,11 @@ export default gql`
 
     linkRecipe(input: LinkRecipeInput!): LinkRecipeResult! @subscribed
 
-    updateRecipe(input: UpdateRecipeInput!): Recipe
+    updateRecipe(input: UpdateRecipeInput!): UpdateRecipeResult!
       @aqlSubquery(
         query: """
         LET recipe = FIRST(
-          FOR authored_recipe IN OUTBOUND user AuthorOf
+          FOR authored_recipe IN OUTBOUND DOCUMENT(Users, $context.userId) AuthorOf
             FILTER authored_recipe._key == $args.input.id
             LIMIT 1
             RETURN authored_recipe
@@ -282,7 +283,7 @@ export default gql`
           private: NOT_NULL($args.input.fields.private, recipe.private),
           published: NOT_NULL($args.input.fields.published, recipe.published),
           steps: NOT_NULL($args.input.steps.set, recipe.steps)
-        } IN RECIPES
+        } IN Recipes
         """
         return: "{ recipe: NEW }"
       )

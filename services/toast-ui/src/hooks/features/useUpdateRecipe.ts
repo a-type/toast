@@ -14,6 +14,7 @@ export const UpdateRecipeMutation = gql`
         unattendedTime
         private
         published
+        steps
       }
     }
   }
@@ -38,7 +39,7 @@ export type UpdateRecipeMutationResult = {
 export type UpdateRecipeMutationVariables = {
   input: {
     id: string;
-    fields: {
+    fields?: {
       title?: string;
       description?: string;
       servings?: number;
@@ -47,6 +48,9 @@ export type UpdateRecipeMutationVariables = {
       unattendedTime?: number;
       private?: boolean;
       published?: boolean;
+    };
+    steps?: {
+      set?: string[];
     };
   };
 };

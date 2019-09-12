@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { path } from 'ramda';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik, FormikHelpers, FieldArray } from 'formik';
 import { Loader } from 'components/generic/Loader/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import {
@@ -22,6 +22,7 @@ import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
 import useRouter from 'use-react-router';
 import * as colors from 'themes/colors';
 import { LabelTwoTone } from '@material-ui/icons';
+import { FormikTextField } from 'components/fields';
 
 export interface RecipeEditorProps {
   recipeId?: string;
@@ -102,9 +103,31 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
 
   const save = useCallback(
     async (
-      { steps, published, ...fields }: RecipeValues,
+      {
+        steps,
+        published,
+        id,
+        title,
+        description,
+        prepTime,
+        cookTime,
+        unattendedTime,
+        servings,
+        private: isPrivate,
+      }: RecipeValues,
       form: FormikHelpers<RecipeValues>,
     ) => {
+      const fields = {
+        published,
+        title,
+        description,
+        prepTime,
+        cookTime,
+        unattendedTime,
+        servings,
+        private: isPrivate,
+      };
+
       form.setSubmitting(true);
       try {
         if (recipeId) {
@@ -113,15 +136,17 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
               input: {
                 id: recipeId,
                 fields,
+                steps: {
+                  set: steps,
+                },
               },
             },
           });
         } else {
-          const { id, ...createFields } = fields;
           const result = await createRecipe({
             variables: {
               input: {
-                fields: createFields,
+                fields,
               },
             },
           });
@@ -169,7 +194,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
   return (
     <Box>
       {error && <ErrorMessage error={error} />}
-      <Box>
+      <Box mb={4}>
         {!published && recipeId && (
           <Box mb={2} className={classes.publishPanel}>
             <Typography className={classes.draftLabel}>
@@ -299,22 +324,60 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
         </Formik>
       </Box>
 
-      {/* {recipe && (
+      {recipe && (
         <>
-          <Typography variant="h3" gutterBottom>
+          {/* <Typography variant="h3" gutterBottom>
             Ingredients
           </Typography>
           <RecipeIngredientsEditor
             recipe={recipe}
             createIngredient={createIngredient}
             refetchRecipe={refetchRecipe}
-          />
+          /> */}
           <Typography variant="h3" gutterBottom>
             Steps
           </Typography>
-          <RecipeStepsEditor recipe={recipe} updateRecipe={save} />
+          <RecipeStepsEditor recipe={recipe} save={save} />
         </>
-      )} */}
+      )}
+    </Box>
+  );
+};
+
+interface RecipeStepsEditorProps {
+  save: (values: RecipeValues, form: FormikHelpers<RecipeValues>) => any;
+  recipe: RecipeValues;
+}
+
+const RecipeStepsEditor: FC<RecipeStepsEditorProps> = ({ save, recipe }) => {
+  return (
+    <Box>
+      <Formik initialValues={recipe} onSubmit={save}>
+        {({ handleSubmit, values }) => (
+          <form onSubmit={handleSubmit}>
+            <FieldArray
+              name="steps"
+              render={arrayHelpers => (
+                <Box>
+                  {(values.steps || []).map((step, idx) => (
+                    <Box mb={1} key={idx}>
+                      <FormikTextField
+                        name={`steps.${idx}`}
+                        multiline
+                        fullWidth
+                      />
+                    </Box>
+                  ))}
+                  <Button variant="text" onClick={() => arrayHelpers.push('')}>
+                    Add a step
+                  </Button>
+                </Box>
+              )}
+            />
+            <Button type="submit">Save</Button>
+          </form>
+        )}
+      </Formik>
     </Box>
   );
 };
