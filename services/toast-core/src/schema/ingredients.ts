@@ -36,6 +36,11 @@ export default gql`
 
   type CreateIngredientResult {
     ingredient: Ingredient!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = $parent.ingredient")
+    recipe: Recipe!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = $parent.recipe")
   }
 
   input UpdateIngredientInput {
@@ -59,7 +64,9 @@ export default gql`
   }
 
   type UpdateIngredientResult {
-    ingredient: Ingredient
+    ingredient: Ingredient!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = $parent.ingredient")
   }
 
   input DeleteIngredientInput {
@@ -67,6 +74,11 @@ export default gql`
   }
 
   type DeleteIngredientResult {
-    ingredient: Ingredient
+    ingredient: Ingredient!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = $parent.ingredient")
+    recipe: Recipe!
+      @aqlNewQuery
+      @aqlSubquery(query: "LET $field = $parent.recipe")
   }
 `;

@@ -25,6 +25,21 @@ export type IngredientParseResult = {
   comments: string[];
 };
 
+export type RecipeIngredient = {
+  text: string;
+  unit: string;
+  unitStart: number;
+  unitEnd: number;
+  quantity: number;
+  quantityStart: number;
+  quantityEnd: number;
+  foodStart: number;
+  foodEnd: number;
+  comments: string[];
+  preparations: string[];
+  foodId: string;
+};
+
 export default {
   linkRecipe: async (
     sourceUrl: string,
@@ -65,7 +80,9 @@ export default {
   },
 };
 
-const parsedIngredientToRecipeIngredient = (parsed: IngredientParseResult) => ({
+const parsedIngredientToRecipeIngredient = (
+  parsed: IngredientParseResult,
+): RecipeIngredient => ({
   text: parsed.sanitized || parsed.original,
   unit: parsed.unit && parsed.unit.normalized,
   unitStart: parsed.unit && parsed.unit.range[0],

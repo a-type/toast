@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, ChangeEvent } from 'react';
 import { path } from 'ramda';
 import { Formik, FormikHelpers, FieldArray } from 'formik';
 import { Loader } from 'components/generic/Loader/Loader';
@@ -23,6 +23,10 @@ import useRouter from 'use-react-router';
 import * as colors from 'themes/colors';
 import { LabelTwoTone } from '@material-ui/icons';
 import { FormikTextField } from 'components/fields';
+import { useCreateIngredient } from 'hooks/features/useCreateIngredient';
+import { useUpdateIngredient } from 'hooks/features/useUpdateIngredient';
+import { useDeleteIngredient } from 'hooks/features/useDeleteIngredient';
+import { useDebounce } from 'use-debounce';
 
 export interface RecipeEditorProps {
   recipeId?: string;
@@ -39,6 +43,22 @@ type RecipeValues = {
   published: boolean;
   private: boolean;
   steps: string[];
+  ingredientsConnection: {
+    edges: {
+      node: {
+        id: string;
+        text: string;
+        unit: string;
+        quantity: number;
+        comments: string[];
+        preparations: string[];
+        food: {
+          id: string;
+          name: string;
+        };
+      };
+    }[];
+  };
 };
 
 const emptyRecipe: RecipeValues = {
@@ -52,6 +72,9 @@ const emptyRecipe: RecipeValues = {
   published: false,
   private: false,
   steps: [],
+  ingredientsConnection: {
+    edges: [],
+  },
 };
 
 const useStyles = makeStyles(theme => ({
@@ -326,20 +349,146 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
 
       {recipe && (
         <>
-          {/* <Typography variant="h3" gutterBottom>
+          <Typography variant="h3" gutterBottom>
             Ingredients
           </Typography>
-          <RecipeIngredientsEditor
-            recipe={recipe}
-            createIngredient={createIngredient}
-            refetchRecipe={refetchRecipe}
-          /> */}
+          <RecipeIngredientsEditor recipe={recipe} />
           <Typography variant="h3" gutterBottom>
             Steps
           </Typography>
           <RecipeStepsEditor recipe={recipe} save={save} />
         </>
       )}
+    </Box>
+  );
+};
+
+interface RecipeIngredientsEditorProps {
+  recipe: RecipeValues;
+}
+
+const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
+  recipe,
+}) => {
+  const [createMutation] = useCreateIngredient();
+
+  const create = useCallback(
+    async (values: { text: string }, formik: FormikHelpers<any>) => {
+      await createMutation({
+        variables: {
+          input: {
+            recipeId: recipe.id,
+            text: values.text,
+          },
+        },
+      });
+    },
+    [createMutation, recipe.id],
+  );
+
+  return (
+    <Box>
+      {recipe.ingredientsConnection.edges.map(({ node: ingredient }) => (
+        <RecipeIngredientEditor ingredient={ingredient} key={ingredient.id} />
+      ))}
+      <Formik initialValues={{ text: '' }} onSubmit={create}>
+        {({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <FormikTextField name="text" multiline label="Text" fullWidth />
+            <Button type="submit" variant="contained">
+              Add Ingredient
+            </Button>
+          </form>
+        )}
+      </Formik>
+    </Box>
+  );
+};
+
+interface RecipeIngredientEditorProps {
+  ingredient: {
+    id: string;
+    text: string;
+    quantity: number;
+    unit: string;
+    food: {
+      id: string;
+      name: string;
+    };
+  };
+}
+
+const RecipeIngredientEditor: FC<RecipeIngredientEditorProps> = ({
+  ingredient,
+}) => {
+  const [updateMutation] = useUpdateIngredient();
+  const [deleteMutation] = useDeleteIngredient();
+
+  const updateText = useCallback(
+    async (event: ChangeEvent<HTMLTextAreaElement>) => {
+      await updateMutation({
+        variables: {
+          input: {
+            id: ingredient.id,
+            text: event.target.value,
+          },
+        },
+      });
+    },
+    [updateMutation, ingredient.id],
+  );
+
+  const updateFields = useCallback(
+    async (
+      values: { id: string; text: string; quantity: number; unit: string },
+      formik: FormikHelpers<any>,
+    ) => {
+      await updateMutation({
+        variables: {
+          input: {
+            id: ingredient.id,
+            fields: {
+              ...values,
+            },
+          },
+        },
+      });
+    },
+    [updateMutation, ingredient.id],
+  );
+
+  const updateFood = useCallback(
+    async (foodId: string) => {
+      await updateMutation({
+        variables: {
+          input: {
+            id: ingredient.id,
+            foodId,
+          },
+        },
+      });
+    },
+    [updateMutation, ingredient.id],
+  );
+
+  const deleteIngredient = useCallback(async () => {
+    await deleteMutation({
+      variables: {
+        input: { id: ingredient.id },
+      },
+    });
+  }, [deleteMutation, ingredient.id]);
+
+  return (
+    <Box>
+      <TextField
+        value={ingredient.text}
+        onChange={updateText}
+        multiline
+        label="Text"
+        fullWidth
+      />
+      <Button onClick={deleteIngredient}>Delete</Button>
     </Box>
   );
 };

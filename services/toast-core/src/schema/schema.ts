@@ -6,7 +6,6 @@ import groups from './groups';
 import plan from './plan';
 import ingredients from './ingredients';
 import recipes from './recipes';
-import corrections from './corrections';
 
 export default [
   gql`
@@ -23,5 +22,4 @@ export default [
   plan,
   ingredients,
   recipes,
-  corrections,
 ];
