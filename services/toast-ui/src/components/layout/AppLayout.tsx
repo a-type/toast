@@ -34,6 +34,7 @@ const useContentStyles = makeStyles<Theme, AppLayoutContentProps>(theme => ({
     width: '100%',
     gridArea: 'content',
     overflowY: 'auto',
+    backgroundColor: theme.palette.background.default,
   },
 }));
 

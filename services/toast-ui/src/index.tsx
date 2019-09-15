@@ -1,5 +1,3 @@
-/// <reference types="@emotion/core"/>
-
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -10,7 +8,7 @@ import { setConfig } from 'react-hot-loader';
 import './workbox';
 
 setConfig({
-  reloadHooks: false,
+  //reloadHooks: false,
 } as any);
 
 const renderApp = (AppComponent = App) => {

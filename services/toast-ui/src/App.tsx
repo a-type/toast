@@ -9,7 +9,6 @@ import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { Loader } from 'components/generic/Loader/Loader';
 import Helmet from 'react-helmet';
 import UpdateChecker from './UpdateChecker';
-import { Global, css } from '@emotion/core';
 import { CssBaseline } from '@material-ui/core';
 import { hot } from 'react-hot-loader/root';
 import { ToastAppBar } from 'components/features/AppBar';
@@ -43,34 +42,19 @@ const App: FC<{}> = props => {
         </LinkerContextProvider>
       </AuthProvider>
       <UpdateChecker />
-      <CssBaseline />
-      <Global
-        styles={css`
-          html,
-          body,
-          #main {
-            height: 100vh;
-          }
-          body {
-            overflow-y: hidden;
-            position: relative;
-          }
-          ::selection,
-          ::moz-selection {
-            background: #ffe6bd;
-          }
-        `}
-      />
     </SnackbarProvider>
   );
 };
 
 export default hot(props => (
-  <Router history={history}>
-    <ApolloProvider client={apolloClient}>
-      <DynamicThemeProvider>
-        <App {...props} />
-      </DynamicThemeProvider>
-    </ApolloProvider>
-  </Router>
+  <>
+    <Router history={history}>
+      <ApolloProvider client={apolloClient}>
+        <DynamicThemeProvider>
+          <CssBaseline />
+          <App {...props} />
+        </DynamicThemeProvider>
+      </ApolloProvider>
+    </Router>
+  </>
 ));
