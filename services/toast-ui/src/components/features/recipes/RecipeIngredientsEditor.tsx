@@ -1,61 +1,79 @@
-import React, { FC } from 'react';
-import { EditRecipeRecipe } from '../../../hooks/features/queries';
-import { Formik } from 'formik';
-import { Box, Button, TextField } from '@material-ui/core';
+import { FullRecipe, FullRecipeIngredient } from 'hooks/features/useFullRecipe';
+import { useCreateIngredient } from 'hooks/features/useCreateIngredient';
+import React, { FC, useCallback, ChangeEvent, useMemo, useRef } from 'react';
+import {
+  Box,
+  Button,
+  TextField,
+  IconButton,
+  makeStyles,
+} from '@material-ui/core';
+import { Formik, FormikHelpers, FastField } from 'formik';
+import { FormikTextField } from 'components/fields';
+import { useUpdateIngredient } from 'hooks/features/useUpdateIngredient';
+import { useDeleteIngredient } from 'hooks/features/useDeleteIngredient';
+import { DeleteTwoTone } from '@material-ui/icons';
+import { BoxProps } from '@material-ui/core/Box';
+import { IngredientEditor } from '../IngredientEditor';
+import { colors } from 'themes/colors';
 
-export interface RecipeIngredientsEditorProps {
-  recipe: EditRecipeRecipe;
-  createIngredient: (args: {
-    recipeId: string;
-    ingredientText: string;
-  }) => Promise<void>;
-  refetchRecipe: () => Promise<any>;
+interface RecipeIngredientsEditorProps extends BoxProps {
+  recipe: FullRecipe;
 }
 
-// const CORRECTOR_MESSAGES: IngredientCorrectorMessages = {
-//   suggestChange: 'Change',
-//   suggestDelete: 'Delete',
-//   correctionSubmitted: 'Saved',
-//   submitCorrection: 'Save',
-// };
+const useRecipeIngredientsEditorStyles = makeStyles(theme => ({
+  addIngredientField: {
+    marginBottom: theme.spacing(1),
+  },
+}));
 
-export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
-  recipe,
-  createIngredient,
-  refetchRecipe,
-}) => {
-  // const { submitChange, submitDelete } = useCorrectIngredient({
-  //   recipeId: recipe.id,
-  //   refetch: refetchRecipe,
-  // });
+export const RecipeIngredientsEditor: FC<
+  RecipeIngredientsEditorProps
+> = props => {
+  const { recipe, ...rest } = props;
+  const classes = useRecipeIngredientsEditorStyles(props);
+
+  const addIngredientEditorRef = useRef(null);
+
+  const [createMutation] = useCreateIngredient();
+
+  const create = useCallback(
+    async (values: { text: string }, formik: FormikHelpers<any>) => {
+      await createMutation({
+        variables: {
+          input: {
+            recipeId: recipe.id,
+            text: values.text,
+          },
+        },
+      });
+      addIngredientEditorRef.current.reset();
+    },
+    [createMutation, recipe.id],
+  );
 
   return (
-    <Box>
-      <Box>
-        {/* {recipe.ingredients.map(recipeIngredient => (
-          <IngredientCorrector
-            key={recipeIngredient.id}
-            recipeIngredient={recipeIngredient}
-            submit={submitChange}
-            requestDelete={submitDelete}
-            messages={CORRECTOR_MESSAGES}
-          />
-        ))} */}
-      </Box>
-      <Formik
-        onSubmit={createIngredient}
-        initialValues={{ ingredientText: '' }}
-      >
-        {({ values, handleSubmit, handleChange }) => (
+    <Box {...rest}>
+      {recipe.ingredientsConnection.edges.map(({ node: ingredient }) => (
+        <RecipeIngredientEditor ingredient={ingredient} key={ingredient.id} />
+      ))}
+      <Formik initialValues={{ text: '' }} onSubmit={create}>
+        {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <TextField
-              label="Add ingredient"
-              required
-              value={values.ingredientText}
-              onChange={handleChange}
-              name="ingredientText"
+            <FastField
+              name="text"
+              render={({ field, form }) => (
+                <IngredientEditor
+                  value={field.value}
+                  onChange={text => form.setFieldValue('text', text)}
+                  className={classes.addIngredientField}
+                  ref={addIngredientEditorRef}
+                />
+              )}
             />
-            <Button type="submit">Add ingredient</Button>
+            <Button color="secondary" type="submit" variant="contained">
+              Add Ingredient
+            </Button>
           </form>
         )}
       </Formik>
@@ -63,4 +81,113 @@ export const RecipeIngredientsEditor: FC<RecipeIngredientsEditorProps> = ({
   );
 };
 
-export default RecipeIngredientsEditor;
+interface RecipeIngredientEditorProps {
+  ingredient: FullRecipeIngredient;
+}
+
+const useRecipeIngredientEditorStyles = makeStyles(theme => ({
+  fieldRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: theme.spacing(2),
+  },
+  deleteButton: {
+    flex: '0 0 auto',
+    margin: 'auto',
+    marignLeft: theme.spacing(1),
+  },
+  warning: {
+    color: colors.yellow[700],
+  },
+}));
+
+const RecipeIngredientEditor: FC<RecipeIngredientEditorProps> = ({
+  ingredient,
+}) => {
+  const classes = useRecipeIngredientEditorStyles({ ingredient });
+
+  const [updateMutation] = useUpdateIngredient();
+  const [deleteMutation] = useDeleteIngredient();
+
+  const updateText = useCallback(
+    async event => {
+      await updateMutation({
+        variables: {
+          input: {
+            id: ingredient.id,
+            text: event.target.value,
+          },
+        },
+      });
+    },
+    [updateMutation, ingredient.id],
+  );
+
+  const updateFields = useCallback(
+    async (
+      values: { id: string; text: string; quantity: number; unit: string },
+      formik: FormikHelpers<any>,
+    ) => {
+      await updateMutation({
+        variables: {
+          input: {
+            id: ingredient.id,
+            fields: {
+              ...values,
+            },
+          },
+        },
+      });
+    },
+    [updateMutation, ingredient.id],
+  );
+
+  const updateFood = useCallback(
+    async (foodId: string) => {
+      await updateMutation({
+        variables: {
+          input: {
+            id: ingredient.id,
+            foodId,
+          },
+        },
+      });
+    },
+    [updateMutation, ingredient.id],
+  );
+
+  const deleteIngredient = useCallback(async () => {
+    await deleteMutation({
+      variables: {
+        input: { id: ingredient.id },
+      },
+    });
+  }, [deleteMutation, ingredient.id]);
+
+  const parsedInfo = useMemo(() => {
+    if (ingredient.food) {
+      return `Recognized: ${ingredient.food.name}`;
+    } else {
+      return <span className={classes.warning}>No food recognized!</span>;
+    }
+  }, [ingredient]);
+
+  return (
+    <Box className={classes.fieldRow}>
+      <TextField
+        value={ingredient.text}
+        onBlur={updateText}
+        label="Text"
+        fullWidth
+        helperText={parsedInfo}
+      />
+      <IconButton
+        className={classes.deleteButton}
+        aria-label="Delete ingredient"
+        onClick={deleteIngredient}
+      >
+        <DeleteTwoTone />
+      </IconButton>
+    </Box>
+  );
+};

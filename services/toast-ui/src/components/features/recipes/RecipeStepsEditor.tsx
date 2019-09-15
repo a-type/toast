@@ -1,57 +1,93 @@
-import React, { FC } from 'react';
-import { Formik, FieldArray } from 'formik';
-import {
-  EditRecipeRecipe,
-  RecipeUpdateInput,
-} from '../../../hooks/features/queries';
-import { TextField, Button, Box } from '@material-ui/core';
+import { FullRecipe } from 'hooks/features/useFullRecipe';
+import { FormikHelpers, Formik, FieldArray } from 'formik';
+import React, { FC, useCallback } from 'react';
+import { Box, Button } from '@material-ui/core';
+import { FormikTextField } from 'components/fields';
+import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
+import { BoxProps } from '@material-ui/core/Box';
 
-export interface RecipeStepsEditorProps {
-  recipe: EditRecipeRecipe;
-  updateRecipe: (input: RecipeUpdateInput) => any;
+interface RecipeStepsEditorProps extends BoxProps {
+  recipe: FullRecipe;
 }
 
-export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = ({
-  recipe,
-  updateRecipe,
-}) => {
+export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = props => {
+  const { recipe, ...rest } = props;
+  const [updateRecipe, { error: updateError }] = useUpdateRecipe();
+
+  const save = useCallback(
+    async (
+      {
+        steps,
+        published,
+        id,
+        title,
+        description,
+        prepTime,
+        cookTime,
+        unattendedTime,
+        servings,
+        private: isPrivate,
+      }: FullRecipe,
+      form: FormikHelpers<FullRecipe>,
+    ) => {
+      const fields = {
+        published,
+        title,
+        description,
+        prepTime,
+        cookTime,
+        unattendedTime,
+        servings,
+        private: isPrivate,
+      };
+
+      form.setSubmitting(true);
+      try {
+        await updateRecipe({
+          variables: {
+            input: {
+              id: recipe.id,
+              fields,
+              steps: {
+                set: steps,
+              },
+            },
+          },
+        });
+      } finally {
+        form.setSubmitting(false);
+      }
+    },
+    [updateRecipe, recipe],
+  );
+
   return (
-    <Box>
-      <Formik
-        onSubmit={({ steps }) => updateRecipe({ id: recipe.id, steps })}
-        initialValues={{ steps: recipe.steps }}
-      >
-        {({ handleSubmit, values, handleChange }) => (
+    <Box {...rest}>
+      <Formik initialValues={recipe} onSubmit={save}>
+        {({ handleSubmit, values }) => (
           <form onSubmit={handleSubmit}>
             <FieldArray
               name="steps"
               render={arrayHelpers => (
-                <div>
-                  {values.steps && values.steps.length > 0 ? (
-                    values.steps.map((step, index) => (
-                      <div key={index}>
-                        <TextField
-                          label="Step"
-                          value={step}
-                          name={`steps.${index}`}
-                          onChange={handleChange}
-                        />
-                        <Button onClick={() => arrayHelpers.remove(index)}>
-                          Delete
-                        </Button>
-                      </div>
-                    ))
-                  ) : (
-                    <div>There are no steps</div>
-                  )}
-
-                  <Button onClick={() => arrayHelpers.push('')}>
-                    Add step
+                <Box>
+                  {(values.steps || []).map((step, idx) => (
+                    <Box mb={1} key={idx}>
+                      <FormikTextField
+                        name={`steps.${idx}`}
+                        multiline
+                        fullWidth
+                      />
+                    </Box>
+                  ))}
+                  <Button variant="text" onClick={() => arrayHelpers.push('')}>
+                    Add a step
                   </Button>
-                </div>
+                </Box>
               )}
             />
-            <Button type="submit">Save</Button>
+            <Button type="submit" color="secondary" variant="contained">
+              Save
+            </Button>
           </form>
         )}
       </Formik>

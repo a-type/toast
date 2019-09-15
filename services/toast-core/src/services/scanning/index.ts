@@ -25,6 +25,21 @@ export type IngredientParseResult = {
   comments: string[];
 };
 
+export type RecipeIngredient = {
+  text: string;
+  unit: string;
+  unitStart: number;
+  unitEnd: number;
+  quantity: number;
+  quantityStart: number;
+  quantityEnd: number;
+  foodStart: number;
+  foodEnd: number;
+  comments: string[];
+  preparations: string[];
+  foodId: string;
+};
+
 export default {
   linkRecipe: async (
     sourceUrl: string,
@@ -45,9 +60,7 @@ export default {
     return body;
   },
 
-  parseIngredients: async (
-    ingredients: string[],
-  ): Promise<IngredientParseResult[]> => {
+  parseIngredients: async (ingredients: string[]) => {
     const response = await invokeCloudRun(
       config.scanning.host,
       '/parseIngredients',
@@ -62,22 +75,24 @@ export default {
       },
     );
 
-    const body = await response.json();
-    return body;
+    const body = (await response.json()) as IngredientParseResult[];
+    return body.map(parsedIngredientToRecipeIngredient);
   },
-
-  parsedIngredientToRecipeIngredient: (parsed: IngredientParseResult) => ({
-    text: parsed.sanitized || parsed.original,
-    unit: parsed.unit && parsed.unit.normalized,
-    unitStart: parsed.unit && parsed.unit.range[0],
-    unitEnd: parsed.unit && parsed.unit.range[1],
-    quantity: parsed.quantity && parsed.quantity.normalized,
-    quantityStart: parsed.quantity && parsed.quantity.range[0],
-    quantityEnd: parsed.quantity && parsed.quantity.range[1],
-    foodStart: parsed.food && parsed.food.range[0],
-    foodEnd: parsed.food && parsed.food.range[1],
-    comments: parsed.comments,
-    preparations: parsed.preparations,
-    foodId: parsed.food && parsed.food.id,
-  }),
 };
+
+const parsedIngredientToRecipeIngredient = (
+  parsed: IngredientParseResult,
+): RecipeIngredient => ({
+  text: parsed.sanitized || parsed.original,
+  unit: parsed.unit && parsed.unit.normalized,
+  unitStart: parsed.unit && parsed.unit.range[0],
+  unitEnd: parsed.unit && parsed.unit.range[1],
+  quantity: parsed.quantity && parsed.quantity.normalized,
+  quantityStart: parsed.quantity && parsed.quantity.range[0],
+  quantityEnd: parsed.quantity && parsed.quantity.range[1],
+  foodStart: parsed.food && parsed.food.range[0],
+  foodEnd: parsed.food && parsed.food.range[1],
+  comments: parsed.comments,
+  preparations: parsed.preparations,
+  foodId: parsed.food && parsed.food.id,
+});

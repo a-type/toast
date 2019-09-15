@@ -1,5 +1,5 @@
 import stringSimilarity from 'string-similarity';
-import { aqlQuery, aql } from 'toast-common';
+import { aqlQuery, aql, logger } from 'toast-common';
 
 export type Food = {
   id: string;
@@ -13,7 +13,12 @@ const ensureCloseEnough = (
   if (!food) {
     return null;
   }
-  const passed = getOverallSimilarity(food, searchTerm) > 0.75;
+  logger.debug(`Comparing "${searchTerm}" and ${JSON.stringify(food)}`);
+
+  const similarity = getOverallSimilarity(food, searchTerm);
+
+  const passed = similarity > 0.75;
+  logger.debug(`Passed: ${passed}, similarity: ${similarity}`);
 
   return passed ? food : null;
 };
@@ -35,24 +40,34 @@ const findClearWinner = (candidates: any[], term: string) => {
     return candidates[0];
   }
 
-  const scoreOfFirstResult = getOverallSimilarity(candidates[0], term);
-  const scoreOfSecondResult = getOverallSimilarity(candidates[1], term);
+  const sorted = candidates.sort(
+    // sorting descending by score
+    (a, b) => getOverallSimilarity(b, term) - getOverallSimilarity(a, term),
+  );
+
+  const scoreOfFirstResult = getOverallSimilarity(sorted[0], term);
+  logger.debug(`Score for first candidate: ${scoreOfFirstResult}`);
+  const scoreOfSecondResult = getOverallSimilarity(sorted[1], term);
+  logger.debug(`Score for second candidate: ${scoreOfSecondResult}`);
 
   if (scoreOfSecondResult / scoreOfFirstResult < 0.85) {
-    return candidates[0];
+    return sorted[0];
   }
+
+  logger.debug(`No clear winner found in list ${JSON.stringify(sorted)}`);
 };
 
 export default async (ingredientTexts: string[]): Promise<Food[]> =>
   Promise.all(
     ingredientTexts.map(async text => {
       if (!text) {
+        logger.debug(`Tried to lookup food with empty string`);
         return null;
       }
 
       const result = await aqlQuery(aql`
         FOR food IN FoodSearchView SEARCH PHRASE(food.name, ${text}, 'text_en') OR PHRASE(food.alternateNames, ${text}, 'text_en') OR PHRASE(food.searchHelpers, ${text}, 'text_en')
-          SORT BM25(food) DESC
+          SORT BM25(food) ASC
           LIMIT 10
           RETURN {
             id: food._key,
@@ -63,6 +78,9 @@ export default async (ingredientTexts: string[]): Promise<Food[]> =>
       `);
 
       const candidates = await result.all();
+      logger.debug(
+        `Food candidates for "${text}": ${JSON.stringify(candidates)}`,
+      );
 
       const foundFood = ensureCloseEnough(
         text,

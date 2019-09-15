@@ -23,7 +23,7 @@ export default (
   },
   overrides?: ThemeOptions,
 ) => {
-  const stylized = {
+  const stylized: ThemeOptions = {
     palette: {
       type,
       primary: main,
@@ -67,6 +67,14 @@ export default (
           '&$selected': {
             color: main[900],
           },
+        },
+      },
+      MuiOutlinedInput: {
+        notchedOutline: {
+          borderColor:
+            type === 'light'
+              ? fade(colors.black[500], 0.23)
+              : fade(colors.white[500], 0.23),
         },
       },
     },

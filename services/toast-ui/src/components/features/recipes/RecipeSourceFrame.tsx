@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { IFrame } from './components';
 import { Box } from '@material-ui/core';
 
 const enforceHttps = (src: string) => {
