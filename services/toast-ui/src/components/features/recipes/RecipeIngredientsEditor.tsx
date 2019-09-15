@@ -14,15 +14,15 @@ import { useUpdateIngredient } from 'hooks/features/useUpdateIngredient';
 import { useDeleteIngredient } from 'hooks/features/useDeleteIngredient';
 import { DeleteTwoTone } from '@material-ui/icons';
 import { BoxProps } from '@material-ui/core/Box';
-import { IngredientTextEditor } from '../IngredientTextEditor';
+import { IngredientEditor } from '../IngredientEditor';
 
 interface RecipeIngredientsEditorProps extends BoxProps {
   recipe: FullRecipe;
 }
 
 const useRecipeIngredientsEditorStyles = makeStyles(theme => ({
-  field: {
-    marginBottom: theme.spacing(2),
+  addIngredientField: {
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -60,9 +60,10 @@ export const RecipeIngredientsEditor: FC<
             <FastField
               name="text"
               render={({ field, form }) => (
-                <IngredientTextEditor
+                <IngredientEditor
                   value={field.value}
                   onChange={text => form.setFieldValue('text', text)}
+                  className={classes.addIngredientField}
                 />
               )}
             />

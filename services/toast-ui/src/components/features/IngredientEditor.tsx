@@ -9,27 +9,26 @@ import {
   MenuItem,
   Typography,
 } from '@material-ui/core';
-import { Editor } from 'slate-react';
-import { Value, Plugin } from 'slate';
+import { Value, SchemaProperties } from 'slate';
 import Plain from 'slate-plain-serializer';
 import { useFoodSuggestionsPlugin } from 'hooks/slate/useFoodSuggestionsPlugin';
-import { TabTwoTone } from '@material-ui/icons';
+import { SlateEditor } from 'components/generic/SlateEditor';
 
 export interface IngredientTextEditorProps {
   value: string;
   onChange: (newValue: string) => any;
+  className?: string;
 }
 
 const useStyles = makeStyles<Theme, IngredientTextEditorProps>(theme => ({
-  /* custom styles go here */
-  editor: {
-    border: `1px solid ${theme.palette.grey[500]}`,
-  },
   menuTitle: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     marginTop: theme.spacing(0.5),
     fontStyle: 'italic',
+  },
+  menuItem: {
+    paddingRight: '50px',
   },
   tabIcon: {
     position: 'absolute',
@@ -41,9 +40,9 @@ const useStyles = makeStyles<Theme, IngredientTextEditorProps>(theme => ({
   },
 }));
 
-export const IngredientTextEditor: FC<IngredientTextEditorProps> = props => {
+export const IngredientEditor: FC<IngredientTextEditorProps> = props => {
   const classes = useStyles(props);
-  const { value, onChange } = props;
+  const { value, onChange, ...rest } = props;
 
   const [slateValue, setSlateValue] = useState<Value>(
     Plain.deserialize(value || ''),
@@ -72,11 +71,25 @@ export const IngredientTextEditor: FC<IngredientTextEditorProps> = props => {
     foodSuggestionsPlugin,
   ]);
 
-  console.info('Rerender');
+  const renderInline = useCallback((props, editor, next) => {
+    const { attributes, node } = props;
+
+    if (node.type === FOOD_NODE_TYPE) {
+      return <b {...attributes}>{props.node.text}</b>;
+    }
+
+    return next();
+  }, []);
 
   return (
     <>
-      <Editor value={slateValue} onChange={handleChange} plugins={plugins} />
+      <SlateEditor
+        value={slateValue}
+        onChange={handleChange}
+        plugins={plugins}
+        renderInline={renderInline}
+        {...rest}
+      />
       {showSuggestions && (
         <Popper
           open={!!popperAnchor}
@@ -98,6 +111,7 @@ export const IngredientTextEditor: FC<IngredientTextEditorProps> = props => {
                       <MenuItem
                         key={id}
                         selected={highlightedSuggestion === idx}
+                        className={classes.menuItem}
                       >
                         {name}
                         {highlightedSuggestion === idx && (
