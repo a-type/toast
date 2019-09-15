@@ -3,7 +3,9 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { useDebouncedCallback } from 'use-debounce';
 import gql from 'graphql-tag';
 
-export const useLazyFoodSuggestions = (): [
+export const useLazyFoodSuggestions = (
+  delay: number = 250,
+): [
   (term: string) => any,
   { id: string; name: string }[],
   { loading: boolean },
@@ -41,7 +43,7 @@ export const useLazyFoodSuggestions = (): [
         setSuggestions([]);
       }
     },
-    500,
+    delay,
     [client],
   );
 

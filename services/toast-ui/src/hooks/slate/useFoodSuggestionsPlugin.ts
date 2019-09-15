@@ -8,7 +8,7 @@ const UP_ARROW_KEY = 38;
 const DOWN_ARROW_KEY = 40;
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
-const RESULT_SIZE = 5;
+const TAB_KEY = 9;
 
 export const useFoodSuggestionsPlugin = (): [
   Plugin,
@@ -16,6 +16,8 @@ export const useFoodSuggestionsPlugin = (): [
     popperAnchor: PopperProps['anchorEl'];
     suggestions: { id: string; name: string }[];
     loading: boolean;
+    highlightedSuggestion: number;
+    showSuggestions: boolean;
   },
 ] => {
   const popperAnchorRef = useRef<PopperProps['anchorEl'] | null>(null);
@@ -27,9 +29,11 @@ export const useFoodSuggestionsPlugin = (): [
     suggestions,
     { loading },
   ] = useLazyFoodSuggestions();
+  const [highlightedSuggestion, setHighlightedSuggestion] = useState<number>(0);
+  const [trackedValue, setTrackedValue] = useState('');
 
   const onKeyDown = useCallback(
-    (event: KeyboardEvent, editor: Editor) => {
+    (event: KeyboardEvent, editor: Editor, next) => {
       const keyCode = event.keyCode;
 
       const isSuggestionsOpen = menuState === 'capturing';
@@ -39,35 +43,66 @@ export const useFoodSuggestionsPlugin = (): [
         (keyCode === UP_ARROW_KEY || keyCode === DOWN_ARROW_KEY)
       ) {
         event.preventDefault();
+        if (keyCode === UP_ARROW_KEY) {
+          setHighlightedSuggestion(
+            (suggestions.length + highlightedSuggestion - 1) %
+              suggestions.length,
+          );
+        } else {
+          setHighlightedSuggestion(
+            (highlightedSuggestion + 1) % suggestions.length,
+          );
+        }
       }
 
-      if (isSuggestionsOpen && keyCode === ENTER_KEY) {
+      if (isSuggestionsOpen && (keyCode === ENTER_KEY || keyCode === TAB_KEY)) {
         event.preventDefault();
+        editor
+          .deleteBackward(trackedValue.length)
+          .insertText(suggestions[highlightedSuggestion].name);
+        setHighlightedSuggestion(null);
+        setMenuState('dismissed');
+        return;
       }
 
       if (isSuggestionsOpen && keyCode === ESCAPE_KEY) {
         event.preventDefault();
         setMenuState('dismissed');
+        setHighlightedSuggestion(null);
       }
+
+      next();
     },
-    [menuState, setMenuState],
+    [
+      menuState,
+      setMenuState,
+      suggestions,
+      highlightedSuggestion,
+      setHighlightedSuggestion,
+      trackedValue,
+    ],
   );
 
-  const lastTrackedValueRef = useRef<string | null>(null);
   const onChange = useCallback(
     (change: { value: Value }) => {
-      console.log(change.value);
+      const newTrackedValue = getTrackedValue(change.value) || '';
 
-      const trackedValue = getTrackedValue(change.value) || '';
+      if (newTrackedValue !== trackedValue) {
+        setTrackedValue(newTrackedValue);
 
-      if (trackedValue !== lastTrackedValueRef.current) {
-        lastTrackedValueRef.current = trackedValue;
+        if (newTrackedValue.length === 0) {
+          setMenuState('capturing');
+        }
 
         if (menuState === 'dismissed') {
           return;
         }
 
-        handleSearchTermChange(trackedValue);
+        if (newTrackedValue.length < 3) {
+          return;
+        }
+
+        handleSearchTermChange(newTrackedValue);
 
         // get anchor position
         const selection = window.getSelection();
@@ -95,7 +130,7 @@ export const useFoodSuggestionsPlugin = (): [
           // modify range to include all of tracked word value
           clonedRange.setStart(
             clonedRange.startContainer,
-            Math.max(0, clonedRange.startOffset - trackedValue.length),
+            Math.max(0, clonedRange.startOffset - newTrackedValue.length),
           );
 
           const boundingClientRect = clonedRange.getBoundingClientRect();
@@ -110,7 +145,13 @@ export const useFoodSuggestionsPlugin = (): [
         }
       }
     },
-    [handleSearchTermChange, lastTrackedValueRef, menuState],
+    [
+      handleSearchTermChange,
+      trackedValue,
+      menuState,
+      setMenuState,
+      setTrackedValue,
+    ],
   );
 
   const plugin = useMemo(
@@ -126,7 +167,12 @@ export const useFoodSuggestionsPlugin = (): [
     {
       suggestions,
       loading,
-      popperAnchor: menuState === 'capturing' ? popperAnchorRef.current : null,
+      popperAnchor: popperAnchorRef.current,
+      showSuggestions:
+        trackedValue.length > 2 &&
+        menuState === 'capturing' &&
+        suggestions.length > 0,
+      highlightedSuggestion,
     },
   ];
 };
@@ -143,63 +189,3 @@ const getTrackedValue = (value: Value) => {
     .pop();
   return lastWord;
 };
-
-// from http://jsfiddle.net/gliheng/vbucs/12/
-function cursorPosition(
-  parentElement?: HTMLElement,
-  offsetx?: number,
-  offsety?: number,
-) {
-  offsetx = offsetx || 0;
-  offsety = offsety || 0;
-
-  let nodeLeft = 0;
-  let nodeTop = 0;
-  if (parentElement) {
-    nodeLeft = parentElement.offsetLeft;
-    nodeTop = parentElement.offsetTop;
-  }
-
-  const pos = { left: 0, top: 0 };
-
-  if ((document as any).selection) {
-    const range = (document as any).selection.createRange();
-    pos.left = range.offsetLeft + offsetx - nodeLeft;
-    pos.top = range.offsetTop + offsety - nodeTop;
-  } else if (window.getSelection) {
-    const sel = window.getSelection();
-    if (sel.rangeCount === 0) return null;
-    const range = sel.getRangeAt(0).cloneRange();
-
-    try {
-      range.setStart(range.startContainer, range.startOffset - 1);
-    } catch (e) {}
-
-    const rect = range.getBoundingClientRect();
-
-    if (range.endOffset === 0 || range.toString() === '') {
-      // first char of line
-      if (range.startContainer === parentElement) {
-        // empty div
-        if (range.endOffset === 0) {
-          pos.top = 0;
-          pos.left = 0;
-        } else {
-          // firefox need this
-          const range2 = range.cloneRange();
-          range2.setStart(range2.startContainer, 0);
-          const rect2 = range2.getBoundingClientRect();
-          pos.left = rect2.left + offsetx - nodeLeft;
-          pos.top = rect2.top + rect2.height + offsety - nodeTop;
-        }
-      } else {
-        pos.top = (range.startContainer as HTMLElement).offsetTop;
-        pos.left = (range.startContainer as HTMLElement).offsetLeft;
-      }
-    } else {
-      pos.left = rect.left + rect.width + offsetx - nodeLeft;
-      pos.top = rect.top + offsety - nodeTop;
-    }
-  }
-  return pos;
-}
