@@ -1,6 +1,6 @@
 import { FullRecipe, FullRecipeIngredient } from 'hooks/features/useFullRecipe';
 import { useCreateIngredient } from 'hooks/features/useCreateIngredient';
-import React, { FC, useCallback, ChangeEvent } from 'react';
+import React, { FC, useCallback, ChangeEvent, useMemo, useRef } from 'react';
 import {
   Box,
   Button,
@@ -15,6 +15,7 @@ import { useDeleteIngredient } from 'hooks/features/useDeleteIngredient';
 import { DeleteTwoTone } from '@material-ui/icons';
 import { BoxProps } from '@material-ui/core/Box';
 import { IngredientEditor } from '../IngredientEditor';
+import { colors } from 'themes/colors';
 
 interface RecipeIngredientsEditorProps extends BoxProps {
   recipe: FullRecipe;
@@ -32,6 +33,8 @@ export const RecipeIngredientsEditor: FC<
   const { recipe, ...rest } = props;
   const classes = useRecipeIngredientsEditorStyles(props);
 
+  const addIngredientEditorRef = useRef(null);
+
   const [createMutation] = useCreateIngredient();
 
   const create = useCallback(
@@ -44,7 +47,7 @@ export const RecipeIngredientsEditor: FC<
           },
         },
       });
-      formik.resetForm();
+      addIngredientEditorRef.current.reset();
     },
     [createMutation, recipe.id],
   );
@@ -64,6 +67,7 @@ export const RecipeIngredientsEditor: FC<
                   value={field.value}
                   onChange={text => form.setFieldValue('text', text)}
                   className={classes.addIngredientField}
+                  ref={addIngredientEditorRef}
                 />
               )}
             />
@@ -92,6 +96,9 @@ const useRecipeIngredientEditorStyles = makeStyles(theme => ({
     margin: 'auto',
     marignLeft: theme.spacing(1),
   },
+  warning: {
+    color: colors.yellow[700],
+  },
 }));
 
 const RecipeIngredientEditor: FC<RecipeIngredientEditorProps> = ({
@@ -103,7 +110,7 @@ const RecipeIngredientEditor: FC<RecipeIngredientEditorProps> = ({
   const [deleteMutation] = useDeleteIngredient();
 
   const updateText = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
+    async event => {
       await updateMutation({
         variables: {
           input: {
@@ -157,13 +164,22 @@ const RecipeIngredientEditor: FC<RecipeIngredientEditorProps> = ({
     });
   }, [deleteMutation, ingredient.id]);
 
+  const parsedInfo = useMemo(() => {
+    if (ingredient.food) {
+      return `Recognized: ${ingredient.food.name}`;
+    } else {
+      return <span className={classes.warning}>No food recognized!</span>;
+    }
+  }, [ingredient]);
+
   return (
     <Box className={classes.fieldRow}>
       <TextField
         value={ingredient.text}
-        onChange={updateText}
+        onBlur={updateText}
         label="Text"
         fullWidth
+        helperText={parsedInfo}
       />
       <IconButton
         className={classes.deleteButton}

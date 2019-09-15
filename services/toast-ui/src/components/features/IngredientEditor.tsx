@@ -1,4 +1,12 @@
-import React, { FC, useState, useCallback, useMemo } from 'react';
+import React, {
+  FC,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import {
   makeStyles,
   Theme,
@@ -8,6 +16,7 @@ import {
   MenuList,
   MenuItem,
   Typography,
+  ClickAwayListener,
 } from '@material-ui/core';
 import { Value, SchemaProperties } from 'slate';
 import Plain from 'slate-plain-serializer';
@@ -40,94 +49,101 @@ const useStyles = makeStyles<Theme, IngredientTextEditorProps>(theme => ({
   },
 }));
 
-export const IngredientEditor: FC<IngredientTextEditorProps> = props => {
-  const classes = useStyles(props);
-  const { value, onChange, ...rest } = props;
+export const IngredientEditor = forwardRef<any, IngredientTextEditorProps>(
+  (props, ref) => {
+    const classes = useStyles(props);
+    const { value, onChange, ...rest } = props;
 
-  const [slateValue, setSlateValue] = useState<Value>(
-    Plain.deserialize(value || ''),
-  );
+    const [slateValue, setSlateValue] = useState<Value>(
+      Plain.deserialize(value || ''),
+    );
 
-  const handleChange = useCallback(
-    ({ value: v }) => {
-      setSlateValue(v);
-      onChange(Plain.serialize(v));
-    },
-    [setSlateValue],
-  );
+    useImperativeHandle(
+      ref,
+      () => ({
+        reset: () => setSlateValue(Plain.deserialize('')),
+      }),
+      [setSlateValue],
+    );
 
-  const [
-    foodSuggestionsPlugin,
-    {
-      popperAnchor,
-      loading,
-      suggestions,
-      highlightedSuggestion,
-      showSuggestions,
-    },
-  ] = useFoodSuggestionsPlugin();
+    const handleChange = useCallback(
+      ({ value: v }) => {
+        setSlateValue(v);
+        onChange(Plain.serialize(v));
+      },
+      [setSlateValue],
+    );
 
-  const plugins = useMemo(() => [foodSuggestionsPlugin], [
-    foodSuggestionsPlugin,
-  ]);
+    const [
+      foodSuggestionsPlugin,
+      {
+        popperAnchor,
+        loading,
+        suggestions,
+        highlightedSuggestion,
+        showSuggestions,
+        closeSuggestions,
+      },
+    ] = useFoodSuggestionsPlugin();
 
-  const renderInline = useCallback((props, editor, next) => {
-    const { attributes, node } = props;
+    const plugins = useMemo(() => [foodSuggestionsPlugin], [
+      foodSuggestionsPlugin,
+    ]);
 
-    if (node.type === FOOD_NODE_TYPE) {
-      return <b {...attributes}>{props.node.text}</b>;
-    }
-
-    return next();
-  }, []);
-
-  return (
-    <>
-      <SlateEditor
-        value={slateValue}
-        onChange={handleChange}
-        plugins={plugins}
-        renderInline={renderInline}
-        {...rest}
-      />
-      {showSuggestions && (
-        <Popper
-          open={!!popperAnchor}
-          transition
-          placement="bottom-start"
-          anchorEl={popperAnchor}
-        >
-          {({ TransitionProps }) => (
-            <Grow {...TransitionProps} timeout={350}>
-              <Paper>
-                <Typography variant="caption" className={classes.menuTitle}>
-                  Food suggestions
-                </Typography>
-                {loading ? (
-                  <span>Loading...</span>
-                ) : (
-                  <MenuList>
-                    {suggestions.map(({ id, name }, idx) => (
-                      <MenuItem
-                        key={id}
-                        selected={highlightedSuggestion === idx}
-                        className={classes.menuItem}
+    return (
+      <>
+        <SlateEditor
+          value={slateValue}
+          onChange={handleChange}
+          plugins={plugins}
+          {...rest}
+        />
+        {showSuggestions && (
+          <Popper
+            open={!!popperAnchor}
+            transition
+            placement="bottom-start"
+            anchorEl={popperAnchor}
+          >
+            {({ TransitionProps }) => (
+              <Grow {...TransitionProps} timeout={350}>
+                <Paper>
+                  <ClickAwayListener onClickAway={closeSuggestions}>
+                    <>
+                      <Typography
+                        variant="caption"
+                        className={classes.menuTitle}
                       >
-                        {name}
-                        {highlightedSuggestion === idx && (
-                          <div aria-hidden className={classes.tabIcon}>
-                            Tab
-                          </div>
-                        )}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                )}
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      )}
-    </>
-  );
-};
+                        Food suggestions
+                      </Typography>
+                      {loading ? (
+                        <span>Loading...</span>
+                      ) : (
+                        <MenuList>
+                          {suggestions.map(({ id, name }, idx) => (
+                            <MenuItem
+                              key={id}
+                              selected={highlightedSuggestion === idx}
+                              className={classes.menuItem}
+                            >
+                              {name}
+                              {highlightedSuggestion === idx && (
+                                <div aria-hidden className={classes.tabIcon}>
+                                  Tab
+                                </div>
+                              )}
+                            </MenuItem>
+                          ))}
+                        </MenuList>
+                      )}
+                    </>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+        )}
+      </>
+    );
+  },
+);

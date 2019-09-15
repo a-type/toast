@@ -45,6 +45,7 @@ export default gql`
 
   input UpdateIngredientInput {
     id: ID!
+    text: String
     fields: UpdateIngredientFieldsInput
     foodId: ID
   }

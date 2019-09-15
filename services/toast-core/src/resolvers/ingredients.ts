@@ -64,6 +64,8 @@ export default {
     updateIngredient: async (parent, args, ctx: Context, info) => {
       await authorizeIngredient(args, ctx);
 
+      const ingredientId = args.input.id;
+
       let parsed: RecipeIngredient;
       if (args.input.text) {
         const parsedList = await ctx.scanning.parseIngredients([
@@ -72,7 +74,8 @@ export default {
         parsed = parsedList[0];
 
         await ctx.arangoDb.query(aql`
-          UPDATE ${args.input.id} WITH {
+          LET ingredient = DOCUMENT(Ingredients, ${ingredientId})
+          UPDATE ${ingredientId} WITH {
             text: NOT_NULL(${parsed.text || null}, ingredient.text),
             quantity: NOT_NULL(${parsed.quantity || null}, ingredient.quantity),
             unit: NOT_NULL(${parsed.unit || null}, ingredient.unit),
@@ -96,25 +99,39 @@ export default {
       const newFoodId = args.input.foodId || parsed.foodId;
 
       if (newFoodId) {
-        await ctx.arangoDb.query(aql`
+        // there might not be an existing edge to update
+        const foodEdgeResult = await ctx.arangoDb.query(aql`
           LET edge = FIRST(
-            FOR food, foodEdge IN INBOUND DOCUMENT(Ingredients, ${
-              args.input.id
-            }) UsedIn
+            FOR food, foodEdge IN INBOUND DOCUMENT(Ingredients, ${ingredientId}) UsedIn
               LIMIT 1
               RETURN foodEdge
           )
-          LET food = DOCUMENT(Foods, ${newFoodId})
-          UPDATE {
-            _key: edge._key,
-            _from: food._id
-          } IN UsedIn
+          RETURN edge
         `);
+
+        const foodEdge = await foodEdgeResult.next();
+
+        if (foodEdge) {
+          await ctx.arangoDb.query(aql`
+            LET food = DOCUMENT(Foods, ${newFoodId})
+            UPDATE {
+              _key: ${foodEdge._key},
+              _from: food._id
+            } IN UsedIn
+          `);
+        } else {
+          await ctx.arangoDb.query(aql`
+            INSERT {
+              _to: ${`Ingredients/${ingredientId}`},
+              _from: ${`Foods/${newFoodId}`}
+            } INTO UsedIn
+          `);
+        }
       }
 
       const result = await ctx.arangoDb.query(aql`
-        LET ingredient = DOCUMENT(Ingredients, ${args.input.id})
-        UPDATE ${args.input.id} WITH {
+        LET ingredient = DOCUMENT(Ingredients, ${ingredientId})
+        UPDATE ${ingredientId} WITH {
           text: NOT_NULL(${args.input.text || null}, ingredient.text),
           quantity: NOT_NULL(${args.input.quantity ||
             null}, ingredient.quantity),

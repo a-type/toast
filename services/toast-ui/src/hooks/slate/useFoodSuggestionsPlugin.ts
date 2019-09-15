@@ -18,6 +18,7 @@ export const useFoodSuggestionsPlugin = (): [
     loading: boolean;
     highlightedSuggestion: number;
     showSuggestions: boolean;
+    closeSuggestions: () => any;
   },
 ] => {
   const popperAnchorRef = useRef<PopperProps['anchorEl'] | null>(null);
@@ -154,6 +155,10 @@ export const useFoodSuggestionsPlugin = (): [
     ],
   );
 
+  const closeSuggestions = useCallback(() => setMenuState('dismissed'), [
+    setMenuState,
+  ]);
+
   const plugin = useMemo(
     () => ({
       onKeyDown,
@@ -173,6 +178,7 @@ export const useFoodSuggestionsPlugin = (): [
         menuState === 'capturing' &&
         suggestions.length > 0,
       highlightedSuggestion,
+      closeSuggestions,
     },
   ];
 };

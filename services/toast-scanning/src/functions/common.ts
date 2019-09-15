@@ -1,8 +1,9 @@
-import { aqlQuery, aql } from 'toast-common';
+import { aqlQuery, aql, logger } from 'toast-common';
 import { Food } from '../services/lookupFoods/lookupFoods';
 
 export const createFood = async (name: string): Promise<Food> => {
   if (!name) {
+    logger.warn('Tried to create food from empty string');
     return null;
   }
 
@@ -19,6 +20,7 @@ export const createFood = async (name: string): Promise<Food> => {
     `);
 
     const food = await result.next();
+    logger.debug(`Created new food: ${JSON.stringify(food)}`);
     return {
       id: food._key,
       name: food.name,
@@ -34,7 +36,7 @@ export const createFood = async (name: string): Promise<Food> => {
 
       if (!result.hasNext()) {
         // this is weird. we got a conflict but no duplicate food
-        console.error(
+        logger.fatal(
           `Food creation conflicted, but no duplicate food found by name ${name}`,
         );
       } else {
@@ -45,7 +47,7 @@ export const createFood = async (name: string): Promise<Food> => {
         };
       }
     } else {
-      console.error('Failed to create food ' + name, err);
+      logger.fatal('Failed to create food ' + name, err);
       throw new Error('Failed to create food ' + name);
     }
   }
