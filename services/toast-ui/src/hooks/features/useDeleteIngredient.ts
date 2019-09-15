@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { useMutation, MutationHookOptions } from '@apollo/react-hooks';
+import { FullRecipeQueryResult, FullRecipeQuery } from './useFullRecipe';
 
 export const DeleteIngredientMutation = gql`
   mutation DeleteIngredientMutation($input: DeleteIngredientInput!) {
@@ -31,18 +32,6 @@ export type DeleteIngredientMutationVariables = {
   };
 };
 
-const RecipeFragment = gql`
-  fragment DeleteIngredientRecipe on Recipe {
-    ingredientsConnection {
-      edges {
-        node {
-          id
-        }
-      }
-    }
-  }
-`;
-
 export const useDeleteIngredient = (
   args: MutationHookOptions<
     DeleteIngredientMutationResult,
@@ -55,35 +44,31 @@ export const useDeleteIngredient = (
   >(DeleteIngredientMutation, {
     ...args,
     update: async (cache, result) => {
-      const id = `Recipe:${result.data.deleteIngredient.recipe.id}`;
+      const id = result.data.deleteIngredient.recipe.id;
 
-      const recipe = cache.readFragment<{
-        ingredientsConnection: {
-          edges: {
-            node: {
-              id: string;
-            };
-          }[];
-        };
-      }>({
-        id,
-        fragmentName: 'DeleteIngredientRecipe',
-        fragment: RecipeFragment,
+      const { recipe } = cache.readQuery<FullRecipeQueryResult>({
+        query: FullRecipeQuery,
+        variables: {
+          recipeId: id,
+        },
       });
 
       const edges = recipe.ingredientsConnection.edges.filter(
         ({ node }) => node.id !== result.data.deleteIngredient.ingredient.id,
       );
 
-      cache.writeFragment({
-        id,
-        fragmentName: 'DeleteIngredientRecipe',
-        fragment: RecipeFragment,
+      cache.writeQuery({
+        query: FullRecipeQuery,
+        variables: {
+          recipeId: id,
+        },
         data: {
-          __typename: 'Recipe',
-          ingredientsConnection: {
-            __typename: 'RecipeIngredientsConnection',
-            edges,
+          recipe: {
+            ...recipe,
+            ingredientsConnection: {
+              ...recipe.ingredientsConnection,
+              edges,
+            },
           },
         },
       });

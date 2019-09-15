@@ -35,9 +35,9 @@ export default gql`
   }
 
   type CreateIngredientResult {
-    ingredient: Ingredient!
+    ingredientEdge: RecipeIngredientEdge!
       @aqlNewQuery
-      @aqlSubquery(query: "LET $field = $parent.ingredient")
+      @aqlSubquery(query: "LET $field = $parent.ingredientEdge")
     recipe: Recipe!
       @aqlNewQuery
       @aqlSubquery(query: "LET $field = $parent.recipe")

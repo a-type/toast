@@ -11,11 +11,15 @@ export const FullRecipeQuery = gql`
       sourceUrl
       published
       servings
+      cookTime
+      prepTime
+      unattendedTime
+      private
+      published
       coverImageUrl
       coverImageAttribution
       ingredientsConnection {
         edges {
-          cursor
           node {
             id
             unit
@@ -49,45 +53,48 @@ export type FullRecipe = {
   published: boolean;
   title: string;
   description: string;
-  sourceUrl: string;
-  attribution: string;
-  coverImageUrl: string;
-  coverImageAttribution: string;
+  servings: number;
+  cookTime: number;
+  prepTime: number;
+  unattendedTime: number;
+  private: boolean;
+  sourceUrl?: string;
+  attribution?: string;
+  coverImageUrl?: string;
+  coverImageAttribution?: string;
   ingredientsConnection: {
     edges: {
-      cursor: string;
-      node: {
-        id: string;
-        unit?: string;
-        unitStart?: number;
-        unitEnd?: number;
-        quantity: number;
-        quantityStart?: number;
-        quantityEnd?: number;
-        text: string;
-        foodStart?: number;
-        foodEnd?: number;
-        comments: string[];
-        preparations: string[];
-        food: {
-          id: string;
-          name: string;
-        };
-      };
+      node: FullRecipeIngredient;
     }[];
   };
   steps: string[];
-  // author?: {
-  //   id: string;
-  // };
 };
 
-export type FullRecipeData = {
+export type FullRecipeIngredient = {
+  id: string;
+  unit?: string;
+  unitStart?: number;
+  unitEnd?: number;
+  quantity: number;
+  quantityStart?: number;
+  quantityEnd?: number;
+  text: string;
+  foodStart?: number;
+  foodEnd?: number;
+  comments: string[];
+  preparations: string[];
+  food: {
+    id: string;
+    name: string;
+  };
+};
+
+export type FullRecipeQueryResult = {
   recipe: FullRecipe;
 };
 
 export default (id: string, options: QueryHookOptions = {}) =>
-  useQuery<FullRecipeData, { recipeId: string }>(FullRecipeQuery, {
+  useQuery<FullRecipeQueryResult, { recipeId: string }>(FullRecipeQuery, {
     ...options,
     variables: {
       recipeId: id,

@@ -1,19 +1,28 @@
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { FullRecipeQueryResult, FullRecipeQuery } from './useFullRecipe';
 
 export const CreateIngredientMutation = gql`
   mutation CreateIngredientMutation($input: CreateIngredientInput!) {
     createIngredient(input: $input) {
-      ingredient {
-        id
-        text
-        quantity
-        unit
-        comments
-        preparations
-        food {
+      ingredientEdge {
+        node {
           id
-          name
+          text
+          quantity
+          unit
+          quantityStart
+          quantityEnd
+          unitStart
+          unitEnd
+          foodStart
+          foodEnd
+          comments
+          preparations
+          food {
+            id
+            name
+          }
         }
       }
       recipe {
@@ -25,16 +34,24 @@ export const CreateIngredientMutation = gql`
 
 export type CreateIngredientMutationResult = {
   createIngredient: {
-    ingredient: {
-      id: string;
-      text: string;
-      quantity: number;
-      unit: string;
-      comments: string[];
-      preparations: string[];
-      food: {
+    ingredientEdge: {
+      node: {
         id: string;
-        name: string;
+        text: string;
+        quantity: number;
+        unit: string;
+        quantityStart: number;
+        quantityEnd: number;
+        unitStart: number;
+        unitEnd: number;
+        foodStart: number;
+        foodEnd: number;
+        comments: string[];
+        preparations: string[];
+        food: {
+          id: string;
+          name: string;
+        };
       };
     };
     recipe: {
@@ -50,18 +67,6 @@ export type CreateIngredientMutationVariables = {
   };
 };
 
-const RecipeFragment = gql`
-  fragment CreateIngredientRecipe on Recipe {
-    ingredientsConnection {
-      edges {
-        node {
-          id
-        }
-      }
-    }
-  }
-`;
-
 export const useCreateIngredient = (args = {}) =>
   useMutation<
     CreateIngredientMutationResult,
@@ -69,44 +74,40 @@ export const useCreateIngredient = (args = {}) =>
   >(CreateIngredientMutation, {
     ...args,
     update: async (cache, result) => {
-      const id = `Recipe:${result.data.createIngredient.recipe.id}`;
+      const id = result.data.createIngredient.recipe.id;
 
-      const recipe = cache.readFragment<{
-        ingredientsConnection: {
-          edges: {
-            node: {
-              id: string;
-            };
-          }[];
-        };
-      }>({
-        id,
-        fragmentName: 'CreateIngredientRecipe',
-        fragment: RecipeFragment,
+      const { recipe, ...restData } = cache.readQuery<FullRecipeQueryResult>({
+        query: FullRecipeQuery,
+        variables: {
+          recipeId: id,
+        },
       });
 
       console.info(recipe);
 
       const edges = [
         ...recipe.ingredientsConnection.edges,
-        {
-          __typename: 'RecipeIngredientEdge',
-          node: result.data.createIngredient.ingredient,
-        },
+        result.data.createIngredient.ingredientEdge,
       ];
 
       console.info(edges);
 
-      cache.writeFragment({
-        id,
-        fragmentName: 'CreateIngredientRecipe',
-        fragment: RecipeFragment,
+      const newRecipe = {
+        ...recipe,
+        ingredientsConnection: {
+          ...recipe.ingredientsConnection,
+          edges,
+        },
+      };
+
+      cache.writeQuery({
+        query: FullRecipeQuery,
+        variables: {
+          recipeId: id,
+        },
         data: {
-          __typename: 'Recipe',
-          ingredientsConnection: {
-            __typename: 'RecipeIngredientsConnection',
-            edges,
-          },
+          ...restData,
+          recipe: newRecipe,
         },
       });
     },

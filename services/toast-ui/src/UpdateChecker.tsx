@@ -15,7 +15,9 @@ export const UpdateChecker: FC<UpdateCheckerProps> = ({}) => {
         snackbars.enqueueSnackbar('A new version is available.', {
           persist: true,
           action: (
-            <Button onClick={() => window.location.reload()}>Update</Button>
+            <Button color="primary" onClick={() => window.location.reload()}>
+              Update
+            </Button>
           ),
         });
       }

@@ -44,8 +44,6 @@ export default {
 
       const value = await result.next();
 
-      console.info(value);
-
       if (parsed.foodId) {
         await ctx.arangoDb.query(aql`
           INSERT {
@@ -55,7 +53,13 @@ export default {
         `);
       }
 
-      return value;
+      return {
+        recipe: value.recipe,
+        ingredientEdge: {
+          node: value.ingredient,
+          cursor: value.ingredient._key,
+        },
+      };
     },
     updateIngredient: async (parent, args, ctx: Context, info) => {
       await authorizeIngredient(args, ctx);
@@ -191,7 +195,7 @@ export default {
   },
 
   CreateIngredientResult: {
-    ingredient: arango,
+    ingredientEdge: arango,
     recipe: arango,
   },
   UpdateIngredientResult: {

@@ -11,8 +11,7 @@ export default gql`
   }
 
   extend type Query {
-    foods(first: Int = 50, after: String): FoodsConnection!
-      @aqlRelayConnection(source: "FOR $node IN Foods")
+    foods(first: Int = 50, after: String, searchTerm: String): FoodsConnection!
   }
 
   type FoodsConnection {
