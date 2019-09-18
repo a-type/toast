@@ -5,6 +5,8 @@ import { Box, Button } from '@material-ui/core';
 import { FormikTextField } from 'components/fields';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
 import { BoxProps } from '@material-ui/core/Box';
+import { FormikAutoSave } from 'components/generic/FormikAutoSave';
+import { AddTwoTone } from '@material-ui/icons';
 
 interface RecipeStepsEditorProps extends BoxProps {
   recipe: FullRecipe;
@@ -80,14 +82,12 @@ export const RecipeStepsEditor: FC<RecipeStepsEditorProps> = props => {
                     </Box>
                   ))}
                   <Button variant="text" onClick={() => arrayHelpers.push('')}>
-                    Add a step
+                    <AddTwoTone /> Add a step
                   </Button>
                 </Box>
               )}
             />
-            <Button type="submit" color="secondary" variant="contained">
-              Save
-            </Button>
+            <FormikAutoSave />
           </form>
         )}
       </Formik>

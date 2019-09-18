@@ -66,6 +66,7 @@ const theme = createMuiTheme({
 
     MuiButton: {
       contained: {
+        backgroundColor: colors.grey[50],
         '&$disabled': {
           backgroundColor: fade(colors.purple[500], 0.1),
         },

@@ -3,12 +3,37 @@ import { gql } from 'apollo-server-core';
 export default gql`
   type Recipe {
     id: ID! @aqlKey
+
     title: String!
 
+    """
+    A bit of long- or short-form prose to describe the history of the recipe, special preparations,
+    or anything else the author wants the reader to know. This is stored as a SlateJS document encoded
+    as JSON.
+    """
+    introduction: String
+
+    """
+    A brief summary of the recipe to use in cards or user notifications
+    """
     description: String
+
+    """
+    A description of the person or publication to which the recipe is credited
+    """
     attribution: String
+
+    """
+    If the recipe originated on a remote site, this should be the canonical link to it
+    """
     sourceUrl: String
+
+    """
+    As described in ingredients and instructions, this is how many meals the recipe
+    should produce.
+    """
     servings: Int!
+
     """
     In minutes
     """
@@ -178,6 +203,7 @@ export default gql`
 
   input CreateRecipeFieldsInput {
     title: String!
+    introduction: String
     description: String
     servings: Int
     cookTime: Int
@@ -214,6 +240,7 @@ export default gql`
 
   input UpdateRecipeFieldsInput {
     title: String
+    introduction: String
     description: String
     servings: Int
     cookTime: Int
@@ -244,6 +271,7 @@ export default gql`
         LET recipe = FIRST(
           INSERT {
             title: $args.input.fields.title,
+            introduction: $args.input.fields.introduction,
             description: $args.input.fields.description,
             servings: $args.input.fields.servings,
             cookTime: $args.input.fields.cookTime,
@@ -275,6 +303,7 @@ export default gql`
         UPDATE recipe._key WITH {
           updatedAt: DATE_NOW(),
           title: NOT_NULL($args.input.fields.title, recipe.title),
+          introduction: NOT_NULL($args.input.fields.introduction, recipe.introduction),
           description: NOT_NULL($args.input.fields.description, recipe.description),
           servings: NOT_NULL($args.input.fields.servings, recipe.servings),
           cookTime: NOT_NULL($args.input.fields.cookTime, recipe.cookTime),

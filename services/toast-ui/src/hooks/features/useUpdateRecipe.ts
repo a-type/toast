@@ -8,6 +8,7 @@ export const UpdateRecipeMutation = gql`
         id
         title
         description
+        introduction
         servings
         cookTime
         prepTime
@@ -25,7 +26,8 @@ export type UpdateRecipeMutationResult = {
     recipe: {
       id: string;
       title: string;
-      description: string;
+      introduction: string | null;
+      description: string | null;
       servings: number;
       cookTime: number;
       prepTime: number;
@@ -41,6 +43,7 @@ export type UpdateRecipeMutationVariables = {
     id: string;
     fields?: {
       title?: string;
+      introduction?: string;
       description?: string;
       servings?: number;
       prepTime?: number;

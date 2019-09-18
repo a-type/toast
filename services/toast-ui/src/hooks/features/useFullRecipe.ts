@@ -6,6 +6,7 @@ export const FullRecipeQuery = gql`
     recipe(input: { id: $recipeId }) {
       id
       title
+      introduction
       description
       attribution
       sourceUrl
@@ -52,7 +53,8 @@ export type FullRecipe = {
   id: string;
   published: boolean;
   title: string;
-  description: string;
+  introduction: string | null;
+  description: string | null;
   servings: number;
   cookTime: number;
   prepTime: number;
