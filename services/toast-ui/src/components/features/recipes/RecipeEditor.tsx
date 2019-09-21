@@ -126,16 +126,16 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
         <Paper className={classes.paper}>
           <section className={classes.section}>
             <Typography variant="h4" gutterBottom>
-              Details
+              Introduction
             </Typography>
-            <RecipeDetailsEditor recipe={recipe} />
+            <RecipeIntroductionEditor recipe={recipe} />
           </section>
 
           <section className={classes.section}>
             <Typography variant="h4" gutterBottom>
-              Introduction
+              Details
             </Typography>
-            <RecipeIntroductionEditor recipe={recipe} />
+            <RecipeDetailsEditor recipe={recipe} />
           </section>
 
           <section className={classes.section}>
