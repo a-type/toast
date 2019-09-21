@@ -16,8 +16,9 @@ import { CloseTwoTone } from '@material-ui/icons';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
 import { useTheme, ThemeProvider } from '@material-ui/styles';
 import baseTheme from 'themes/baseTheme';
+import { DialogProps } from '@material-ui/core/Dialog';
 
-export interface PopupProps {
+export interface PopupProps extends DialogProps {
   open: boolean;
   onClose: () => any;
   title?: string;
@@ -39,19 +40,20 @@ const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
 ));
 
 export const Popup: FC<PopupProps> = props => {
-  const { open, onClose, title, children } = props;
+  const { open, onClose, title, children, maxWidth = 'md', ...rest } = props;
   const classes = useStyles(props);
   const theme = useTheme<Theme>();
-  const isLarge = useMediaQuery(theme.breakpoints.up('lg'));
+  const isLarge = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <ThemeProvider theme={baseTheme}>
       <Dialog
+        {...rest}
         fullScreen={!isLarge}
         open={!!open}
         onClose={onClose}
         TransitionComponent={Transition}
-        maxWidth="md"
+        maxWidth={maxWidth}
         fullWidth
       >
         <DialogTitle>

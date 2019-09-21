@@ -56,8 +56,11 @@ const useStyles = makeStyles(theme => ({
   publishButton: {
     marginBottom: theme.spacing(1),
   },
-  firstPanel: {
+  paper: {
     padding: theme.spacing(3),
+    marginBottom: theme.spacing(4),
+  },
+  section: {
     marginBottom: theme.spacing(4),
   },
 }));
@@ -115,52 +118,43 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
           </Button>
         </Paper>
       )}
-      <Paper className={classes.firstPanel}>
+      <Paper className={classes.paper}>
         <RecipeBasicsEditor recipe={recipe} />
       </Paper>
 
       {recipe && (
-        <div>
-          <ExpansionPanel>
-            <ExpansionPanelSummary>
-              <Typography variant="h4">Details</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <RecipeDetailsEditor recipe={recipe} />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary>
-              <Typography variant="h4">Introduction</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <RecipeIntroductionEditor recipe={recipe} />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary>
-              <Typography variant="h4">
-                Ingredients (
-                {path(['ingredientsConnection', 'edges', 'length'], recipe) ||
-                  'None'}
-                )
-              </Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <RecipeIngredientsEditor recipe={recipe} width="100%" />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary>
-              <Typography variant="h4">
-                Steps ({path(['steps', 'length'], recipe) || 'None'})
-              </Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <RecipeStepsEditor recipe={recipe} width="100%" />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        </div>
+        <Paper className={classes.paper}>
+          <section className={classes.section}>
+            <Typography variant="h4" gutterBottom>
+              Details
+            </Typography>
+            <RecipeDetailsEditor recipe={recipe} />
+          </section>
+
+          <section className={classes.section}>
+            <Typography variant="h4" gutterBottom>
+              Introduction
+            </Typography>
+            <RecipeIntroductionEditor recipe={recipe} />
+          </section>
+
+          <section className={classes.section}>
+            <Typography variant="h4" gutterBottom>
+              Ingredients (
+              {path(['ingredientsConnection', 'edges', 'length'], recipe) ||
+                'None'}
+              )
+            </Typography>
+            <RecipeIngredientsEditor recipe={recipe} width="100%" />
+          </section>
+
+          <section className={classes.section}>
+            <Typography variant="h4" gutterBottom>
+              Steps ({path(['steps', 'length'], recipe) || 'None'})
+            </Typography>
+            <RecipeStepsEditor recipe={recipe} width="100%" />
+          </section>
+        </Paper>
       )}
     </Box>
   );

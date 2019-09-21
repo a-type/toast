@@ -8,6 +8,7 @@ import {
   Checkbox,
   Typography,
   Button,
+  FormHelperText,
 } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import { FullRecipe } from 'hooks/features/useFullRecipe';
@@ -75,10 +76,6 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
         published,
         title,
         description,
-        prepTime,
-        cookTime,
-        unattendedTime,
-        servings,
         private: isPrivate,
       };
 
@@ -148,17 +145,7 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
                 value={values.description}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
-              <TextField
-                label="Servings"
-                type="number"
-                name="servings"
-                fullWidth
-                onChange={handleChange}
-                value={values.servings}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
               <FormControlLabel
                 label="Private"
                 control={
@@ -169,10 +156,10 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
                   />
                 }
               />
-              <Typography variant="caption" paragraph>
+              <FormHelperText>
                 Private recipes can only be seen by you and other members of
                 your plan
-              </Typography>
+              </FormHelperText>
             </Grid>
           </Grid>
 
