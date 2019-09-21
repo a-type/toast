@@ -103,7 +103,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
     <Box>
       {error && <ErrorMessage error={error} />}
       {!published && recipeId && (
-        <Paper className={classes.publishPanel}>
+        <Paper className={classes.publishPanel} elevation={0}>
           <LabelTwoTone className={classes.draftLabel} />
           <Typography style={{ flex: '1' }}>
             Your recipe is unpublished. Publish it so you can start using it!
@@ -118,12 +118,12 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
           </Button>
         </Paper>
       )}
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={0}>
         <RecipeBasicsEditor recipe={recipe} />
       </Paper>
 
       {recipe && (
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} elevation={0}>
           <section className={classes.section}>
             <Typography variant="h4" gutterBottom>
               Introduction

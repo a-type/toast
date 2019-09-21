@@ -26,6 +26,7 @@ import {
   AddCircleTwoTone,
 } from '@material-ui/icons';
 import Link from 'components/generic/Link';
+import { GradientBackground } from 'components/layout/GradientBackground';
 
 export const RecipePage = () => (
   <Switch>
@@ -80,9 +81,11 @@ const RecipeViewPage: FC<RouteComponentProps<{ recipeId: string }>> = ({
 };
 
 const EditRecipePage = ({ match: { params } }) => (
-  <Container>
-    <RecipeEditor recipeId={params.recipeId || null} />
-  </Container>
+  <GradientBackground>
+    <Container>
+      <RecipeEditor recipeId={params.recipeId || null} />
+    </Container>
+  </GradientBackground>
 );
 
 const useCollectionsPageStyles = makeStyles(theme => ({
