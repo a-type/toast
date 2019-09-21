@@ -13,6 +13,9 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Theme,
+  Button,
+  Paper,
 } from '@material-ui/core';
 import RecipeCollection from 'components/features/RecipeCollection';
 import Popup from 'components/generic/Popup';
@@ -26,7 +29,7 @@ import {
   AddCircleTwoTone,
 } from '@material-ui/icons';
 import Link from 'components/generic/Link';
-import { GradientBackground } from 'components/layout/GradientBackground';
+import { AuthoredRecipes } from 'components/features/recipes/AuthoredRecipes';
 
 export const RecipePage = () => (
   <Switch>
@@ -41,28 +44,49 @@ export const RecipePage = () => (
   </Switch>
 );
 
+const useHomePageStyles = makeStyles<Theme, {}>(theme => ({
+  paper: {
+    marginBottom: theme.spacing(4),
+    padding: theme.spacing(2),
+  },
+  headingRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: theme.spacing(2),
+  },
+  heading: {
+    flex: '1',
+  },
+}));
+
 const RecipesHomePage: FC = () => {
+  const classes = useHomePageStyles({});
+
   return (
-    <List>
-      <ListItem button component={Link} to="/recipes/collections">
-        <ListItemIcon>
-          <BookmarksTwoTone />
-        </ListItemIcon>
-        <ListItemText>My Recipes</ListItemText>
-      </ListItem>
-      <ListItem button component={Link} to="/recipes/create">
-        <ListItemIcon>
-          <AddCircleTwoTone />
-        </ListItemIcon>
-        <ListItemText>Add Recipe</ListItemText>
-      </ListItem>
-      <ListItem button component={Link} to="/recipes/scan">
-        <ListItemIcon>
-          <FindInPageTwoTone />
-        </ListItemIcon>
-        <ListItemText>Scan Recipe</ListItemText>
-      </ListItem>
-    </List>
+    <Container>
+      <Paper className={classes.paper} elevation={0}>
+        <div className={classes.headingRow}>
+          <Typography variant="h2" className={classes.heading}>
+            Your Recipes
+          </Typography>
+          <Button component={Link} to="/recipes/create">
+            <AddCircleTwoTone /> Add new
+          </Button>
+        </div>
+        <AuthoredRecipes />
+      </Paper>
+      <Paper className={classes.paper} elevation={0}>
+        <div className={classes.headingRow}>
+          <Typography variant="h2" className={classes.heading}>
+            Your Collections
+          </Typography>
+          <Button component={Link} to="/recipes/scan">
+            <FindInPageTwoTone /> Scan new
+          </Button>
+        </div>
+        <RecipeCollections />
+      </Paper>
+    </Container>
   );
 };
 
@@ -81,11 +105,9 @@ const RecipeViewPage: FC<RouteComponentProps<{ recipeId: string }>> = ({
 };
 
 const EditRecipePage = ({ match: { params } }) => (
-  <GradientBackground>
-    <Container>
-      <RecipeEditor recipeId={params.recipeId || null} />
-    </Container>
-  </GradientBackground>
+  <Container>
+    <RecipeEditor recipeId={params.recipeId || null} />
+  </Container>
 );
 
 const useCollectionsPageStyles = makeStyles(theme => ({

@@ -5,6 +5,7 @@ import {
   ExpansionPanelSummary,
   Grid,
   makeStyles,
+  Paper,
 } from '@material-ui/core';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { Loader } from 'components/generic/Loader/Loader';
@@ -27,6 +28,10 @@ export interface RecipeViewProps {
 const useStyles = makeStyles(theme => ({
   hero: {
     marginBottom: theme.spacing(3),
+  },
+  paper: {
+    marginBottom: theme.spacing(4),
+    padding: theme.spacing(2),
   },
 }));
 
@@ -63,31 +68,25 @@ export const RecipeView: FC<RecipeViewProps> = ({ recipeId, servings }) => {
           </Typography>
         </Grid>
       </Grid>
-      <ExpansionPanel defaultExpanded>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreTwoTone />}>
-          <Typography variant="h3">Details</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Details recipe={recipe} servingsOverride={servings} />
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel defaultExpanded>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreTwoTone />}>
-          <Typography variant="h3">Ingredients</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Ingredients
-            recipeId={recipeId}
-            naturalServings={pathOr(1, ['servings'], recipe)}
-            servingsOverride={servings}
-            ingredients={pathOr(
-              [],
-              ['ingredientsConnection', 'edges'],
-              recipe,
-            ).map(({ node }) => node)}
-          />
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+      <Paper className={classes.paper}>
+        <Typography variant="h3">Details</Typography>
+
+        <Details recipe={recipe} servingsOverride={servings} />
+      </Paper>
+      <Paper className={classes.paper}>
+        <Typography variant="h3">Ingredients</Typography>
+
+        <Ingredients
+          recipeId={recipeId}
+          naturalServings={pathOr(1, ['servings'], recipe)}
+          servingsOverride={servings}
+          ingredients={pathOr(
+            [],
+            ['ingredientsConnection', 'edges'],
+            recipe,
+          ).map(({ node }) => node)}
+        />
+      </Paper>
       <RecipeStepsLink
         recipe={recipe}
         servingsMultiplier={

@@ -18,6 +18,31 @@ export default gql`
     group: Group
       @aqlNode(edgeCollection: "MemberOf", direction: OUTBOUND)
       @authenticated
+
+    authoredRecipes: UserRecipesConnection!
+      @aqlRelayConnection(
+        edgeCollection: "AuthorOf"
+        edgeDirection: OUTBOUND
+        cursorExpression: "$node.createdAt"
+        filter: """
+        ($node.published && $node.public) || ($context.userId && $parent._key == $context.userId)
+        """
+      )
+  }
+
+  type UserRecipesConnection {
+    edges: [UserRecipeEdge!]! @aqlRelayEdges
+    pageInfo: UserRecipePageInfo!
+  }
+
+  type UserRecipeEdge {
+    cursor: String!
+    node: Recipe! @aqlRelayNode
+  }
+
+  type UserRecipePageInfo {
+    hasNextPage: Boolean!
+    endCursor: String
   }
 
   """

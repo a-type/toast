@@ -34,7 +34,7 @@ const useContentStyles = makeStyles<Theme, AppLayoutContentProps>(theme => ({
     width: '100%',
     gridArea: 'content',
     overflowY: 'auto',
-    backgroundColor: theme.palette.background.default,
+    background: `linear-gradient(180deg, ${theme.palette.grey[100]} 0%, ${theme.palette.background.paper} 50vh)`,
   },
 }));
 

@@ -90,6 +90,9 @@ const theme = createMuiTheme({
     MuiTextField: {
       variant: 'outlined',
     },
+    MuiPaper: {
+      elevation: 0,
+    },
   },
 });
 

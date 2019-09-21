@@ -5,25 +5,23 @@ import useCollection, {
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { Loader } from 'components/generic/Loader/Loader';
 import { path } from 'ramda';
-import { Typography, Button } from '@material-ui/core';
-import CardGrid, { CardGridProps } from 'components/generic/CardGrid';
-import RecipeCard from './RecipeCard';
-import useRouter from 'use-react-router';
+import { Typography } from '@material-ui/core';
+import { RecipeGrid, RecipeGridProps } from './recipes/RecipeGrid';
 
-export interface RecipeCollectionProps extends CardGridProps {
+export interface RecipeCollectionProps extends RecipeGridProps {
   collectionId: string;
   onRecipeSelected?(recipe: RecipeCollectionRecipe): void;
 }
 
-export const RecipeCollection: FC<RecipeCollectionProps> = ({
-  collectionId,
-  onRecipeSelected,
-  ...rest
-}) => {
+export const RecipeCollection: FC<
+  Omit<
+    RecipeCollectionProps,
+    'recipes' | 'hasNextPage' | 'fetchMore' | 'emptyState'
+  >
+> = ({ collectionId, onRecipeSelected, ...rest }) => {
   const { data, loading, error, fetchMore, hasNextPage } = useCollection(
     collectionId,
   );
-  const { history } = useRouter();
 
   if (error) {
     return <ErrorMessage error={error} />;
@@ -44,38 +42,17 @@ export const RecipeCollection: FC<RecipeCollectionProps> = ({
     collection,
   ) as any[]).map(({ node }) => node) as RecipeCollectionRecipe[];
 
-  const handleRecipeSelected = (recipe: RecipeCollectionRecipe) => {
-    if (onRecipeSelected) {
-      onRecipeSelected(recipe);
-    } else {
-      history.push(`/recipes/${recipe.id}`);
-    }
-  };
-
   return (
-    <>
-      {!!(recipes && recipes.length) ? (
-        <>
-          <CardGrid {...rest}>
-            {recipes.map(recipe => (
-              <RecipeCard
-                recipe={recipe}
-                onClick={() => handleRecipeSelected(recipe)}
-              />
-            ))}
-          </CardGrid>
-          {hasNextPage && (
-            <Button fullWidth onClick={fetchMore}>
-              Load more
-            </Button>
-          )}
-        </>
-      ) : (
+    <RecipeGrid
+      recipes={recipes}
+      hasNextPage={hasNextPage}
+      fetchMore={fetchMore}
+      emptyState={
         <Typography variant="caption">
           This collection doesn't have any recipes in it
         </Typography>
-      )}
-    </>
+      }
+    />
   );
 };
 
