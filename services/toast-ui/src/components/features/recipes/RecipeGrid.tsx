@@ -31,6 +31,8 @@ export const RecipeGrid: FC<RecipeGridProps> = props => {
   const handleRecipeSelected = (recipe: RecipeGridRecipe) => {
     if (onRecipeSelected) {
       onRecipeSelected(recipe);
+    } else if (recipe.published === false) {
+      history.push(`/recipes/${recipe.id}/edit`);
     } else {
       history.push(`/recipes/${recipe.id}`);
     }

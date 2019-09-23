@@ -1,19 +1,10 @@
 import React, { FC, useCallback } from 'react';
-import {
-  makeStyles,
-  Theme,
-  Grid,
-  TextField,
-  Typography,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-} from '@material-ui/core';
+import { makeStyles, Theme, Grid, TextField } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
-import { FullRecipe } from 'hooks/features/useFullRecipe';
+import { FullRecipe } from 'hooks/features/fragments';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
-import useRouter from 'use-react-router';
 import { FormikAutoSave } from 'components/generic/FormikAutoSave';
+import { FormikFileField } from 'components/fields';
 
 export interface RecipeDetailsEditorProps {
   recipe: FullRecipe;
@@ -56,7 +47,8 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
         unattendedTime,
         servings,
         private: isPrivate,
-      }: FullRecipe,
+        coverImage,
+      }: FullRecipe & { coverImage: File[] },
       form: FormikHelpers<FullRecipe>,
     ) => {
       const fields = {
@@ -75,6 +67,7 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
             input: {
               id: recipe.id,
               fields,
+              coverImage: coverImage[0] || undefined,
               steps: {
                 set: steps,
               },
@@ -137,6 +130,9 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
                 value={values.unattendedTime}
                 helperText="Unattended time is any time you spend slow cooking, baking, sous vide... any time you don't have to actively do anything during cooking."
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+              <FormikFileField name="coverImage" label="Cover image" />
             </Grid>
           </Grid>
 

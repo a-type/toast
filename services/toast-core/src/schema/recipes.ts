@@ -236,6 +236,7 @@ export default gql`
     id: ID!
     fields: UpdateRecipeFieldsInput = {}
     steps: UpdateRecipeStepsInput = {}
+    coverImage: Upload
   }
 
   input UpdateRecipeFieldsInput {

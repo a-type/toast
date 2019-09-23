@@ -3,24 +3,10 @@ import { path } from 'ramda';
 import { Formik, FormikHelpers } from 'formik';
 import { Loader } from 'components/generic/Loader/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
-import {
-  Box,
-  Button,
-  Typography,
-  TextField,
-  Checkbox,
-  FormControlLabel,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Grid,
-  makeStyles,
-  Paper,
-} from '@material-ui/core';
-import useFullRecipe, { FullRecipe } from 'hooks/features/useFullRecipe';
-import { useCreateRecipe } from 'hooks/features/useCreateRecipe';
+import { Box, Button, Typography, makeStyles, Paper } from '@material-ui/core';
+import useFullRecipe from 'hooks/features/useFullRecipe';
+import { FullRecipe } from 'hooks/features/fragments';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
-import useRouter from 'use-react-router';
 import * as colors from 'themes/colors';
 import { LabelTwoTone } from '@material-ui/icons';
 import { RecipeIngredientsEditor } from './RecipeIngredientsEditor';
@@ -62,6 +48,13 @@ const useStyles = makeStyles(theme => ({
   },
   section: {
     marginBottom: theme.spacing(4),
+  },
+  coverImage: {
+    height: '30vh',
+    width: '100%',
+    marginBottom: theme.spacing(4),
+    backgroundSize: 'cover',
+    borderRadius: theme.shape.borderRadius,
   },
 }));
 
@@ -118,6 +111,14 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
           </Button>
         </Paper>
       )}
+
+      {recipe && recipe.coverImageUrl && (
+        <div
+          className={classes.coverImage}
+          style={{ backgroundImage: `url(${recipe.coverImageUrl})` }}
+        />
+      )}
+
       <Paper className={classes.paper} elevation={0}>
         <RecipeBasicsEditor recipe={recipe} />
       </Paper>

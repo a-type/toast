@@ -4,14 +4,15 @@ import uuid from 'uuid';
 import { logger } from 'toast-common';
 import { File } from 'types';
 
-logger.info('GCloud Project ID: ', config.gcloud.projectId);
-logger.info('GCloud Media Bucket: ', config.gcloud.storage.bucket);
+const projectId = process.env.GCLOUD_PROJECT_ID;
+const bucket = process.env.GCLOUD_STORAGE_BUCKET;
+
+logger.info('GCloud Project ID: ', projectId);
+logger.info('GCloud Media Bucket: ', bucket);
 
 const storage = new Storage({
-  projectId: config.gcloud.projectId,
+  projectId: projectId,
 });
-
-const bucket = config.gcloud.storage.bucket;
 
 export interface UploadResult {
   id: string;

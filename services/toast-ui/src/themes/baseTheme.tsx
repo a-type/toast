@@ -66,10 +66,14 @@ const theme = createMuiTheme({
 
     MuiButton: {
       contained: {
-        backgroundColor: colors.grey[50],
+        backgroundColor: colors.grey[100],
         '&$disabled': {
           backgroundColor: fade(colors.purple[500], 0.1),
         },
+        '&:hover': {
+          backgroundColor: colors.grey[50],
+        },
+        boxShadow: 'none',
       },
     },
 

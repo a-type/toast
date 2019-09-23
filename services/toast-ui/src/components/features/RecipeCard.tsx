@@ -31,6 +31,7 @@ export interface RecipeCardRecipe {
   title: string;
   coverImageUrl: string | null;
   attribution: string | null;
+  published?: boolean;
 }
 
 const useBadgeStyles = makeStyles<Theme>(theme => ({
@@ -101,7 +102,7 @@ const RecipeCard: FC<
   recipe,
   onClick,
   actions = [],
-  renderBadge,
+  renderBadge: providedRenderBadge,
   variant = 'full',
   hideSave,
   servings,
@@ -111,9 +112,16 @@ const RecipeCard: FC<
   const classes = useStyles(props);
 
   const defaultOnClick = () =>
-    history.push(
-      `/recipes/${recipe.id}${servings ? `?servings=${servings}` : ''}`,
-    );
+    recipe.published === false
+      ? history.push(`/recipes/${recipe.id}/edit`)
+      : history.push(
+          `/recipes/${recipe.id}${servings ? `?servings=${servings}` : ''}`,
+        );
+
+  const renderBadge =
+    providedRenderBadge || recipe.published === false
+      ? () => 'Draft'
+      : undefined;
 
   return (
     <Card {...props} className={classNames(classes.card, props.className)}>
