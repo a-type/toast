@@ -21,6 +21,7 @@ import {
   SettingsTwoTone,
   WarningTwoTone,
   ShoppingCartTwoTone,
+  MeetingRoomTwoTone,
 } from '@material-ui/icons';
 import useRouter from 'use-react-router';
 import firebase from 'services/firebase';
@@ -104,6 +105,12 @@ const Sidebar: SFC<SidebarProps> = props => {
         </ListItemIcon>
         <ListItemText>Settings</ListItemText>
       </ListItemLink>
+      <ListItemLink to="/users/me" nav className={classes.listItemLink}>
+        <ListItemIcon>
+          <Avatar avatarUrl={path(['photoURL'], user)} />
+        </ListItemIcon>
+        <ListItemText>Profile</ListItemText>
+      </ListItemLink>
       <IsAdmin>
         <ListItemLink to="/manage" nav className={classes.listItemLink}>
           <ListItemIcon>
@@ -114,7 +121,7 @@ const Sidebar: SFC<SidebarProps> = props => {
       </IsAdmin>
       <ListItemLink onClick={logout} className={classes.listItemLink}>
         <ListItemIcon>
-          <Avatar avatarUrl={path(['photoURL'], user)} />
+          <MeetingRoomTwoTone />
         </ListItemIcon>
         <ListItemText>Log out</ListItemText>
       </ListItemLink>

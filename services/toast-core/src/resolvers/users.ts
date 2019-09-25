@@ -20,6 +20,7 @@ const supplementUserData = async (
     return {
       ...dbUser,
       ...firebaseUser,
+      photoUrl: firebaseUser.photoURL,
     };
   } catch (err) {
     logger.warn(err);
@@ -33,6 +34,10 @@ export default {
       if (!ctx.user) {
         return null;
       }
+      const user = await arango(parent, args, ctx, info);
+      return supplementUserData(user);
+    },
+    user: async (parent, args, ctx: Context, info) => {
       const user = await arango(parent, args, ctx, info);
       return supplementUserData(user);
     },

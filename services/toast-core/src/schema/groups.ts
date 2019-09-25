@@ -1,50 +1,6 @@
 import { gql } from 'apollo-server-core';
 
 export default gql`
-  # Users and groups
-
-  """
-  A user in the system
-  """
-  type User {
-    id: ID! @aqlKey
-    displayName: String
-    photoUrl: String
-
-    # TODO authorization!
-    """
-    You may only view the group associated with your own User
-    """
-    group: Group
-      @aqlNode(edgeCollection: "MemberOf", direction: OUTBOUND)
-      @authenticated
-
-    authoredRecipes: UserRecipesConnection!
-      @aqlRelayConnection(
-        edgeCollection: "AuthorOf"
-        edgeDirection: OUTBOUND
-        cursorExpression: "$node.createdAt"
-        filter: """
-        ($node.published && $node.public) || ($context.userId && $parent._key == $context.userId)
-        """
-      )
-  }
-
-  type UserRecipesConnection {
-    edges: [UserRecipeEdge!]! @aqlRelayEdges
-    pageInfo: UserRecipePageInfo!
-  }
-
-  type UserRecipeEdge {
-    cursor: String!
-    node: Recipe! @aqlRelayNode
-  }
-
-  type UserRecipePageInfo {
-    hasNextPage: Boolean!
-    endCursor: String
-  }
-
   """
   One of the primary resources in meal planning, a Group is the container for plan information for one
   or more Users.
@@ -145,10 +101,6 @@ export default gql`
     hasNextPage: Boolean!
   }
 
-  extend type Query {
-    viewer: User @aqlDocument(collection: "Users", key: "$context.userId")
-  }
-
   input SetGroceryDayInput {
     groceryDay: Weekday!
   }
@@ -166,24 +118,6 @@ export default gql`
   }
 
   extend type Mutation {
-    # users and groups
-
-    """
-    Idempotent operation that merges a new user into the graph based on the currently authenticated
-    user info.
-    """
-    mergeUser: User!
-      @aqlSubquery(
-        query: """
-        UPSERT {_key: $context.userId}
-          INSERT {_key: $context.userId}
-          UPDATE {}
-        IN Users
-        """
-        return: "NEW"
-      )
-      @authenticated
-
     createGroup: GroupCreateResult!
       @aqlSubquery(
         query: """

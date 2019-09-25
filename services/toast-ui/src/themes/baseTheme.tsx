@@ -42,7 +42,7 @@ const theme = createMuiTheme({
 
   shadows: [
     'none',
-    ...new Array(23)
+    ...new Array(24)
       .fill(null)
       .map((_, idx) =>
         createShadow(

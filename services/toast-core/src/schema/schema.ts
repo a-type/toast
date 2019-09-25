@@ -6,6 +6,7 @@ import groups from './groups';
 import plan from './plan';
 import ingredients from './ingredients';
 import recipes from './recipes';
+import users from './users';
 
 export default [
   gql`
@@ -17,6 +18,7 @@ export default [
     directive @subscribed on FIELD_DEFINITION
   `,
   globals,
+  users,
   foods,
   groups,
   plan,

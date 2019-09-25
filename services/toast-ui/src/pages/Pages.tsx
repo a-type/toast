@@ -9,6 +9,7 @@ import { HomePage } from './HomePage';
 import { JoinGroupPage } from './JoinGroupPage';
 import { ManagePage } from './ManagePage';
 import { ShoppingPage } from './ShoppingPage';
+import { UsersPage } from './UsersPage';
 
 export const Pages = () => (
   <Switch>
@@ -19,6 +20,7 @@ export const Pages = () => (
     <Route path="/recipes" component={RecipePage} />
     <PrivateRoute path="/shopping" component={ShoppingPage} />
     <PrivateRoute path="/settings" component={SettingsPage} />
+    <Route path="/users" component={UsersPage} />
     <PrivateRoute path="/manage" component={ManagePage} />
     <Route render={() => <div>Not found</div>} />
   </Switch>

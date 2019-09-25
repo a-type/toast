@@ -1,23 +1,26 @@
 import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
-import { useAuthoredRecipes } from 'hooks/features/useAuthoredRecipes';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { Loader } from 'components/generic/Loader';
-import { path } from 'ramda';
+import { pathOr } from 'ramda';
 import { FullRecipe } from 'hooks/features/fragments';
 import { RecipeGrid } from './RecipeGrid';
+import { useUser } from 'hooks/features/useUser';
 
-export interface AuthoredRecipesProps {}
+export interface AuthoredRecipesProps {
+  userId?: string;
+}
 
 const useStyles = makeStyles<Theme, AuthoredRecipesProps>(theme => ({}));
 
 export const AuthoredRecipes: FC<AuthoredRecipesProps> = props => {
   const classes = useStyles(props);
-  const {} = props;
+  const { userId } = props;
 
-  const { data, loading, error } = useAuthoredRecipes();
+  const { data, loading, error } = useUser({ id: userId });
 
   if (error) {
+    console.error(error);
     return <ErrorMessage error={error} />;
   }
 
@@ -25,8 +28,9 @@ export const AuthoredRecipes: FC<AuthoredRecipesProps> = props => {
     return <Loader />;
   }
 
-  const recipes = (path(
-    ['viewer', 'authoredRecipes', 'edges'],
+  const recipes = (pathOr(
+    [],
+    ['user', 'authoredRecipes', 'edges'],
     data,
   ) as any[]).map(({ node }) => node) as FullRecipe[];
 

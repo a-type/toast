@@ -134,19 +134,20 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
         <Box flexDirection="row" justifyContent="flex-start">
           {!error ||
             (typeof error !== 'string' &&
-            !['ForbiddenError', 'UserInputError'].includes(error.name) ? (
-              <Button
-                className={classes.button}
-                onClick={() => {
-                  saveLastErrorRefreshTime();
-                  window.location.reload();
-                }}
-              >
-                Reload
-              </Button>
-            ) : (
-              <Button onClick={() => setDismissed(true)}>Dismiss</Button>
-            ))}
+              !['ForbiddenError', 'UserInputError'].includes(error.name) && (
+                <Button
+                  className={classes.button}
+                  onClick={() => {
+                    saveLastErrorRefreshTime();
+                    window.location.reload();
+                  }}
+                >
+                  Reload
+                </Button>
+              ))}
+          <Button className={classes.button} onClick={() => setDismissed(true)}>
+            Dismiss
+          </Button>
           {isRepeatError && (
             <Link to="mailto:support@toastcooking.app">
               <Button className={classes.button}>Contact support</Button>
