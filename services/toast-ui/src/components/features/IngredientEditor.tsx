@@ -47,6 +47,9 @@ const useStyles = makeStyles<Theme, IngredientTextEditorProps>(theme => ({
     fontSize: 10,
     border: `1px solid currentColor`,
   },
+  popper: {
+    zIndex: theme.zIndex.modal + 1,
+  },
 }));
 
 export const IngredientEditor = forwardRef<any, IngredientTextEditorProps>(
@@ -104,10 +107,11 @@ export const IngredientEditor = forwardRef<any, IngredientTextEditorProps>(
             transition
             placement="bottom-start"
             anchorEl={popperAnchor}
+            className={classes.popper}
           >
             {({ TransitionProps }) => (
               <Grow {...TransitionProps} timeout={350}>
-                <Paper>
+                <Paper elevation={3}>
                   <ClickAwayListener onClickAway={closeSuggestions}>
                     <>
                       <Typography

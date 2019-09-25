@@ -67,7 +67,7 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
             input: {
               id: recipe.id,
               fields,
-              coverImage: coverImage[0] || undefined,
+              coverImage: (coverImage && coverImage[0]) || undefined,
               steps: {
                 set: steps,
               },

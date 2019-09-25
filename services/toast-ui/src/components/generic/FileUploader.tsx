@@ -85,7 +85,7 @@ export const FileUploader: FC<FileUploaderProps> = props => {
         <CloudUploadTwoTone className={classes.icon} /> {children}
         <input {...getInputProps()} />
       </Button>
-      {displayFiles.length && (
+      {displayFiles.length > 0 && (
         <Box
           display="flex"
           flexDirection="horizontal"

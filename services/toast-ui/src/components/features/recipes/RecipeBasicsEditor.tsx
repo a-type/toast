@@ -11,7 +11,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
-import { FullRecipe } from 'hooks/features/useFullRecipe';
+import { FullRecipe } from 'hooks/features/fragments';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
 import { useCreateRecipe } from 'hooks/features/useCreateRecipe';
 import useRouter from 'use-react-router';
@@ -37,6 +37,10 @@ const emptyRecipe: FullRecipe = {
   ingredientsConnection: {
     edges: [],
   },
+  sourceUrl: null,
+  attribution: null,
+  coverImageUrl: null,
+  coverImageAttribution: null,
 };
 
 const useStyles = makeStyles<Theme, RecipeBasicsEditorProps>(theme => ({
@@ -169,6 +173,7 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
               color="primary"
               type="submit"
               disabled={isSubmitting}
+              style={{ marginTop: '16px' }}
             >
               Create Recipe
             </Button>

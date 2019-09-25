@@ -83,14 +83,10 @@ export const useCreateIngredient = (args = {}) =>
         },
       });
 
-      console.info(recipe);
-
       const edges = [
         ...recipe.ingredientsConnection.edges,
         result.data.createIngredient.ingredientEdge,
       ];
-
-      console.info(edges);
 
       const newRecipe = {
         ...recipe,

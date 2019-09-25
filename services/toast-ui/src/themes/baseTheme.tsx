@@ -1,7 +1,19 @@
 import { createMuiTheme, fade, darken } from '@material-ui/core/styles';
 import * as colors from './colors';
 
-const dummyTheme = createMuiTheme();
+const shadowRgb = [0, 0, 10];
+const shadowKeyUmbraOpacity = 0.15;
+const shadowKeyPenumbraOpacity = 0.12;
+const shadowAmbientShadowOpacity = 0.08;
+
+const createShadow = (
+  ...[umbra, penumbra, ambient]: [number, number, number, number][]
+) =>
+  [
+    `${umbra[0]}px ${umbra[1]}px ${umbra[2]}px ${umbra[3]}px rgba(${shadowRgb[0]}, ${shadowRgb[1]}, ${shadowRgb[2]}, ${shadowKeyUmbraOpacity})`,
+    `${penumbra[0]}px ${penumbra[1]}px ${penumbra[2]}px ${penumbra[3]}px rgba(${shadowRgb[0]}, ${shadowRgb[1]}, ${shadowRgb[2]}, ${shadowKeyPenumbraOpacity})`,
+    `${ambient[0]}px ${ambient[1]}px ${ambient[2]}px ${ambient[3]}px rgba(${shadowRgb[0]}, ${shadowRgb[1]}, ${shadowRgb[2]}, ${shadowAmbientShadowOpacity})`,
+  ].join(',');
 
 const theme = createMuiTheme({
   palette: {
@@ -27,6 +39,24 @@ const theme = createMuiTheme({
       disabledBackground: fade(colors.black[500], 0.12),
     },
   },
+
+  shadows: [
+    'none',
+    ...new Array(23)
+      .fill(null)
+      .map((_, idx) =>
+        createShadow(
+          [
+            0,
+            1 + Math.round(idx / 2),
+            3 + Math.round(idx / 2),
+            0 - Math.round(idx / 4),
+          ],
+          [0, 1 + idx, 1 + Math.round((idx * 3) / 2), 0 + Math.round(idx / 8)],
+          [0, 2 + Math.round(idx / 3), 1 + idx * 3, -2 + Math.round(idx / 2)],
+        ),
+      ),
+  ] as any,
 
   typography: {
     h1: {

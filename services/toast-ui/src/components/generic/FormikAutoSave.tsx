@@ -24,6 +24,7 @@ const InternalFormikAutoSave: FC<FormikAutoSaveProps> = ({
         await formik.submitForm();
         setLastSaved(new Date());
       } catch (err) {
+        console.error(err);
         enqueueSnackbar(
           'There was an error! Your last changes may not have been saved.',
         );

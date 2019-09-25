@@ -95,7 +95,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
   return (
     <Box>
       {error && <ErrorMessage error={error} />}
-      {!published && recipeId && (
+      {!published && recipe && (
         <Paper className={classes.publishPanel} elevation={0}>
           <LabelTwoTone className={classes.draftLabel} />
           <Typography style={{ flex: '1' }}>
