@@ -48,11 +48,16 @@ const theme = createMuiTheme({
         createShadow(
           [
             0,
-            1 + Math.round(idx / 2),
-            3 + Math.round(idx / 2),
-            0 - Math.round(idx / 4),
+            1 + Math.round(idx),
+            3 + Math.round(idx),
+            0 - Math.round(idx / 2),
           ],
-          [0, 1 + idx, 1 + Math.round((idx * 3) / 2), 0 + Math.round(idx / 8)],
+          [
+            0,
+            1 + Math.round((idx * 3) / 2),
+            1 + Math.round((idx * 8) / 3),
+            0 + Math.round(idx / 8),
+          ],
           [0, 2 + Math.round(idx / 3), 1 + idx * 3, -2 + Math.round(idx / 2)],
         ),
       ),
