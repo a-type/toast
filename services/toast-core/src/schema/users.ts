@@ -8,6 +8,8 @@ export default gql`
     id: ID! @aqlKey
     displayName: String
     photoUrl: String
+    bio: String
+    coverImageUrl: String
 
     # TODO authorization!
     """
@@ -83,5 +85,18 @@ export default gql`
         return: "NEW"
       )
       @authenticated
+
+    updateViewer(input: UpdateUserInput!): UpdateUserResult!
+  }
+
+  input UpdateUserInput {
+    displayName: String
+    bio: String
+    photo: Upload
+    coverImage: Upload
+  }
+
+  type UpdateUserResult {
+    user: User! @aqlNewQuery @aql(expression: "$parent.user")
   }
 `;
