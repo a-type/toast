@@ -86,7 +86,7 @@
     "react-outside-click-handler": "^1.2.2",
     "react-popper": "^1.0.2",
     "react-portal": "^4.2.0",
-    "react-router-dom": "^5.0.0",
+    "react-router-dom": "^5.1.0",
     "react-scroll": "^1.7.10",
     "react-stripe-elements": "^3.0.0",
     "react-swipeable-views": "^0.13.3",

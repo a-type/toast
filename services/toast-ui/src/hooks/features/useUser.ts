@@ -9,6 +9,8 @@ export const GetUserQuery = gql`
       id
       displayName
       photoUrl
+      coverImageUrl
+      bio
 
       authoredRecipes {
         edges {
@@ -33,6 +35,8 @@ export type GetUserQueryResult = {
     id: string;
     displayName: string;
     photoUrl: string;
+    coverImageUrl: string | null;
+    bio: string | null;
 
     authoredRecipes: {
       edges: {
@@ -60,7 +64,7 @@ export const useUser = (
   const { user: authenticatedUser } = useAuth();
 
   const userId =
-    variables.id || authenticatedUser ? authenticatedUser.uid : null;
+    variables.id || (authenticatedUser ? authenticatedUser.uid : null);
 
   return useQuery<GetUserQueryResult>(GetUserQuery, {
     ...args,

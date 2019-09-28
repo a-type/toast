@@ -22,6 +22,7 @@ import {
   WarningTwoTone,
   ShoppingCartTwoTone,
   MeetingRoomTwoTone,
+  PersonTwoTone,
 } from '@material-ui/icons';
 import useRouter from 'use-react-router';
 import firebase from 'services/firebase';
@@ -107,7 +108,7 @@ const Sidebar: SFC<SidebarProps> = props => {
       </ListItemLink>
       <ListItemLink to="/users/me" nav className={classes.listItemLink}>
         <ListItemIcon>
-          <Avatar avatarUrl={path(['photoURL'], user)} />
+          <PersonTwoTone />
         </ListItemIcon>
         <ListItemText>Profile</ListItemText>
       </ListItemLink>

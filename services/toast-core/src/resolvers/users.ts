@@ -19,8 +19,9 @@ const supplementUserData = async (
     const firebaseUser = await firebase.auth().getUser(id);
     return {
       ...firebaseUser,
-      photoUrl: firebaseUser.photoURL,
       ...dbUser,
+      photoUrl: dbUser.photoUrl || firebaseUser.photoURL,
+      displayName: dbUser.displayName || firebaseUser.displayName,
     };
   } catch (err) {
     logger.warn(err);
@@ -48,15 +49,17 @@ export default {
       let coverImageUrl: string;
 
       if (args.input.photo) {
+        logger.debug('Uploading user photo');
         const { url } = await ctx.gcloudStorage.upload(
           await args.input.photo,
           'images',
         );
         photoUrl = url;
       }
-      if (args.input.coverImageUrl) {
+      if (args.input.coverImage) {
+        logger.debug('Uploading user cover image');
         const { url } = await ctx.gcloudStorage.upload(
-          await args.input.coverImageUrl,
+          await args.input.coverImage,
           'images',
         );
         coverImageUrl = url;
@@ -76,7 +79,7 @@ export default {
             photoUrl: NOT_NULL(${photoUrl || null}, user.photoUrl),
             coverImageUrl: NOT_NULL(${coverImageUrl ||
               null}, user.coverImageUrl)
-          } IN Users
+          } IN Users OPTIONS { waitForSync: true }
           RETURN {
             user: OLD
           }
@@ -85,5 +88,8 @@ export default {
 
       return supplementUserData(user);
     },
+  },
+  UpdateUserResult: {
+    user: arango,
   },
 };

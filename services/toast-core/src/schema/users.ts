@@ -97,6 +97,6 @@ export default gql`
   }
 
   type UpdateUserResult {
-    user: User! @aqlNewQuery @aql(expression: "$parent.user")
+    user: User! @aqlNewQuery @aqlSubquery(query: "", return: "$parent.user")
   }
 `;
