@@ -100,17 +100,17 @@ const Sidebar: SFC<SidebarProps> = props => {
         </ListItemIcon>
         <ListItemText>Recipes</ListItemText>
       </ListItemLink>
-      <ListItemLink to="/settings" nav className={classes.listItemLink}>
-        <ListItemIcon>
-          <SettingsTwoTone />
-        </ListItemIcon>
-        <ListItemText>Settings</ListItemText>
-      </ListItemLink>
       <ListItemLink to="/users/me" nav className={classes.listItemLink}>
         <ListItemIcon>
           <PersonTwoTone />
         </ListItemIcon>
         <ListItemText>Profile</ListItemText>
+      </ListItemLink>
+      <ListItemLink to="/settings" nav className={classes.listItemLink}>
+        <ListItemIcon>
+          <SettingsTwoTone />
+        </ListItemIcon>
+        <ListItemText>Settings</ListItemText>
       </ListItemLink>
       <IsAdmin>
         <ListItemLink to="/manage" nav className={classes.listItemLink}>

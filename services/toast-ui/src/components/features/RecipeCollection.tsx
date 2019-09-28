@@ -47,6 +47,7 @@ export const RecipeCollection: FC<
       recipes={recipes}
       hasNextPage={hasNextPage}
       fetchMore={fetchMore}
+      onRecipeSelected={onRecipeSelected}
       emptyState={
         <Typography variant="caption">
           This collection doesn't have any recipes in it

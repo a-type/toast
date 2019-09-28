@@ -11,7 +11,7 @@ import {
   Button,
 } from '@material-ui/core';
 import Link from 'components/generic/Link';
-import { SettingsTwoTone } from '@material-ui/icons';
+import { SettingsTwoTone, PersonTwoTone } from '@material-ui/icons';
 import { useTheme } from '@material-ui/core/styles';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 
@@ -73,6 +73,9 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
             </Button>
           }
         >
+          <IconButton aria-label="Profile" component={Link} to="/users/me">
+            <PersonTwoTone />
+          </IconButton>
           <IconButton
             aria-label="Settings"
             className={classes.settingsButton}
