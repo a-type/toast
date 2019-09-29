@@ -23,16 +23,10 @@ const useStyles = makeStyles<Theme, RecipeImageProps>(theme => ({
     display: 'flex',
     color: theme.palette.grey[500],
 
-    [theme.breakpoints.down('md')]: {
-      height: '200px',
-    },
-
-    [theme.breakpoints.up('md')]: {
-      '&::after': {
-        content: '""',
-        display: 'block',
-        paddingBottom: '100%',
-      },
+    '&::after': {
+      content: '""',
+      display: 'block',
+      paddingBottom: '33%',
     },
   }),
   icon: {
