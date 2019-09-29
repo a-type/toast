@@ -1,8 +1,16 @@
 import React, { FC, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Container, Theme, Typography, Paper, Chip } from '@material-ui/core';
+import {
+  Container,
+  Theme,
+  Typography,
+  Paper,
+  Chip,
+  Box,
+  Avatar,
+  ButtonBase,
+} from '@material-ui/core';
 import { parse } from 'querystring';
-import Recipe from 'components/features/recipes/RecipeView';
 import { makeStyles } from '@material-ui/styles';
 import { RecipeImage } from 'components/features/recipes/RecipeImage';
 import useFullRecipe from 'hooks/features/useFullRecipe';
@@ -13,6 +21,7 @@ import { FullRecipe } from 'hooks/features/fragments';
 import { Value } from 'slate';
 import { RecipeIngredients } from 'components/features/recipes/RecipeIngredients';
 import { RecipeStepsLink } from 'components/features/recipes/RecipeStepsLink';
+import Link from 'components/generic/Link';
 
 export interface RecipeViewPageProps
   extends RouteComponentProps<{ recipeId: string }> {}
@@ -56,6 +65,17 @@ const useStyles = makeStyles<Theme, any>(theme => ({
       margin: 'auto',
     },
   },
+  authorButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: theme.spacing(2),
+    '& > * + *': {
+      marginLeft: theme.spacing(2),
+    },
+  },
+  authorName: {
+    flex: 1,
+  },
 }));
 
 const RecipeViewPageContent: FC<{
@@ -71,6 +91,8 @@ const RecipeViewPageContent: FC<{
     [recipe.introduction],
   );
 
+  const author = recipe.author;
+
   return (
     <Container>
       <RecipeImage recipe={recipe} className={classes.coverImage} />
@@ -82,6 +104,18 @@ const RecipeViewPageContent: FC<{
           <Typography variant="body2" gutterBottom>
             {recipe.description}
           </Typography>
+        )}
+        {author && (
+          <ButtonBase
+            className={classes.authorButton}
+            component={Link}
+            to={`/users/${author.id}`}
+          >
+            <Avatar src={author.photoUrl} />
+            <Typography className={classes.authorName}>
+              {author.displayName}
+            </Typography>
+          </ButtonBase>
         )}
       </Paper>
       <div className={classes.center}>

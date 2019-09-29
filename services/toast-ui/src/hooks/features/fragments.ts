@@ -40,6 +40,11 @@ export const FullRecipeFragment = gql`
       }
     }
     steps
+    author {
+      id
+      displayName
+      photoUrl
+    }
   }
 `;
 
@@ -64,6 +69,11 @@ export type FullRecipe = {
     }[];
   };
   steps: string[];
+  author: {
+    id: string;
+    displayName: string;
+    photoUrl: string;
+  } | null;
 };
 
 export type FullRecipeIngredient = {

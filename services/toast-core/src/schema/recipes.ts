@@ -70,6 +70,8 @@ export default gql`
         edgeDirection: INBOUND
       )
 
+    author: User @aqlNode(edgeCollection: "AuthorOf", direction: INBOUND)
+
     containedInViewerCollections: [RecipeCollection!]!
       @aqlSubquery(
         query: """
