@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import { toReadableFraction } from 'readable-fractions';
 
@@ -12,7 +12,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default ({ servings, servingsOverride }) => {
+export const RecipeServings: FC<{
+  servings: number;
+  servingsOverride?: number;
+}> = ({ servings, servingsOverride }) => {
   const classes = useStyles({ servings, servingsOverride });
 
   const multiplier = servingsOverride ? servingsOverride / servings : 1;

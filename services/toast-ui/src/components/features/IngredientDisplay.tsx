@@ -11,7 +11,6 @@ export type IngredientDisplayProps = {
     quantity: number;
   };
   multiplier?: number;
-  recipeId?: string;
   showMultiplier?: boolean;
 };
 
@@ -31,7 +30,7 @@ export const IngredientDisplay: FC<IngredientDisplayProps> = ({
 
   const newQuantity = multiplier
     ? toReadableFraction(ingredient.quantity * multiplier, true)
-    : `${ingredient.quantity}`;
+    : toReadableFraction(ingredient.quantity, true);
   const newText = [
     ingredient.text.slice(0, ingredient.quantityStart),
     newQuantity,

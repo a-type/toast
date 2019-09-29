@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, HTMLAttributes } from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
 import { LocalDiningTwoTone } from '@material-ui/icons';
+import clsx from 'clsx';
 
-export type RecipeImageProps = {
+export type RecipeImageProps = HTMLAttributes<HTMLDivElement> & {
   recipe: {
     coverImageUrl?: string;
   };
@@ -40,11 +41,12 @@ const useStyles = makeStyles<Theme, RecipeImageProps>(theme => ({
 }));
 
 export const RecipeImage: FC<RecipeImageProps> = props => {
-  const { coverImageUrl } = props.recipe;
   const classes = useStyles(props);
+  const { recipe, ...rest } = props;
+  const coverImageUrl = recipe.coverImageUrl;
 
   return (
-    <div className={classes.image}>
+    <div {...rest} className={clsx(classes.image, props.className)}>
       {!coverImageUrl && (
         <LocalDiningTwoTone fontSize="large" className={classes.icon} />
       )}

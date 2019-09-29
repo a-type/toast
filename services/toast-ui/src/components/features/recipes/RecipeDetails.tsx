@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import Servings from './Servings';
-import Time from './Time';
+import { RecipeServings } from './RecipeServings';
+import { RecipeTimeSummary } from './RecipeTimeSummary';
 import TextLink from 'components/text/Link';
 import { Box, Typography } from '@material-ui/core';
 
-const RecipeDetails: FC<{ recipe: any; servingsOverride?: number }> = ({
+export const RecipeDetails: FC<{ recipe: any; servingsOverride?: number }> = ({
   recipe,
   servingsOverride,
 }) => {
@@ -19,15 +19,11 @@ const RecipeDetails: FC<{ recipe: any; servingsOverride?: number }> = ({
       <Typography gutterBottom style={{ overflowX: 'hidden' }}>
         Source: <TextLink to={sourceUrl}>{sourceUrl}</TextLink>
       </Typography>
-      <Servings
+      <RecipeServings
         servingsOverride={servingsOverride}
         servings={servings || 'Not specified'}
       />
-      <Time
-        cookTime={cookTime}
-        prepTime={prepTime}
-        unattendedTime={unattendedTime}
-      />
+      <RecipeTimeSummary recipe={recipe} />
     </Box>
   );
 };

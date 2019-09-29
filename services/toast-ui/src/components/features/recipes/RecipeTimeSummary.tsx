@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Typography } from '@material-ui/core';
+import { FullRecipe } from 'hooks/features/fragments';
 
-export default ({ cookTime, prepTime, unattendedTime }) => {
+export const RecipeTimeSummary: FC<{ recipe: FullRecipe }> = ({ recipe }) => {
+  if (!recipe) {
+    return null;
+  }
+
+  const { cookTime, prepTime, unattendedTime } = recipe;
+
   if (!cookTime && !prepTime && !unattendedTime) {
     return null;
   }

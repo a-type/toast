@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
 import { LandingPage } from './LandingPage';
-import { RecipePage } from './RecipePage';
+import { RecipePage } from './recipes/RecipePages';
 import { LoginPage } from './LoginPage';
 import { SettingsPage } from './SettingsPage';
 import { HomePage } from './HomePage';
