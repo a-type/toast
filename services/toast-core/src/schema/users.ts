@@ -23,7 +23,7 @@ export default gql`
       )
       @authenticated
 
-    authoredRecipes: UserRecipesConnection!
+    authoredRecipes(first: Int = 10, after: String): UserRecipesConnection!
       @aqlRelayConnection(
         edgeCollection: "AuthorOf"
         edgeDirection: OUTBOUND

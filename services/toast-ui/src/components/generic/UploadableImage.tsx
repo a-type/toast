@@ -1,5 +1,11 @@
 import React, { FC, useState, useEffect } from 'react';
-import { makeStyles, Theme, ButtonBase } from '@material-ui/core';
+import {
+  makeStyles,
+  Theme,
+  ButtonBase,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core';
 import { useDropzone } from 'react-dropzone';
 import { CloudUploadTwoTone } from '@material-ui/icons';
 import clsx from 'clsx';
@@ -18,6 +24,7 @@ const useStyles = makeStyles<Theme, UploadableImageProps>(theme => ({
     '&:hover > $icon': {
       opacity: 0.5,
     },
+    backgroundColor: theme.palette.grey[100],
   },
   icon: {
     position: 'absolute',
@@ -32,6 +39,19 @@ const useStyles = makeStyles<Theme, UploadableImageProps>(theme => ({
     height: '100%',
     objectFit: 'cover',
   },
+  placeholder: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: theme.palette.grey[900],
+  },
+  loader: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
 }));
 
 export const UploadableImage: FC<UploadableImageProps> = props => {
@@ -39,6 +59,7 @@ export const UploadableImage: FC<UploadableImageProps> = props => {
   const { value, onChange, className } = props;
 
   const [displayFile, setDisplayFile] = useState<string>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // convert File values to binary strings for display on value change
   useEffect(() => {
@@ -61,7 +82,14 @@ export const UploadableImage: FC<UploadableImageProps> = props => {
   }, [value, setDisplayFile]);
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (files: any[]) => onChange(files[0]),
+    onDrop: async (files: any[]) => {
+      try {
+        setLoading(true);
+        await onChange(files[0]);
+      } finally {
+        setLoading(false);
+      }
+    },
   });
 
   return (
@@ -69,6 +97,12 @@ export const UploadableImage: FC<UploadableImageProps> = props => {
       <img src={displayFile} className={classes.image} />
       <CloudUploadTwoTone className={classes.icon} />
       <input {...getInputProps()} />
+      {!displayFile && (
+        <Typography variant="caption" className={classes.placeholder}>
+          Tap to select an image
+        </Typography>
+      )}
+      {loading && <CircularProgress className={classes.loader} />}
     </ButtonBase>
   );
 };

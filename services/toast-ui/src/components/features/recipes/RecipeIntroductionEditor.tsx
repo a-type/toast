@@ -8,8 +8,9 @@ import {
   IconButton,
   Grid,
   Button,
+  CircularProgress,
 } from '@material-ui/core';
-import { FullRecipe } from 'hooks/features/useFullRecipe';
+import { FullRecipe } from 'hooks/features/fragments';
 import { SlateEditor } from 'components/generic/SlateEditor';
 import { Value } from 'slate';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
@@ -19,6 +20,7 @@ import {
   FormatItalicTwoTone,
   FormatUnderlinedTwoTone,
 } from '@material-ui/icons';
+import { useSnackbar } from 'notistack';
 
 export interface RecipeIntroductionEditorProps {
   recipe: FullRecipe;
@@ -58,6 +60,11 @@ export const RecipeIntroductionEditor: FC<
   const classes = useStyles(props);
   const { recipe } = props;
 
+  const [dirty, setDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [updateRecipe] = useUpdateRecipe();
 
   const [slateValue, setSlateValue] = useState<Value>(() =>
@@ -69,12 +76,14 @@ export const RecipeIntroductionEditor: FC<
   const handleSlateChange = useCallback(
     ({ value }) => {
       setSlateValue(value);
+      setDirty(true);
     },
-    [setSlateValue],
+    [setSlateValue, setDirty],
   );
 
   const save = async () => {
     try {
+      setSaving(true);
       await updateRecipe({
         variables: {
           input: {
@@ -85,7 +94,11 @@ export const RecipeIntroductionEditor: FC<
           },
         },
       });
+      setDirty(false);
+    } catch (err) {
+      enqueueSnackbar('We failed to save your introduction. Please try again.');
     } finally {
+      setSaving(false);
     }
   };
 
@@ -127,8 +140,8 @@ export const RecipeIntroductionEditor: FC<
           what it's like to cook it for people you love. Anything goes!
         </FormHelperText>
       </FormControl>
-      <Button variant="contained" onClick={save}>
-        Save
+      <Button variant="contained" onClick={save} disabled={!dirty || saving}>
+        {saving ? <CircularProgress size="1.5em" /> : dirty ? 'Save' : 'Saved'}
       </Button>
     </Box>
   );

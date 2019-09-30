@@ -2,23 +2,31 @@ import React, { FC } from 'react';
 import { Grid } from '@material-ui/core';
 
 export interface CardGridProps {
-  small?: boolean;
+  highlightedItems?: number[];
 }
 
-export const CardGrid: FC<CardGridProps> = ({ children, small = false }) => {
+export const CardGrid: FC<CardGridProps> = ({
+  children,
+  highlightedItems = [],
+}) => {
   return (
     <Grid container spacing={2}>
-      {React.Children.map(children, (child, idx) => (
-        <Grid
-          item
-          key={idx}
-          xs={small ? 6 : 12}
-          md={small ? 3 : 6}
-          lg={small ? 2 : 4}
-        >
-          {child}
-        </Grid>
-      ))}
+      {React.Children.map(children, (child, idx) => {
+        const isHighlighted = highlightedItems.includes(idx);
+        return (
+          <Grid
+            item
+            key={idx}
+            xs={isHighlighted ? 12 : 6}
+            sm={isHighlighted ? 12 : 6}
+            md={isHighlighted ? 8 : 4}
+            lg={isHighlighted ? 8 : 4}
+            xl={isHighlighted ? 6 : 2}
+          >
+            {child}
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };

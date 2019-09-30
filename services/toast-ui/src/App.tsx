@@ -9,18 +9,35 @@ import { Provider as LinkerContextProvider } from 'contexts/LinkerContext';
 import { Loader } from 'components/generic/Loader/Loader';
 import Helmet from 'react-helmet';
 import UpdateChecker from './UpdateChecker';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, Button } from '@material-ui/core';
 import { hot } from 'react-hot-loader/root';
 import { ToastAppBar } from 'components/features/AppBar';
-import { SnackbarProvider } from 'notistack';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 import { ErrorBoundary } from 'components/generic/ErrorBoundary';
 import { AppLayout, AppLayoutContent } from 'components/layout/AppLayout';
 import { DynamicThemeProvider } from 'themes/DynamicThemeProvider';
 import { AuthProvider } from 'contexts/AuthContext';
 
+const CloseSnackbarButton = ({ barKey }: { barKey: string }) => {
+  const { closeSnackbar } = useSnackbar();
+  return (
+    <Button
+      variant="text"
+      color="primary"
+      onClick={() => closeSnackbar(barKey)}
+    >
+      Close
+    </Button>
+  );
+};
+
+const closeSnackbarAction = (key: string) => (
+  <CloseSnackbarButton barKey={key} />
+);
+
 const App: FC<{}> = props => {
   return (
-    <SnackbarProvider maxSnack={2}>
+    <SnackbarProvider maxSnack={2} action={closeSnackbarAction}>
       <AuthProvider>
         <LinkerContextProvider>
           <Suspense fallback={<Loader />}>

@@ -17,30 +17,16 @@ import { useCreateRecipe } from 'hooks/features/useCreateRecipe';
 import useRouter from 'use-react-router';
 import { path } from 'ramda';
 import { FormikAutoSave } from 'components/generic/FormikAutoSave';
+import { useSnackbar } from 'notistack';
 
 export interface RecipeBasicsEditorProps {
   recipe: FullRecipe;
 }
 
-const emptyRecipe: FullRecipe = {
-  id: null,
-  title: '',
-  introduction: null,
-  description: '',
-  servings: 2,
-  cookTime: 0,
-  prepTime: 0,
-  unattendedTime: 0,
-  published: false,
-  private: false,
-  steps: [],
-  ingredientsConnection: {
-    edges: [],
-  },
-  sourceUrl: null,
-  attribution: null,
-  coverImageUrl: null,
-  coverImageAttribution: null,
+type BasicsFormValues = {
+  title: string;
+  description: string;
+  private: boolean;
 };
 
 const useStyles = makeStyles<Theme, RecipeBasicsEditorProps>(theme => ({
@@ -60,24 +46,14 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
   const [createRecipe, { error: createError }] = useCreateRecipe();
   const [updateRecipe, { error: updateError }] = useUpdateRecipe();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const save = useCallback(
     async (
-      {
-        steps,
-        published,
-        id,
-        title,
-        description,
-        prepTime,
-        cookTime,
-        unattendedTime,
-        servings,
-        private: isPrivate,
-      }: FullRecipe,
-      form: FormikHelpers<FullRecipe>,
+      { title, description, private: isPrivate }: BasicsFormValues,
+      form: FormikHelpers<BasicsFormValues>,
     ) => {
       const fields = {
-        published,
         title,
         description,
         private: isPrivate,
@@ -91,9 +67,6 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
               input: {
                 id: recipe.id,
                 fields,
-                steps: {
-                  set: steps,
-                },
               },
             },
           });
@@ -112,6 +85,13 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
             )}/edit`,
           );
         }
+      } catch (err) {
+        console.error(err);
+        enqueueSnackbar(
+          !!recipe
+            ? "The recipe couldn't be saved. Please try again."
+            : "We couldn't create your recipe just now. Please try again.",
+        );
       } finally {
         form.setSubmitting(false);
       }
@@ -119,12 +99,14 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
     [createRecipe, updateRecipe, recipe],
   );
 
+  const initialValues: BasicsFormValues = {
+    title: (recipe && recipe.title) || '',
+    description: (recipe && recipe.description) || '',
+    private: !!recipe && recipe.private,
+  };
+
   return (
-    <Formik<FullRecipe>
-      initialValues={recipe || emptyRecipe}
-      enableReinitialize
-      onSubmit={save}
-    >
+    <Formik initialValues={initialValues} enableReinitialize onSubmit={save}>
       {({ values, handleChange, handleSubmit, isSubmitting }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>

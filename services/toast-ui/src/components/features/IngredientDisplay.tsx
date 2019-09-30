@@ -6,9 +6,9 @@ export type IngredientDisplayProps = {
   ingredient: {
     id: string;
     text: string;
-    quantityStart: number;
-    quantityEnd: number;
-    quantity: number;
+    quantityStart?: number;
+    quantityEnd?: number;
+    quantity?: number;
   };
   multiplier?: number;
   showMultiplier?: boolean;

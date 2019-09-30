@@ -32,7 +32,7 @@ export default gql`
     As described in ingredients and instructions, this is how many meals the recipe
     should produce.
     """
-    servings: Int!
+    servings: Int! @defaultValue(value: 1)
 
     """
     In minutes
@@ -282,7 +282,9 @@ export default gql`
             unattendedTime: $args.input.fields.unattendedTime,
             private: $args.input.fields.private,
             createdAt: DATE_NOW(),
-            updatedAt: DATE_NOW()
+            updatedAt: DATE_NOW(),
+            viewedAt: DATE_NOW(),
+            servings: 1
           } INTO Recipes
           RETURN NEW
         )

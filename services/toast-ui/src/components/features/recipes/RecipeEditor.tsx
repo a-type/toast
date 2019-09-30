@@ -14,6 +14,7 @@ import { RecipeStepsEditor } from './RecipeStepsEditor';
 import { RecipeDetailsEditor } from './RecipeDetailsEditor';
 import { RecipeBasicsEditor } from './RecipeBasicsEditor';
 import { RecipeIntroductionEditor } from './RecipeIntroductionEditor';
+import { RecipeCoverImageEditor } from './RecipeCoverImageEditor';
 
 export interface RecipeEditorProps {
   recipeId?: string;
@@ -48,13 +49,6 @@ const useStyles = makeStyles(theme => ({
   },
   section: {
     marginBottom: theme.spacing(4),
-  },
-  coverImage: {
-    height: '30vh',
-    width: '100%',
-    marginBottom: theme.spacing(4),
-    backgroundSize: 'cover',
-    borderRadius: theme.shape.borderRadius,
   },
 }));
 
@@ -112,12 +106,7 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
         </Paper>
       )}
 
-      {recipe && recipe.coverImageUrl && (
-        <div
-          className={classes.coverImage}
-          style={{ backgroundImage: `url(${recipe.coverImageUrl})` }}
-        />
-      )}
+      {recipe && <RecipeCoverImageEditor recipe={recipe} />}
 
       <Paper className={classes.paper} elevation={0}>
         <RecipeBasicsEditor recipe={recipe} />

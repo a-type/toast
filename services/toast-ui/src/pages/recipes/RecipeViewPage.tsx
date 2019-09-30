@@ -132,6 +132,9 @@ const RecipeViewPageContent: FC<{
       )}
       <Paper className={classes.paper} id="ingredients">
         <Typography variant="h3">Ingredients</Typography>
+        <Typography variant="caption">
+          Check off items as you prepare them for cooking
+        </Typography>
         <RecipeIngredients recipe={recipe} servingsOverride={servings} />
       </Paper>
       <RecipeStepsLink recipe={recipe} />

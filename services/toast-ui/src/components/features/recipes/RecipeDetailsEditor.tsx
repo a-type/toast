@@ -4,29 +4,19 @@ import { Formik, FormikHelpers } from 'formik';
 import { FullRecipe } from 'hooks/features/fragments';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
 import { FormikAutoSave } from 'components/generic/FormikAutoSave';
-import { FormikFileField } from 'components/fields';
 
 export interface RecipeDetailsEditorProps {
   recipe: FullRecipe;
 }
 
-const useStyles = makeStyles<Theme, RecipeDetailsEditorProps>(theme => ({
-  optionalPanel: {
-    marginBottom: theme.spacing(2),
-    backgroundColor: 'transparent',
-    padding: 0,
-    '&:before': {
-      content: '',
-      display: 'none',
-    },
-  },
-  optionalPanelSummary: {
-    padding: 0,
-  },
-  optionalPanelDetails: {
-    padding: 0,
-  },
-}));
+const useStyles = makeStyles<Theme, RecipeDetailsEditorProps>(theme => ({}));
+
+type DetailsFormValues = {
+  prepTime: number;
+  cookTime: number;
+  unattendedTime: number;
+  servings: number;
+};
 
 export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
   const classes = useStyles(props);
@@ -36,28 +26,14 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
 
   const save = useCallback(
     async (
-      {
-        steps,
-        published,
-        id,
-        title,
-        description,
-        prepTime,
-        cookTime,
-        unattendedTime,
-        servings,
-        private: isPrivate,
-        coverImage,
-      }: FullRecipe & { coverImage: File[] },
+      { prepTime, cookTime, unattendedTime, servings }: DetailsFormValues,
       form: FormikHelpers<FullRecipe>,
     ) => {
       const fields = {
-        published,
         prepTime,
         cookTime,
         unattendedTime,
         servings,
-        private: isPrivate,
       };
 
       form.setSubmitting(true);
@@ -67,10 +43,6 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
             input: {
               id: recipe.id,
               fields,
-              coverImage: (coverImage && coverImage[0]) || undefined,
-              steps: {
-                set: steps,
-              },
             },
           },
         });
@@ -81,9 +53,16 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
     [updateRecipe, recipe],
   );
 
+  const initialValues: DetailsFormValues = {
+    servings: recipe.servings || 1,
+    prepTime: recipe.prepTime || 0,
+    cookTime: recipe.cookTime || 0,
+    unattendedTime: recipe.unattendedTime || 0,
+  };
+
   return (
-    <Formik<FullRecipe>
-      initialValues={recipe}
+    <Formik<DetailsFormValues>
+      initialValues={initialValues}
       enableReinitialize
       onSubmit={save}
     >
@@ -130,9 +109,6 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
                 value={values.unattendedTime}
                 helperText="Unattended time is any time you spend slow cooking, baking, sous vide... any time you don't have to actively do anything during cooking."
               />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
-              <FormikFileField name="coverImage" label="Cover image" />
             </Grid>
           </Grid>
 

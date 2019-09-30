@@ -26,7 +26,7 @@ const useStyles = makeStyles<Theme, RecipeImageProps>(theme => ({
     '&::after': {
       content: '""',
       display: 'block',
-      paddingBottom: '33%',
+      paddingBottom: '42%',
     },
   }),
   icon: {
