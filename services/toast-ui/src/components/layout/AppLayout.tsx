@@ -35,6 +35,8 @@ const useContentStyles = makeStyles<Theme, AppLayoutContentProps>(theme => ({
     gridArea: 'content',
     overflowY: 'auto',
     background: `linear-gradient(180deg, ${theme.palette.grey[100]} 0%, ${theme.palette.background.paper} 50vh)`,
+    display: 'flex',
+    flexDirection: 'column',
   },
 }));
 

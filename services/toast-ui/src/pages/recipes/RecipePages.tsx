@@ -15,6 +15,7 @@ import { AuthoredRecipes } from 'components/features/recipes/AuthoredRecipes';
 import { EditRecipePage } from './EditRecipePage';
 import { RecipeViewPage } from './RecipeViewPage';
 import { ScanPage } from './ScanPage';
+import { RecipeStepsPage } from './RecipeStepsPage';
 
 export const RecipePage = () => (
   <Switch>
@@ -23,6 +24,7 @@ export const RecipePage = () => (
       path={['/recipes/create', '/recipes/:recipeId/edit'] as any}
       component={EditRecipePage}
     />
+    <Route path="/recipes/:recipeId/steps" component={RecipeStepsPage} />
     <Route path="/recipes/:recipeId" component={RecipeViewPage} />
     <Route path="/recipes" exact component={RecipesHomePage} />
   </Switch>

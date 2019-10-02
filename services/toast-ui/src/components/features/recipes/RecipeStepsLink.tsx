@@ -7,6 +7,7 @@ import { toReadableFraction } from 'readable-fractions';
 
 export interface StepsLinkProps extends LinkProps {
   recipe: {
+    id: string;
     sourceUrl: string;
   };
   servingsMultiplier?: number;
@@ -61,15 +62,30 @@ export const RecipeStepsLink: React.SFC<StepsLinkProps> = ({
     }
   };
 
+  if (recipe.sourceUrl) {
+    return (
+      <Fab
+        color="primary"
+        variant="extended"
+        href={recipe.sourceUrl}
+        className={classes.fab}
+        target={'_blank'}
+        rel={'noopener'}
+        onClick={handleNavigate}
+      >
+        Start Cooking
+        <ArrowForwardIosTwoTone />
+      </Fab>
+    );
+  }
+
   return (
     <Fab
       color="primary"
       variant="extended"
-      href={recipe.sourceUrl}
+      component={Link}
+      to={`/recipes/${recipe.id}/steps`}
       className={classes.fab}
-      target="_blank"
-      rel="noopener"
-      onClick={handleNavigate}
     >
       Start Cooking
       <ArrowForwardIosTwoTone />
