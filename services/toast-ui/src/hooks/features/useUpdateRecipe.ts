@@ -15,7 +15,6 @@ export const UpdateRecipeMutation = gql`
         unattendedTime
         private
         published
-        steps
         coverImageUrl
       }
     }
@@ -35,7 +34,6 @@ export type UpdateRecipeMutationResult = {
       unattendedTime: number;
       private: boolean;
       published: boolean;
-      steps: string[];
       coverImageUrl: string;
     };
   };
@@ -56,9 +54,6 @@ export type UpdateRecipeMutationVariables = {
       published?: boolean;
     };
     coverImage?: File;
-    steps?: {
-      set?: string[];
-    };
   };
 };
 

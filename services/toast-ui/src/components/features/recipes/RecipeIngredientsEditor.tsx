@@ -1,38 +1,25 @@
-import { FullRecipe, FullRecipeIngredient } from 'hooks/features/useFullRecipe';
+import { FullRecipe, FullRecipeIngredient } from 'hooks/features/fragments';
 import { useCreateIngredient } from 'hooks/features/useCreateIngredient';
-import React, {
-  FC,
-  useCallback,
-  ChangeEvent,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, useCallback, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
-  TextField,
-  IconButton,
   makeStyles,
   Theme,
   FormControl,
-  FormControlLabel,
-  InputLabel,
   FormLabel,
   FormHelperText,
   Card,
   CardContent,
   CardActionArea,
 } from '@material-ui/core';
-import { Formik, FormikHelpers, FastField } from 'formik';
-import { FormikTextField } from 'components/fields';
+import { Formik, FastField } from 'formik';
 import { useUpdateIngredient } from 'hooks/features/useUpdateIngredient';
 import { useDeleteIngredient } from 'hooks/features/useDeleteIngredient';
-import { DeleteTwoTone, AddTwoTone } from '@material-ui/icons';
+import { AddTwoTone } from '@material-ui/icons';
 import { BoxProps } from '@material-ui/core/Box';
 import { IngredientEditor } from '../IngredientEditor';
 import { colors } from 'themes/colors';
-import { Editor } from 'slate-react';
 import Popup, { PopupProps } from 'components/generic/Popup';
 import { useSnackbar } from 'notistack';
 
@@ -40,13 +27,12 @@ interface RecipeIngredientsEditorProps extends BoxProps {
   recipe: FullRecipe;
 }
 
-const useRecipeIngredientsEditorStyles = makeStyles(theme => ({}));
+const useRecipeIngredientsEditorStyles = makeStyles(() => ({}));
 
 export const RecipeIngredientsEditor: FC<
   RecipeIngredientsEditorProps
 > = props => {
   const { recipe, ...rest } = props;
-  const classes = useRecipeIngredientsEditorStyles(props);
 
   const [addModalOpen, setAddModalOpen] = useState(false);
 
@@ -196,7 +182,7 @@ const RecipeIngredientEditModal: FC<RecipeIngredientEditModalProps> = props => {
         enqueueSnackbar("Couldn't save the ingredient, please try again");
       }
     },
-    [ingredient],
+    [ingredient, enqueueSnackbar, onClose],
   );
 
   const parsedInfo = useMemo(() => {

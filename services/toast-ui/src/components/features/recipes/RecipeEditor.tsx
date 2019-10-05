@@ -140,7 +140,8 @@ export const RecipeEditor: FC<RecipeEditorProps> = ({ recipeId }) => {
 
           <section className={classes.section}>
             <Typography variant="h4" gutterBottom>
-              Steps ({path(['steps', 'length'], recipe) || 'None'})
+              Steps (
+              {path(['stepsConnection', 'edges', 'length'], recipe) || 'None'})
             </Typography>
             <RecipeStepsEditor recipe={recipe} width="100%" />
           </section>

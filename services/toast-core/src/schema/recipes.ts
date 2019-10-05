@@ -59,6 +59,9 @@ export default gql`
     private: Boolean! @defaultValue(value: true)
     locked: Boolean! @defaultValue(value: true)
 
+    """
+    @deprecated
+    """
     steps: [String!]
 
     ingredientsConnection(
@@ -69,6 +72,14 @@ export default gql`
         edgeCollection: "IngredientOf"
         edgeDirection: INBOUND
       )
+
+    stepsConnection(
+      first: Int = 50
+      after: String = "0"
+    ): RecipeStepsConnection!
+      @aqlRelayConnection(edgeCollection: "StepOf", edgeDirection: INBOUND)
+
+    stepOrder: [ID!]! @defaultValue(value: [])
 
     author: User @aqlNode(edgeCollection: "AuthorOf", direction: INBOUND)
 
@@ -101,6 +112,20 @@ export default gql`
   }
 
   type RecipeIngredientPageInfo {
+    hasNextPage: Boolean!
+  }
+
+  type RecipeStepsConnection {
+    edges: [RecipeStepEdge!]! @aqlRelayEdges
+    pageInfo: RecipeStepsPageInfo! @aqlRelayPageInfo
+  }
+
+  type RecipeStepEdge {
+    cursor: String!
+    node: Step! @aqlRelayNode
+  }
+
+  type RecipeStepsPageInfo {
     hasNextPage: Boolean!
   }
 
@@ -237,7 +262,6 @@ export default gql`
   input UpdateRecipeInput {
     id: ID!
     fields: UpdateRecipeFieldsInput = {}
-    steps: UpdateRecipeStepsInput = {}
     coverImage: Upload
   }
 
@@ -251,13 +275,6 @@ export default gql`
     unattendedTime: Int
     private: Boolean
     published: Boolean
-  }
-
-  input UpdateRecipeStepsInput {
-    """
-    Simply assigns a list of strings as the steps of the recipe
-    """
-    set: [String!]
   }
 
   type UpdateRecipeResult {

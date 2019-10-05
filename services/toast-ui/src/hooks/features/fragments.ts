@@ -39,7 +39,15 @@ export const FullRecipeFragment = gql`
         }
       }
     }
-    steps
+    stepsConnection {
+      edges {
+        node {
+          id
+          text
+        }
+      }
+    }
+    stepOrder
     author {
       id
       displayName
@@ -68,7 +76,12 @@ export type FullRecipe = {
       node: FullRecipeIngredient;
     }[];
   };
-  steps: string[];
+  stepsConnection: {
+    edges: {
+      node: FullRecipeStep;
+    }[];
+  };
+  stepOrder: string[];
   author: {
     id: string;
     displayName: string;
@@ -93,4 +106,9 @@ export type FullRecipeIngredient = {
     id: string;
     name: string;
   };
+};
+
+export type FullRecipeStep = {
+  id: string;
+  text: string;
 };

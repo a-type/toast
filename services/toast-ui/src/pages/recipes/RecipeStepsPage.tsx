@@ -18,6 +18,7 @@ import { Loader } from 'components/generic/Loader';
 import ErrorMessage from 'components/generic/ErrorMessage';
 import { pathOr } from 'ramda';
 import SwipeableViews from 'react-swipeable-views';
+import { FullRecipeStep } from 'hooks/features/fragments';
 
 export interface RecipeStepsPageProps
   extends RouteComponentProps<{ recipeId: string }> {}
@@ -66,7 +67,9 @@ export const RecipeStepsPage: FC<RecipeStepsPageProps> = props => {
     return <ErrorMessage error={error} />;
   }
 
-  const steps = pathOr([], ['recipe', 'steps'], data) as string[];
+  const steps = (pathOr([], ['recipe', 'stepsConnection', 'edges'], data) as ({
+    node: FullRecipeStep;
+  }[])).map(({ node }) => node);
 
   return (
     <Container className={classes.container}>
@@ -76,7 +79,7 @@ export const RecipeStepsPage: FC<RecipeStepsPageProps> = props => {
           nonLinear
           className={classes.stepNumbers}
         >
-          {steps.map((step, idx) => (
+          {steps.map((_step, idx) => (
             <Step completed={idx < activeStep}>
               <StepButton onClick={() => setActiveStep(idx)}></StepButton>
             </Step>
@@ -89,7 +92,7 @@ export const RecipeStepsPage: FC<RecipeStepsPageProps> = props => {
           >
             {steps.map((step, idx) => (
               <Typography paragraph key={idx}>
-                {step}
+                {step.text}
               </Typography>
             ))}
           </SwipeableViews>

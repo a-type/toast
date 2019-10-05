@@ -7,6 +7,7 @@ import groups from './groups';
 import plan from './plan';
 import foods from './foods';
 import ingredients from './ingredients';
+import steps from './steps';
 
 export default [
   recipes,
@@ -16,6 +17,7 @@ export default [
   plan,
   foods,
   ingredients,
+  steps,
 ].reduce(mergeDeepRight, {
   Query: {
     foo: () => false,
