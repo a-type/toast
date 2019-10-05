@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Link, { LinkProps } from 'components/generic/Link';
-import { Fab, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { ArrowForwardIosTwoTone } from '@material-ui/icons';
 import { registrationPromise } from 'workbox';
 import { toReadableFraction } from 'readable-fractions';
+import { Fab } from 'components/generic/Fab';
 
 export interface StepsLinkProps extends LinkProps {
   recipe: {
@@ -13,17 +14,7 @@ export interface StepsLinkProps extends LinkProps {
   servingsMultiplier?: number;
 }
 
-const useStyles = makeStyles(theme => ({
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing(2) + 55,
-    right: theme.spacing(2),
-
-    [theme.breakpoints.up('md')]: {
-      bottom: theme.spacing(2),
-    },
-  },
-}));
+const useStyles = makeStyles(theme => ({}));
 
 export const RecipeStepsLink: React.SFC<StepsLinkProps> = ({
   recipe,
@@ -68,7 +59,6 @@ export const RecipeStepsLink: React.SFC<StepsLinkProps> = ({
         color="primary"
         variant="extended"
         href={recipe.sourceUrl}
-        className={classes.fab}
         target={'_blank'}
         rel={'noopener'}
         onClick={handleNavigate}
@@ -85,7 +75,6 @@ export const RecipeStepsLink: React.SFC<StepsLinkProps> = ({
       variant="extended"
       component={Link}
       to={`/recipes/${recipe.id}/steps`}
-      className={classes.fab}
     >
       Start Cooking
       <ArrowForwardIosTwoTone />

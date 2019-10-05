@@ -7,7 +7,6 @@ import {
   Typography,
   Paper,
   TextField,
-  Fab,
 } from '@material-ui/core';
 import { RouteComponentProps, Route, Switch } from 'react-router';
 import { useAuth } from 'contexts/AuthContext';
@@ -24,6 +23,7 @@ import { EditTwoTone, DoneTwoTone } from '@material-ui/icons';
 import { useUpdateViewer } from 'hooks/features/useUpdateViewer';
 import removeUndefined from 'utils/removeUndefined';
 import useRouter from 'use-react-router';
+import { Fab } from 'components/generic/Fab';
 
 export interface UsersPageProps {}
 
@@ -135,13 +135,7 @@ export const BaseUserPage: FC<BaseUserPageProps> = props => {
   );
 };
 
-const useUserPageStyles = makeStyles<Theme, any>(theme => ({
-  editButton: {
-    position: 'fixed',
-    bottom: theme.spacing(3),
-    right: theme.spacing(3),
-  },
-}));
+const useUserPageStyles = makeStyles<Theme, any>(theme => ({}));
 
 export const UserPage: FC<RouteComponentProps<{ userId: string }>> = ({
   match: {
@@ -208,11 +202,7 @@ export const UserPage: FC<RouteComponentProps<{ userId: string }>> = ({
       {() => (
         <>
           {isMe && (
-            <Fab
-              component={Link}
-              to="/users/me/edit"
-              className={classes.editButton}
-            >
+            <Fab component={Link} to="/users/me/edit">
               <EditTwoTone />
             </Fab>
           )}
@@ -226,13 +216,7 @@ export const UserPage: FC<RouteComponentProps<{ userId: string }>> = ({
   );
 };
 
-const useEditUserPageStyles = makeStyles<Theme, any>(theme => ({
-  editButton: {
-    position: 'fixed',
-    bottom: theme.spacing(3),
-    right: theme.spacing(3),
-  },
-}));
+const useEditUserPageStyles = makeStyles<Theme, any>(theme => ({}));
 
 export const EditUserPage: FC<{}> = props => {
   const classes = useEditUserPageStyles({});
@@ -344,7 +328,7 @@ export const EditUserPage: FC<{}> = props => {
             )}
           >
             {() => (
-              <Fab type="submit" className={classes.editButton}>
+              <Fab type="submit">
                 <DoneTwoTone />
               </Fab>
             )}
