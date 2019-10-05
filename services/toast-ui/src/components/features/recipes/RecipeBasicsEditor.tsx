@@ -107,7 +107,13 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
 
   return (
     <Formik initialValues={initialValues} enableReinitialize onSubmit={save}>
-      {({ values, handleChange, handleSubmit, isSubmitting }) => (
+      {({
+        values,
+        handleChange,
+        setFieldValue,
+        handleSubmit,
+        isSubmitting,
+      }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -137,7 +143,10 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
                 control={
                   <Checkbox
                     name="private"
-                    onChange={handleChange}
+                    value="private"
+                    onChange={(_ev, checked) =>
+                      setFieldValue('private', checked)
+                    }
                     checked={values.private}
                   />
                 }
