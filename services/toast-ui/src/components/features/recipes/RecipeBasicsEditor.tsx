@@ -31,8 +31,9 @@ type BasicsFormValues = {
 
 const useStyles = makeStyles<Theme, RecipeBasicsEditorProps>(theme => ({
   titleField: {
-    '& input': {
+    '& textarea': {
       fontSize: theme.typography.h2.fontSize,
+      lineHeight: 1.25,
     },
   },
 }));
@@ -113,6 +114,7 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
         setFieldValue,
         handleSubmit,
         isSubmitting,
+        dirty,
       }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -120,6 +122,7 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
               <TextField
                 required
                 fullWidth
+                multiline
                 label="Title"
                 value={values.title}
                 onChange={handleChange}
@@ -158,19 +161,15 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
             </Grid>
           </Grid>
 
-          {!recipe ? (
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              disabled={isSubmitting}
-              style={{ marginTop: '16px' }}
-            >
-              Create Recipe
-            </Button>
-          ) : (
-            <FormikAutoSave />
-          )}
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={isSubmitting || !dirty}
+            style={{ marginTop: '16px' }}
+          >
+            {recipe ? (!dirty ? 'Saved' : 'Save') : 'Create Recipe'}
+          </Button>
         </form>
       )}
     </Formik>
