@@ -30,14 +30,15 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // HACK!
 const userReadyPromise = new Promise(resolve => {
-  firebase.auth().onAuthStateChanged(ev => {
-    console.log('user ready', ev);
-    resolve();
-  });
-  setTimeout(() => {
+  let timeout = setTimeout(() => {
     console.log('timed out');
     resolve();
   }, 5000);
+  firebase.auth().onAuthStateChanged(ev => {
+    console.log('user ready', ev);
+    clearTimeout(timeout);
+    resolve();
+  });
 });
 
 const requestHandler = new ApolloLink(

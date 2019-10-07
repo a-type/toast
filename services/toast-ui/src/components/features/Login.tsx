@@ -2,6 +2,8 @@ import * as React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'services/firebase';
 import useRouter from 'use-react-router';
+import { useMergeUser } from 'hooks/features/useMergeUser';
+import { useSnackbar } from 'notistack';
 
 export interface LoginProps {
   returnTo?: string;
@@ -9,6 +11,8 @@ export interface LoginProps {
 
 const Login: React.SFC<LoginProps> = ({ returnTo }) => {
   const { history } = useRouter();
+  const [mergeUserMutation] = useMergeUser();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <StyledFirebaseAuth
@@ -21,7 +25,14 @@ const Login: React.SFC<LoginProps> = ({ returnTo }) => {
         ],
         callbacks: {
           signInSuccessWithAuthResult: (result, redirectUrl) => {
-            history.push(returnTo);
+            mergeUserMutation()
+              .then(() => {
+                history.push(returnTo);
+              })
+              .catch(err => {
+                console.error(err);
+                enqueueSnackbar('Error logging in, please try again.');
+              });
             return false;
           },
         },
