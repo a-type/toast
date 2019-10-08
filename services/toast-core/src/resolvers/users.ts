@@ -88,8 +88,17 @@ export default {
 
       return supplementUserData(user);
     },
+
+    follow: arango,
+    unfollow: arango,
   },
   UpdateUserResult: {
+    user: arango,
+  },
+  FollowResult: {
+    user: arango,
+  },
+  UnfollowResult: {
     user: arango,
   },
 };

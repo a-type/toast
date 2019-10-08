@@ -1,0 +1,9 @@
+type: graph
+action: modify
+name: Main
+edgedefinitions:
+  - collection: Following
+    from:
+      - Users
+    to:
+      - Users

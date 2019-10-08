@@ -112,3 +112,48 @@ export type FullRecipeStep = {
   id: string;
   text: string;
 };
+
+export const UserFragment = gql`
+  fragment UserFragment on User {
+    id
+    displayName
+    photoUrl
+    coverImageUrl
+    bio
+    viewerFollowing
+
+    authoredRecipes {
+      edges {
+        node {
+          id
+          ...FullRecipeFragment
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+
+  ${FullRecipeFragment}
+`;
+
+export type User = {
+  id: string;
+  displayName: string;
+  photoUrl: string;
+  coverImageUrl: string | null;
+  bio: string | null;
+  viewerFollowing: boolean;
+
+  authoredRecipes: {
+    edges: {
+      node: FullRecipe;
+    }[];
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string;
+    };
+  };
+};

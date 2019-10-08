@@ -1,53 +1,21 @@
 import gql from 'graphql-tag';
 import { useQuery, QueryHookOptions } from '@apollo/react-hooks';
-import { FullRecipeFragment, FullRecipe } from './fragments';
+import { UserFragment, User } from './fragments';
 import { useAuth } from 'contexts/AuthContext';
 
 export const GetUserQuery = gql`
   query GetUserQuery($id: ID!) {
     user(input: { id: $id }) {
       id
-      displayName
-      photoUrl
-      coverImageUrl
-      bio
-
-      authoredRecipes {
-        edges {
-          node {
-            id
-            ...FullRecipeFragment
-          }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-      }
+      ...UserFragment
     }
   }
 
-  ${FullRecipeFragment}
+  ${UserFragment}
 `;
 
 export type GetUserQueryResult = {
-  user: {
-    id: string;
-    displayName: string;
-    photoUrl: string;
-    coverImageUrl: string | null;
-    bio: string | null;
-
-    authoredRecipes: {
-      edges: {
-        node: FullRecipe;
-      }[];
-      pageInfo: {
-        hasNextPage: boolean;
-        endCursor: string;
-      };
-    };
-  };
+  user: User;
 };
 
 export type GetUserQueryVariables = {

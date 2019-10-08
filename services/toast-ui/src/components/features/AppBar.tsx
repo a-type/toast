@@ -14,6 +14,7 @@ import Link from 'components/generic/Link';
 import { SettingsTwoTone, PersonTwoTone } from '@material-ui/icons';
 import { useTheme } from '@material-ui/core/styles';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
+import { useAuth } from 'contexts/AuthContext';
 
 export interface ToastAppBarProps {
   gridArea: string;
@@ -54,6 +55,7 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
   const classes = useStyles(props);
   const theme = useTheme();
   const isWide = useMediaQuery(theme.breakpoints.up('md'));
+  const { user } = useAuth();
 
   if (isWide) {
     return null;
@@ -73,9 +75,15 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
             </Button>
           }
         >
-          <IconButton aria-label="Profile" component={Link} to="/users/me">
-            <PersonTwoTone />
-          </IconButton>
+          {user && (
+            <IconButton
+              aria-label="Profile"
+              component={Link}
+              to={`/users/${user.uid}`}
+            >
+              <PersonTwoTone />
+            </IconButton>
+          )}
           <IconButton
             aria-label="Settings"
             className={classes.settingsButton}

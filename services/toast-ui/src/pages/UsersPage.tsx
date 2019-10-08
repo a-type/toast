@@ -7,6 +7,7 @@ import {
   Typography,
   Paper,
   TextField,
+  Box,
 } from '@material-ui/core';
 import { RouteComponentProps, Route, Switch } from 'react-router';
 import { useAuth } from 'contexts/AuthContext';
@@ -24,6 +25,8 @@ import { useUpdateViewer } from 'hooks/features/useUpdateViewer';
 import removeUndefined from 'utils/removeUndefined';
 import useRouter from 'use-react-router';
 import { Fab } from 'components/generic/Fab';
+import { FollowButton } from 'components/features/users/FollowButton';
+import { User } from 'hooks/features/fragments';
 
 export interface UsersPageProps {}
 
@@ -44,8 +47,6 @@ export interface BaseUserPageProps {
   renderCoverImage: (props: any) => ReactElement;
   children: (props: any) => ReactElement;
 }
-
-type User = GetUserQueryResult['user'];
 
 const useBaseUserPageStyles = makeStyles<Theme, BaseUserPageProps>(theme => ({
   coverImage: {
@@ -144,7 +145,9 @@ export const UserPage: FC<RouteComponentProps<{ userId: string }>> = ({
 }) => {
   const classes = useUserPageStyles({});
 
-  const isMe = !userId || userId === 'me';
+  const { user: tokenUser } = useAuth();
+
+  const isMe = !userId || (tokenUser && userId === tokenUser.uid);
 
   const { data, loading, error } = useUser({
     id: isMe ? null : userId,
@@ -179,9 +182,12 @@ export const UserPage: FC<RouteComponentProps<{ userId: string }>> = ({
   return (
     <BaseUserPage
       renderDisplayName={props => (
-        <Typography variant="h2" gutterBottom {...props}>
-          {user.displayName}
-        </Typography>
+        <Box mb={2}>
+          <Typography variant="h2" gutterBottom {...props}>
+            {user.displayName}
+          </Typography>
+          {!isMe && <FollowButton user={user} />}
+        </Box>
       )}
       renderBio={props =>
         user.bio && (

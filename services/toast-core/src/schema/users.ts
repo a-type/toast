@@ -29,8 +29,26 @@ export default gql`
         edgeDirection: OUTBOUND
         cursorExpression: "$node.createdAt"
         filter: """
-        ($node.published && $node.public) || ($context.userId && $parent._key == $context.userId)
+        (($node.published && !$node.private) || ($context.userId && $parent._key == $context.userId))
         """
+      )
+
+    """
+    Whether or not the authenticated user is following this user
+    """
+    viewerFollowing: Boolean!
+      @authenticated
+      @aqlSubquery(
+        query: """
+        LET viewer = DOCUMENT(Users, $context.userId)
+        LET relationship = FIRST(
+          FOR followed IN OUTBOUND viewer Following
+            FILTER followed._key == $parent._key
+            LIMIT 1
+            RETURN followed
+        )
+        """
+        return: "relationship != null"
       )
   }
 
@@ -87,6 +105,45 @@ export default gql`
       @authenticated
 
     updateViewer(input: UpdateUserInput!): UpdateUserResult!
+
+    follow(input: FollowInput!): FollowResult!
+      @authenticated
+      @aqlSubquery(
+        query: """
+        LET viewer = DOCUMENT(Users, $context.userId)
+        LET user = DOCUMENT(Users, $args.input.userId)
+        UPSERT {
+          _from: viewer._id,
+          _to: user._id
+        }
+          INSERT {
+            _from: viewer._id,
+            _to: user._id,
+            createdAt: DATE_NOW()
+          }
+          UPDATE {}
+          IN Following
+          OPTIONS { waitForSync: true }
+        """
+        return: "{ user: user }"
+      )
+
+    unfollow(input: UnfollowInput!): UnfollowResult!
+      @authenticated
+      @aqlSubquery(
+        query: """
+        LET viewer = DOCUMENT(Users, $context.userId)
+        LET user = DOCUMENT(Users, $args.input.userId)
+        LET edge = FIRST(
+          FOR v, e IN OUTBOUND viewer Following
+            FILTER v._id == user._id
+            LIMIT 1
+            RETURN e
+        )
+        REMOVE edge._key In Following OPTIONS { ignoreErrors: true, waitForSync: true }
+        """
+        return: "{ user: user }"
+      )
   }
 
   input UpdateUserInput {
@@ -98,5 +155,21 @@ export default gql`
 
   type UpdateUserResult {
     user: User! @aqlNewQuery @aqlSubquery(query: "", return: "$parent.user")
+  }
+
+  input FollowInput {
+    userId: ID!
+  }
+
+  type FollowResult {
+    user: User! @aqlNewQuery @aqlSubquery(query: "LET $field = $parent.user")
+  }
+
+  input UnfollowInput {
+    userId: ID!
+  }
+
+  type UnfollowResult {
+    user: User! @aqlNewQuery @aqlSubquery(query: "LET $field = $parent.user")
   }
 `;
