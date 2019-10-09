@@ -8,6 +8,7 @@ import ingredients from './ingredients';
 import recipes from './recipes';
 import users from './users';
 import steps from './steps';
+import feed from './feed';
 
 export default [
   gql`
@@ -26,4 +27,5 @@ export default [
   ingredients,
   steps,
   recipes,
+  feed,
 ];

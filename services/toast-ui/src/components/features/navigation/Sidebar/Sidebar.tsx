@@ -23,6 +23,7 @@ import {
   ShoppingCartTwoTone,
   MeetingRoomTwoTone,
   PersonTwoTone,
+  HomeTwoTone,
 } from '@material-ui/icons';
 import useRouter from 'use-react-router';
 import firebase from 'services/firebase';
@@ -84,9 +85,15 @@ const Sidebar: SFC<SidebarProps> = props => {
     <List>
       <ListItemLink to="/home" nav className={classes.listItemLink}>
         <ListItemIcon>
-          <CalendarTodayTwoTone />
+          <HomeTwoTone />
         </ListItemIcon>
         <ListItemText>Home</ListItemText>
+      </ListItemLink>
+      <ListItemLink to="/plan" nav className={classes.listItemLink}>
+        <ListItemIcon>
+          <CalendarTodayTwoTone />
+        </ListItemIcon>
+        <ListItemText>Plan</ListItemText>
       </ListItemLink>
       <ListItemLink to="/shopping" nav className={classes.listItemLink}>
         <ListItemIcon>

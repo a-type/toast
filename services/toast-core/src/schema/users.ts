@@ -11,7 +11,6 @@ export default gql`
     bio: String
     coverImageUrl: String
 
-    # TODO authorization!
     """
     You may only view the group associated with your own User
     """
@@ -50,6 +49,13 @@ export default gql`
         """
         return: "relationship != null"
       )
+
+    following(first: Int = 10, after: String): UserFollowingConnection!
+      @aqlRelayConnection(
+        edgeCollection: "Following"
+        edgeDirection: OUTBOUND
+        cursorExpression: "$edge.createdAt"
+      )
   }
 
   type UserRecipesConnection {
@@ -67,11 +73,28 @@ export default gql`
     endCursor: String
   }
 
+  type UserFollowingConnection {
+    edges: [UserFollowingEdge!]! @aqlRelayEdges
+    pageInfo: UserFollowingPageInfo!
+  }
+
+  type UserFollowingEdge {
+    cursor: String!
+    node: User! @aqlRelayNode
+  }
+
+  type UserFollowingPageInfo {
+    hasNextPage: Boolean!
+    endCursor: String
+  }
+
   extend type Query {
     """
     Gets the authenticated user. A good starting point for exploring the graph.
     """
-    viewer: User @aqlDocument(collection: "Users", key: "$context.userId")
+    viewer: User!
+      @aqlDocument(collection: "Users", key: "$context.userId")
+      @authenticated
 
     """
     Gets a specific user by ID

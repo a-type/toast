@@ -10,6 +10,7 @@ import {
   CalendarTodayTwoTone,
   BookmarksTwoTone,
   ShoppingCartTwoTone,
+  HomeTwoTone,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import useNavState from 'hooks/useNavState';
@@ -21,6 +22,7 @@ export interface BottomNavProps {
 const useStyles = makeStyles<Theme, BottomNavProps>(theme => ({
   bottomNav: props => ({
     gridArea: props.gridArea,
+    borderTop: `1px solid ${theme.palette.grey[100]}`,
   }),
 }));
 
@@ -30,7 +32,9 @@ export const BottomNav: FC<BottomNavProps> = props => {
   const paths = [
     {
       path: '/home',
-      exact: true,
+    },
+    {
+      path: '/plan',
     },
     {
       path: '/shopping',
@@ -52,7 +56,8 @@ export const BottomNav: FC<BottomNavProps> = props => {
       onChange={onChange}
       className={classes.bottomNav}
     >
-      <BottomNavigationAction icon={<CalendarTodayTwoTone />} label="Home" />
+      <BottomNavigationAction icon={<HomeTwoTone />} label="Home" />
+      <BottomNavigationAction icon={<CalendarTodayTwoTone />} label="Plan" />
       <BottomNavigationAction icon={<ShoppingCartTwoTone />} label="Shopping" />
       <BottomNavigationAction icon={<BookmarksTwoTone />} label="Recipes" />
     </BottomNavigation>
