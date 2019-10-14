@@ -21,17 +21,20 @@ export default gql`
   }
 
   extend type Query {
-    feed: FeedConnection!
+    feed(first: Int = 10, after: String): FeedConnection!
       @authenticated
       @aqlRelayConnection(
         source: """
-        FLATTEN(FOR followed IN OUTBOUND DOCUMENT(Users, $context.userId) Following
+        FOR $node IN FLATTEN(FOR followed IN OUTBOUND DOCUMENT(Users, $context.userId) Following
           RETURN (FOR recipe IN OUTBOUND followed AuthorOf
             RETURN { recipe }
           )
         )
         """
-        cursorExpression: "$node.recipe.createdAt"
+        cursorExpression: "$node.recipe.updatedAt"
+        filter: """
+        ($node.recipe.published && !$node.recipe.private)
+        """
       )
   }
 `;
