@@ -1,10 +1,9 @@
 import React, { FC } from 'react';
-import { makeStyles, Theme } from '@material-ui/core';
+import { makeStyles, Theme, Typography } from '@material-ui/core';
 import { useFeed, FeedEdge } from 'hooks/features/useFeed';
 import CardGrid from 'components/generic/CardGrid';
 import { Loader } from 'components/generic/Loader';
 import { pathOr } from 'ramda';
-import RecipeCard from './RecipeCard';
 import { FeedCard } from './FeedCard';
 
 export interface FeedProps {}
@@ -28,6 +27,25 @@ export const Feed: FC<FeedProps> = props => {
       {feed.map(edge => (
         <FeedCard feedEdge={edge} key={edge.node.recipe.id} />
       ))}
+      {!feed.length && <Empty />}
     </CardGrid>
+  );
+};
+
+const useEmptyStyles = makeStyles<Theme, {}>(theme => ({
+  root: {
+    textAlign: 'center',
+    color: theme.palette.grey[900],
+  },
+}));
+
+const Empty: FC = () => {
+  const classes = useEmptyStyles({});
+
+  return (
+    <Typography className={classes.root}>
+      You don't have any activity yet. Follow chefs or start meal planning to
+      get started!
+    </Typography>
   );
 };
