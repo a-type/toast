@@ -28,7 +28,10 @@ export const RecipeServings: FC<{
 
   return (
     <Typography gutterBottom className={classes.text}>
-      <span>Servings: {servingsOverride || servings}</span>
+      <span>
+        Servings:{' '}
+        <span itemProp="recipeYield">{servingsOverride || servings}</span>
+      </span>
       {servingsOverride && (
         <span className={classes.multiplier}> ({multiplierText})</span>
       )}

@@ -94,14 +94,14 @@ const RecipeViewPageContent: FC<{
   const author = recipe.author;
 
   return (
-    <Container>
+    <Container itemScope itemType="https://schema.org/Recipe">
       <RecipeImage recipe={recipe} className={classes.coverImage} />
       <Paper className={classes.paper}>
-        <Typography variant="h1" gutterBottom>
+        <Typography variant="h1" gutterBottom itemProp="name">
           {recipe.title}
         </Typography>
         {recipe.description && (
-          <Typography variant="body2" gutterBottom>
+          <Typography variant="body2" gutterBottom itemProp="description">
             {recipe.description}
           </Typography>
         )}
@@ -112,7 +112,7 @@ const RecipeViewPageContent: FC<{
             to={`/users/${author.id}`}
           >
             <Avatar src={author.photoUrl} />
-            <Typography className={classes.authorName}>
+            <Typography className={classes.authorName} itemProp="author">
               {author.displayName}
             </Typography>
           </ButtonBase>
@@ -127,7 +127,7 @@ const RecipeViewPageContent: FC<{
       </div>
       {introValue && (
         <Paper className={classes.paper}>
-          <SlateEditor readOnly value={introValue} />
+          <SlateEditor readOnly value={introValue} itemProp="text" />
         </Paper>
       )}
       <Paper className={classes.paper} id="ingredients">

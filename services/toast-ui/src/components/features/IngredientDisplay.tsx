@@ -39,7 +39,7 @@ export const IngredientDisplay: FC<IngredientDisplayProps> = ({
 
   return (
     <span className={classes.text}>
-      {newText}
+      <span itemProp="recipeIngredient">{newText}</span>
       {showMultiplier && multiplier && (
         <span className={classes.multiplier}>
           {' '}

@@ -5,7 +5,9 @@ import { fade } from '@material-ui/core/styles';
 import { colors } from 'themes/colors';
 import clsx from 'clsx';
 
-export interface SlateEditorProps extends EditorProps {}
+export interface SlateEditorProps extends EditorProps {
+  itemProp?: string;
+}
 
 const useStyles = makeStyles<Theme, SlateEditorProps>(theme => ({
   root: {
