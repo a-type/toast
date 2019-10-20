@@ -1,5 +1,5 @@
 import React, { FC, useState, FormEvent } from 'react';
-import Popup from 'components/generic/Popup';
+import Popup from 'components/Popup';
 import {
   MenuItem,
   Box,
@@ -10,11 +10,10 @@ import {
   DialogContent,
   DialogActions,
 } from '@material-ui/core';
-import RecipeCollections from './RecipeCollections';
-import RecipeCollection from './RecipeCollection';
+import RecipeCollections from '../recipes/RecipeCollections';
+import RecipeCollection from '../recipes/RecipeCollection';
 import { ArrowBackIosTwoTone, ClearTwoTone } from '@material-ui/icons';
-import { Row } from 'components/generic/Row';
-import RecipeCard from './RecipeCard';
+import RecipeCard from '../recipes/RecipeCard';
 import { useAddPlanMeal } from 'hooks/features/useAddPlanMeal';
 import { RecipeCollectionRecipe } from 'hooks/features/useCollection';
 import { TextField, SliderField } from 'components/fields';
@@ -138,13 +137,11 @@ export const PlanAddModal: FC<PlanAddModalProps> = ({
                   {!selectedCollection ? (
                     <RecipeCollections
                       onCollectionSelected={setSelectedCollection}
-                      small
                     />
                   ) : (
                     <RecipeCollection
                       collectionId={selectedCollection.id}
                       onRecipeSelected={handleRecipeSelected}
-                      small
                     />
                   )}
                 </div>

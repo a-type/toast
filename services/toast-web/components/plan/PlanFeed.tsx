@@ -1,22 +1,8 @@
 import React, { FC, useState, useMemo } from 'react';
 import { PlanMealPlanMeal, PlanMeal } from './PlanMeal';
-import {
-  Box,
-  Typography,
-  IconButton,
-  Button,
-  makeStyles,
-  Grid,
-} from '@material-ui/core';
-import {
-  addDays,
-  startOfToday,
-  isSameDay,
-  compareAsc,
-  parse,
-  differenceInDays,
-} from 'date-fns';
-import { FormattedDate } from 'components/generic/FormattedDate';
+import { Box, Typography, Button, makeStyles, Grid } from '@material-ui/core';
+import { addDays, isSameDay, compareAsc, differenceInDays } from 'date-fns';
+import { FormattedDate } from 'components/FormattedDate';
 import { AddTwoTone } from '@material-ui/icons';
 import { PlanAddModal } from './PlanAddModal';
 
@@ -43,9 +29,9 @@ export const PlanFeed: FC<PlanFeedProps> = ({
 }) => {
   const endDate: Date = useMemo(() => {
     const lastMeal = mealEdges.sort((a, b) =>
-      compareAsc(a.node.date, b.node.date),
+      compareAsc(new Date(a.node.date), new Date(b.node.date)),
     )[mealEdges.length - 1];
-    return lastMeal ? parse(lastMeal.node.date) : null;
+    return lastMeal ? new Date(lastMeal.node.date) : null;
   }, [mealEdges]);
 
   const dateRange = Math.max(
@@ -61,7 +47,7 @@ export const PlanFeed: FC<PlanFeedProps> = ({
     () =>
       dates.map(date => {
         const meals = mealEdges.filter(mealEdge =>
-          isSameDay(mealEdge.node.date, date),
+          isSameDay(new Date(mealEdge.node.date), date),
         );
         return {
           date,

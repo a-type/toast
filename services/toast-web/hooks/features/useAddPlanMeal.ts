@@ -1,12 +1,7 @@
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import {
-  GetPlanQuery,
-  GetPlanQueryResult,
-  GroupPlanMealsEdgeFragment,
-  GroupPlanMealEdge,
-} from './usePlan';
-import logger from 'logger';
+import { GroupPlanMealsEdgeFragment, GroupPlanMealEdge } from './usePlan';
+import logger from 'utils/logger';
 
 export const AddPlanMealMutation = gql`
   mutation AddPlanMealMutation($input: AddPlanMealInput!) {

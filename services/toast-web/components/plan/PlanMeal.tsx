@@ -8,7 +8,7 @@ import {
   MenuItem,
   Paper,
 } from '@material-ui/core';
-import RecipeCard from './RecipeCard';
+import RecipeCard from '../recipes/RecipeCard';
 import { MoreVertTwoTone } from '@material-ui/icons';
 import { useRemovePlanMeal } from 'hooks/features/useRemovePlanMeal';
 

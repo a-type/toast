@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { makeStyles, Theme, Grid, TextField } from '@material-ui/core';
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { FullRecipe } from 'hooks/features/fragments';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
 import { FormikAutoSave } from 'components/FormikAutoSave';
@@ -27,7 +27,7 @@ export const RecipeDetailsEditor: FC<RecipeDetailsEditorProps> = props => {
   const save = useCallback(
     async (
       { prepTime, cookTime, unattendedTime, servings }: DetailsFormValues,
-      form: FormikActions<FullRecipe>,
+      form: FormikHelpers<FullRecipe>,
     ) => {
       const fields = {
         prepTime,

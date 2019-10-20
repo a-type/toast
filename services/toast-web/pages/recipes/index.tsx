@@ -27,7 +27,7 @@ const useHomePageStyles = makeStyles<Theme, {}>(theme => ({
   },
 }));
 
-export const RecipesHomePage: FC = () => {
+const RecipesHomePage: FC = () => {
   const classes = useHomePageStyles({});
 
   return (
@@ -57,3 +57,5 @@ export const RecipesHomePage: FC = () => {
     </Container>
   );
 };
+
+export default RecipesHomePage;

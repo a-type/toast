@@ -7,8 +7,8 @@
     "build:clean": "rimraf build",
     "build": "next build",
     "ci:build": "npm run build",
-    "dev": "next",
-    "start": "next start"
+    "dev": "next -p 8080",
+    "start": "next start -p 8080"
   },
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "dotenv": "^8.0.0",
     "downshift": "^3.3.5",
     "firebase": "^7.2.1",
-    "formik": "^1.5.8",
+    "formik": "^2.0.1-rc.13",
     "framer-motion": "^1.6.14",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",

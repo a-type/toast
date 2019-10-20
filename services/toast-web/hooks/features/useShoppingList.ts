@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { subDays, addDays, parse } from 'date-fns';
+import { subDays, addDays } from 'date-fns';
 import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
 
@@ -142,8 +142,8 @@ export const useShoppingList = ({
         const cookedServings = pathOr(1, ['node', 'servings'], mealEdge);
 
         return {
-          key: `${parse(mealEdge.node.date).getTime()}_${edge.node.id}`,
-          mealDate: parse(mealEdge.node.date),
+          key: `${new Date(mealEdge.node.date).getTime()}_${edge.node.id}`,
+          mealDate: new Date(mealEdge.node.date),
           ingredient: edge.node as ShoppingListIngredient,
           quantityMultiplier: cookedServings / naturalServings,
         };

@@ -32,9 +32,9 @@ export const RecipeGrid: FC<RecipeGridProps> = props => {
     if (onRecipeSelected) {
       onRecipeSelected(recipe);
     } else if (recipe.published === false) {
-      router.push(`/recipes/${recipe.id}/edit`);
+      router.push('/recipes/[recipeId]/edit', `/recipes/${recipe.id}/edit`);
     } else {
-      router.push(`/recipes/${recipe.id}`);
+      router.push('/recipes/[recipeId]', `/recipes/${recipe.id}`);
     }
   };
 

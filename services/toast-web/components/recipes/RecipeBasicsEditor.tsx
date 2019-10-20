@@ -6,17 +6,15 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Typography,
   Button,
   FormHelperText,
 } from '@material-ui/core';
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { FullRecipe } from 'hooks/features/fragments';
 import { useUpdateRecipe } from 'hooks/features/useUpdateRecipe';
 import { useCreateRecipe } from 'hooks/features/useCreateRecipe';
 import { useRouter } from 'next/router';
 import { path } from 'ramda';
-import { FormikAutoSave } from 'components/FormikAutoSave';
 import { useSnackbar } from 'notistack';
 
 export interface RecipeBasicsEditorProps {
@@ -52,7 +50,7 @@ export const RecipeBasicsEditor: FC<RecipeBasicsEditorProps> = props => {
   const save = useCallback(
     async (
       { title, description, private: isPrivate }: BasicsFormValues,
-      form: FormikActions<BasicsFormValues>,
+      form: FormikHelpers<BasicsFormValues>,
     ) => {
       const fields = {
         title,

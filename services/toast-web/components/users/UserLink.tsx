@@ -36,7 +36,8 @@ export const UserLink: FC<UserLinkProps> = props => {
     <Button
       variant="text"
       component={Link}
-      to={`/users/${user.id}`}
+      to="/users/[userId]"
+      as={`/users/${user.id}`}
       className={classes.root}
     >
       <Avatar src={user.photoUrl} className={classes.avatar} />

@@ -23,6 +23,7 @@ export type LinkProps = {
   className?: string;
   naked?: boolean;
   to?: string;
+  as?: string;
   [key: string]: any;
 };
 
@@ -34,6 +35,7 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
     className: classNameProps,
     naked,
     to,
+    as,
     ...other
   } = props;
   const router = useRouter();
@@ -45,7 +47,13 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
 
   if (naked) {
     return (
-      <NextComposed className={className} ref={ref} href={to} {...other} />
+      <NextComposed
+        className={className}
+        ref={ref}
+        href={to}
+        as={as}
+        {...other}
+      />
     );
   }
 
@@ -55,6 +63,7 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
       className={className}
       ref={ref}
       href={to}
+      as={as}
       {...other}
     />
   );

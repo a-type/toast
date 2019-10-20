@@ -1,4 +1,11 @@
-import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import { connect, FormikContext } from 'formik';
 import { useDebouncedCallback } from 'use-debounce';
 import { useSnackbar } from 'notistack';
@@ -18,21 +25,18 @@ const InternalFormikAutoSave: FC<FormikAutoSaveProps> = ({
   const [lastSaved, setLastSaved] = useState<Date>(null);
   const { enqueueSnackbar } = useSnackbar();
 
-  const [debouncedSave] = useDebouncedCallback(
-    async () => {
-      try {
-        await formik.submitForm();
-        setLastSaved(new Date());
-      } catch (err) {
-        console.error(err);
-        enqueueSnackbar(
-          'There was an error! Your last changes may not have been saved.',
-        );
-      }
-    },
-    timeout,
-    [formik, setLastSaved, enqueueSnackbar],
-  );
+  const save = useCallback(async () => {
+    try {
+      await formik.submitForm();
+      setLastSaved(new Date());
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(
+        'There was an error! Your last changes may not have been saved.',
+      );
+    }
+  }, [formik, setLastSaved, enqueueSnackbar]);
+  const [debouncedSave] = useDebouncedCallback(save, timeout);
 
   const previousValuesRef = useRef<any | null>(formik.values);
 

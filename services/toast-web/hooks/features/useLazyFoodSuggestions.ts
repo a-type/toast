@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { useDebouncedCallback } from 'use-debounce';
 import gql from 'graphql-tag';
@@ -16,7 +16,7 @@ export const useLazyFoodSuggestions = (
     { id: string; name: string }[]
   >([]);
 
-  const [handleSearchTermChange] = useDebouncedCallback(
+  const handleSearchTermChange = useCallback(
     async (searchTerm: string = '') => {
       if (searchTerm.length > 2) {
         setLoading(true);
@@ -43,11 +43,14 @@ export const useLazyFoodSuggestions = (
         setSuggestions([]);
       }
     },
-    delay,
     [client],
   );
+  const [debouncedHandleSearchTermChange] = useDebouncedCallback(
+    handleSearchTermChange,
+    delay,
+  );
 
-  return [handleSearchTermChange, suggestions, { loading }];
+  return [debouncedHandleSearchTermChange, suggestions, { loading }];
 };
 
 const FoodSuggestionsQuery = gql`

@@ -78,7 +78,7 @@ const Sidebar: SFC<SidebarProps> = props => {
 
   const authContent = (
     <List>
-      <ListItemLink to="/home" nav className={classes.listItemLink}>
+      <ListItemLink to="/feed" nav className={classes.listItemLink}>
         <ListItemIcon>
           <HomeTwoTone />
         </ListItemIcon>
@@ -104,7 +104,8 @@ const Sidebar: SFC<SidebarProps> = props => {
       </ListItemLink>
       {user && (
         <ListItemLink
-          to={`/users/${user.uid}`}
+          to="/users/[userId]"
+          as={`/users/${user.uid}`}
           nav
           className={classes.listItemLink}
         >

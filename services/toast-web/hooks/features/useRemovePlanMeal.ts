@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import logger from 'logger';
+import logger from 'utils/logger';
 
 export const RemovePlanMealMutation = gql`
   mutation RemovePlanMealMutation($input: RemovePlanMealInput!) {

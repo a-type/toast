@@ -1,8 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import {
-  FileUploaderProps,
-  FileUploader,
-} from 'components/generic/FileUploader';
+import { FileUploaderProps, FileUploader } from 'components/FileUploader';
 import { FormControl, FormLabel, FormHelperText } from '@material-ui/core';
 import { useField, useFormikContext } from 'formik';
 import { FormControlProps } from '@material-ui/core/FormControl';

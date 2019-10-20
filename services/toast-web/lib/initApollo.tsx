@@ -40,10 +40,11 @@ const create = (
 
   const authLink = setContext(async (_, { headers }) => {
     const token = await getToken();
+    console.debug(`token`, token);
     return {
       headers: {
         ...headers,
-        Authorization: token,
+        ...(token ? { Authorization: token } : {}),
       },
     };
   });
@@ -51,7 +52,7 @@ const create = (
   const httpLink = createUploadLink({
     uri: `${config.apiHost}/api`,
     credentials: 'include',
-    fetch: !isBrowser && fetch,
+    fetch: !isBrowser ? fetch : window.fetch,
   });
 
   const link = ApolloLink.from([errorLink, authLink, httpLink].filter(Boolean));

@@ -2,8 +2,8 @@ import React, { FC, useCallback, ChangeEvent } from 'react';
 import { ShoppingListItem as ShoppingListItemData } from 'hooks/features/useShoppingList';
 import { usePurchaseItemState } from 'hooks/features/purchasedItems';
 import { FormControlLabel, Checkbox, ListItem } from '@material-ui/core';
-import ErrorMessage from 'components/generic/ErrorMessage';
-import { IngredientDisplay } from './IngredientDisplay';
+import ErrorMessage from 'components/ErrorMessage';
+import { IngredientDisplay } from '../recipes/IngredientDisplay';
 
 export type ShoppingListItemProps = {
   item: ShoppingListItemData;

@@ -6,7 +6,6 @@ import {
   Box,
   Typography,
   Avatar,
-  Fab,
 } from '@material-ui/core';
 import { Loader } from 'components/Loader';
 import { useUser } from 'hooks/features/useUser';
@@ -19,6 +18,7 @@ import { FollowButton } from 'components/users/FollowButton';
 import { EditTwoTone } from '@material-ui/icons';
 import Link from 'components/Link';
 import { RecipeGrid } from 'components/recipes/RecipeGrid';
+import { Fab } from 'components/Fab';
 
 const useUserPageStyles = makeStyles<Theme, any>(theme => ({}));
 

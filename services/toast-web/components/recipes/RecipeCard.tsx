@@ -113,8 +113,9 @@ const RecipeCard: FC<
 
   const defaultOnClick = () =>
     recipe.published === false
-      ? router.push(`/recipes/${recipe.id}/edit`)
+      ? router.push('/recipes/[recipeId]/edit', `/recipes/${recipe.id}/edit`)
       : router.push(
+          '/recipes/[recipeId]',
           `/recipes/${recipe.id}${servings ? `?servings=${servings}` : ''}`,
         );
 

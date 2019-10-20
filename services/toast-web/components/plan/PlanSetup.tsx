@@ -1,7 +1,7 @@
 import { Button, makeStyles, Paper, Typography } from '@material-ui/core';
-import ErrorMessage from 'components/generic/ErrorMessage';
-import { Loader } from 'components/generic/Loader/Loader';
-import { Row } from 'components/generic/Row';
+import ErrorMessage from 'components/ErrorMessage';
+import { Loader } from 'components/Loader/Loader';
+import { Row } from 'components/Row';
 import useGuides from 'hooks/features/useGuides';
 import gql from 'graphql-tag';
 import useStoredFlag from 'hooks/useStoredFlag';

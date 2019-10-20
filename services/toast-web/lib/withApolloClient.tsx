@@ -12,7 +12,7 @@ const getToken = async (context: { req: Request } = { req: null }) => {
     return null;
   }
 
-  const firebase = (await import('./firebase')) as any;
+  const firebase = (await import('./firebase')).default;
 
   if (firebase.auth().currentUser) {
     return firebase.auth().currentUser.getIdToken(true);
