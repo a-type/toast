@@ -13,7 +13,7 @@ import {
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import { Redirect } from 'react-router';
 import { BackdropArt, Logo } from 'components/brand';
-import { PlanDeviceExample } from 'components/graphics/PlanDeviceExample/PlanDeviceExample';
+import { PlanDeviceExample } from '../../toast-web/components/graphics/PlanDeviceExample/PlanDeviceExample';
 import * as colors from 'themes/colors';
 
 const useStyles = makeStyles(theme => ({
