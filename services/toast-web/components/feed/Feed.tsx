@@ -34,7 +34,6 @@ export const Feed: FC<FeedProps> = props => {
 
 const useEmptyStyles = makeStyles<Theme, {}>(theme => ({
   root: {
-    textAlign: 'center',
     color: theme.palette.grey[900],
   },
 }));

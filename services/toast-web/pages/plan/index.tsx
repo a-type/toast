@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import usePlan from 'hooks/features/usePlan';
 import { Loader } from 'components/Loader/Loader';
 import ErrorMessage from 'components/ErrorMessage';
@@ -14,6 +14,8 @@ import { NetworkStatus, ApolloError } from 'apollo-client';
 import { startOfToday, subDays } from 'date-fns';
 import { Center } from 'components/layout/Center';
 import Link from 'components/Link';
+import { NextPage } from 'next';
+import { ensureLoggedIn } from 'lib/auth';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -21,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PlanPage = () => {
+const PlanPage: NextPage = () => {
   const [startDate, setStartDate] = useState(startOfToday());
   const {
     data,
@@ -81,6 +83,11 @@ const PlanPage = () => {
       />
     </Container>
   );
+};
+
+PlanPage.getInitialProps = async ctx => {
+  await ensureLoggedIn(ctx);
+  return {};
 };
 
 export default PlanPage;

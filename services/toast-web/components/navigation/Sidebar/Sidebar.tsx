@@ -10,6 +10,7 @@ import {
   ListItemText,
   Divider,
   Theme,
+  makeStyles,
 } from '@material-ui/core';
 import {
   LocalDiningTwoTone,
@@ -22,12 +23,11 @@ import {
   PersonTwoTone,
   HomeTwoTone,
 } from '@material-ui/icons';
-import firebase from '../../../lib/firebase';
-import { makeStyles } from '@material-ui/styles';
 import ListItemLink from './SidebarLink';
 import Logo from '../../brand/Logo';
 import Link from '../../Link';
 import { useRouter } from 'next/router';
+import { logout } from 'lib/auth';
 
 interface SidebarProps {}
 
@@ -44,7 +44,7 @@ const useStyles = makeStyles<Theme, SidebarProps>(theme => ({
     transition: theme.transitions.create('background-color'),
   },
   listItemLink: {
-    '&.link-matching': {
+    '&.active': {
       color: theme.palette.primary.contrastText,
       backgroundColor: theme.palette.primary[900],
 
@@ -60,9 +60,8 @@ const Sidebar: SFC<SidebarProps> = props => {
   const router = useRouter();
   const classes = useStyles(props);
 
-  const logout = async () => {
-    await firebase.auth().signOut();
-    router.push('/');
+  const doLogout = async () => {
+    await logout();
   };
 
   const anonContent = (
@@ -130,7 +129,7 @@ const Sidebar: SFC<SidebarProps> = props => {
         </ListItemLink>
       </IsAdmin>
       <ListItemLink
-        onClick={logout}
+        onClick={doLogout}
         component="button"
         className={classes.listItemLink}
       >

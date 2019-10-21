@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
-import { FindInPageTwoTone } from '@material-ui/icons';
 import LinkRecipeForm from 'components/recipes/LinkRecipeForm';
+import { ensureLoggedIn } from 'lib/auth';
 
 const findUrl = (text: string | string[]) => {
   if (text instanceof Array) {
@@ -34,6 +34,9 @@ const ScanPage = ({
   );
 };
 
-ScanPage.getInitialProps = ({ query }) => query;
+ScanPage.getInitialProps = async ctx => {
+  await ensureLoggedIn(ctx);
+  return ctx.query;
+};
 
 export default ScanPage;

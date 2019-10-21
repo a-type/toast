@@ -2,30 +2,15 @@ import React from 'react';
 import Head from 'next/head';
 import initApollo from './initApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { getToken } from './auth';
+import { NextPageContext } from 'next';
 
-const getToken = async (context: { req: Request } = { req: null }) => {
-  if (context.req && context.req.headers) {
-    return context.req.headers['Authorization'];
-  }
-
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  const firebase = (await import('./firebase')).default;
-
-  if (firebase.auth().currentUser) {
-    return firebase.auth().currentUser.getIdToken(true);
-  }
-
-  // TODO: wait for auth?
-
-  return null;
-};
+const tokenGetter = (context?: NextPageContext) => () => getToken(context);
 
 export default (PageComponent: any, { ssr = true } = {}) => {
   const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
-    const client = apolloClient || initApollo(apolloState, { getToken });
+    const client =
+      apolloClient || initApollo(apolloState, { getToken: tokenGetter() });
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
@@ -49,7 +34,7 @@ export default (PageComponent: any, { ssr = true } = {}) => {
 
       const apolloClient = (ctx.apolloClient = initApollo(
         {},
-        { getToken: () => getToken(ctx.req) },
+        { getToken: tokenGetter(ctx) },
       ));
 
       const pageProps = PageComponent.getInitialProps

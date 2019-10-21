@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import {
   makeStyles,
   Theme,
@@ -18,10 +18,12 @@ import { DoneTwoTone } from '@material-ui/icons';
 import { useUser } from 'hooks/features/useUser';
 import { User } from 'hooks/features/fragments';
 import removeUndefined from 'utils/removeUndefined';
+import { NextPage } from 'next';
+import { ensureLoggedIn } from 'lib/auth';
 
 const useEditUserPageStyles = makeStyles<Theme, any>(theme => ({}));
 
-export const EditUserPage: FC<{}> = props => {
+const EditUserPage: NextPage<{}> = props => {
   const classes = useEditUserPageStyles({});
   const { data, loading, error } = useUser();
 
@@ -141,3 +143,10 @@ export const EditUserPage: FC<{}> = props => {
     </Formik>
   );
 };
+
+EditUserPage.getInitialProps = async ctx => {
+  await ensureLoggedIn(ctx);
+  return {};
+};
+
+export default EditUserPage;

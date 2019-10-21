@@ -4,6 +4,7 @@ import firebase from 'lib/firebase';
 import { useRouter } from 'next/router';
 import { useMergeUser } from 'hooks/features/useMergeUser';
 import { useSnackbar } from 'notistack';
+import { login } from 'lib/auth';
 
 export interface LoginProps {
   returnTo?: string;
@@ -29,15 +30,21 @@ const Login: React.SFC<LoginProps> = ({ returnTo }) => {
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         ],
         callbacks: {
-          signInSuccessWithAuthResult: (result, redirectUrl) => {
-            mergeUserMutation()
-              .then(() => {
-                router.push(returnTo);
-              })
-              .catch(err => {
-                console.error(err);
-                enqueueSnackbar('Error logging in, please try again.');
-              });
+          signInSuccessWithAuthResult: (
+            result: firebase.auth.UserCredential,
+            redirectUrl,
+          ) => {
+            result.user.getIdToken(true).then(token => {
+              login(token);
+              mergeUserMutation()
+                .then(() => {
+                  router.push(returnTo);
+                })
+                .catch(err => {
+                  console.error(err);
+                  enqueueSnackbar('Error logging in, please try again.');
+                });
+            });
             return false;
           },
         },

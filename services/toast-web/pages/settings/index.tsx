@@ -1,11 +1,13 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { GroceryDay } from 'components/groceryDay/GroceryDay';
 import LogoutButton from 'components/auth/LogoutButton';
 import { Typography, Box, Container, Divider, Button } from '@material-ui/core';
 import { GroupInviteButton } from 'components/groups/GroupInviteButton';
 import Link from 'components/Link';
+import { NextPage } from 'next';
+import { ensureLoggedIn } from 'lib/auth';
 
-const SettingsMainPage: FC = () => {
+const SettingsMainPage: NextPage = () => {
   return (
     <Container>
       <Typography variant="h2" gutterBottom>
@@ -30,6 +32,11 @@ const SettingsMainPage: FC = () => {
       </Box>
     </Container>
   );
+};
+
+SettingsMainPage.getInitialProps = async ctx => {
+  await ensureLoggedIn(ctx);
+  return {};
 };
 
 export default SettingsMainPage;

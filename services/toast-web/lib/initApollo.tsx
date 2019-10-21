@@ -15,7 +15,11 @@ let apolloClient: ApolloClient<any> = null;
 
 const create = (
   initialState: any,
-  { getToken }: { getToken: () => Promise<string> },
+  {
+    getToken,
+  }: {
+    getToken: () => string;
+  },
 ) => {
   const isBrowser = typeof window !== 'undefined';
 
@@ -67,7 +71,12 @@ const create = (
 
 export default (
   initialState: any,
-  { getToken }: { getToken: () => Promise<string> },
+  // this can probably be simplified
+  {
+    getToken,
+  }: {
+    getToken: () => string;
+  },
 ) => {
   if (typeof window === 'undefined') {
     return create(initialState, { getToken });

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { GroceryDay } from 'components/groceryDay/GroceryDay';
 import LogoutButton from 'components/auth/LogoutButton';
 import { Typography, Box, Container, Button, Paper } from '@material-ui/core';
@@ -8,8 +8,10 @@ import { PlanSetup } from 'components/plan/PlanSetup';
 import { SubscribeButton } from 'components/groups/SubscribeButton';
 import { FormattedDate } from 'components/FormattedDate';
 import ErrorMessage from 'components/ErrorMessage';
+import { ensureLoggedIn } from 'lib/auth';
+import { NextPage } from 'next';
 
-const SubscriptionPage: FC = () => {
+const SubscriptionPage: NextPage = () => {
   const {
     data: { canSubscribe, subscribed, subscriptionExpiresAt },
     refetch,
@@ -84,6 +86,11 @@ const SubscriptionPage: FC = () => {
       </Box>
     </Container>
   );
+};
+
+SubscriptionPage.getInitialProps = async ctx => {
+  await ensureLoggedIn(ctx);
+  return {};
 };
 
 export default SubscriptionPage;

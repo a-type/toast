@@ -12,7 +12,7 @@ const NextComposed = React.forwardRef<HTMLAnchorElement, ComposedLinkProps>(
 
     return (
       <NextLink href={href} prefetch={prefetch} as={as}>
-        <a ref={ref} {...other} />
+        <a ref={ref} style={{ textDecoration: 'none' }} {...other} />
       </NextLink>
     );
   },
