@@ -9,12 +9,12 @@ const useStyles = makeStyles<Theme, AppLayoutProps>(theme => ({
     height: '100vh',
     display: 'grid',
     gridTemplateAreas: "'appBar' 'content' 'nav'",
-    gridTemplateRows: '1fr auto',
+    gridTemplateRows: 'auto 1fr auto',
     gridTemplateColumns: '100%',
 
     [theme.breakpoints.up('md')]: {
-      gridTemplateAreas: "'nav content'",
-      gridTemplateRows: '1fr',
+      gridTemplateAreas: "'appBar appBar' 'nav content'",
+      gridTemplateRows: 'auto 1fr',
       gridTemplateColumns: 'auto 1fr',
     },
   },

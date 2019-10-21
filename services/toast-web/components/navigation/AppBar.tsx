@@ -8,6 +8,7 @@ import {
   makeStyles,
   useMediaQuery,
   Button,
+  Hidden,
 } from '@material-ui/core';
 import Link from '../Link';
 import { SettingsTwoTone, PersonTwoTone } from '@material-ui/icons';
@@ -51,46 +52,43 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
 export const ToastAppBar: FC<ToastAppBarProps> = props => {
   const classes = useStyles(props);
   const theme = useTheme();
-  const isWide = useMediaQuery(theme.breakpoints.up('md'));
   const { user } = useAuth();
 
-  if (isWide) {
-    return null;
-  }
-
   return (
-    <AppBar className={classes.appBar}>
-      <Link to="/" className={classes.titleArea}>
-        <Logo className={classes.logo} variant="small" size="42px" />
-      </Link>
+    <Hidden mdUp implementation="css">
+      <AppBar className={classes.appBar}>
+        <Link to="/" className={classes.titleArea}>
+          <Logo className={classes.logo} variant="small" size="42px" />
+        </Link>
 
-      <Toolbar className={classes.toolbar}>
-        <IsLoggedIn
-          fallback={
-            <Button component={Link} to="/login">
-              Log in
-            </Button>
-          }
-        >
-          {user && (
-            <IconButton
-              aria-label="Profile"
-              component={Link}
-              to={`/users/${user.uid}`}
-            >
-              <PersonTwoTone />
-            </IconButton>
-          )}
-          <IconButton
-            aria-label="Settings"
-            className={classes.settingsButton}
-            component={Link}
-            to="/settings"
+        <Toolbar className={classes.toolbar}>
+          <IsLoggedIn
+            fallback={
+              <Button component={Link} to="/login">
+                Log in
+              </Button>
+            }
           >
-            <SettingsTwoTone />
-          </IconButton>
-        </IsLoggedIn>
-      </Toolbar>
-    </AppBar>
+            {user && (
+              <IconButton
+                aria-label="Profile"
+                component={Link}
+                to={`/users/${user.uid}`}
+              >
+                <PersonTwoTone />
+              </IconButton>
+            )}
+            <IconButton
+              aria-label="Settings"
+              className={classes.settingsButton}
+              component={Link}
+              to="/settings"
+            >
+              <SettingsTwoTone />
+            </IconButton>
+          </IsLoggedIn>
+        </Toolbar>
+      </AppBar>
+    </Hidden>
   );
 };
