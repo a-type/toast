@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   origin: 'https://toastcooking.app',
   apiHost: 'https://api.toastcooking.app',
   firebase: {

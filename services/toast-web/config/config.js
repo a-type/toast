@@ -1,4 +1,4 @@
-import local from './local';
-import production from './production';
+const local = require('./local');
+const production = require('./production');
 
-export default process.env.NODE_ENV === 'production' ? production : local;
+module.exports = process.env.NODE_ENV === 'production' ? production : local;

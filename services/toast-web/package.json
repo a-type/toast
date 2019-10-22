@@ -8,7 +8,7 @@
     "build": "next build",
     "ci:build": "npm run build",
     "dev": "next -p 8080",
-    "start": "next start -p 8080"
+    "start": "next start"
   },
   "repository": {
     "type": "git",

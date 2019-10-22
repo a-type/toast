@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   origin: 'http://localhost:8080',
   apiHost: 'http://localhost:4000',
   firebase: {
