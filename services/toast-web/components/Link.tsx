@@ -24,7 +24,12 @@ const NextComposed = React.forwardRef<HTMLAnchorElement, ComposedLinkProps>(
 
     if (href && href.toString().startsWith('mailto:')) {
       return (
-        <a ref={ref} {...other} className={clsx(classes.a, other.className)} />
+        <a
+          ref={ref}
+          {...other}
+          href={href as string}
+          className={clsx(classes.a, other.className)}
+        />
       );
     }
 

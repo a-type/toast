@@ -69,7 +69,7 @@ const Sidebar: SFC<SidebarProps> = props => {
 
   const anonContent = (
     <List>
-      <ListItemLink to="/login" className={classes.listItemLink}>
+      <ListItemLink to="/login" as="/login" className={classes.listItemLink}>
         <ListItemIcon>
           <LocalDiningTwoTone />
         </ListItemIcon>
@@ -80,25 +80,33 @@ const Sidebar: SFC<SidebarProps> = props => {
 
   const authContent = (
     <List>
-      <ListItemLink to="/feed" className={classes.listItemLink}>
+      <ListItemLink to="/feed" as="/feed" className={classes.listItemLink}>
         <ListItemIcon>
           <HomeTwoTone />
         </ListItemIcon>
         <ListItemText>Home</ListItemText>
       </ListItemLink>
-      <ListItemLink to="/plan" className={classes.listItemLink}>
+      <ListItemLink to="/plan" as="/plan" className={classes.listItemLink}>
         <ListItemIcon>
           <CalendarTodayTwoTone />
         </ListItemIcon>
         <ListItemText>Plan</ListItemText>
       </ListItemLink>
-      <ListItemLink to="/shopping" className={classes.listItemLink}>
+      <ListItemLink
+        to="/shopping"
+        as="/shopping"
+        className={classes.listItemLink}
+      >
         <ListItemIcon>
           <ShoppingCartTwoTone />
         </ListItemIcon>
         <ListItemText>Shopping</ListItemText>
       </ListItemLink>
-      <ListItemLink to="/recipes" className={classes.listItemLink}>
+      <ListItemLink
+        to="/recipes"
+        as="/recipes"
+        className={classes.listItemLink}
+      >
         <ListItemIcon>
           <BookmarksTwoTone />
         </ListItemIcon>
@@ -116,14 +124,22 @@ const Sidebar: SFC<SidebarProps> = props => {
           <ListItemText>Profile</ListItemText>
         </ListItemLink>
       )}
-      <ListItemLink to="/settings" className={classes.listItemLink}>
+      <ListItemLink
+        to="/settings"
+        as="/settings"
+        className={classes.listItemLink}
+      >
         <ListItemIcon>
           <SettingsTwoTone />
         </ListItemIcon>
         <ListItemText>Settings</ListItemText>
       </ListItemLink>
       <IsAdmin>
-        <ListItemLink to="/manage" className={classes.listItemLink}>
+        <ListItemLink
+          to="/manage"
+          as="/manage"
+          className={classes.listItemLink}
+        >
           <ListItemIcon>
             <WarningTwoTone />
           </ListItemIcon>
