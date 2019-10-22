@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   env: {},
+  distDir: 'build',
   webpack: (config, { isServer, webpack }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
