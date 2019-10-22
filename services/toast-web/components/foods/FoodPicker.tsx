@@ -15,7 +15,7 @@ import { useDebounce } from 'use-debounce';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
-import ErrorMessage from 'components/generic/ErrorMessage';
+import ErrorMessage from 'components/ErrorMessage';
 import { InputProps } from '@material-ui/core/Input';
 
 const SearchFoodsQuery = gql`
@@ -98,12 +98,12 @@ export const FoodPicker: FC<FoodPickerProps> = ({
             InputLabelProps={getLabelProps()}
             InputProps={{
               ...InputProps,
-              ...getInputProps({
+              ...(getInputProps({
                 onClick: () => toggleMenu(),
                 ref: el => {
                   inputRef.current = el;
                 },
-              }),
+              }) as any),
             }}
           />
           <Popper

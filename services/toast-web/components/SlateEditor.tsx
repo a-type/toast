@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useCallback } from 'react';
+import React, { forwardRef, useCallback } from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import { Editor, EditorProps } from 'slate-react';
 import { fade } from '@material-ui/core/styles';

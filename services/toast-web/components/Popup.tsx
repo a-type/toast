@@ -1,7 +1,6 @@
 import React, { FC, forwardRef } from 'react';
 import {
   Dialog,
-  Container,
   makeStyles,
   Box,
   IconButton,
@@ -10,7 +9,6 @@ import {
   useMediaQuery,
   Theme,
   DialogTitle,
-  DialogContent,
 } from '@material-ui/core';
 import { CloseTwoTone } from '@material-ui/icons';
 import { TransitionProps } from '@material-ui/core/transitions/transition';

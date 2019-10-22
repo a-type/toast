@@ -23,7 +23,7 @@ export const SubscribeButton: FC<SubscribeButtonProps> = ({
 
   const checkout = async () => {
     const result = await stripe.redirectToCheckout({
-      items: [{ plan: CONFIG.stripe.planId, quantity: 1 }],
+      items: [{ plan: process.env.STRIPE_PLAN_ID, quantity: 1 }],
       successUrl,
       cancelUrl,
       clientReferenceId: user.uid,

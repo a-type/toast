@@ -5,11 +5,9 @@ import {
   Typography,
   Paper,
   Chip,
-  Box,
   Avatar,
   ButtonBase,
 } from '@material-ui/core';
-import { parse } from 'querystring';
 import { makeStyles } from '@material-ui/styles';
 import { RecipeImage } from 'components/recipes/RecipeImage';
 import useFullRecipe from 'hooks/features/useFullRecipe';

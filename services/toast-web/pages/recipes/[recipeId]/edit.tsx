@@ -13,7 +13,7 @@ const EditRecipePage: NextPage<{ recipeId?: string }> = ({ recipeId }) => (
 );
 
 EditRecipePage.getInitialProps = async ctx => {
-  await ensureLoggedIn(ctx);
+  ensureLoggedIn(ctx);
   return ctx.query;
 };
 

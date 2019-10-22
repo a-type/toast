@@ -12,7 +12,7 @@ export const RecipeDetails: FC<{ recipe: any; servingsOverride?: number }> = ({
     return null;
   }
 
-  const { servings, cookTime, prepTime, unattendedTime, sourceUrl } = recipe;
+  const { servings, sourceUrl } = recipe;
 
   return (
     <Box width="100%">

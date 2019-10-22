@@ -4,7 +4,6 @@ import {
   Box,
   Paper,
   Typography,
-  IconButton,
   makeStyles,
   Theme,
   Button,

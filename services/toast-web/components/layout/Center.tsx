@@ -1,14 +1,14 @@
-import React, { FC, ReactNode, ComponentClass } from 'react';
+import React, { FC, ComponentClass } from 'react';
 import {
-  Paper,
   Box,
   makeStyles,
   Typography,
   Container,
   Theme,
 } from '@material-ui/core';
+import { ContainerProps } from '@material-ui/core/Container';
 
-export type CenterProps = {
+export type CenterProps = ContainerProps & {
   title?: string;
   Icon?: ComponentClass<any> | FC<any>;
 };
@@ -37,11 +37,11 @@ const useStyles = makeStyles<Theme, any>(theme => ({
   },
 }));
 
-export const Center: FC<CenterProps> = ({ title, Icon, children }) => {
+export const Center: FC<CenterProps> = ({ title, Icon, children, ...rest }) => {
   const classes = useStyles({ title, Icon, children });
 
   return (
-    <Container className={classes.container}>
+    <Container className={classes.container} {...rest}>
       <Box className={classes.box}>
         {Icon && <Icon className={classes.icon} />}
         {title && (

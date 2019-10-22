@@ -1,6 +1,6 @@
 import * as React from 'react';
 import templateIcs from './templateIcs';
-import Link from 'components/generic/Link';
+import Link from 'components/Link';
 import { Button } from '@material-ui/core';
 
 export interface GroceryDayEventCreatorProps {

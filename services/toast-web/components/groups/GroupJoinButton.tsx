@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { Loader } from 'components/generic/Loader';
+import { Loader } from 'components/Loader';
 import { Button } from '@material-ui/core';
-import ErrorMessage from 'components/generic/ErrorMessage';
+import ErrorMessage from 'components/ErrorMessage';
+import { useRouter } from 'next/router';
 
 const JoinGroupMutation = gql`
   mutation AcceptGroupInvitation($key: String!) {
@@ -20,19 +20,18 @@ export interface JoinProps {
   invitationKey: string;
 }
 
-const JoinGroup: React.SFC<JoinProps & RouteComponentProps> = ({
-  invitationKey,
-  history,
-}) => {
+const JoinGroup: React.SFC<JoinProps> = ({ invitationKey }) => {
   const [mutate, { loading, error }] = useMutation(JoinGroupMutation, {
     variables: {
       key: invitationKey,
     },
   });
 
+  const router = useRouter();
+
   const join = async () => {
     await mutate();
-    history.push('/');
+    router.push('/feed');
   };
 
   if (error) {
@@ -48,4 +47,4 @@ const JoinGroup: React.SFC<JoinProps & RouteComponentProps> = ({
   );
 };
 
-export default withRouter(JoinGroup);
+export default JoinGroup;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Copy from 'react-copy-to-clipboard';
 import { Box, Button, Typography, Dialog } from '@material-ui/core';
 import { useCreateGroupInvite } from 'hooks/features/useCreateGroupInvite';
-import ErrorMessage from 'components/generic/ErrorMessage';
+import ErrorMessage from 'components/ErrorMessage';
 import { ButtonProps } from '@material-ui/core/Button';
 
 export interface GroupInviteButtonProps extends ButtonProps {}

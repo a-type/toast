@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IconButton, Typography, Box, makeStyles } from '@material-ui/core';
-import Link from 'components/generic/Link';
+import Link from 'components/Link';
 import { ArrowBackIosTwoTone, LinkTwoTone } from '@material-ui/icons';
 
 export interface RecipeStepsToolbarProps {

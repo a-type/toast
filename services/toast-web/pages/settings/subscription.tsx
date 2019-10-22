@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { GroceryDay } from 'components/groceryDay/GroceryDay';
-import LogoutButton from 'components/auth/LogoutButton';
 import { Typography, Box, Container, Button, Paper } from '@material-ui/core';
 import Link from 'components/Link';
 import { useSubscriptionInfo } from 'hooks/features/useSubscriptionInfo';

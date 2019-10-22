@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logger from 'logger';
+import logger from 'utils/logger';
 import ErrorMessage from './ErrorMessage';
 
 export class ErrorBoundary extends Component {

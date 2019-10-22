@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IsLoggedIn } from 'components/auth/IsLoggedIn';
 import Login from 'components/auth/Login';
-import { Typography, Box, Container, Paper } from '@material-ui/core';
+import { Typography, Box, Container } from '@material-ui/core';
 import GroupJoinButton from 'components/groups/GroupJoinButton';
-import { parse } from 'querystring';
 
 const JoinGroupPage = ({ token }: { token: string }) => {
   const [key, setKey] = useState(token);
