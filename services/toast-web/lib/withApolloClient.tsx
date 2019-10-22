@@ -1,45 +1,47 @@
 import React from 'react';
 import Head from 'next/head';
 import initApollo from './initApollo';
-import { ApolloProvider } from '@apollo/react-hooks';
 import { getToken } from './auth';
-import { NextPageContext } from 'next';
 
-const tokenGetter = (context?: NextPageContext) => () => getToken(context);
-
-export default (PageComponent: any, { ssr = true } = {}) => {
-  const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
+export default (AppComponent: any, { ssr = true } = {}) => {
+  const WithApollo = ({ apolloClient, apolloState, token, ...pageProps }) => {
+    // apolloClient will be passed in during the initial getDataFromTree,
+    // but not for the full server or client render
     const client =
-      apolloClient || initApollo(apolloState, { getToken: tokenGetter() });
-    return (
-      <ApolloProvider client={client}>
-        <PageComponent {...pageProps} />
-      </ApolloProvider>
-    );
+      apolloClient ||
+      initApollo(apolloState, { getToken: token ? () => token : getToken });
+    return <AppComponent {...pageProps} apolloClient={client} />;
   };
 
   if (process.env.NODE_ENV !== 'production') {
     const displayName =
-      PageComponent.displayName || PageComponent.name || 'Component';
-    if (displayName === 'App') {
-      console.warn('This withApollo HOC only works with PageComponents');
-    }
+      AppComponent.displayName || AppComponent.name || 'Component';
 
     WithApollo.displayName = `withApollo(${displayName})`;
   }
 
-  if (ssr || PageComponent.getInitialProps) {
-    WithApollo.getInitialProps = async (ctx: any) => {
-      const { AppTree } = ctx;
+  console.info(`ssr`, ssr);
 
-      const apolloClient = (ctx.apolloClient = initApollo(
-        {},
-        { getToken: tokenGetter(ctx) },
-      ));
+  if (ssr || AppComponent.getInitialProps) {
+    WithApollo.getInitialProps = async (context: any) => {
+      console.info('getInitialProps');
+      const { AppTree, ctx } = context;
 
-      const pageProps = PageComponent.getInitialProps
-        ? await PageComponent.getInitialProps(ctx)
+      console.info(`getInitialProps ctx`, !!ctx);
+      const token = getToken(ctx);
+      const apolloClient = initApollo({}, { getToken: () => token });
+
+      (ctx as any).apolloClient = apolloClient;
+
+      console.info(
+        `AppComponent.getInitialProps`,
+        AppComponent.getInitialProps,
+      );
+      const appProps = AppComponent.getInitialProps
+        ? await AppComponent.getInitialProps(context)
         : {};
+
+      console.info(`pageProps`, appProps);
 
       if (typeof window === 'undefined') {
         /// when redirecting, response is finished. no point in continuing render
@@ -51,12 +53,7 @@ export default (PageComponent: any, { ssr = true } = {}) => {
           try {
             const { getDataFromTree } = await import('@apollo/react-ssr');
             await getDataFromTree(
-              <AppTree
-                pageProps={{
-                  ...pageProps,
-                  apolloClient,
-                }}
-              />,
+              <AppTree {...appProps} apolloClient={apolloClient} />,
             );
           } catch (err) {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
@@ -74,8 +71,9 @@ export default (PageComponent: any, { ssr = true } = {}) => {
       const apolloState = apolloClient.cache.extract();
 
       return {
-        ...pageProps,
+        ...appProps,
         apolloState,
+        token,
       };
     };
   }

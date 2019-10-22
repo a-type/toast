@@ -12,7 +12,7 @@ import { useUser } from 'hooks/features/useUser';
 import { useAuth } from 'contexts/AuthContext';
 import { BaseUserPage } from './BaseUserPage';
 import { User } from 'hooks/features/fragments';
-import path from 'ramda/es/path';
+import { path } from 'ramda';
 import ErrorMessage from 'components/ErrorMessage';
 import { FollowButton } from 'components/users/FollowButton';
 import { EditTwoTone } from '@material-ui/icons';

@@ -5,16 +5,20 @@ import cookie from 'js-cookie';
 import firebase from './firebase';
 
 export const getToken = (ctx?: NextPageContext): string | null => {
+  console.log('getToken context:', !!ctx);
   if (ctx) {
     const { toastToken } = nextCookie(ctx);
     return toastToken || null;
-  } else {
+  } else if (typeof window !== 'undefined') {
     return cookie.get('toastToken') || null;
+  } else {
+    console.debug(`no window, no context!`);
   }
 };
 
 /** redirects an unauthenticated user to the login page, or returns the token */
 export const ensureLoggedIn = (ctx: NextPageContext): string | null => {
+  console.info('ensureLoggedIn');
   const token = getToken(ctx);
 
   if (ctx.req && !token) {

@@ -15,6 +15,8 @@ import {
 import Navigation from '../components/navigation/Navigation';
 import { AuthProvider } from '../contexts/AuthContext';
 import { ToastAppBar } from '../components/navigation/AppBar';
+import { ApolloProvider } from '@apollo/react-hooks';
+import ApolloClient from 'apollo-client';
 
 const CloseSnackbarButton = ({ barKey }: { barKey: string }) => {
   const { closeSnackbar } = useSnackbar();
@@ -33,7 +35,7 @@ const closeSnackbarAction = (key: string) => (
   <CloseSnackbarButton barKey={key} />
 );
 
-class MyApp extends App<{}> {
+class MyApp extends App<{ apolloClient: ApolloClient<any> }> {
   componentDidMount() {
     // remove server-side injected CSS
     const jssStyles = document.querySelector('#jss-server-side');
@@ -43,31 +45,34 @@ class MyApp extends App<{}> {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, apolloClient } = this.props;
+    console.info((apolloClient.cache as any).data);
 
     return (
       <>
         <Head>
           <title>Toast</title>
         </Head>
-        <AuthProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <SnackbarProvider maxSnack={2} action={closeSnackbarAction}>
-              <AppLayout>
-                <AppLayoutAppBar>
-                  <ToastAppBar />
-                </AppLayoutAppBar>
-                <AppLayoutNavigation>
-                  <Navigation />
-                </AppLayoutNavigation>
-                <AppLayoutContent>
-                  <Component {...pageProps} />
-                </AppLayoutContent>
-              </AppLayout>
-            </SnackbarProvider>
-          </ThemeProvider>
-        </AuthProvider>
+        <ApolloProvider client={apolloClient}>
+          <AuthProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <SnackbarProvider maxSnack={2} action={closeSnackbarAction}>
+                <AppLayout>
+                  <AppLayoutAppBar>
+                    <ToastAppBar />
+                  </AppLayoutAppBar>
+                  <AppLayoutNavigation>
+                    <Navigation />
+                  </AppLayoutNavigation>
+                  <AppLayoutContent>
+                    <Component {...pageProps} />
+                  </AppLayoutContent>
+                </AppLayout>
+              </SnackbarProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </ApolloProvider>
       </>
     );
   }

@@ -3,16 +3,34 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import MuiLink from '@material-ui/core/Link';
+import { makeStyles } from '@material-ui/core';
 
 type ComposedLinkProps = NextLinkProps & HTMLAttributes<HTMLAnchorElement>;
 
+const useStyles = makeStyles(theme => ({
+  a: {
+    // arg!
+    '&&&': {
+      textDecoration: 'none',
+      color: 'inherit',
+    },
+  },
+}));
+
 const NextComposed = React.forwardRef<HTMLAnchorElement, ComposedLinkProps>(
   function NextComposed(props, ref) {
+    const classes = useStyles(props);
     const { as, href, prefetch, ...other } = props;
+
+    if (href && href.toString().startsWith('mailto:')) {
+      return (
+        <a ref={ref} {...other} className={clsx(classes.a, other.className)} />
+      );
+    }
 
     return (
       <NextLink href={href} prefetch={prefetch} as={as}>
-        <a ref={ref} style={{ textDecoration: 'none' }} {...other} />
+        <a ref={ref} {...other} className={clsx(classes.a, other.className)} />
       </NextLink>
     );
   },
@@ -36,6 +54,7 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
     naked,
     to,
     as,
+    newTab,
     ...other
   } = props;
   const router = useRouter();
@@ -45,6 +64,13 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
       router && router.pathname === props.to && activeClassName,
   });
 
+  const newTabProps = newTab
+    ? {
+        target: '_blank',
+        rel: 'noopener',
+      }
+    : {};
+
   if (naked) {
     return (
       <NextComposed
@@ -52,6 +78,7 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
         ref={ref}
         href={to}
         as={as}
+        {...newTabProps}
         {...other}
       />
     );
@@ -64,6 +91,7 @@ export default React.forwardRef<any, LinkProps>((props, ref) => {
       ref={ref}
       href={to}
       as={as}
+      {...newTabProps}
       {...other}
     />
   );

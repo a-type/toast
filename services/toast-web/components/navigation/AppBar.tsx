@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import Link from '../Link';
 import { SettingsTwoTone, PersonTwoTone } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
 import { IsLoggedIn } from '../auth/IsLoggedIn';
 import { useAuth } from '../../contexts/AuthContext';
 import Logo from '../brand/Logo';
@@ -51,7 +50,6 @@ const useStyles = makeStyles<Theme, ToastAppBarProps>((theme: Theme) => ({
 
 export const ToastAppBar: FC<ToastAppBarProps> = props => {
   const classes = useStyles(props);
-  const theme = useTheme();
   const { user } = useAuth();
 
   return (
@@ -73,7 +71,8 @@ export const ToastAppBar: FC<ToastAppBarProps> = props => {
               <IconButton
                 aria-label="Profile"
                 component={Link}
-                to={`/users/${user.uid}`}
+                to="/users/[userId]"
+                as={`/users/${user.uid}`}
               >
                 <PersonTwoTone />
               </IconButton>

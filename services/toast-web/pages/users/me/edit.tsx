@@ -6,7 +6,7 @@ import {
   TextField,
   Fab,
 } from '@material-ui/core';
-import path from 'ramda/es/path';
+import { path } from 'ramda';
 import { useUpdateViewer } from 'hooks/features/useUpdateViewer';
 import { useRouter } from 'next/router';
 import { Loader } from 'components/Loader';

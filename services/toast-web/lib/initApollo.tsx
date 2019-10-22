@@ -27,7 +27,9 @@ const create = (
     introspectionQueryResultData,
   });
 
-  const cache = new InMemoryCache({ fragmentMatcher });
+  const cache = new InMemoryCache({ fragmentMatcher }).restore(
+    initialState || {},
+  );
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
