@@ -1,5 +1,5 @@
 import { Context } from 'context';
-import { resolver as arango } from 'graphql-arangodb';
+import { resolver as arango,  builders } from 'graphql-arangodb';
 import { aql } from 'toast-common';
 import { pathOr } from 'ramda';
 
@@ -7,7 +7,44 @@ const pathOrNull = pathOr(null);
 
 export default {
   Query: {
-    recipe: arango,
+    recipe: async (parent, args, ctx: Context, info) => {
+      const recipe = await arango.runCustomQuery({
+        parent,
+        args,
+        context: ctx,
+        info,
+        queryBuilder: builders.aqlDocument({
+          collection: 'Recipes',
+          key: '$args.input.id',
+          limit: {
+            skip: '0',
+            count: '1'
+          },
+        }),
+      });
+
+      if ((recipe.published && !recipe.private)) {
+        return recipe;
+      } else if (recipe.author && recipe.author.id && recipe.author.id === ctx.user.id) {
+        return recipe;
+      } else {
+        const authorResult = await ctx.arangoDb.query(aql`
+          FOR author IN INBOUND ${recipe._id} AuthorOf
+            LIMIT 1
+            RETURN author
+        `);
+
+        if (!authorResult.hasNext()) {
+          return null;
+        }
+
+        const author = await authorResult.next();
+        if (author.id = ctx.user.id) {
+          return recipe;
+        }
+      }
+      return null;
+    },
   },
   Mutation: {
     createRecipe: arango,

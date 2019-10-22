@@ -1,10 +1,6 @@
 {
   "folders": [
     {
-      "path": "services/toast-ui",
-      "name": "UI"
-    },
-    {
       "path": "services/toast-web",
       "name": "Web"
     },

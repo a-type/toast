@@ -1,2 +1,0 @@
-export const NAV_SIDEBAR_MIN_WIDTH_PX = 1000;
-export const SIDE_ACTIONS_MIN_WIDTH_PX = 1400;
