@@ -46,7 +46,6 @@ class MyApp extends App<{ apolloClient: ApolloClient<any> }> {
 
   render() {
     const { Component, pageProps, apolloClient } = this.props;
-    console.info((apolloClient.cache as any).data);
 
     return (
       <>

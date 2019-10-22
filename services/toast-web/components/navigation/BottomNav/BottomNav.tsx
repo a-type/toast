@@ -14,14 +14,14 @@ import {
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import useNavState from '../../../hooks/useNavState';
+import clsx from 'clsx';
 
 export interface BottomNavProps {
-  gridArea?: string;
+  className?: string;
 }
 
 const useStyles = makeStyles<Theme, BottomNavProps>(theme => ({
   bottomNav: props => ({
-    gridArea: props.gridArea,
     borderTop: `1px solid ${theme.palette.grey[100]}`,
   }),
 }));
@@ -54,7 +54,7 @@ export const BottomNav: FC<BottomNavProps> = props => {
       showLabels
       value={index}
       onChange={onChange}
-      className={classes.bottomNav}
+      className={clsx(classes.bottomNav, props.className)}
     >
       <BottomNavigationAction icon={<HomeTwoTone />} label="Home" />
       <BottomNavigationAction icon={<CalendarTodayTwoTone />} label="Plan" />

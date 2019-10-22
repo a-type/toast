@@ -46,7 +46,6 @@ const create = (
 
   const authLink = setContext(async (_, { headers }) => {
     const token = await getToken();
-    console.debug(`token`, token);
     return {
       headers: {
         ...headers,

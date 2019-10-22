@@ -28,8 +28,11 @@ import Logo from '../../brand/Logo';
 import Link from '../../Link';
 import { useRouter } from 'next/router';
 import { logout } from 'lib/auth';
+import clsx from 'clsx';
 
-interface SidebarProps {}
+interface SidebarProps {
+  className?: string;
+}
 
 const useStyles = makeStyles<Theme, SidebarProps>(theme => ({
   drawer: props => ({
@@ -143,7 +146,7 @@ const Sidebar: SFC<SidebarProps> = props => {
   return (
     <Drawer
       variant="permanent"
-      className={classes.drawer}
+      className={clsx(classes.drawer, props.className)}
       classes={{ paper: classes.drawerPaper }}
     >
       <Box p={3} alignItems="center" display="flex" flexDirection="column">

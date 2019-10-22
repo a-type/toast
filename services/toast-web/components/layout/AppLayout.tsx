@@ -37,6 +37,9 @@ const useContentStyles = makeStyles<Theme, AppLayoutContentProps>(theme => ({
     background: `linear-gradient(180deg, ${theme.palette.grey[100]} 0%, ${theme.palette.background.paper} 50vh)`,
     display: 'flex',
     flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+      width: 'auto',
+    },
   },
 }));
 
@@ -51,7 +54,6 @@ export interface AppLayoutNavigationProps {}
 const useNavigationStyles = makeStyles<Theme, AppLayoutNavigationProps>(
   theme => ({
     root: {
-      width: '100%',
       gridArea: 'nav',
     },
   }),

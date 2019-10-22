@@ -20,28 +20,18 @@ export default (AppComponent: any, { ssr = true } = {}) => {
     WithApollo.displayName = `withApollo(${displayName})`;
   }
 
-  console.info(`ssr`, ssr);
-
   if (ssr || AppComponent.getInitialProps) {
     WithApollo.getInitialProps = async (context: any) => {
-      console.info('getInitialProps');
       const { AppTree, ctx } = context;
 
-      console.info(`getInitialProps ctx`, !!ctx);
       const token = getToken(ctx);
       const apolloClient = initApollo({}, { getToken: () => token });
 
       (ctx as any).apolloClient = apolloClient;
 
-      console.info(
-        `AppComponent.getInitialProps`,
-        AppComponent.getInitialProps,
-      );
       const appProps = AppComponent.getInitialProps
         ? await AppComponent.getInitialProps(context)
         : {};
-
-      console.info(`pageProps`, appProps);
 
       if (typeof window === 'undefined') {
         /// when redirecting, response is finished. no point in continuing render
