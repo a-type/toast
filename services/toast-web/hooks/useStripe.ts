@@ -4,7 +4,11 @@ export const useStripe = () => {
   const [stripe, setStripe] = useState(null);
 
   useEffect(() => {
-    const stripeKey = CONFIG.stripe.key;
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const stripeKey = process.env.STRIPE_KEY;
     const stripeUrl = 'https://js.stripe.com/v3/';
     if (!document.querySelector('#stripe-js')) {
       const script = document.createElement('script');

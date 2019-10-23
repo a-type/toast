@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
-import { Day } from 'types/Day';
+import Day from 'types/Day';
 
 export const GetGroceryDayQuery = gql`
   query GroceryDay {

@@ -9,7 +9,7 @@ export interface SubscribeButtonProps extends ButtonProps {
   onCheckoutComplete: () => any;
 }
 
-const basePath = window.location.origin;
+const basePath = typeof window !== 'undefined' ? window.location.origin : '';
 const successUrl = `${basePath}/subscription`;
 const cancelUrl = `${basePath}/subscription`;
 

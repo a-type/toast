@@ -25,6 +25,7 @@ module.exports = {
       themes: path.resolve(__dirname, 'themes'),
       lib: path.resolve(__dirname, 'lib'),
       utils: path.resolve(__dirname, 'utils'),
+      types: path.resolve(__dirname, 'types'),
     };
     return config;
   },

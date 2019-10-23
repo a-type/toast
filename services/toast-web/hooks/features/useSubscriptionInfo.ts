@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { pathOr } from 'ramda';
-import { parse } from 'date-fns';
 
 export const GetSubscriptionInfoQuery = gql`
   query GetSubscriptionInfoQuery {
@@ -35,7 +34,7 @@ export const useSubscriptionInfo = () => {
     ['viewer', 'group', 'subscriptionExpiresAt'],
     data,
   ) as string;
-  const expiresAt = expiresAtString ? parse(expiresAtString) : null;
+  const expiresAt = expiresAtString ? new Date(expiresAtString) : null;
 
   return {
     ...rest,

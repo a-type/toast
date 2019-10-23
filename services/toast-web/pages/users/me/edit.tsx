@@ -11,7 +11,7 @@ import { useUpdateViewer } from 'hooks/features/useUpdateViewer';
 import { useRouter } from 'next/router';
 import { Loader } from 'components/Loader';
 import ErrorMessage from 'components/ErrorMessage';
-import { BaseUserPage } from '../BaseUserPage';
+import { BaseUserPage } from '../../../components/users/BaseUserPage';
 import { Formik } from 'formik';
 import { UploadableImage } from 'components/UploadableImage';
 import { DoneTwoTone } from '@material-ui/icons';

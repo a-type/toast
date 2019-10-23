@@ -10,7 +10,7 @@ import {
 import { Loader } from 'components/Loader';
 import { useUser } from 'hooks/features/useUser';
 import { useAuth } from 'contexts/AuthContext';
-import { BaseUserPage } from './BaseUserPage';
+import { BaseUserPage } from '../../components/users/BaseUserPage';
 import { User } from 'hooks/features/fragments';
 import { path } from 'ramda';
 import ErrorMessage from 'components/ErrorMessage';

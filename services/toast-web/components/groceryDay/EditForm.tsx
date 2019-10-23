@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Day } from 'types/Day';
 import { MenuItem } from '@material-ui/core';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { TextField } from 'components/fields';
+import Day from 'types/Day';
 
 const SetGroceryDayMutation = gql`
   mutation SetGroceryDay($groceryDay: WeekDay!) {
