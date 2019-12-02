@@ -51,6 +51,10 @@ class MyApp extends App<{ apolloClient: ApolloClient<any> }> {
       <>
         <Head>
           <title>Toast</title>
+          <link
+            href="https://fonts.googleapis.com/css?family=Pacifico&display=swap"
+            rel="stylesheet"
+          />
         </Head>
         <ApolloProvider client={apolloClient}>
           <AuthProvider>

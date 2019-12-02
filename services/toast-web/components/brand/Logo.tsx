@@ -12,6 +12,7 @@ export type LogoProps = {
 
 const useStyles = makeStyles<Theme, LogoProps>(theme => ({
   wrapper: props => ({
+    zIndex: 1,
     width: props.size,
     height: props.size,
     fontSize:

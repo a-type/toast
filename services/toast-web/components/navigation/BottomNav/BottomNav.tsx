@@ -23,6 +23,7 @@ export interface BottomNavProps {
 const useStyles = makeStyles<Theme, BottomNavProps>(theme => ({
   bottomNav: props => ({
     borderTop: `1px solid ${theme.palette.grey[100]}`,
+    display: 'flex',
   }),
 }));
 

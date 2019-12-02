@@ -11,9 +11,9 @@ export type DateProps = {
 const formatString = (date: string | Date, format: DateFormat) => {
   switch (format) {
     case 'date':
-      return doFormat(new Date(date), 'ddd, MMM Do');
+      return doFormat(new Date(date), 'EEE, MMM do');
     case 'dateTime':
-      return doFormat(new Date(date), 'h:mm ddd, MMM Do');
+      return doFormat(new Date(date), 'h:mm EEE, MMM do');
     case 'relative':
       return formatDistanceToNow(new Date(date));
   }
