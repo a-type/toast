@@ -1,5 +1,9 @@
 # Toast
 
+> **Note on current status**
+> I originally created this app as a startup idea. I still think it's cool, but I've decided I'm not in a position to be an entrepreneur, so I'm open sourcing it as a showcase of my experience in React, graph database technology, serverless architecture, and other things.
+> If you can learn from it, great!
+
 Toast is a meal planning app. Each directory in `services` is a relevant service.
 
 ## Developing
