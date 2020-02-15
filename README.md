@@ -4,6 +4,10 @@
 > I originally created this app as a startup idea. I still think it's cool, but I've decided I'm not in a position to be an entrepreneur, so I'm open sourcing it as a showcase of my experience in React, graph database technology, serverless architecture, and other things.
 > If you can learn from it, great!
 
+![Toast logo](media/brand.png)
+
+![Screenshots of the app](media/screens.png)
+
 Toast is a meal planning app. Each directory in `services` is a relevant service.
 
 ## Developing
@@ -22,9 +26,7 @@ To add a new dependency to a specific service, run `lerna add <dependency> --sco
 
 The best way to develop locally is to connect to the development environment in Google Cloud. The development environment includes the core database, media storage, and identity management.
 
-I'm not going to put the credentials needed to connect to that environment here, though. You'll need to ask me. I'll send you over the `.env` files you need for each service to connect to the development environment.
-
-Once you have the credentials, you can run `npm run devenv:start` from the `toast-core` service to spin up the dev database. It automatically sleeps at midnight.
+Once you have service account credentials, you can run `npm run devenv:start` from the `toast-core` service to spin up the dev database. It automatically sleeps at midnight.
 
 To run any service, run `npm run dev` in its module directory.
 
